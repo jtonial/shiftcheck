@@ -1,0 +1,1 @@
+Instead of using receipt images, I think I should used items (in an items table) and taxes (from taxes table) each linked to the receipt. The receipt can then be generated from this info. A basic template could be used for all receipts. Functionality for retailers to customize their receipts could eventually be added (at least different color schemes)
