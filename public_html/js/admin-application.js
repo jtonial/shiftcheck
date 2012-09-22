@@ -199,8 +199,8 @@ $(function() {
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
 
-		Schedule.Router = new AppRouter;
-		Schedule.Router.init=1;
+		Scheduleme.Router = new AppRouter;
+		Scheduleme.Router.init=1;
 		Backbone.history.start();
 
 });
