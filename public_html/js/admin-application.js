@@ -136,7 +136,7 @@ $(function() {
 
 	Scheduleme.classes.collections.Approvals = Backbone.Collection.extend({
 		//url:,
-		model: Shift,
+		model: Scheduleme.classes.models.Shift,
 	});
 
 	Scheduleme.classes.views.ApprovalView = Backbone.View.extend({
