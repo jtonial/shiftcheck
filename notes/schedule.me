@@ -1,0 +1,25 @@
+Idea:
+	An application for mcdonalds employees to access their schedule. (Could easily be expanded to any store with shift-scheduled employees)
+
+	Employees can:
+		- view full schedules from current day onwards
+		- put a shift 'up for grabs'
+		- search shifts that can be taken
+			- When an employee says they will take a shift, an admin would have to approve the change, and then it will change in the schedule. Both employees (the giver and the taker) will receive notifications if the change is approved/denied.
+		- Get system notification reminders before their shifts
+		- Receive a notification when new schedules are posted
+
+	Admins can:
+		- view full schedules from current day onwards
+			- when viewing todays schedule there will be a vertical 'current time' line overlayed
+		- view past schedules (web interface only)
+		- edit shifts (web interface only) (drag and drop shift length, etc)
+		- push a notification to an employee/send a text to an employee (twilio) (during times that the employee has a shift only)
+			- Example: an employee has not shown up for their shift. The manager can push a notification asking them to call the store, without having to find their phone number
+		- Reset an employees password
+
+	Things I still need to figure out:
+		- Employees 'trading' shifts (probably solution: an admin can be told and he can switch it thought admin panel)
+
+	Things I need to remember:
+		- Check for conflicts when displaying shifts that are up for grabs. Grey out shifts that conflict.
