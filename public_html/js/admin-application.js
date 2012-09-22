@@ -53,7 +53,7 @@ $(function() {
 		model: Scheduleme.classes.models.Shift,
 
 		initialize: function () {
-			this.shifts = new Shifts();
+			this.shifts = new Scheduleme.classes.collections.Shifts();
 			this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
 		}
 
