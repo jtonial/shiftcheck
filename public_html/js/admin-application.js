@@ -33,7 +33,7 @@ $(function() {
 	});
 
 	window.Schedule = Backbone.Model.extend({
-		url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
+		//url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
 		model: Shift,
 
 		initialize: function () {
