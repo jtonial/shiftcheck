@@ -21,7 +21,7 @@ if (!isset($_SESSION['userid'])) {
 	
 		$fieldEmail = "";
 
-		$v = date("d-m-Y");
+		$v = date("Y-m-d");
 		$l = &Log::singleton("file","../logs/$v.log");
 		$s = array();
 	
