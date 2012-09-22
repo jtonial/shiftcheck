@@ -57,6 +57,7 @@ if (!isset($_SESSION['userid'])) {
 				}
 			}
 		} else {
+			$s['query'] = $query;
 			$s['User']='Email Not Registered';
 		}
 
