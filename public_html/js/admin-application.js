@@ -1,10 +1,27 @@
 $(function() {
 
-	window.Employee = Backbone.Model.extend({
+	window.Scheduleme = {//new Object();
+		classes: {
+			models: {},
+			collections: {},
+			views: {},
+		},
+		helpers: {},
+
+		Receipts: {},
+		Cards: {},
+		Messages: {},
+
+		Init: function () {},
+
+		AppView: {},
+		Router: {},
+	};
+	Scheduleme.classes.models.Employee = Backbone.Model.extend({
 		
 	});
 
-	window.Employees = Backbone.Collection.extend({
+	Scheduleme.classes.collections.Employees = Backbone.Collection.extend({
 	
 		//url:,
 		
@@ -12,7 +29,7 @@ $(function() {
 
 	});
 
-	window.EmployeeView = Backbone.View.extend({
+	Scheduleme.classes.views.EmployeeView = Backbone.View.extend({
 
 		tagName: 'div',
 		template: _.template($('#employee-template').html()),
@@ -22,19 +39,19 @@ $(function() {
 		}
 	});
 
-	window.Shift = Backbone.Model.extend({
+	Scheduleme.classes.models.Shift = Backbone.Model.extend({
 	
 	});
-	window.Shifts = Backbone.Collection.extend({
+	Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
 
 		parse: function (data) {
 			return data.data;
 		}
 	});
 
-	window.Schedule = Backbone.Model.extend({
+	Scheduleme.classes.models.Schedule = Backbone.Model.extend({
 		//url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
-		model: Shift,
+		model: Scheduleme.classes.models.Shift,
 
 		initialize: function () {
 			this.shifts = new Shifts();
@@ -43,12 +60,12 @@ $(function() {
 
 	});
 
-	window.Schedules = Backbone.Collection.extend({
+	Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
 		url: 'api/schedules',
-		model: Schedule,
+		model: Scheduleme.classes.models.Schedule,
 	});
 
-	window.ShiftView = Backbone.View.extend({
+	Scheduleme.classes.views.ShiftView = Backbone.View.extend({
 
 		tagName: 'div',
 
@@ -81,7 +98,7 @@ $(function() {
 		}
 	});
 
-	window.ScheduleView = Backbone.View.extend({
+	Schedulme.classes.views.ScheduleView = Backbone.View.extend({
 
 		//Create the frame
 		initialize: function () {
@@ -95,7 +112,7 @@ $(function() {
 		//Add in views for each shift in the schedule
 
 	});
-	window.SchedulesView = Backbone.View.extend({
+	Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		el: $('.page.schedules'),
 
 		initialize: function () {
@@ -114,16 +131,16 @@ $(function() {
 		},
 	});
 
-	window.Approval = Backbone.Model.extend({
+	Scheduleme.classes.models.Approval = Backbone.Model.extend({
 	
 	});
 
-	window.Approvals = Backbone.Collection.extend({
+	Scheduleme.classes.collections.Approvals = Backbone.Collection.extend({
 		//url:,
 		model: Shift,
 	});
 
-	window.ApprovalView = Backbone.View.extend({
+	Scheduleme.classes.views.ApprovalView = Backbone.View.extend({
 
 		tagName: 'div',
 		template: _.template($('#approval-template').html()),
@@ -180,11 +197,11 @@ $(function() {
 	});
 //------------------PAYLOAD----------------------------
 
-		window.Schedules = new Schedules();
-		window.SchedulesView = new SchedulesView({collection: Schedules});
+		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+		Scheduleme..SchedulesView = new SchedulesView({collection: Schedules});
 
-		var Router = new AppRouter;
-		Router.init=1;
+		Schedule.Router = new AppRouter;
+		Schedule.Router.init=1;
 		Backbone.history.start();
 
 });
