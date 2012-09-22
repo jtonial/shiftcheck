@@ -39,13 +39,13 @@ class RestSQL {
 		//I should probably escape all data here, as one string, before it is decoded
 		$this->data=json_decode(file_get_contents('php://input'), true);
 
-		if (isset($_SESSION['employeeid'])) { //This should not check a retailer session; it should check a provided apiKey
-			$this->id=$_SESSION['employeeid'];
+		if (isset($_SESSION['employee_id'])) { //This should not check a retailer session; it should check a provided apiKey
+			$this->id=$_SESSION['employee_id'];
 			$this->user_type = 'employee';
 
 			$this->authorized = true;
-		} else if (isset($_SESSION['employerid'])) {
-			$this->id=$_SESSION['employerid'];
+		} else if (isset($_SESSION['employer_id'])) {
+			$this->id=$_SESSION['employer_id'];
 			$this->user_type = 'employer';
 			$this->authorized = true;
 		} else if (isset($_GET['sessionOverride'])) {
