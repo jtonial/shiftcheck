@@ -24,7 +24,7 @@ $(function() {
 	
 		//url:,
 		
-		model: Employee,
+		model: Schedule.classes.models.Employee,
 
 	});
 
