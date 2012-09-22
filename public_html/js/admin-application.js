@@ -97,7 +97,7 @@ $(function() {
 		}
 	});
 
-	Schedulme.classes.views.ScheduleView = Backbone.View.extend({
+	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
 		//Create the frame
 		initialize: function () {
