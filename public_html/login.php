@@ -12,7 +12,7 @@ $email=mysql_real_escape_string($_POST['email']);
 
 if (!isset($_SESSION['userid'])) {
 	if (isset($_POST['email'])){
-		$query="SELECT employee_id,password FROM users WHERE email='".$email."' LIMIT 1";
+		$query="SELECT employee_id,password FROM employees WHERE email='".$email."' LIMIT 1";
 		//$query="SELECT *, TIME_TO_SEC(TIMEDIFF(NOW(), `lastattempt_date`)) as timediff FROM nrmitchi_php.users WHERE email='testnrmitchi@hotmail.com' LIMIT 1";
 		//$_POST['password'] = $_GET['password']; //Used for testing
 		//echo "<br/><br/>".$query;
