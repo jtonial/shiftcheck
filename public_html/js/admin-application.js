@@ -8,9 +8,8 @@ $(function() {
 		},
 		helpers: {},
 
-		Receipts: {},
-		Cards: {},
-		Messages: {},
+		Schedules: {},
+		SchedulesView: {},
 
 		Init: function () {},
 
@@ -198,7 +197,7 @@ $(function() {
 //------------------PAYLOAD----------------------------
 
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
-		Scheduleme..SchedulesView = new SchedulesView({collection: Schedules});
+		Scheduleme.SchedulesView = new SchedulesView({collection: Schedules});
 
 		Schedule.Router = new AppRouter;
 		Schedule.Router.init=1;
