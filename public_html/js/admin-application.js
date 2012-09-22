@@ -99,7 +99,7 @@ $(function() {
 		el: $('.page.schedules'),
 
 		initialize: function () {
-			this.collection = typeof this.collection !== 'undefined' ? this.collection : new Schedules();
+			this.collection = typeof
 			this.collection.bind('add',this.addOneSchedule, this);
 		},
 
