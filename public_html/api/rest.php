@@ -406,7 +406,7 @@ class RestSQL {
 	function getSchedule ($date) {
 		$this->trace[]='getSchedule';
 		try {
-			$query = "SELECT `shift_id`, `employer_id`, `date`, `start_time`, `end_time`, `position`, `employee_id` FROM `shifts` WHERE date=DATE('$date') ORDER BY date,start_time ASC";
+			$query = "SELECT `shift_id`, `employer_id`, `date`, `start_time`, `end_time`, `position`, `employee_id` FROM `shifts` WHERE date=DATE('$date') and employer_id='$this->id' ORDER BY date,start_time ASC";
 			$resource=$this->db->query($query);
 			if (!$resource) {
 				throw new Exception ('Query failure in getSchedule');
