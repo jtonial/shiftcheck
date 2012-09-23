@@ -411,7 +411,7 @@ class RestSQL {
 				throw new Exception ('Query failure in getSchedule');
 			}
 			$return=array();
-			$return['date'];
+			$return['date']=$date;
 			while ($row=$this->db->row($resource)) {
 				$return['shifts'][]=$row;
 			}
