@@ -131,7 +131,7 @@ $(function() {
 
 			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
 			var d = new Date(datenum);
-			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+d.getDate()+1; //This will be the date string
+			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
 			this.$('#dates.nav-tabs div').before('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
 
 			this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
