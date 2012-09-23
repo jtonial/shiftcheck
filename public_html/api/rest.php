@@ -201,7 +201,7 @@ class RestSQL {
 				$this->addEmployee();
 				break;
 			case 'PUT':
-				if (isset($this->component[2]))
+				if (isset($this->component[2])) {
 					if ($this->component[2] == 'passSet') {
 						$this->updateEmployeePassSet($this->component[1]);
 					}
