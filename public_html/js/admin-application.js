@@ -57,9 +57,9 @@ $(function() {
 			this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
 
 			var that = this;
-			$.each(this.get('shifts'), function (shift) {
-				console.log('adding shift: '+JSON.stringify(shift));
-				that.shifts.add(shift);
+			$.each(this.get('shifts'), function (index, shift) {
+				console.log('adding shift: '+JSON.stringify(this));
+				that.shifts.add(this);
 			});
 
 		}
