@@ -129,11 +129,11 @@ $(function() {
 			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
+			var d=schedule.get('date');//'2012-01-01';//This will be the real date
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+d.getDate()+1; //This will be the date string
-			this.$('#dates.nav-tabs div').before('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
+			this.$('#dates.nav-tabs div').before('<li><a href="#'+d+'" data-toggle="tab">'+datestring+'</a></li>');
 
-			this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
+			this.$('.tab-content').append('<div class="tab-pane" id="'+d+'"></div>');
 			
 		},
 	});
