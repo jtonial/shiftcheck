@@ -425,7 +425,16 @@ class RestSQL {
 		$this->trace[]='getSchedules';
 		if ($this->user_type == 'employer') {
 			try {
-				$query = "SELECT `shift_id`, `employer_id`, `date`, `start_time`, `end_time`, `position`, `employee_id` FROM `shifts` WHERE date>=DATE(NOW()) and employer_id='$this->id' ORDER BY date,start_time ASC";
+				$dateQuery="SELECT DISTINCT(date) FROM shifts WHERE employer_id='$this->id' ORDER BY date";
+				$dateResource=$this->db->query($dateQuery);
+				if (!$dateResource) {
+					throw new Exception ('Query failure in getSchedule date query');
+				}
+				while ($row=$this->db->row($dateResource)) {
+					$this->return['dates'][]=$row['date'];
+				}
+
+				$query="SELECT s.shift_id,s.employer_id,s.date,s.start_time,s.end_time,s.position,s.employee_id,e.name, e.enumber, e.phone FROM shifts as s JOIN employees as e USING (employee_id) WHERE date=DATE(NOW()) and s.employer_id='$this->id' ORDER BY date,start_time ASC";
 				$resource=$this->db->query($query);
 				if (!$resource) {
 					throw new Exception ('Query failure in getSchedule');
