@@ -55,6 +55,12 @@ $(function() {
 		initialize: function () {
 			this.shifts = new Scheduleme.classes.collections.Shifts();
 			this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
+
+			var that = this;
+			$.each(this.get('shifts'), function (shift) {
+				that.shifts.add(shift);
+			});
+
 		}
 
 	});
