@@ -201,8 +201,12 @@ class RestSQL {
 				$this->addEmployee();
 				break;
 			case 'PUT':
-				if (isset($this->uid)) {
-					$this->updateEmployee();
+				if (isset($this->component[2]))
+					if ($this->component[2] == 'passSet') {
+						$this->updateEmployeePassSet($this->component[1]);
+					}
+				} else if (isset($this->component[1])) {
+					$this->updateEmployee($this->component[1]);
 				} else {
 					$this->unavailable();
 				}
@@ -226,8 +230,8 @@ class RestSQL {
 				$this->addEmployer();
 				break;
 			case 'PUT':
-				if (isset($this->uid)) {
-					$this->updateEmployer();
+				if (isset($this->component[1])) {
+					$this->updateEmployer($this->component[1]);
 				} else {
 					$this->unavailable();
 				}
@@ -245,8 +249,8 @@ class RestSQL {
 		$this->trace[]='shifts';
 		switch ($this->method) {
 			case 'GET':
-				if (isset($this->uid)) {
-					$this->getShift();
+				if (isset($this->component[1])) {
+					$this->getShift($shift);
 				} else {
 					$this->unavailable();
 				}
@@ -255,15 +259,15 @@ class RestSQL {
 				$this->addShift();
 				break;
 			case 'PUT':
-				if (isset($this->uid)) {
-					$this->updateShift();
+				if (isset($this->component[1])) {
+					$this->updateShift($this->component[1]);
 				} else {
 					$this->unavailable();
 				}
 				break;
 			case 'DELETE':
-				if (isset($this->uid)) {
-					$this->removeShift();
+				if (isset($this->component[1])) {
+					$this->removeShift($this->component[1]);
 				} else {
 					$this->unavailable();
 				}
@@ -344,7 +348,7 @@ class RestSQL {
 //-----------------------------------------EMPLOYEES-----------------------------------------
 	function getEmployees(){
 		if ($this->user_type == 'employer') {
-			$query="SELECT * FROM employees WHERE employerid='$this->id'";
+			$query="SELECT * FROM employees WHERE employer_id='$this->id'";
 			$response=$this->db->query($query);
 		}
 	$this->success();
@@ -358,15 +362,28 @@ class RestSQL {
 		}
 	$this->success();
 	}
-	function updateEmployee(){
+	function updateEmployee($employee){
+
+		//New values
+		$name = $this->db->escape($this->data['name']);
+		$enumber = $this->db->escape($this->data['']);
+		$email = $this->db->escape($this->data['email']);
+		$phone = $this->db->escape($this->data['phone']);
+		$password = $this->db->escape($this->data['password']);
+
 		if ($this->user_type == 'employer') {
 
 		} else if ($this->user_type == 'employee') {
 			
 		}
-	$this->success();
+		$this->success();
 	}
-	function removeEmployee(){
+	function updateEmployeePassSet($employee) {
+		if ($this->user_type == 'employee') {
+			$query = "UPDATE employees SET emp_pass_set=1 WHERE employee_id='$this->id'";
+		}
+	}
+	function removeEmployee($employee){
 		if ($this->user_type == 'employer') {
 			
 		}
@@ -379,7 +396,7 @@ class RestSQL {
 	function addEmployer(){
 		$this->unavailable();
 	}
-	function updateEmployer(){
+	function updateEmployer($employer){
 		if ($this->user_type == 'employer') {
 
 		}
@@ -406,19 +423,23 @@ class RestSQL {
 	function getSchedules () {
 		//Return future schedules
 		$this->trace[]='getSchedules';
-		try {
-			$query = "SELECT `shift_id`, `employer_id`, `date`, `start_time`, `end_time`, `position`, `employee_id` FROM `shifts` WHERE date>=DATE(NOW()) ORDER BY date,start_time ASC";
-			$resource=$this->db->query($query);
-			if (!$resource) {
-				throw new Exception ('Query failure in getSchedule');
+		if ($this->user_type == 'employer') {
+			try {
+				$query = "SELECT `shift_id`, `employer_id`, `date`, `start_time`, `end_time`, `position`, `employee_id` FROM `shifts` WHERE date>=DATE(NOW()) and employer_id='$this->id' ORDER BY date,start_time ASC";
+				$resource=$this->db->query($query);
+				if (!$resource) {
+					throw new Exception ('Query failure in getSchedule');
+				}
+				$return=array();
+				while ($row=$this->db->row($resource)) {
+					$return[]=$row;
+				}
+				$this->return['data']=$return;
+			} catch (Exception $e) {
+				$this->criticalFailure($e->getMessage());
 			}
-			$return=array();
-			while ($row=$this->db->row($resource)) {
-				$return[]=$row;
-			}
-			$this->return['data']=$return;
-		} catch (Exception $e) {
-			$this->criticalFailure($e->getMessage());
+		} else if ($this->user_type == 'employee') {
+
 		}
 	}
 //-------------------------------------------SHIFTS------------------------------------------
@@ -435,7 +456,7 @@ class RestSQL {
 					}
 		*/
 	}
-	function addShift(){
+	function addShift($shift){
 		if ($this->user_type == 'employer') {
 			$date=$this->db->escape($this->data['date']);
 			$start_time=$this->db->escape($this->data['start_time']);
@@ -443,7 +464,7 @@ class RestSQL {
 			$position=$this->db->escape($this->data['position']);
 			$employee_id=$this->db->escape($this->data['employee_id']);
 
-			$query="INSERT INTO shifts (employer_id,date,start_time,end_time,position,employee_id) VALUES ('$this->id','$date','$start_time','$end_time','$position','$employee_id')";
+			$query="INSERT INTO shifts (employer_id,date,start_time,end_time,position,employee_id) VALUES ('$shift','$date','$start_time','$end_time','$position','$employee_id')";
 			if ($response = $this->db->query($query)) {
 				$this->success();
 			} else {
@@ -453,7 +474,7 @@ class RestSQL {
 			$this->unauthorized();
 		}
 	}
-	function updateShift(){
+	function updateShift($shift){
 		if ($this->user_type == 'employer') {
 			$update='';
 
@@ -482,7 +503,7 @@ class RestSQL {
 			$this->unauthorized();
 		}
 	}
-	function removeShift(){
+	function removeShift($shift){
 		if ($this->user_type == 'employer') {
 			$query="DELETE FROM shifts WHERE shift_id='$this->uid'";
 			if ($this->db->query($query)) {
