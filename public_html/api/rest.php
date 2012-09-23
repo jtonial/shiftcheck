@@ -403,9 +403,25 @@ class RestSQL {
 	$this->success();
 	}
 //-----------------------------------------SCHEDULES-----------------------------------------
+	function fetchSchedule($date) {
+		try {
+			$query = "SELECT s.shift_id,s.employer_id,s.date,s.start_time,s.end_time,s.position,s.employee_id,e.name, e.enumber, e.phone FROM shifts as s JOIN employees as e USING (employee_id) WHERE date=DATE('$date') and s.employer_id='$this->id' ORDER BY date,start_time ASC";
+			$resource=$this->db->query($query);
+			if (!$resource) {
+				throw new Exception ('Query failure in getSchedule');
+			}
+			$return=array();
+			while ($row=$this->db->row($resource)) {
+				$return[]=$row;
+			}
+		} catch (Exception $e) {
+			$this->criticalFailure($e->getMessage());
+		}
+		return $return;
+	}
 	function getSchedule ($date) {
 		$this->trace[]='getSchedule';
-		try {
+	/*	try {
 			$query = "SELECT s.shift_id,s.employer_id,s.date,s.start_time,s.end_time,s.position,s.employee_id,e.name, e.enumber, e.phone FROM shifts as s JOIN employees as e USING (employee_id) WHERE date=DATE('$date') and s.employer_id='$this->id' ORDER BY date,start_time ASC";
 			$resource=$this->db->query($query);
 			if (!$resource) {
@@ -418,7 +434,9 @@ class RestSQL {
 			$this->return['data']=$return;
 		} catch (Exception $e) {
 			$this->criticalFailure($e->getMessage());
-		}
+		}*/
+
+		$this->return['data']=$this->fetchSchedule($date);
 	}
 	function getSchedules () {
 		//Return future schedules
@@ -431,10 +449,11 @@ class RestSQL {
 					throw new Exception ('Query failure in getSchedule date query');
 				}
 				while ($row=$this->db->row($dateResource)) {
-					$this->return['dates'][]=$row['date'];
+					//$this->return['dates'][]=$row['date'];
+					$this->return['data'][$row['date']]=$this->fetchSchedule($row['date']);
 				}
 
-				$query="SELECT s.shift_id,s.employer_id,s.date,s.start_time,s.end_time,s.position,s.employee_id,e.name, e.enumber, e.phone FROM shifts as s JOIN employees as e USING (employee_id) WHERE date=DATE(NOW()) and s.employer_id='$this->id' ORDER BY date,start_time ASC";
+				/*$query="SELECT s.shift_id,s.employer_id,s.date,s.start_time,s.end_time,s.position,s.employee_id,e.name, e.enumber, e.phone FROM shifts as s JOIN employees as e USING (employee_id) WHERE date=DATE(NOW()) and s.employer_id='$this->id' ORDER BY date,start_time ASC";
 				$resource=$this->db->query($query);
 				if (!$resource) {
 					throw new Exception ('Query failure in getSchedule');
@@ -443,7 +462,7 @@ class RestSQL {
 				while ($row=$this->db->row($resource)) {
 					$return[]=$row;
 				}
-				$this->return['data']=$return;
+				$this->return['data']=$return;*/
 			} catch (Exception $e) {
 				$this->criticalFailure($e->getMessage());
 			}
