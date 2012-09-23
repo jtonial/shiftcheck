@@ -58,6 +58,7 @@ $(function() {
 
 			var that = this;
 			$.each(this.get('shifts'), function (shift) {
+				console.log('adding shift: '+JSON.stringify(shift));
 				that.shifts.add(shift);
 			});
 
