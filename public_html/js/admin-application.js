@@ -62,6 +62,10 @@ $(function() {
 	Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
 		url: 'api/schedules',
 		model: Scheduleme.classes.models.Schedule,
+
+		parse: function (data) {
+			return data.data;
+		}
 	});
 
 	Scheduleme.classes.views.ShiftView = Backbone.View.extend({
