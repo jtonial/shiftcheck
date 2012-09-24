@@ -39,7 +39,10 @@ $(function() {
 	});
 
 	Scheduleme.classes.models.Shift = Backbone.Model.extend({
-	
+
+		initialize: function () {	
+			console.log('adding shift: '+this.toJSON());
+		}
 	});
 	Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
 
@@ -58,7 +61,6 @@ $(function() {
 
 			var that = this;
 			$.each(this.get('shifts'), function (index, shift) {
-				console.log('adding shift: '+JSON.stringify(this));
 				that.shifts.add(this);
 			});
 
