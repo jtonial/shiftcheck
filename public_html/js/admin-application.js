@@ -63,6 +63,7 @@ $(function() {
 			$.each(this.get('shifts'), function (index, shift) {
 				console.log('adding shift: '+index);
 				that.shifts.add(this);
+				//that.shifts.add(new Scheduleme.classes.model.Shift({model:shift});
 			});
 
 		}
