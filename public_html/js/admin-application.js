@@ -114,6 +114,9 @@ $(function() {
 
 	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
+		//template: Handlebars.compile($('#receipt-template').html()),
+		template: _.template($('#schedule-template').html()),
+		
 		//Create the frame
 		initialize: function () {
 			var that=this;
@@ -123,14 +126,19 @@ $(function() {
 				that._shiftViews.push(new ShiftView ({model: shift}));
 			});
 		},
+
 		//Add in views for each shift in the schedule
+		render: function () {
+			$(this.el).html(this.template(this.model.toJSON()));
+			return this;
+		}
 
 	});
 	Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		el: $('.page.schedules'),
 
 		initialize: function () {
-			this.collection = typeof
+			//this.collection = typeof
 			this.collection.bind('add',this.addOneSchedule, this);
 		},
 
@@ -145,6 +153,9 @@ $(function() {
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
 			this.$('#dates.nav-tabs div').before('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
 
+			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule});
+
+			//this.$('.tab-content').append(view.render());
 			this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
 			
 		},
