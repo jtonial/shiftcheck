@@ -147,11 +147,12 @@ $(function() {
 
 			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+			var sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
 			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
 			var d = new Date(datenum);
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
-			this.$('#dates.nav-tabs div').before('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
+			this.$('#dates.nav-tabs div').before('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+sups[(d.getDate+1)%10]+'</a></li>');
 
 			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule});
 
