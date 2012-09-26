@@ -122,9 +122,11 @@ $(function() {
 			var that=this;
 			this._shiftViews = [];
 
-			this.collection.each(function(shift) {
-				that._shiftViews.push(new ShiftView ({model: shift}));
-			});
+			if (typeof this.collection != 'undefined') {
+				this.collection.each(function(shift) {
+					that._shiftViews.push(new ShiftView ({model: shift}));
+				});
+			}
 		},
 
 		//Add in views for each shift in the schedule
