@@ -30,7 +30,7 @@ class RestSQL {
 	 * request method used and parses the request URL to find out the requested table name and primary key values.
 	 * @param str iniFile Configuration file to use
 	 */
-	function RestSQL($iniFile = '../../Connections/api.ini') {
+	function RestSQL($iniFile = '../../config/api.ini') {
 		session_start();
 		$this->config = parse_ini_file($iniFile, TRUE);
 		$this->connect(); //Establish database connection
@@ -104,7 +104,7 @@ class RestSQL {
 	function connect() {
   	      
 		$database = $this->config['database']['type'];
-		require_once($database.'.php');
+		require_once('../../includes/'.$database.'.php');
 		$this->db = new $database(); 
 		if (isset($this->config['database']['username']) && isset($this->config['database']['password'])) {
 			if (!$this->db->connect($this->config['database'])) {
