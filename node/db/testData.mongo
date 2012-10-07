@@ -1,0 +1,117 @@
+use schedule
+
+db.createCollection('employees');
+db.createCollection('employers');
+db.createCollection('schedules');
+
+db.employees.ensureIndex({ email:1 },{unique:true});
+db.employers.ensureIndex({ email:1 },{unique:true});
+db.schedules.ensureIndex({ _id:1, date:1 },{unique:true});
+
+function employeeId(email) {
+	var ret = db.employeess.findOne({ email:email }, {_id:1});
+	return ret._id;
+}
+function employerId(name) {
+	var ret = db.employers.findOne({ name:name }, {_id:1});
+	return ret._id;
+}
+
+db.employers.insert(
+	{
+		name:'McDonalds'
+		email:'mcds@nrmitchi.ca',
+		password:'',
+		positions: ['WN','DT','BK','LB','MB'],
+		contact_info: {
+			email: 'mcds@nrmitchi.ca',
+			phone: '123-456-7890',
+			address: '6410 Millcreek Drive'
+		},
+		last_login:new Date(),
+		login_count:'0',
+		reg_time:new Date()
+	}
+)
+db.employers.insert(
+	{
+		name:'Tim Hortons'
+		email:'timmies@nrmitchi.ca',
+		password:'',
+		positions: ['WN','DT','BK','LB','MB','TIMMIES'],
+		contact_info: {
+			email: 'timmies@nrmitchi.ca',
+			phone: '012-345-6789',
+			address: '6666 Winston Churchill Blvd'
+		},
+		last_login:new Date(),
+		login_count:'0',
+		reg_time:new Date()
+	}
+)
+
+db.employees.insert(
+	{
+		email: 'nick@nrmitchi.ca',
+		password: '',
+		first_name: 'Nick',
+		last_name: 'Mitchinson',
+		employer: employerId('McDonalds'),
+		positions: ['BK','WN','DT'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'jack@nrmitchi.ca',
+		password: '',
+		first_name: 'Jack',
+		last_name: 'Johnson',
+		employer: employerId('McDonalds'),
+		positions: ['BK','WN'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'john@nrmitchi.ca',
+		password: '',
+		first_name: 'John',
+		last_name: 'Jackson',
+		employer: employerId('McDonalds'),
+		positions: ['WN','DT'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'santa@nrmitchi.ca',
+		password: '',
+		first_name: 'Santa',
+		last_name: 'Clause',
+		employer: employerId('Time Hortons'),
+		positions: ['BK'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'holly@nrmitchi.ca',
+		password: '',
+		first_name: 'Holly',
+		last_name: 'Smithson',
+		employer: employerId('Tim Hortons'),
+		positions: ['WN'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
