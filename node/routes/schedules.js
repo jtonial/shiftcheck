@@ -64,39 +64,44 @@ exports.load = function (req, res) {
 };
 exports.create = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
-		var email = req.body.email;
-		var password = calcHash(req.body.password);
-		var first_name = req.body.first_name;
-		var last_name = req.body.last_name;
-		var employer = req.session.employerid; //Current employer
-		var positions = req.body.positions;
+		var employer = req.body.employer;
+		var date = ISODate(req.body.date);
 
-		var employee = new Employee ({
-			email: email ,
-			password: password,
-			first_name: first_name,
-			last_name: last_name,
-			employer: company,
-			positions: positions,
-			last_login:'',
-			login_count:0,
-			reg_time:new Date()
+		//I have no idea if this is going to work... I will have to check after I html2jade the html files and have the ability to sign in
+		var shifts = new Array();
+
+		req.body.shifts.forEach(function (x) {
+			var y = new Object();
+			y._id = new mongoose.Schema.ObjectId()
+			y.employee = x.employee;
+			y.start_time = x.start_time;
+			y.end_time = x.end_time;
+			y.position = x.position;
+			y.upforgrabs = false;
+			shifts.push(y);
 		});
 
-		employee.save(function (err) {
+		var schedule = new Schedule ({
+			employer: employer,
+			date: date,
+			creation_time:new Date(),
+			shifts: shifts
+		});
+
+		schedule.save(function (err) {
 			if (!err) {
-				console.log('New Employee created');
+				console.log('New Schedule created');
 				res.statusCode = 201;
 			} else { //There was an error
-				console.log('There was an error creating an employee: '+err);
+				console.log('There was an error creating a schedule: '+err);
 				res.statusCode = 401;
 			}
-			res.end('Employee - create');
+			res.end('Schedule - create');
 		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?
 		res.end();
-		console.log('Unauthorized access attempt: create employee');
+		console.log('Unauthorized access attempt: create schedule');
 	}
 };
 

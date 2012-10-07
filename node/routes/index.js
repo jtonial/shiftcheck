@@ -6,7 +6,8 @@ calcHash = function (val) {
 	var shasum = crypto.createHash('sha1')
 		, salt = 'schedule12101991';
 
-	return shasum.update(val+salt).digest('hex');
+	//return shasum.update(val+salt).digest('hex');
+	return val;
 }
 
 exports.index = function(req, res){

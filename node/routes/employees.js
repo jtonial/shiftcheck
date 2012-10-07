@@ -6,7 +6,8 @@ calcHash = function (val) {
 	var shasum = crypto.createHash('sha1')
 		, salt = 'schedule12101991';
 
-	return shasum.update(val+salt).digest('hex');
+	//return shasum.update(val+salt).digest('hex');
+	return val;
 }
 
 exports.loadOne = function(req, res){
@@ -108,6 +109,19 @@ exports.update = function(req, res) {
 exports.changePassword = function(req,res){
 	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
 		//Update Password
+		var oldPassword = req.body.oldpassword;
+		var newPassword = req.body.newpassword;
+		models.Employee.update( { _id:req.session.employeeid, password:oldPassword }, { password:newpassword }, { multi:false }, function(err, numAffected) {
+			if (!err) {
+				//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
+				console.log('Employee '+req.session.employeeid+' password updated');
+				res.statusCode = 200;
+				res.end("Password Updated");
+			} else { //An error
+				res.statusCode = 499;
+				res.end('There was an error.. not sure what i should do here');
+			}
+		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?
 		res.end();

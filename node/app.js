@@ -38,6 +38,8 @@ app.post('/logout', routes.logout);
 
 app.get('/signup', routes.signup);
 
+//Me
+
 //Employee
 app.get('/employees', employees.load);
 app.get('/employees/:id', employees.loadOne);
@@ -46,9 +48,10 @@ app.put('/employees', employees.update);
 app.delete('/employees/:id', employees.delete);
 
 //Employers
-app.get('/employers', employers.load);
-app.get('/employers/:id', employers.loadOne);
+app.get('/employers', employers.loadMe);
+app.get('/employers/all', employers.load);
 app.post('/employers', employers.create);
+app.put('/employers/:id', employers.update);
 app.delete('/employers/:id', employers.delete);
 
 //Schedules

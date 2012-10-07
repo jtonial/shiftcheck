@@ -1,7 +1,3 @@
-/*
- * Should I split these into seperate modules, so that the users.js route doesnt load unnecessary models? If I do that, where should I require(mongoose) and start the connection
- */
-
 var  mongoose = require('mongoose')
 	//, mongo  = require('mongodb')
 	;
@@ -28,6 +24,7 @@ var EmployerSchema = new mongoose.Schema({
 		phone: String,
 		address: String
 	},
+	img: String,
 	last_login: Date,
 	login_count: Number,
 	reg_time: Date
@@ -39,14 +36,16 @@ var ShiftSchema = new mongoose.Schema({
 	end_time: Date,
 	position: String,
 	upforgrabs: Boolean,
-	history: {
-		from: mongoose.Schema.ObjectId,
-		to: mongoose.Schema.ObjectId,
-		posted_time: Date,
-		request_time: Date,
-		approved_time: Date,
-		approved_by: String,
-	}
+	history: [
+		{
+			from: mongoose.Schema.ObjectId,
+			to: mongoose.Schema.ObjectId,
+			posted_time: Date,
+			request_time: Date,
+			approved_time: Date,
+			approved_by: String,
+		}
+	]
 })
 var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
