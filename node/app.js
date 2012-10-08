@@ -1,5 +1,6 @@
 
 var express = require('express')
+	, config = require('./config/config')
   , routes = require('./routes')
   , employees = require('./routes/employees')
   , employers = require('./routes/employers')
@@ -12,7 +13,7 @@ var app = express();
 var store = new express.session.MemoryStore;
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || config.port );
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());

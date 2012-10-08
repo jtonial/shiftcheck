@@ -1,4 +1,5 @@
 var  mongoose = require('mongoose')
+	, config = require('../config/config');
 	//, mongo  = require('mongodb')
 	;
 
@@ -54,8 +55,8 @@ var ScheduleSchema = new mongoose.Schema({
 	shifts: [ShiftSchema]
 })
 
-var dbhost = 'localhost'
-	, dbdb = 'schedule'
+var dbhost = config.mongo_host
+	, dbdb = config.mongo_db
 	;
 var db2 = mongoose.createConnection(dbhost, dbdb);
 db2.on('error', function () {
