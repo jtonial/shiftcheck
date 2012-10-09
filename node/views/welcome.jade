@@ -7,7 +7,7 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
     // Le styles
-    link(href='bootstrap/css/bootstrap.css', rel='stylesheet')
+    link(href='css/bootstrap.css', rel='stylesheet')
     style
       body {
       padding-top: 60px;
@@ -28,9 +28,9 @@ html(lang='en')
           .nav-collapse
             ul.nav.pull-right
               li
-                a(href='admin-login.php') Admin Login
+                a(href='admin-login') Admin Login
               li
-                a(href='login.php') Login
+                a(href='login') Login
           // /.nav-collapse
     .container
       .row
@@ -40,7 +40,7 @@ html(lang='en')
             | Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
           p
             | If you would like to discuss how Schedule.me can work with your business, please contact me at
-            a(href='mailto:nrmitchi@gmail.com') nrmitchi@gmail.com
+            a(href='mailto:nrmitchi@gmail.com')  nrmitchi@gmail.com
       .row
         h3 Features:
         .span4
@@ -65,11 +65,8 @@ html(lang='en')
             p
               | We make pricing simple, at just 50
               sup &cent
-              | per employee per month.
+              |  per employee per month.
     // /container
-    //
-       Le javascript
-          ================================================== 
     // Placed at the end of the document so the pages load faster
     script(src='./js/jquery.js')
     script(src='./bootstrap/js/bootstrap.js')
