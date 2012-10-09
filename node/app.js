@@ -7,13 +7,26 @@ var express = require('express')
   , schedules = require('./routes/schedules')
   , grabs = require('./routes/grabs')
   , http = require('http')
-  , path = require('path');
+ 	, https = require('https')
+	, path = require('path')
+	, fs = require('fs')
+	;
+
+
+var key = fs.readFileSync(config.ssl_key);
+var cert = fs.readFileSync(config.ssl_cert)
+console.log('Key: '+key+'Cert: '+cert)
+var https_options = {
+	key: key,
+	cert: cert
+};
 
 var app = express();
 var store = new express.session.MemoryStore;
 
 app.configure(function(){
   app.set('port', process.env.PORT || config.port );
+  app.set('ssl_port', process.env.PORT || config.ssl_port );
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -25,54 +38,66 @@ app.configure(function(){
   app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
+
+	
+	app.get('/', routes.index);
+	app.get('/login', routes.login);
+	app.post('/login', function(req, res) {
+		if (req.secure) {
+			routes.loginProcess(req, res);
+		} else {
+			res.statusCode = 308;
+			res.end('{"reason":"This can only be done over SSL"}');
+		}
+	});
+	app.get('/logout', routes.logout);
+	app.post('/logout', routes.logout);
+
+	app.get('/admin-login', routes.adminloginPage);
+	app.post('/admin-login', routes.adminloginProcess);
+
+	app.get('/signup', routes.signup);
+
+
+	//Me
+
+	//Employee
+	app.get('/employees', employees.load);
+	app.get('/employees/:id', employees.loadOne);
+	app.post('employees', employees.create);
+	app.put('/employees', employees.update);
+	app.delete('/employees/:id', employees.delete);
+
+	//Employers
+	app.get('/employers', employers.loadMe);
+	app.get('/employers/all', employers.load);
+	app.post('/employers', employers.create);
+	app.put('/employers/:id', employers.update);
+	app.delete('/employers/:id', employers.delete);
+
+	//Schedules
+	app.get('/schedules', schedules.load);
+	app.get('/schedules/:date', schedules.loadDate);
+	app.post('/schedules', schedules.create);
+	app.post('/schedules/upload', schedules.processUpload);
+
+	//Grabs and Requests
+	app.get('/upforgrabs', grabs.load);
+	app.post('/upforgrabs/:id', grabs.create);
+	app.post('/upforgrabs/:id/request', grabs.addRequest);
+
+	app.get('/requests', grabs.getRequests);
+	app.post('/requests/:id', grabs.respondRequest);
+	app.delete('/requests/:id', grabs.deleteRequest);
 });
 
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
-app.get('/login', routes.loginPage);
-app.post('/login', routes.loginProcess);
-app.get('/admin-login', routes.adminloginPage);
-app.post('/admin-login', routes.adminloginProcess);
-app.get('/logout', routes.logout);
-app.post('/logout', routes.logout);
-
-app.get('/signup', routes.signup);
-
-//Me
-
-//Employee
-app.get('/employees', employees.load);
-app.get('/employees/:id', employees.loadOne);
-app.post('employees', employees.create);
-app.put('/employees', employees.update);
-app.delete('/employees/:id', employees.delete);
-
-//Employers
-app.get('/employers', employers.loadMe);
-app.get('/employers/all', employers.load);
-app.post('/employers', employers.create);
-app.put('/employers/:id', employers.update);
-app.delete('/employers/:id', employers.delete);
-
-//Schedules
-app.get('/schedules', schedules.load);
-app.get('/schedules/:date', schedules.loadDate);
-app.post('/schedules', schedules.create);
-app.post('/schedules/upload', schedules.processUpload);
-
-//Grabs and Requests
-app.get('/upforgrabs', grabs.load);
-app.post('/upforgrabs/:id', grabs.create);
-app.post('/upforgrabs/:id/request', grabs.addRequest);
-
-app.get('/requests', grabs.getRequests);
-app.post('/requests/:id', grabs.respondRequest)
-app.delete('/requests/:id', grabs.deleteRequest);
-
-
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log("HTTP server listening on %s", app.get('port'));
 });
+https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
+	console.log('HTTPS server listening on %s', app.get('ssl_port'));
+})
