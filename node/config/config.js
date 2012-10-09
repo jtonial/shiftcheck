@@ -2,8 +2,8 @@ module.exports = config = {
 
 	"name" : "Schedule.me",
 
-  "port" : 8000,
-	"ssl_port" : 8443,
+  "port" : 80,
+	"ssl_port" : 443,
 
   "mongo_host" : "localhost",
   "mongo_port" : 27017,
