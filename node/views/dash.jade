@@ -1,0 +1,194 @@
+!!! 5
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Schedule.me
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='')
+    meta(name='author', content='nrmitchi')
+    // Le styles
+    link(href='css/bootstrap.css', rel='stylesheet')
+    style
+      body {
+      padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      } .page, .schedule {
+      display:none;
+      visibility:hidden;
+      } .page.active, .schedule.active {
+      display:block;
+      visibility:visible;
+      } .schedule-table {
+      width:100%;
+      padding:1px;
+      } .schedule-table tr {
+      height:20px;
+      } .schedule-table tr th {
+      text-align:center;
+      font-weight:bold;
+      width:3.75%;
+      /*max-width:3.75%;*/
+      } .schedule-table tr td {
+      width:3.75%;
+      /*max-width:3.75%;*/
+      } .schedule-table tr td.fill {
+      background-color:black;
+      /*} .schedule-table tr td {
+      } .schedule-table tr td {*/
+      } .schedule-table tr td.row-header {
+      width:10%;
+      min-width:175px;
+      } .schedule-hour {
+      padding:0;
+      } .schedule-hour tr td {
+      width:25%;
+      }
+    script(src='http://heapify.ca/js/jquery/jquery-1.7.2.min.js')
+    script(src='./js/bootstrap.js')
+    script(src='http://heapify.ca/js/underscore/underscore.js')
+    script(src='http://heapify.ca/js/backbone/backbone.js')
+    script(src='js/application.js')
+    // Le HTML5 shim, for IE6-8 support of HTML5 elements
+    //if lt IE 9
+      script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+  body
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.brand(href='#') schedule.me
+          .nav-collapse
+            ul.nav
+              li.link.shifts.active
+                a(href='#shifts') My Shifts
+              li.link.schedules
+                a(href='#schedules') Schedules
+              li.link.upforgrabs
+                a(href='#upforgrabs') Up for Grabs
+            ul.nav.pull-right
+              li.dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown')
+                  | My Account
+                  b.caret
+                ul.dropdown-menu
+                  li
+                    a(href='#account') Options
+                  li.divider
+                  li
+                    a(href='logout.php') Logout
+          // /.nav-collapse
+    .container
+      .page.shifts.active
+        h1 My Shifts
+        ul#shifts
+      .page.schedules
+        .row
+          .tabbable.tabs-left
+            ul#dates.nav.nav-tabs
+              li.nav-header Dates
+              li.active
+                a(href='#2012-08-20', data-toggle='tab')
+                  | Monday, August 20
+                  sup th
+              li
+                a(href='#2012-08-21', data-toggle='tab')
+                  | Tuesday, August 21
+                  sup st
+              li
+                a(href='#2012-08-22', data-toggle='tab')
+                  | Wednesday, August 22
+                  sup nd
+              li
+                a(href='#2012-08-23', data-toggle='tab')
+                  | Thursday, August 23
+                  sup rd
+              li
+                a(href='#2012-08-24', data-toggle='tab')
+                  | Friday, August 24
+                  sup th
+            .tab-content
+              #2012-08-20.tab-pane.active
+                h1 Today
+              #2012-08-21.tab-pane
+                h1 August 21
+              #2012-08-22.tab-pane
+                h1 August 22
+              #2012-08-23.tab-pane
+                p August 23
+              #2012-08-24.tab-pane
+                p August 24
+      .page.upforgrabs
+        h1 Up for Grabs
+        #search.row
+        #results.row
+          ul#results-list
+      .page.account
+        h1(style='margin-bottom: 15px;') Account Options
+        .form-horizontal
+          .control-group
+            label.control-label Email: 
+            .controls
+              input#email.input-large(type='text', disabled='disabled')
+              button#edit-email-trigger.btn Edit
+              button#save-email-trigger.btn.btn-primary(style='display: none;') Save
+              p
+          .control-group
+            label.control-label Change Password:
+            .controls.input-large
+              input#oldpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='Current Password')
+              input#newpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='New Password')
+              input#newpassword1.input-large(type='password', style='margin-bottom: 9px;', placeholder='Confirm New Password')
+              button#change-password-trigger.btn.input-large(type='button', style='margin-left: 0;') Change!
+              p
+    // /container
+    //
+       Le javascript
+          ================================================== 
+    // Placed at the end of the document so the pages load faster
+  script
+    $(document).ready(function () {
+    $('#edit-email-trigger').click(function () {
+    $('#email').removeAttr('disabled');
+    $('#save-email-trigger').show();
+    $(this).hide();
+    });
+    $('#save-email-trigger').click(function () {
+    function validateEmail(email) {
+    var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+    }
+    if (validateEmail($('#email').val())) {
+    console.log('email valid. changing email');
+    $('#email').attr('disabled','');
+    $('#edit-email-trigger').show();
+    $(this).hide();
+    } else {
+    console.log('the entered email is not valid');
+    }
+    });
+    $('#change-password-trigger').click(function () {
+    function validateOldPasswords () {
+    var newpass = $('#newpassword').val();
+    var newpass1 = $('#newpassword1').val();
+    if (newpass.length < 6) {
+    return 3;
+    }
+    if (newpass != newpass1) {
+    return 2;
+    }
+    return 1;
+    }
+    console.log('validating password change...');
+    var validate = validateOldPasswords();
+    if (validate == 1) {
+    console.log('Inputs valid.');
+    //Ajax request to change password
+    } else if (validate == 2) {
+    console.log('The new password entries must match.');
+    } else if (validate == 3) {
+    console.log('Your new password must be at last 6 characters long');
+    }
+    });
+    });
