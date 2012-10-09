@@ -7,13 +7,26 @@ var express = require('express')
   , schedules = require('./routes/schedules')
   , grabs = require('./routes/grabs')
   , http = require('http')
-  , path = require('path');
+ 	, https = require('https')
+	, path = require('path')
+	, fs = require('fs')
+	;
+
+
+var key = fs.readFileSync(config.ssl_key);
+var cert = fs.readFileSync(config.ssl_cert)
+
+var https_options = {
+	key: key,
+	cert: cert
+};
 
 var app = express();
 var store = new express.session.MemoryStore;
 
 app.configure(function(){
   app.set('port', process.env.PORT || config.port );
+  app.set('ssl_port', process.env.PORT || config.ssl_port );
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -67,10 +80,15 @@ app.post('/upforgrabs/:id', grabs.create);
 app.post('/upforgrabs/:id/request', grabs.addRequest);
 
 app.get('/requests', grabs.getRequests);
-app.post('/requests/:id', grabs.respondRequest)
+app.post('/requests/:id', grabs.respondRequest);
 app.delete('/requests/:id', grabs.deleteRequest);
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log("HTTP server listening on %s", app.get('port'));
 });
+//https.createServer(https_options, app).listen(app.get('ssl_port'));
+
+//, 'localhost', function() {
+//	console.log('HTTPS server listening on %s', app.get('ssl_port'));
+//})

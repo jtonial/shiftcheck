@@ -75,13 +75,16 @@ exports.create = function(req, res){
 };
 
 exports.addRequest = function(req, res) {
-	console.log('Update Employee ID: '+req.params.id);
-  res.send("Employee - update");
+	console.log('Add Request for shift:'+req.params.id);
+	var Request = new models.RequestSchema; //I dont know if i'm allowed to do this
+  res.send("Add Request");
 };
 
 exports.getRequests = function(req,res){
-	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
-		//Update Password
+	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
+		models.Employers.find ( {} , function(err, docs) {
+			
+		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?
 		res.end();

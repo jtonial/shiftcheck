@@ -15,6 +15,15 @@ var EmployeeSchema = new mongoose.Schema({
 	login_count:Number,
 	reg_time:Date
 })
+
+var RequestSchema = new mongoose.Schema({
+	_id: mongoose.Schema.ObjectId,
+	shift: mongoose.Schema.ObjectId,
+	from: mongoose.Schema.ObjectId,
+	to: mongoose.Schema.ObjectId,
+	posted_time: Date,
+	request_time: Date,
+})
 var EmployerSchema = new mongoose.Schema({
 	name: String,
 	email: String,
@@ -25,10 +34,19 @@ var EmployerSchema = new mongoose.Schema({
 		phone: String,
 		address: String
 	},
+	open_requests: [RequestSchema],
 	img: String,
 	last_login: Date,
 	login_count: Number,
 	reg_time: Date
+})
+var HistorySchema = new mongoose.Schema({
+	from: mongoose.Schema.ObjectId,
+	to: mongoose.Schema.ObjectId,
+	posted_time: Date,
+	request_time: Date,
+	approved_time: Date,
+	approved_by: String,
 })
 var ShiftSchema = new mongoose.Schema({
 	_id: mongoose.Schema.ObjectId,
@@ -36,17 +54,11 @@ var ShiftSchema = new mongoose.Schema({
 	start_time: Date,
 	end_time: Date,
 	position: String,
-	upforgrabs: Boolean,
-	history: [
-		{
-			from: mongoose.Schema.ObjectId,
-			to: mongoose.Schema.ObjectId,
-			posted_time: Date,
-			request_time: Date,
-			approved_time: Date,
-			approved_by: String,
-		}
-	]
+	upforgrabs: {
+		forgrabs: Boolean,
+		posted_time: Date
+	},
+	history: [HistorySchema]
 })
 var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
@@ -54,7 +66,6 @@ var ScheduleSchema = new mongoose.Schema({
 	creation_time: Date,
 	shifts: [ShiftSchema]
 })
-
 var dbhost = config.mongo_host
 	, dbdb = config.mongo_db
 	;
@@ -69,3 +80,5 @@ db2.once('open', function () {
 exports.Employee = db2.model('employees', EmployeeSchema);
 exports.Employer = db2.model('employers', EmployerSchema);
 exports.Schedule = db2.model('schedules', ScheduleSchema);
+exports.HistorySchema = HistorySchema;
+exports.RequestSchema = RequestSchema;
