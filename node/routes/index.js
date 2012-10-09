@@ -45,10 +45,53 @@ exports.loginProcess = function (req, res) {	//This will not return this after I
 	console.log('Email: '+email+'; Password: '+password);
 
 	//Access db to get users info
-	models.User.findOne ( {email: email}, function (err, docs) {
+	models.Employee.findOne ( {email: email}, function (err, docs) {
 		if (docs) {
 			if (docs.password == password) { //If signed in
-				req.session.userid = docs._id;
+				req.session.loggedin = true;
+				req.session.employeeid = docs._id;
+				req.session.email = email;
+				req.session.fname = docs.first_name;
+				req.session.lname = docs.last_name;
+				req.session.fullname = docs.first_name+' '+docs.last_name;
+				req.session.company = docs.company;
+
+				res.statusCode = 200;
+				res.end();
+				console.log('login success');
+			} else {
+				res.statusCode = 400;
+				res.end();
+				console.log('login failure');
+			}
+		} else {
+			res.statusCode = 400;
+			res.end();
+			console.log('login failure');
+		}
+	});
+};
+
+exports.adminloginPage = function (req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('admin-login', { title: 'Schedule.me' });
+};
+
+/*
+ * What should I do if a login request comes but a user is already signed in? Sign out the first use and in the new, or redirect to the dash with original user?
+ */
+exports.adminloginProcess = function (req, res) {	//This will not return this after I switch to an AJAX login. It will return a 200 code on success, or 400 with an error message on error
+	var email = req.body.email;
+	//This will have to be the hashed/salted password
+	var password = calcHash(req.body.password);
+	console.log('Email: '+email+'; Password: '+password);
+
+	//Access db to get users info
+	models.Employer.findOne ( {email: email}, function (err, docs) {
+		if (docs) {
+			if (docs.password == password) { //If signed in
+				req.session.loggedin = true;
+				req.session.employerid = docs._id;
 				req.session.email = email;
 				req.session.fname = docs.first_name;
 				req.session.lname = docs.last_name;

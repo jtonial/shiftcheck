@@ -1,0 +1,42 @@
+!!! 5
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Schedule.me
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='')
+    meta(name='author', content='nrmitchi')
+    link(href='./css/bootstrap.css', rel='stylesheet')
+    script(src='http://heapify.ca/js/jquery/jquery-1.7.2.min.js')
+    script(src='./js/bootstrap.js')
+    style
+      .navbar-static-top {
+      margin-bottom:20px;
+      }
+  body
+    .navbar.navbar-static-top
+      .navbar-inner
+        .container
+          a.brand(href='/') schedule.me
+          ul.nav.pull-right
+            li
+              a(href='admin-login') Admin Login
+            li.active
+              a(href='login') Login
+    .container
+      .wrapper(style='width: 500px; margin: 0 auto;')
+        .well
+          h1 Login
+          form.form-horizontal(action='', method='POST')
+            fieldset
+              .control-group
+                label.control-label(for='input01') Email: 
+                .controls
+                  input#email.input-xlarge(type='text', name='email')
+              .control-group
+                label.control-label(for='input01') Password: 
+                .controls
+                  input#password.input-xlarge(type='password', name='password')
+              .form-actions
+                button.btn.btn-primary.input-xlarge(type='submit') Login
+    // /container

@@ -32,8 +32,10 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.get('/login', routes.login);
+app.get('/login', routes.loginPage);
 app.post('/login', routes.loginProcess);
+app.get('/admin-login', routes.adminloginPage);
+app.post('/admin-login', routes.adminloginProcess);
 app.get('/logout', routes.logout);
 app.post('/logout', routes.logout);
 
