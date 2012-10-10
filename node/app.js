@@ -41,7 +41,7 @@ app.configure(function(){
 
 	
 	app.get('/', routes.index);
-	app.get('/login', routes.login);
+	app.get('/login', routes.loginPage);
 	app.post('/login', function(req, res) {
 		if (req.secure) {
 			routes.loginProcess(req, res);
