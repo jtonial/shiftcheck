@@ -15,7 +15,6 @@ var express = require('express')
 
 var key = fs.readFileSync(config.ssl_key);
 var cert = fs.readFileSync(config.ssl_cert)
-console.log('Key: '+key+'Cert: '+cert)
 var https_options = {
 	key: key,
 	cert: cert
@@ -39,17 +38,10 @@ app.configure(function(){
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
 
-	
 	app.get('/', routes.index);
 	app.get('/login', routes.loginPage);
-	app.post('/login', function(req, res) {
-		if (req.secure) {
-			routes.loginProcess(req, res);
-		} else {
-			res.statusCode = 308;
-			res.end('{"reason":"This can only be done over SSL"}');
-		}
-	});
+	app.post('/login', routes.loginProcess);
+
 	app.get('/logout', routes.logout);
 	app.post('/logout', routes.logout);
 
@@ -57,7 +49,6 @@ app.configure(function(){
 	app.post('/admin-login', routes.adminloginProcess);
 
 	app.get('/signup', routes.signup);
-
 
 	//Me
 
@@ -95,9 +86,20 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("HTTP server listening on %s", app.get('port'));
+//Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
+http.createServer(function (req, res) {		
+	var to = 'https://'+req.headers.host+req.url;
+	console.log('Redirecting to '+to);
+	res.writeHeader(302, {
+		'Location': to
+	});
+	res.end();
+}).listen(80, function () {
+	console.log('HTTP Redirect listening on 80');
 });
+/*http.createServer(app).listen(app.get('port'), function(){
+  console.log("HTTP server listening on %s", app.get('port'));
+});*/
 https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 	console.log('HTTPS server listening on %s', app.get('ssl_port'));
 })

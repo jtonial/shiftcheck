@@ -6,8 +6,8 @@ calcHash = function (val) {
 	var shasum = crypto.createHash('sha1')
 		, salt = 'schedule12101991';
 
-	//return shasum.update(val+salt).digest('hex');
-	return val;
+	return shasum.update(val+salt).digest('hex');
+	//return val;
 }
 
 exports.index = function(req, res){
@@ -47,7 +47,7 @@ exports.loginProcess = function (req, res) {	//This will not return this after I
 	//Access db to get users info
 	models.Employee.findOne ( {email: email}, function (err, docs) {
 		if (docs) {
-			if (docs.password == password) { //If signed in
+			if (docs.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
 				req.session.loggedin = true;
 				req.session.employeeid = docs._id;
 				req.session.email = email;
@@ -89,7 +89,7 @@ exports.adminloginProcess = function (req, res) {	//This will not return this af
 	//Access db to get users info
 	models.Employer.findOne ( {email: email}, function (err, docs) {
 		if (docs) {
-			if (docs.password == password) { //If signed in
+			if (docs.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
 				req.session.loggedin = true;
 				req.session.employerid = docs._id;
 				req.session.email = email;

@@ -8,6 +8,7 @@ html(lang='en')
     meta(name='author', content='nrmitchi')
     link(href='./css/bootstrap.css', rel='stylesheet')
     script(src='http://heapify.ca/js/jquery/jquery-1.7.2.min.js')
+    script(src='./js/login.js')
     script(src='./js/bootstrap.js')
     style
       .navbar-static-top {
@@ -27,7 +28,7 @@ html(lang='en')
       .wrapper(style='width: 500px; margin: 0 auto;')
         .well
           h1 Admin Login
-          form.form-horizontal(action='', method='POST')
+          form.form-horizontal(id="login-form")
             fieldset
               .control-group
                 label.control-label(for='input01') Email: 

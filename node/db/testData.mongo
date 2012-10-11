@@ -53,7 +53,7 @@ db.employers.insert(
 db.employees.insert(
 	{
 		email: 'nick@nrmitchi.ca',
-		password: '',
+		password: '01b3ad3301a0b79e9bae3f9b1feb6431a5513687',
 		first_name: 'Nick',
 		last_name: 'Mitchinson',
 		employer: employerId('McDonalds'),
@@ -66,7 +66,7 @@ db.employees.insert(
 db.employees.insert(
 	{
 		email: 'jack@nrmitchi.ca',
-		password: '',
+		password: '9a71241f7c521dd59795b8886f43c2011b567b3e',
 		first_name: 'Jack',
 		last_name: 'Johnson',
 		employer: employerId('McDonalds'),
@@ -79,7 +79,7 @@ db.employees.insert(
 db.employees.insert(
 	{
 		email: 'john@nrmitchi.ca',
-		password: '',
+		password: '2464438fce2dd0a04d56b748c70f87f260517d3d',
 		first_name: 'John',
 		last_name: 'Jackson',
 		employer: employerId('McDonalds'),
