@@ -57,7 +57,7 @@ app.configure(function(){
 		} else {
 			employers.loadMe; //TODO: Write this function
 		}
-	};
+	});
 	//Employee
 	app.get('/employees', employees.load);
 	app.get('/employees/:id', employees.loadOne);
