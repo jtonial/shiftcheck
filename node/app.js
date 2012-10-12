@@ -24,19 +24,19 @@ var app = express();
 var store = new express.session.MemoryStore;
 
 app.configure(function(){
-  app.set('port', process.env.PORT || config.port );
-  app.set('ssl_port', process.env.PORT || config.ssl_port );
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser('your secret here'));
-  app.use(express.session( {secret:'asdfadsfasdfw4t3t53', store:store} ));
-  app.use(app.router);
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
-  app.use(express.static(path.join(__dirname, 'public')));
+	app.set('port', process.env.PORT || config.port );
+	app.set('ssl_port', process.env.PORT || config.ssl_port );
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.favicon());
+	app.use(express.logger('dev'));
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(express.cookieParser('your secret here'));
+	app.use(express.session( {secret:'asdfadsfasdfw4t3t53', store:store} ));
+	app.use(require('less-middleware')({ src: __dirname + '/public' }));
+	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(app.router);
 
 	app.get('/', routes.index);
 	app.get('/login', routes.loginPage);
@@ -51,7 +51,13 @@ app.configure(function(){
 	app.get('/signup', routes.signup);
 
 	//Me
-
+	app.get('/me', function(req, res) {
+		if (typeof req.session.employeeid != 'undefined') { //An employee is signed in
+			employees.loadMe; // TODO: Write this function
+		} else {
+			employers.loadMe; //TODO: Write this function
+		}
+	};
 	//Employee
 	app.get('/employees', employees.load);
 	app.get('/employees/:id', employees.loadOne);
