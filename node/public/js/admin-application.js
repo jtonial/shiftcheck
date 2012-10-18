@@ -201,11 +201,11 @@ $(function() {
 		routes: {
 			'schedules':'schedules',
 			'employees':'employees',
-			'upforgrabs':'upforgrabs',
+			'exchanges':'exchanges',
 			'approvals':'approvals',
 			'account':'account',
 
-			//'*something':'shifts'
+			'':'schedules'
 		},
 
 		schedules: function () {
@@ -216,9 +216,9 @@ $(function() {
 			$('.link, .page').removeClass('active');
 			$('.employees').addClass('active');
 		},
-		upforgrabs: function () {
+		exchanges: function () {
 			$('.link, .page').removeClass('active');
-			$('.upforgrabs').addClass('active');
+			$('.exchanges').addClass('active');
 		},
 		approvals: function () {
 			$('.link, .page').removeClass('active');

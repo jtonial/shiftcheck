@@ -53,7 +53,7 @@ exports.load = function (req, res) {
 	});
 };
 exports.create = function(req, res){
-	//Validation; same as client side
+	//TODO: Validation; same as client side
 	
 	var name = req.body.name;
 	var email = req.body.email;

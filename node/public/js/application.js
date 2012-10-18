@@ -18,10 +18,10 @@ $(function() {
 		routes: {
 			'shifts':'shifts',
 			'schedules':'schedules',
-			'upforgrabs':'upforgrabs',
+			'exchanges':'exchanges',
 			'account':'account',
 
-			//'*something':'shifts'
+			'':'shifts'
 		},
 
 		shifts: function() {
@@ -32,9 +32,9 @@ $(function() {
 			$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');
 		},
-		upforgrabs: function () {
+		exchanges: function () {
 			$('.link, .page').removeClass('active');
-			$('.upforgrabs').addClass('active');
+			$('.exchanges').addClass('active');
 		},
 		account: function () {
 			$('.link, .page').removeClass('active');
