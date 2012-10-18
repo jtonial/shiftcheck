@@ -11,17 +11,11 @@ calcHash = function (val) {
 
 exports.loadDate = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
-		console.log('Load EmployeeID: '+req.params.id);
-		models.Employee.findOne({ _id: req.params.id, employerid: req.session.employerid }, function (err, docs) {
+		console.log('Load Schedule: '+req.params.date);
+		models.Schedule.findOne({ date: req.params.date, employerid: req.session.employerid }, function (doc) {
 			if (!err) {
-				console.log('returning apis');
-				var response = new Object();
-				response.data = new Array();
-				docs.forEach(function (x) {
-					response.data.push(x);
-				});
 				res.statusCode = 200;
-				res.write(JSON.stringify(response));
+				res.write(doc);
 			} else {
 				console.log('Error fetching Project: '+err);
 				res.statusCode = 499;
@@ -29,7 +23,7 @@ exports.loadDate = function(req, res){
 			res.end();
 		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
+		res.statusCode = 403;
 		res.end();
 		console.log('Unauthorized access attempt: loadDate schedule');
 	}
@@ -39,20 +33,25 @@ exports.loadDate = function(req, res){
 exports.load = function (req, res) {
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 
-		console.log('Load Employees for EmployerID: '+req.session.employerid);
-		models.Employee.find({ employerid: req.session.employerid }, function (err, docs) {
-			if (!err && docs) {
-				var response = new Object();
-				response.data = new Array();
-				docs.forEach(function (x) {
-					console.log();
-					response.data.push(x);
-				});
-				res.statusCode = 200;
-				res.write(JSON.stringify(response));
+		console.log('Load Schedule for EmployerID: '+req.session.employerid);
+		//Note this currently returns all schedules; it should only return from current date forward
+		models.Schedule.find({ employerid: req.session.employerid }, function (err, docs) {
+			if (!err) {
+				if (docs) {
+					var response = new Object();
+					response.data = new Array();
+					docs.forEach(function (x) {
+						console.log();
+						response.data.push(x);
+					});
+					res.statusCode = 200;
+					res.write(JSON.stringify(response));
+				} else {
+					//No Schedules present
+				}
 			} else {
-				console.log('Error fetching Projectss: '+err);
-				res.statusCode = 499;
+				console.log('Error fetching Projects: '+err);
+				res.statusCode = 500;
 			}
 			res.end();
 		});
@@ -105,28 +104,7 @@ exports.create = function(req, res){
 	}
 };
 
-exports.update = function(req, res) {
-	console.log('Update Employee ID: '+req.params.id);
-  res.send("Employee - update");
-};
-
-exports.changePassword = function(req,res){
-	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
-		//Update Password
-	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
-		console.log('Unauthorized access attempt: create employee');
-	}
+exports.processUpload = function(req,res){ //Used to process a file containing a schedule
+	//Determine the type of file
+	//Parse the file based on the given type
 }
-exports.delete = function(req, res) {
-	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
-		//Post all of the employees shifts as up for grabs, and then remove him from the system
-		console.log('Delete  ID: '+req.params.id);
-	  res.send("projects - delete");
-	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
-		console.log('Unauthorized access attempt: create employee');
-	}
-};

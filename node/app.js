@@ -39,14 +39,38 @@ app.configure(function(){
 	app.use(app.router);
 
 	app.get('/', routes.index);
-	app.get('/login', routes.loginPage);
-	app.post('/login', routes.loginProcess);
+	app.get('/login', function (req, res) {
+		if (typeof req.session.employeeid == 'undefined' && typeof req.session.employerid == 'undefined') {
+			routes.loginPage(req, res);
+		} else {
+			res.redirect('/');
+		}
+	});
+	app.post('/login', function (req, res) {
+		if (typeof req.session.employeeid == 'undefined') {
+			routes.loginProcess(req, res);
+		} else {
+			res.redirect('/');
+		}
+	});
 
 	app.get('/logout', routes.logout);
 	app.post('/logout', routes.logout);
 
-	app.get('/admin-login', routes.adminloginPage);
-	app.post('/admin-login', routes.adminloginProcess);
+	app.get('/admin-login', function (req, res) {
+		if (typeof req.session.employeeid == 'undefined' && typeof req.session.employerid == 'undefined') {
+			routes.adminloginPage(req, res);
+		} else {
+			res.redirect('/');
+		}
+	});
+	app.post('/admin-login', function (req, res) {
+		if (typeof req.session.employerid == 'undefined') {
+			routes.adminloginProcess(req, res);
+		} else {
+			res.redirect('/');
+		}
+	});
 
 	app.get('/signup', routes.signup);
 
@@ -72,6 +96,22 @@ app.configure(function(){
 	app.put('/employers/:id', employers.update);
 	app.delete('/employers/:id', employers.delete);
 
+	app.get('/positions', function (req, res) {
+		if (typeof req.session.employerid != 'undefined') {
+			employers.getPositions(req, res);
+		}
+	});
+	app.post('/positions/', function (req, res) {
+		if (typeof req.session.employerid != 'undefined') {
+			employers.createPosition (req, res);
+		}
+	});
+	app.post('/positions/:eid', function (req, res) {
+		if (typeof req.session.employerid != 'undefined') {
+			employees.addPosition (req, res);
+		}
+	});
+
 	//Schedules
 	app.get('/schedules', schedules.load);
 	app.get('/schedules/:date', schedules.loadDate);
@@ -88,7 +128,7 @@ app.configure(function(){
 	app.delete('/requests/:id', grabs.deleteRequest);
 });
 
-app.configure('development', function(){
+app.configure('development', function() {
   app.use(express.errorHandler());
 });
 
@@ -103,9 +143,6 @@ http.createServer(function (req, res) {
 }).listen(80, function () {
 	console.log('HTTP Redirect listening on 80');
 });
-/*http.createServer(app).listen(app.get('port'), function(){
-  console.log("HTTP server listening on %s", app.get('port'));
-});*/
 https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 	console.log('HTTPS server listening on %s', app.get('ssl_port'));
 })

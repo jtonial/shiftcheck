@@ -7,8 +7,30 @@ calcHash = function (val) {
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-	//return val;
 }
+
+exports.loadMe = function(req, res){
+	if (typeof req.session.employeeID != 'undefined') {//If an employer is signed in
+		console.log('Load EmployeeID: '+req.session.employeeid);
+		models.Employee.findOne({ _id:req.session.employeeid }, function (err, doc) {
+			if (!err) {
+				console.log('returning signed in employee');
+				var response = new Object();
+				response.data = (doc);
+				res.statusCode = 200;
+				res.write(JSON.stringify(response));
+			} else {
+				console.log('Error fetching Project: '+err);
+				res.statusCode = 499;
+			}
+			res.end();
+		});
+	} else {
+		res.statusCode = 403; //Unauthorized access?
+		res.end();
+		console.log('Unauthorized access attempt: loadOne employee');
+	}
+};
 
 exports.loadOne = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
@@ -104,6 +126,21 @@ exports.create = function(req, res){
 exports.update = function(req, res) {
 	console.log('Update Employee ID: '+req.params.id);
   res.send("Employee - update");
+};
+
+exports.addPosition = function(req, res) {
+	//Add a position to an employee (given by req.params.eid)
+	//Dont forget to check that the employee works for the given employer
+	models.Employee.update({ _id:req.params.eid, employer:req.session.employerid },
+			{$push: {positions: req.body.positions}}, false, false, function (err) {
+				if (!err) {
+					res.statusCode = 201;
+				} else {
+					res.statusCode = 500;
+					console.log('there was an error: '+err);
+				}
+				res.end();
+			});
 };
 
 exports.changePassword = function(req,res){

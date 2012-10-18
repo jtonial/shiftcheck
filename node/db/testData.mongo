@@ -21,7 +21,7 @@ db.employers.insert(
 	{
 		name:'McDonalds',
 		email:'mcds@nrmitchi.ca',
-		password:'',
+		password:'ce3e810d5a1c96a77e55d5a2d79fc73dc5a5e6db',
 		positions: ['WN','DT','BK','LB','MB'],
 		contact_info: {
 			email: 'mcds@nrmitchi.ca',
@@ -37,7 +37,7 @@ db.employers.insert(
 	{
 		name:'Tim Hortons',
 		email:'timmies@nrmitchi.ca',
-		password:'',
+		password:'1840fe111f0021c49af9463f45236216d2ab1cea',
 		positions: ['WN','DT','BK','LB','MB','TIMMIES'],
 		contact_info: {
 			email: 'timmies@nrmitchi.ca',

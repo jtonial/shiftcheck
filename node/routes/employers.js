@@ -7,17 +7,16 @@ calcHash = function (val) {
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-	//return val;
 }
 
 exports.loadMe = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		console.log('Load EmployerID: '+req.session.employerid);
-		models.Employer.findOne({ _id:req.session.employerid }, function (err, docs) {
+		models.Employer.findOne({ _id:req.session.employerid }, function (err, doc) {
 			if (!err) {
 				console.log('returning signed in employer');
 				var response = new Object();
-				response.data = (x);
+				response.data = (doc);
 				res.statusCode = 200;
 				res.write(JSON.stringify(response));
 			} else {
@@ -96,6 +95,15 @@ exports.update = function(req, res) {
   res.send("Employer - update");
 };
 
+exports.getPositions = function(req, res){
+	//Get positions of the employer
+};
+exports.createPosition = function(req, res) {
+	//Add a position(s) from the req.body to the positions array
+};
+exports.removePosition = function(req, res) {
+	//Remove a position(s) from the req.body from the positions array (if the exist)
+};
 exports.changePassword = function(req,res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		//Update Password
