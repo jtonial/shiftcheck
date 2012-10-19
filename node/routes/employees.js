@@ -94,6 +94,8 @@ exports.create = function(req, res){
 		var employer = req.session.employerid; //Current employer
 		var positions = req.body.positions;
 
+		//TODO: Validate email (can take function from another project)
+
 		var employee = new Employee ({
 			email: email ,
 			password: password,
@@ -125,14 +127,17 @@ exports.create = function(req, res){
 
 exports.update = function(req, res) {
 	console.log('Update Employee ID: '+req.params.id);
-  res.send("Employee - update");
+	res.send("Employee - update");
 };
 
 exports.addPosition = function(req, res) {
 	//Add a position to an employee (given by req.params.eid)
-	//Dont forget to check that the employee works for the given employer
+	var new_positions = req.body.positions;
+
+	//TODO: Verify that passed positions exist in the employer
+
 	models.Employee.update({ _id:req.params.eid, employer:req.session.employerid },
-			{$push: {positions: req.body.positions}}, false, false, function (err) {
+			{$addToSet: {positions: { $each: new_positions }}}, false, false, function (err) {
 				if (!err) {
 					res.statusCode = 201;
 				} else {
@@ -148,6 +153,9 @@ exports.changePassword = function(req,res){
 		//Update Password
 		var oldPassword = req.body.oldpassword;
 		var newPassword = req.body.newpassword;
+
+		//TODO: Validate new password
+
 		models.Employee.update( { _id:req.session.employeeid, password:oldPassword }, { password:newpassword }, { multi:false }, function(err, numAffected) {
 			if (!err) {
 				//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)

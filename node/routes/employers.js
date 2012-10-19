@@ -63,6 +63,8 @@ exports.create = function(req, res){
 	var company_phone = req.body.company_phone;
 	var company_address = req.body.company_address;
 
+	//TODO: Validate email (function can be taken from another project)
+
 	var employer = new Employer ({
 		name: name,
 		email: email ,
@@ -100,9 +102,35 @@ exports.getPositions = function(req, res){
 };
 exports.createPosition = function(req, res) {
 	//Add a position(s) from the req.body to the positions array
+	var new_positions = req.body.positions;
+
+	models.Employer.update( { _id:req.session.employerid },
+		{$addToSet: {positions: { $each: new_positions }}}, false, false, function(err) {
+			if (!err) {
+				res.statusCode = 201;
+			} else {
+				res.statusCode = 500;
+				console.log('Error creating new positions: '+err);
+			}
+			res.end();
+		});
 };
 exports.removePosition = function(req, res) {
 	//Remove a position(s) from the req.body from the positions array (if the exist)
+	var remove_positions = req.body.positions;
+
+	models.Employer.update( { _id:req.session.employerid },
+		{$pullAll: {positions: remove_positions}}, false, false, function(err) {
+			if (!err) {
+				res.statusCode = 200;
+			} else {
+				res.statusCode = 500;
+				console.log('Error removing positions: '+err);
+			}
+			res.end();
+		});
+
+	//TODO: Remove the positions from any employee of the employer
 };
 exports.changePassword = function(req,res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in

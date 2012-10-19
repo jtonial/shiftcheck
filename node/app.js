@@ -72,7 +72,13 @@ app.configure(function(){
 		}
 	});
 
-	app.get('/signup', routes.signup);
+	app.get('/signup', function (req, res) {
+		if (typeof req.session.employeeid == 'undefined' && typeof req.session.employerid == 'undefined') {
+			routes.signup(req, res);
+		} else {
+			res.redirect('/');
+		}
+	});
 
 	//Me
 	app.get('/me', function(req, res) {
@@ -119,9 +125,9 @@ app.configure(function(){
 	app.post('/schedules/upload', schedules.processUpload);
 
 	//Grabs and Requests
-	app.get('/upforgrabs', grabs.load);
-	app.post('/upforgrabs/:id', grabs.create);
-	app.post('/upforgrabs/:id/request', grabs.addRequest);
+	app.get('/exchanges', grabs.load);
+	app.post('/exchanges/:id', grabs.create);
+	app.post('/exchanges/:id/request', grabs.addRequest);
 
 	app.get('/requests', grabs.getRequests);
 	app.post('/requests/:id', grabs.respondRequest);

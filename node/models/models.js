@@ -1,6 +1,5 @@
 var  mongoose = require('mongoose')
 	, config = require('../config/config');
-	//, mongo  = require('mongodb')
 	;
 
 //Make Schemas and models

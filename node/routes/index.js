@@ -122,5 +122,5 @@ exports.adminloginProcess = function (req, res) {
 };
 
 exports.signup = function (req, res) {
-	res.render('signup', { title: 'BlastAPI' });
+	res.render('signup', { title: 'Schedule.me' });
 };
