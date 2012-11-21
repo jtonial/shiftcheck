@@ -38,6 +38,10 @@ app.configure(function(){
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(app.router);
 
+	app.get('/', function(req, res) {
+		res.render('welcome', { title: 'Schedule.me' });
+	});
+
 	/*var employee;
 	var employer;
 
