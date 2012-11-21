@@ -10,6 +10,7 @@
     "jade": "*",
     "less-middleware": "*",
 		"mongoose": "*",
-		"bouncy" : "*"
+		"bouncy" : "*",
+		"knox" : "*"
   }
 }
