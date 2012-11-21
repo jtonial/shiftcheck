@@ -1,1 +1,0 @@
-By setting each API to a subdomain, I can put all .ini files back into one, as the base will then just be '/' instead of '/api'
