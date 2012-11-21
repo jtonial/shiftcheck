@@ -38,11 +38,7 @@ app.configure(function(){
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(app.router);
 
-	app.get('/', function(req, res) {
-		res.render('welcome', { title: 'Schedule.me' });
-	});
-
-	/*var employee;
+	var employee;
 	var employer;
 
 	app.all('*', function (req, res, next) {
@@ -137,7 +133,7 @@ app.configure(function(){
 */
 
 	//Me
-	/*app.get('/me', function (req, res) {
+	app.get('/me', function (req, res) {
 		if (employee) { //An employee is signed in
 			employees.loadMe(req, res); // TODO: Write this function
 		} else if (employer) {
@@ -146,7 +142,7 @@ app.configure(function(){
 			res.statusCode = 403;
 			res.end();
 		}
-	});*/
+	});
 	
 /* //NOT INCLUDED IN MVP
 	Note: I may have to include the schedule paths to work with backbone
