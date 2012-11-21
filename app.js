@@ -98,7 +98,7 @@ app.configure(function(){
 		}
 	});
 
-/*
+
 	//Doesn't work
 	app.get('/gets3creds', function (req, res) {
 		var createS3Policy;
@@ -110,11 +110,11 @@ app.configure(function(){
 		s3Policy = {
 			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours() + 1) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
 			"conditions": [
-				{ "bucket": "bucketName" }, 
+				{ "bucket": "nrmitchi.schedules" }, 
 				["starts-with", "$Content-Disposition", ""], 
 				["starts-with", "$key", "someFilePrefix_"], 
 				{ "acl": "public-read" }, 
-				{ "success_action_redirect": "http://example.com/uploadsuccess" }, 
+				{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" }, 
 				["content-length-range", 0, 2147483648], 
 				["eq", "$Content-Type", 'application/pdf']
 			]
@@ -122,15 +122,20 @@ app.configure(function(){
 	  
 		s3Credentials = {
 			s3PolicyBase64: new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
-			s3Signature: crypto.createHmac( "sha1", "I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr" ).update( s3Policy ).digest( "base64" ),
-			s3Key: "AKIAIKTL23OZ4ILD5TWQ",
-			//s3Redirect: "http://example.com/uploadsuccess",
+			s3Signature: crypto.createHmac( "sha1", process.env.AWS_SECRET_ACCESS_KEY ).update( s3Policy ).digest( "base64" ),
+			s3Key: process.env.AWS_ACCESS_KEY_ID,
+			s3Redirect: "http://schedule-me.herokuapp.com/uploadsuccess",
 			s3Policy: s3Policy
 		}
 			
 		res.end(JSON.stringify(s3Credentials));
 	});
-*/
+	app.get('/uploadsuccess', function (req, res) {
+		res.end('GET - uploadsuccess');
+	});
+	app.post('/uploadsuccess', function (req, res) {
+		res.end('POST - uploadsuccess');
+	});
 
 	//Me
 	app.get('/me', function (req, res) {

@@ -68,19 +68,19 @@ var ScheduleSchema = new mongoose.Schema({
 })
 
 
-var dbhost = config.mongo_host
+var dbhost = process.env.MONGOLAB_URI || config.mongo_host
 	, dbdb = config.mongo_db
 	;
-var db2 = mongoose.createConnection(dbhost, dbdb);
-db2.on('error', function () {
+var db = mongoose.createConnection(dbhost, dbdb);
+db.on('error', function () {
 	console.error.bind(console, 'connection error:');
 });
-db2.once('open', function () {
+db.once('open', function () {
 	console.log('db connection open:');
 });
 
-exports.Employee = db2.model('employees', EmployeeSchema);
-exports.Employer = db2.model('employers', EmployerSchema);
-exports.Schedule = db2.model('schedules', ScheduleSchema);
+exports.Employee = db.model('employees', EmployeeSchema);
+exports.Employer = db.model('employers', EmployerSchema);
+exports.Schedule = db.model('schedules', ScheduleSchema);
 exports.HistorySchema = HistorySchema;
 exports.RequestSchema = RequestSchema;

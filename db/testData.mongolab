@@ -1,0 +1,203 @@
+db.createCollection('employees');
+db.createCollection('employers');
+db.createCollection('schedules');
+
+
+function employeeId(email) {
+	var ret = db.employees.findOne({ email:email }, {_id:1});
+	return ret._id;
+}
+function employerId(name) {
+	var ret = db.employers.findOne({ name:name }, {_id:1});
+	return ret._id;
+}
+
+db.employers.insert(
+	{
+		name:'McDonalds',
+		email:'mcds@nrmitchi.ca',
+		password:'ce3e810d5a1c96a77e55d5a2d79fc73dc5a5e6db',
+		positions: ['WN','DT','BK','LB','MB'],
+		contact_info: {
+			email: 'mcds@nrmitchi.ca',
+			phone: '123-456-7890',
+			address: '6410 Millcreek Drive'
+		},
+		last_login:new Date(),
+		login_count:0,
+		reg_time:new Date()
+	}
+)
+db.employers.insert(
+	{
+		name:'Tim Hortons',
+		email:'timmies@nrmitchi.ca',
+		password:'1840fe111f0021c49af9463f45236216d2ab1cea',
+		positions: ['WN','DT','BK','LB','MB','TIMMIES'],
+		contact_info: {
+			email: 'timmies@nrmitchi.ca',
+			phone: '012-345-6789',
+			address: '6666 Winston Churchill Blvd'
+		},
+		last_login:new Date(),
+		login_count:0,
+		reg_time:new Date()
+	}
+)
+
+db.employees.insert(
+	{
+		email: 'nick@nrmitchi.ca',
+		password: '01b3ad3301a0b79e9bae3f9b1feb6431a5513687',
+		first_name: 'Nick',
+		last_name: 'Mitchinson',
+		employer: employerId('McDonalds'),
+		positions: ['BK','WN','DT'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'jack@nrmitchi.ca',
+		password: '9a71241f7c521dd59795b8886f43c2011b567b3e',
+		first_name: 'Jack',
+		last_name: 'Johnson',
+		employer: employerId('McDonalds'),
+		positions: ['BK','WN'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'john@nrmitchi.ca',
+		password: '2464438fce2dd0a04d56b748c70f87f260517d3d',
+		first_name: 'John',
+		last_name: 'Jackson',
+		employer: employerId('McDonalds'),
+		positions: ['WN','DT'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'santa@nrmitchi.ca',
+		password: '',
+		first_name: 'Santa',
+		last_name: 'Clause',
+		employer: employerId('Tim Hortons'),
+		positions: ['BK'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+db.employees.insert(
+	{
+		email: 'holly@nrmitchi.ca',
+		password: '',
+		first_name: 'Holly',
+		last_name: 'Smithson',
+		employer: employerId('Tim Hortons'),
+		positions: ['WN'],
+		last_login:'',
+		login_count:0,
+		reg_time: new Date()
+	}
+)
+
+db.schedules.insert(
+	{
+		employer:employerId('McDonalds'),
+		date:ISODate('2012-10-20'),
+		creation_time: new Date(),
+		image_loc: 'abcdefghijklmnopqrstuvwxyz',
+		shifts: [
+			{
+				_id:new ObjectId(),
+				employee:employeeId('nick@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 07:00:00'),
+				end_time:ISODate('2012-10-12 12:00:00'),
+				position:'BK',
+				upforgrabs:false,
+				history: [
+				]
+			},
+			{
+				_id:new ObjectId(),
+				employee:employeeId('jack@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 09:30:00'),
+				end_time:ISODate('2012-10-12 13:15:00'),
+				position:'WN',
+				upforgrabs:false,
+				history: [
+				]
+			},
+			{
+				_id:new ObjectId(),
+				employee:employeeId('john@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 12:00:00'),
+				end_time:ISODate('2012-10-12 16:00:00'),
+				position:'DT',
+				upforgrabs:false,
+				history: [
+				]
+			}
+		]
+	}
+)
+db.schedules.insert(
+	{
+		employer:employerId('Tim Hortons'),
+		date:ISODate('2012-10-20'),
+		creation_time: new Date(),
+		image_loc: 'zyxwvutsrqponmlkjihgfedcba',
+		shifts: [
+			{
+				_id:new ObjectId(),
+				employee:employeeId('nick@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 07:00:00'),
+				end_time:ISODate('2012-10-12 12:00:00'),
+				position:'BK',
+				upforgrabs:false,
+				history: [
+				]
+			},
+			{
+				_id:new ObjectId(),
+				employee:employeeId('jack@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 09:30:00'),
+				end_time:ISODate('2012-10-12 13:15:00'),
+				position:'WN',
+				upforgrabs:false,
+				history: [
+				]
+			},
+			{
+				_id:new ObjectId(),
+				employee:employeeId('john@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 12:00:00'),
+				end_time:ISODate('2012-10-12 16:00:00'),
+				position:'DT',
+				upforgrabs:false,
+				history: [
+				]
+			},
+			{
+				_id:new ObjectId(),
+				employee:employeeId('john@nrmitchi.ca'),
+				start_time:ISODate('2012-10-12 10:00:00'),
+				end_time:ISODate('2012-10-12 15:00:00'),
+				position:'DT',
+				upforgrabs:true,
+				history: [
+				]
+			}
+		]
+	}
+)
