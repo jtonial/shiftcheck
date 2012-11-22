@@ -121,9 +121,9 @@ app.configure(function(){
 				{ "bucket": "nrmitchi.schedules" }, 
 				//["starts-with", "$Content-Disposition", ""], 
 				//["starts-with", "$key", "someFilePrefix_"], 
-				{ "acl": "public-read" }, 
-				{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" }, 
-				["content-length-range", 0, 2147483648], 
+				{ "acl": "public-read" },
+				{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" },
+				["content-length-range", 0, 2147483648],
 				["eq", "$Content-Type", 'application/pdf']
 			]
 		};

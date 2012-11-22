@@ -88,7 +88,7 @@ exports.loginProcess = function (req, res) {
 			}
 		} else {
 			res.statusCode = 500;
-			res.end();	
+			res.end();
 		}
 	});
 };
@@ -138,7 +138,7 @@ exports.adminloginProcess = function (req, res) {
 			}
 		} else {
 			res.statusCode = 500;
-			res.end();	
+			res.end();
 		}
 	});
 };
