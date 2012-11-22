@@ -99,41 +99,58 @@ app.configure(function(){
 	});
 
 
-	//Doesn't work
+	//I can upload, however permissions are not right
 	app.get('/gets3creds', function (req, res) {
+		//Check permission; only employers should be able to upload
+			//Note I am skipping this for now for testing
+
+
 		var createS3Policy;
 		var s3Signature;
 		var s3Credentials;
 
+		var key = new Date().getTime().toString(); //Use the current time as key for testing
+		var rand = 'dflkasjceo;ajsclkajs'; //Random string
+		key = crypto.createHmac('sha1', rand).update(key).digest('hex')+'.pdf';
+
 		var s3PolicyBase64, _date, _s3Policy;
 		_date = new Date();
 		s3Policy = {
-			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours() + 1) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
+			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()) + ":" + (_date.getMinutes() + 5) + ":" + (_date.getSeconds()) + "Z",
 			"conditions": [
 				{ "bucket": "nrmitchi.schedules" }, 
-				["starts-with", "$Content-Disposition", ""], 
-				["starts-with", "$key", "someFilePrefix_"], 
+				//["starts-with", "$Content-Disposition", ""], 
+				//["starts-with", "$key", "someFilePrefix_"], 
 				{ "acl": "public-read" }, 
 				{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" }, 
 				["content-length-range", 0, 2147483648], 
 				["eq", "$Content-Type", 'application/pdf']
 			]
 		};
-	  
+		var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
+
 		s3Credentials = {
-			s3PolicyBase64: new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
-			s3Signature: crypto.createHmac( "sha1", process.env.AWS_SECRET_ACCESS_KEY ).update( s3Policy ).digest( "base64" ),
-			s3Key: process.env.AWS_ACCESS_KEY_ID,
+			key: key,
+			acl: 'public-read',
+			s3PolicyBase64: s3PolicyBase64,
+			s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
+			s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
 			s3Redirect: "http://schedule-me.herokuapp.com/uploadsuccess",
 			s3Policy: s3Policy
 		}
-			
 		res.end(JSON.stringify(s3Credentials));
 	});
+
+	app.get('/testupload', function (req, res) {
+		res.render('testupload', { title: 'testupload' });
+	});
+
 	app.get('/uploadsuccess', function (req, res) {
+		console.log('GET - uploadsuccess');
 		res.end('GET - uploadsuccess');
 	});
 	app.post('/uploadsuccess', function (req, res) {
+		console.log('POST - uploadsuccess');
 		res.end('POST - uploadsuccess');
 	});
 
@@ -203,7 +220,7 @@ app.configure('development', function() {
 });
 
 //Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
-/*http.createServer(function (req, res) {		
+http.createServer(function (req, res) {		
 	var to = 'https://'+req.headers.host+req.url;
 	console.log('Redirecting to '+to);
 	res.writeHeader(302, {
@@ -215,7 +232,9 @@ app.configure('development', function() {
 });
 https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 	console.log('HTTPS server listening on %s', app.get('ssl_port'));
-})*/
-http.createServer(app).listen(app.get('port'), function () {
+})
+//Heroku Specific
+/*http.createServer(app).listen(app.get('port'), function () {
 	console.log('HTTP server listening on %s', app.get('port'));
 })
+*/
