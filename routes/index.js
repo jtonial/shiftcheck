@@ -55,35 +55,40 @@ exports.loginProcess = function (req, res) {
 	console.log(where)
 	//Access db to get users info
 	models.Employee.findOne ( where, function (err, doc) {
-		if (doc) {
-			if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
-				req.session.loggedin = true;
-				req.session.employeeid = doc._id;
-				req.session.employer = doc.employer;
-				req.session.email = email;
-				req.session.fname = doc.first_name;
-				req.session.lname = doc.last_name;
-				req.session.fullname = doc.first_name+' '+doc.last_name;
-				req.session.company = doc.company;
+		if (!err) {
+			if (doc) {
+				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
+					req.session.loggedin = true;
+					req.session.employeeid = doc._id;
+					req.session.employer = doc.employer;
+					req.session.email = email;
+					req.session.fname = doc.first_name;
+					req.session.lname = doc.last_name;
+					req.session.fullname = doc.first_name+' '+doc.last_name;
+					req.session.company = doc.company;
 
-				res.statusCode = 200;
-				res.end();
-				console.log('login success');
-				models.Employee.update({ _id:doc._id },
-					{ $inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
-						if (err) {
-							console.log('Error updating login count: '+err);
-						}
-					});
+					res.statusCode = 200;
+					res.end();
+					console.log('login success');
+					models.Employee.update({ _id:doc._id },
+						{ $inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
+							if (err) {
+								console.log('Error updating login count: '+err);
+							}
+						});
+				} else {
+					res.statusCode = 400;
+					res.end();
+					console.log('login failure');
+				}
 			} else {
 				res.statusCode = 400;
 				res.end();
 				console.log('login failure');
 			}
 		} else {
-			res.statusCode = 400;
-			res.end();
-			console.log('login failure');
+			res.statusCode = 500;
+			res.end();	
 		}
 	});
 };
@@ -101,34 +106,39 @@ exports.adminloginProcess = function (req, res) {
 
 	//Access db to get users info
 	models.Employer.findOne ( {email: email}, function (err, doc) {
-		if (doc) {
-			if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
-				req.session.loggedin = true;
-				req.session.employerid = doc._id;
-				req.session.email = email;
-				req.session.fname = doc.first_name;
-				req.session.lname = doc.last_name;
-				req.session.fullname = doc.first_name+' '+doc.last_name;
-				req.session.company = doc.company;
+		if (!err) {
+			if (doc) {
+				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
+					req.session.loggedin = true;
+					req.session.employerid = doc._id;
+					req.session.email = email;
+					req.session.fname = doc.first_name;
+					req.session.lname = doc.last_name;
+					req.session.fullname = doc.first_name+' '+doc.last_name;
+					req.session.company = doc.company;
 
-				res.statusCode = 200;
-				res.end();
-				console.log('login success');
-				models.Employer.update({ _id:doc._id },
-					{$inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
-						if (err) {
-							console.log('Error updating login count: '+err);
-						}
-					});
+					res.statusCode = 200;
+					res.end();
+					console.log('login success');
+					models.Employer.update({ _id:doc._id },
+						{$inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
+							if (err) {
+								console.log('Error updating login count: '+err);
+							}
+						});
+				} else {
+					res.statusCode = 400;
+					res.end();
+					console.log('login failure');
+				}
 			} else {
 				res.statusCode = 400;
 				res.end();
 				console.log('login failure');
 			}
 		} else {
-			res.statusCode = 400;
-			res.end();
-			console.log('login failure');
+			res.statusCode = 500;
+			res.end();	
 		}
 	});
 };
