@@ -219,22 +219,24 @@ app.configure('development', function() {
   app.use(express.errorHandler());
 });
 
-//Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
-http.createServer(function (req, res) {		
-	var to = 'https://'+req.headers.host+req.url;
-	console.log('Redirecting to '+to);
-	res.writeHeader(302, {
-		'Location': to
+if (typeof process.env.PORT == 'undefined') {
+	//Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
+	http.createServer(function (req, res) {		
+		var to = 'https://'+req.headers.host+req.url;
+		console.log('Redirecting to '+to);
+		res.writeHeader(302, {
+			'Location': to
+		});
+		res.end();
+	}).listen(80, function () {
+		console.log('HTTP Redirect listening on 80');
 	});
-	res.end();
-}).listen(80, function () {
-	console.log('HTTP Redirect listening on 80');
-});
-https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
-	console.log('HTTPS server listening on %s', app.get('ssl_port'));
-})
-//Heroku Specific
-/*http.createServer(app).listen(app.get('port'), function () {
-	console.log('HTTP server listening on %s', app.get('port'));
-})
-*/
+	https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
+		console.log('HTTPS server listening on %s', app.get('ssl_port'));
+	})
+} else {
+	//Heroku Specific
+	http.createServer(app).listen(app.get('port'), function () {
+		console.log('HTTP server listening on %s', app.get('port'));
+	})
+}
