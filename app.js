@@ -220,7 +220,7 @@ app.configure('development', function() {
 });
 
 //Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
-http.createServer(function (req, res) {		
+/* http.createServer(function (req, res) {		
 	var to = 'https://'+req.headers.host+req.url;
 	console.log('Redirecting to '+to);
 	res.writeHeader(302, {
@@ -232,9 +232,8 @@ http.createServer(function (req, res) {
 });
 https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 	console.log('HTTPS server listening on %s', app.get('ssl_port'));
-})
+})*/
 //Heroku Specific
-/*http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(app.get('port'), function () {
 	console.log('HTTP server listening on %s', app.get('port'));
 })
-*/
