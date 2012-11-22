@@ -233,8 +233,3 @@ http.createServer(function (req, res) {
 https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 	console.log('HTTPS server listening on %s', app.get('ssl_port'));
 })
-//Heroku Specific
-/*http.createServer(app).listen(app.get('port'), function () {
-	console.log('HTTP server listening on %s', app.get('port'));
-})
-*/
