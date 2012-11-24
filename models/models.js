@@ -71,7 +71,9 @@ var ScheduleSchema = new mongoose.Schema({
 var dbhost = process.env.MONGOLAB_URI || config.mongo_host
 	, dbdb = config.mongo_db
 	;
-var db = mongoose.createConnection(dbhost, dbdb);
+var db = mongoose.createConnection(dbhost, function () {
+	console.log('Connection created');
+});
 db.on('error', function () {
 	console.error.bind(console, 'connection error:');
 });
