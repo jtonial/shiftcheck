@@ -5,11 +5,11 @@ block content
 	form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
 		input(type="hidden", name="key", id="fld_key")
 		input(type="hidden", name="acl", id="fld_acl")
-		input(type="file", name="file", id="file", placeholder="file")
 		input(type="hidden", name="policy", id="fld_Policy")
 		input(type="hidden", name="redirect", id="fld_redirect")
 		input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
 		input(type="hidden", name="signature", id="fld_Signature")
+		input(type="file", name="file", id="file", placeholder="file")
 		input(type="submit", name="submit2", id="btn_submit")
 
 	script
@@ -27,6 +27,7 @@ block content
 			$("#fld_acl").val(res.acl);
 
 			console.log('Policy: '+$("#fld_Policy").val());
+			console.log('Key: '+$("#fld_key").val());
 
 			$("#myform").submit();
 		}

@@ -213,6 +213,12 @@ app.configure(function(){
 	app.post('/requests/:id', grabs.respondRequest);
 	app.delete('/requests/:id', grabs.deleteRequest);
 	*/
+
+	app.all('*', function (req, res) {
+		res.statusCode = 404;
+		res.end();
+	});
+
 });
 
 app.configure('development', function() {
