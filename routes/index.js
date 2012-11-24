@@ -55,6 +55,7 @@ exports.loginProcess = function (req, res) {
 	console.log(where)
 	//Access db to get users info
 	models.Employee.findOne ( where, function (err, doc) {
+		console.log('in signin callback - employee');
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
@@ -106,6 +107,7 @@ exports.adminloginProcess = function (req, res) {
 
 	//Access db to get users info
 	models.Employer.findOne ( {email: email}, function (err, doc) {
+		console.log('in signin callback - admin');
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
