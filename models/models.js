@@ -64,16 +64,21 @@ var ScheduleSchema = new mongoose.Schema({
 	date: Date,
 	creation_time: Date,
 	image_loc: String,
-	shifts: [ShiftSchema]
+	shifts: [ShiftSchema],
+	awaitingupload: Boolean
 })
 
 
 var dbhost = process.env.MONGOLAB_URI || config.mongo_host
 	, dbdb = config.mongo_db
 	;
-var db = mongoose.createConnection(dbhost, function () {
-	console.log('Connection created');
-});
+var db;
+if (typeof process.env.PORT == 'undefined') {
+	db = mongoose.createConnection(dbhost, dbdb);
+} else {
+	db = mongoose.createConnection(dbhost, function () {
+		console.log('Connection created');
+	});}
 db.on('error', function () {
 	console.error.bind(console, 'connection error:');
 });

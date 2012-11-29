@@ -90,62 +90,27 @@ app.configure(function(){
 	});
 
 	app.post('/upload', function (req, res) {
-		if (employer) {
-			schedules.upload(req, res);
-		} else {
-			res.statusCode = 403;
-			res.end();
-		}
+		//if (employer) {
+			schedules.clientUpload(req, res);
+		//} else {
+		//	res.statusCode = 403;
+		//	res.end();
+		//}
 	});
-
+	app.post('/verifyUpload', schedules.verifyUpload);
 
 	//I can upload, however permissions are not right
 	app.get('/gets3creds', function (req, res) {
 		//Check permission; only employers should be able to upload
 			//Note I am skipping this for now for testing
-
-
-		var createS3Policy;
-		var s3Signature;
-		var s3Credentials;
-
-		var key = new Date().getTime().toString(); //Use the current time as key for testing
-		var rand = 'dflkasjceo;ajsclkajs'; //Random string
-		key = crypto.createHmac('sha1', rand).update(key).digest('hex')+'.pdf';
-
-		var s3PolicyBase64, _date, _s3Policy;
-		_date = new Date();
-		s3Policy = {
-			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()) + ":" + (_date.getMinutes() + 5) + ":" + (_date.getSeconds()) + "Z",
-			"conditions": [
-				{ "bucket": "nrmitchi.schedules" }, 
-				//["starts-with", "$Content-Disposition", ""], 
-				//["starts-with", "$key", "someFilePrefix_"], 
-				{ "acl": "public-read" },
-				{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" },
-				["content-length-range", 0, 2147483648],
-				["eq", "$Content-Type", 'application/pdf']
-			]
-		};
-		var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
-
-		s3Credentials = {
-			key: key,
-			acl: 'public-read',
-			s3PolicyBase64: s3PolicyBase64,
-			s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
-			s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
-			s3Redirect: "http://schedule-me.herokuapp.com/uploadsuccess",
-			s3Policy: s3Policy
-		}
-		res.end(JSON.stringify(s3Credentials));
+			//This should also insert the schedule into the database, with a field stating that the upload has not yet completed. This field will be removed on successful upload
 	});
 
 	app.get('/testupload', function (req, res) {
 		res.render('testupload', { title: 'testupload' });
 	});
-
 	app.get('/uploadsuccess', function (req, res) {
+		//This is what should get pinged on successful upload. This will remove the 'incomplete' flag on the item specified in a parameter
 		console.log('GET - uploadsuccess');
 		res.end('GET - uploadsuccess');
 	});

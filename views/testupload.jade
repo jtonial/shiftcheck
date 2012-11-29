@@ -6,7 +6,7 @@ block content
 		input(type="hidden", name="key", id="fld_key")
 		input(type="hidden", name="acl", id="fld_acl")
 		input(type="hidden", name="policy", id="fld_Policy")
-		input(type="hidden", name="redirect", id="fld_redirect")
+		input(type="hidden", name="Content-Type", id="fld_contenttype")
 		input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
 		input(type="hidden", name="signature", id="fld_Signature")
 		input(type="file", name="file", id="file", placeholder="file")
@@ -19,11 +19,13 @@ block content
 			console.log(res);
 			console.log(res.key.toString());
 
-			$("#fld_redirect").val(res.S3Redirect);
+			//$("#fld_redirect").val(res.S3Redirect);
 			$("#fld_AWSAccessKeyId").val(res.s3Key);
 			$("#fld_Policy").val(res.s3PolicyBase64);
 			$("#fld_Signature").val(res.s3Signature);
-			$("#fld_key").val(res.key.toString());
+			$("#fld_contenttype").val('application/pdf');
+			//$("#fld_success_action_redirect").val(res.S3Redirect);
+			$("#fld_key").val(res.key);
 			$("#fld_acl").val(res.acl);
 
 			console.log('Policy: '+$("#fld_Policy").val());
@@ -36,7 +38,9 @@ block content
 			event.preventDefault();
 
 			$.ajax({
-				url: "/gets3creds",
+				url: "/upload",
+				method: 'POST',
+				data: 
 				success: function (res) {
 					processResponse(res);
 				},
