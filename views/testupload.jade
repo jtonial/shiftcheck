@@ -1,0 +1,53 @@
+extends layout
+
+block content
+	script(src="http://code.jquery.com/jquery.min.js")
+	form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
+		input(type="hidden", name="key", id="fld_key")
+		input(type="hidden", name="acl", id="fld_acl")
+		input(type="hidden", name="policy", id="fld_Policy")
+		input(type="hidden", name="Content-Type", id="fld_contenttype")
+		input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
+		input(type="hidden", name="signature", id="fld_Signature")
+		input(type="file", name="file", id="file", placeholder="file")
+		input(type="submit", name="submit2", id="btn_submit")
+
+	script
+		function processResponse( res1 ) {
+			window.res = JSON.parse(res1);
+
+			console.log(res);
+			console.log(res.key.toString());
+
+			//$("#fld_redirect").val(res.S3Redirect);
+			$("#fld_AWSAccessKeyId").val(res.s3Key);
+			$("#fld_Policy").val(res.s3PolicyBase64);
+			$("#fld_Signature").val(res.s3Signature);
+			$("#fld_contenttype").val('application/pdf');
+			//$("#fld_success_action_redirect").val(res.S3Redirect);
+			$("#fld_key").val(res.key);
+			$("#fld_acl").val(res.acl);
+
+			console.log('Policy: '+$("#fld_Policy").val());
+			console.log('Key: '+$("#fld_key").val());
+
+			$("#myform").submit();
+		}
+
+		requestCredentials = function(event) {
+			event.preventDefault();
+
+			$.ajax({
+				url: "/upload",
+				method: 'POST',
+				data: 
+				success: function (res) {
+					processResponse(res);
+				},
+				error: function(res, status, error) {
+
+				}
+			});
+		}
+
+		$( "#btn_submit" ).bind( "click", requestCredentials );
