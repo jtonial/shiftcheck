@@ -78,9 +78,11 @@ if (typeof process.env.PORT == 'undefined') {
 } else {
 	db = mongoose.createConnection(dbhost, function () {
 		console.log('Connection created');
-	});}
+	});
+}
 db.on('error', function () {
 	console.error.bind(console, 'connection error:');
+	console.log('db connection error:');
 });
 db.once('open', function () {
 	console.log('db connection open:');
