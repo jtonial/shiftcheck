@@ -75,10 +75,47 @@ exports.load = function (req, res) {
 };
 exports.clientUpload = function(req, res) {
 
+	var sendCreds = function (id) {
+		var createS3Policy;
+		var s3Signature;
+		var s3Credentials;
+
+		var key = new Date().getTime().toString(); //Use the current time as key for testing
+		var rand = 'dflkasjceo;ajsclkajs'; //Random string
+		key = crypto.createHmac('sha1', rand).update(key).digest('hex')+'.pdf';
+
+		var s3PolicyBase64, _date, _s3Policy;
+		_date = new Date();
+		s3Policy = {
+			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()+12) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
+			"conditions": [
+				{ "bucket": "nrmitchi.schedules" }, 
+				//["starts-with", "$Content-Disposition", ""], 
+				["starts-with", "$key", ""], 
+				{ "acl": "public-read" },
+				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
+				["content-length-range", 0, 2147483648],
+				["eq", "$Content-Type", 'application/pdf']
+			]
+		};
+		var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
+
+		s3Credentials = {
+			key: key,
+			acl: 'public-read',
+			s3PolicyBase64: s3PolicyBase64,
+			s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
+			s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
+			s3Redirect: "http://schedule-me.herokuapp.com/verifyUpload?x="+id, 
+			s3Policy: s3Policy
+		}
+		res.end(JSON.stringify(s3Credentials));
+	}
+
 	var file_name = req.session.employerid+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
 
 	var schedule = new models.Schedule ({
-		employer: req.session.employerid || mongoose.Types.ObjectId('123999999999999999999999'),
+		employer: req.session.employerid || mongoose.Types.ObjectId('999999999999999999999999'),
 		date: new Date(req.body.date),
 		creation_time: Date(),
 		image_loc: file_name,
@@ -86,70 +123,28 @@ exports.clientUpload = function(req, res) {
 		awaitingupload: true
 	});
 
-	schedule.save(function (err) {
+	schedule.save(function (err, s) {
 		if (!err) {
-			console.log('New Schedule created');
+			console.log('New Schedule created: id: '+s.id);
+			sendCreds(s.id);
 		} else { //There was an error
 			console.log('There was an error creating a schedule: '+err);
 			res.statusCode = 500;
 			res.end();
 		}
 	});
-
-	var createS3Policy;
-	var s3Signature;
-	var s3Credentials;
-
-	var key = new Date().getTime().toString(); //Use the current time as key for testing
-	var rand = 'dflkasjceo;ajsclkajs'; //Random string
-	key = crypto.createHmac('sha1', rand).update(key).digest('hex')+'.pdf';
-
-	var s3PolicyBase64, _date, _s3Policy;
-	_date = new Date();
-	s3Policy = {
-		"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()+12) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
-		"conditions": [
-			{ "bucket": "nrmitchi.schedules" }, 
-			//["starts-with", "$Content-Disposition", ""], 
-			["starts-with", "$key", ""], 
-			{ "acl": "public-read" },
-			//{ "success_action_redirect": "http://schedule-me.herokuapp.com/uploadsuccess" },
-			["content-length-range", 0, 2147483648],
-			["eq", "$Content-Type", 'application/pdf']
-		]
-	};
-	var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
-
-	s3Credentials = {
-		key: key,
-		acl: 'public-read',
-		s3PolicyBase64: s3PolicyBase64,
-		s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
-		s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
-		s3Redirect: "http://schedule-me.herokuapp.com/verifyUpload", 
-		s3Policy: s3Policy
-	}
-	res.end(JSON.stringify(s3Credentials));
 };
 exports.verifyUpload = function (req, res) {
 	if (typeof req.query.x != 'undefined' && req.query.x.length == 24) {
 		console.log('Verifying schedule: '+req.query.x);
-		models.Employee.update({},
-						{ $inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
-							console.log('asdfasdsasdf');
-							if (err) {
-								console.log('Error updating login count: '+err);
-							}
-							res.end();
-						});
 		//This update hangs and i'm not sure why.... I feel like it may be because it doens't have a db connection but I cant seem to figure it out
-		/*models.Schedule.update( { _id:mongoose.Types.ObjectId(req.query.x) }, { $unset : { "awaitingupload" : 1 } }, false, false, function (err) {
+		models.Schedule.update( { _id:mongoose.Types.ObjectId(req.query.x) }, { $unset : { "awaitingupload" : 1 } }, function (err) {
 			console.log('update complete');
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
 			}
-			res.end;
-		});*/
+			res.end();
+		});
 	} else {
 		//Do nothing, no parameter supplied
 		console.log('No id provided or invalid id');
