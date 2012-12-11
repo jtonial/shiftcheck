@@ -25,19 +25,14 @@ html(lang='en')
             li.active
               a(href='login') Login
     .container
-      .wrapper(style='width: 500px; margin: 0 auto;')
+      .span4.offset4
         .well
           h1 Login
-          form.form-horizontal(id="login-form")
-            fieldset
-              .control-group
-                label.control-label(for='input01') Email: 
-                .controls
-                  input#email.input-xlarge(type='text', name='email')
-              .control-group
-                label.control-label(for='input01') Password: 
-                .controls
-                  input#password.input-xlarge(type='password', name='password')
-              .form-actions
-                button.btn.btn-primary.input-xlarge(type='submit') Login
+          form(id="login-form")
+            input#email.input-block-level(type='text', name='email', placeholder='Email')
+            input#password.input-block-level(type='password', name='password', placeholder='Password')
+            label.checkbox
+              input(type="checkbox", value="remember-me")
+              | Remember me
+            button.btn.btn-primary.input-block-level(type='submit') Login
     // /container
