@@ -94,6 +94,8 @@ html(lang='en')
                   | Tuesday, August 21
                   sup st
             .tab-content
+              .tab-pane.active
+              .tab-pane
  
       .page.exchanges
         h1 Exchange
@@ -123,46 +125,48 @@ html(lang='en')
     // Placed at the end of the document so the pages load faster
   script
     $(document).ready(function () {
-    $('#edit-email-trigger').click(function () {
-    $('#email').removeAttr('disabled');
-    $('#save-email-trigger').show();
-    $(this).hide();
+      $('#edit-email-trigger').click(function () {
+        $('#email').removeAttr('disabled');
+        $('#save-email-trigger').show();
+        $(this).hide();
+      });
+      $('#save-email-trigger').click(function () {
+        function validateEmail(email) {
+          var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+        }
+        if (validateEmail($('#email').val())) {
+          console.log('email valid. changing email');
+          $('#email').attr('disabled','');
+          $('#edit-email-trigger').show();
+          $(this).hide();
+        } else {
+          console.log('the entered email is not valid');
+        }
+      });
+      $('#change-password-trigger').click(function () {
+        function validateOldPasswords () {
+          var newpass = $('#newpassword').val();
+          var newpass1 = $('#newpassword1').val();
+          if (newpass.length < 6) {
+           return 3;
+          }
+          if (newpass != newpass1) {
+            return 2;
+          }
+          return 1;
+        }
+        console.log('validating password change...');
+        var validate = validateOldPasswords();
+        if (validate == 1) {
+          console.log('Inputs valid.');
+          //Ajax request to change password
+        } else if (validate == 2) {
+          console.log('The new password entries must match.');
+        } else if (validate == 3) {
+          console.log('Your new password must be at last 6 characters long');
+        }
+      });
     });
-    $('#save-email-trigger').click(function () {
-    function validateEmail(email) {
-    var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-    }
-    if (validateEmail($('#email').val())) {
-    console.log('email valid. changing email');
-    $('#email').attr('disabled','');
-    $('#edit-email-trigger').show();
-    $(this).hide();
-    } else {
-    console.log('the entered email is not valid');
-    }
-    });
-    $('#change-password-trigger').click(function () {
-    function validateOldPasswords () {
-    var newpass = $('#newpassword').val();
-    var newpass1 = $('#newpassword1').val();
-    if (newpass.length < 6) {
-    return 3;
-    }
-    if (newpass != newpass1) {
-    return 2;
-    }
-    return 1;
-    }
-    console.log('validating password change...');
-    var validate = validateOldPasswords();
-    if (validate == 1) {
-    console.log('Inputs valid.');
-    //Ajax request to change password
-    } else if (validate == 2) {
-    console.log('The new password entries must match.');
-    } else if (validate == 3) {
-    console.log('Your new password must be at last 6 characters long');
-    }
-    });
-    });
+  script(id='schedule-template')
+    <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/+{{img_url}}+&embedded=true" style="width:718px; height:700px;" frameborder="0"></iframe>
