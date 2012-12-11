@@ -9,6 +9,7 @@ block content
 		input(type="hidden", name="Content-Type", id="fld_contenttype")
 		input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
 		input(type="hidden", name="signature", id="fld_Signature")
+		input(type="hidden", name="success_action_redirect", id="fld_success_action_redirect")
 		input(type="file", name="file", id="file", placeholder="file")
 		input(type="submit", name="submit2", id="btn_submit")
 
@@ -24,7 +25,7 @@ block content
 			$("#fld_Policy").val(res.s3PolicyBase64);
 			$("#fld_Signature").val(res.s3Signature);
 			$("#fld_contenttype").val('application/pdf');
-			//$("#fld_success_action_redirect").val(res.S3Redirect);
+			$("#fld_success_action_redirect").val(res.S3Redirect);
 			$("#fld_key").val(res.key);
 			$("#fld_acl").val(res.acl);
 
@@ -39,13 +40,14 @@ block content
 
 			$.ajax({
 				url: "/upload",
-				method: 'POST',
-				data: 
+				type: 'POSt',
+				data: '',
 				success: function (res) {
+					console.log('received success');
 					processResponse(res);
 				},
 				error: function(res, status, error) {
-
+					console.log('received an error');
 				}
 			});
 		}

@@ -93,7 +93,7 @@ exports.clientUpload = function(req, res) {
 				//["starts-with", "$Content-Disposition", ""], 
 				["starts-with", "$key", ""], 
 				{ "acl": "public-read" },
-				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
+				{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				["content-length-range", 0, 2147483648],
 				["eq", "$Content-Type", 'application/pdf']
 			]
@@ -115,7 +115,7 @@ exports.clientUpload = function(req, res) {
 	var file_name = req.session.employerid+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
 
 	var schedule = new models.Schedule ({
-		employer: req.session.employerid || mongoose.Types.ObjectId('999999999999999999999999'),
+		employer: req.session.employerid,
 		date: new Date(req.body.date),
 		creation_time: Date(),
 		image_loc: file_name,
