@@ -11,59 +11,63 @@ html(lang='en')
     link(href='./css/bootstrap-responsive.css', rel='stylesheet')
     link(rel='stylesheet', type='text/css', media='screen,print', href='./css/jquery-ui-1.8.21.custom.css')
     style
-      body {
-      padding-top: 0px; /* 60px to make the container go all the way to the bottom of the topbar */
-      } .page {
-      display:none;
-      visibility:hidden;
+      @media (min-width: 979px) {
+        body {
+          padding-top: 60px;
+        }
+      }
+      @media (max-width: 979px) {
+        body {
+          padding-top: 0px;
+        }
+      }
+      .page {
+        display:none;
+        visibility:hidden;
       } .page.active {
-      display:block;
-      visibility:visible;
-      }
-      .add-another strong {
-      -moz-border-radius: 2px;
-      -webkit-border-radius: 2px;
-      -o-border-radius: 2px;
-      -ms-border-radius: 2px;
-      -khtml-border-radius: 2px;
-      border-radius: 2px;
-      display: block;
-      border: 1px dashed #CCC;
-      line-height: 78px;
-      }
-      .add-another {
-      display: block;
-      -moz-border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -o-border-radius: 3px;
-      -ms-border-radius: 3px;
-      -khtml-border-radius: 3px;
-      border-radius: 3px;
-      height: 80px;
-      background: white;
-      border: 1px solid #CCC;
-      padding: 5px;
-      text-align: center;
-      cursor:pointer;
-      }
-      .add-another-wrap {
-      background: #EEE;
-      -moz-border-radius: 6px;
-      -webkit-border-radius: 6px;
-      -o-border-radius: 6px;
-      -ms-border-radius: 6px;
-      -khtml-border-radius: 6px;
-      border-radius: 6px;
-      padding: 4px;
-      }
-      .add-another:hover {
-      background: #E3F0FD;
+        display:block;
+        visibility:visible;
+      } .add-another strong {
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -o-border-radius: 2px;
+        -ms-border-radius: 2px;
+        -khtml-border-radius: 2px;
+        border-radius: 2px;
+        display: block;
+        border: 1px dashed #CCC;
+        line-height: 78px;
+      } .add-another {
+        display: block;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -o-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -khtml-border-radius: 3px;
+        border-radius: 3px;
+        height: 80px;
+        background: white;
+        border: 1px solid #CCC;
+        padding: 5px;
+        text-align: center;
+        cursor:pointer;
+      } .add-another-wrap {
+        background: #EEE;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -o-border-radius: 6px;
+        -ms-border-radius: 6px;
+        -khtml-border-radius: 6px;
+        border-radius: 6px;
+        padding: 4px;
+      } .add-another:hover {
+        background: #E3F0FD;
       } .name, .station {
-      text-align:right; /*testing only*/
-      font-size:12px;
-      line-height:14px;
+        text-align:right; /*testing only*/
+        font-size:12px;
+        line-height:14px;
       } .name {
-      text-align:left;
+        text-align:left;
       }
       .schedule-row {
       display:block;
