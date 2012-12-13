@@ -102,9 +102,10 @@ html(lang='en')
                   | Tuesday, August 21
                   sup st
             .tab-content
-              .tab-pane.active
-              .tab-pane
- 
+              .tab-pane.active#2012-08-20
+                <iframe src="https://s3.amazonaws.com/nrmitchi.schedules/e08e5a7d95bfe3addad26a3dd8aadda018507973.pdf" style="width:100%;height:700px;"></iframe>
+              .tab-pane#2012-08-21
+                <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/12BarzTickets.pdf&embedded=true" style="width:718px; height:700px;" frameborder="0"></iframe>
       .page.exchanges
         h1 Exchange
         #search.row
@@ -177,4 +178,4 @@ html(lang='en')
       });
     });
   script(id='schedule-template')
-    <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/+{{img_url}}+&embedded=true" style="width:718px; height:700px;" frameborder="0"></iframe>
+    //<iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/+{{img_url}}+&embedded=true" style="width:718px; height:700px;" frameborder="0"></iframe>

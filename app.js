@@ -88,7 +88,9 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
-
+	app.get('/upload', function (req, res) {
+		res.render('testupload', { title: 'testupload' });
+	});
 	app.post('/upload', function (req, res) {
 		//if (employer) {
 			schedules.clientUpload(req, res);
@@ -98,13 +100,6 @@ app.configure(function(){
 		//}
 	});
 	app.post('/verifyUpload', schedules.verifyUpload);
-
-	//I can upload, however permissions are not right
-	app.get('/gets3creds', function (req, res) {
-		//Check permission; only employers should be able to upload
-			//Note I am skipping this for now for testing
-			//This should also insert the schedule into the database, with a field stating that the upload has not yet completed. This field will be removed on successful upload
-	});
 
 	app.get('/testupload', function (req, res) {
 		res.render('testupload', { title: 'testupload' });

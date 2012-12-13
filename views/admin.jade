@@ -108,7 +108,7 @@ html(lang='en')
     //if lt IE 9
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
   body
-    .navbar
+    .navbar.navbar-fixed-top
       .navbar-inner
         .container
           a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
@@ -169,7 +169,7 @@ html(lang='en')
               li.nav-header#prependHere
                 hl
               div
-                button.btn.btn-success.btn-block#add_schedule
+                button.btn.btn-success.btn-block.upload-modal-trigger#add_schedule
                   Upload New Schedule
               li.nav-header
                 hl
@@ -333,6 +333,21 @@ html(lang='en')
                     .controls
                       input#email.input-large(type='text')
                       p
+    #upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
+      .modal-header
+        h3 Upload Schedule
+      .modal-body
+        form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
+          input(type="hidden", name="key", id="fld_key")
+          input(type="hidden", name="acl", id="fld_acl")
+          input(type="hidden", name="policy", id="fld_Policy")
+          input(type="hidden", name="Content-Type", id="fld_contenttype")
+          input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
+          input(type="hidden", name="signature", id="fld_Signature")
+          input(type="file", name="file", id="file", placeholder="file")
+          input(type="submit", name="submit2", id="upload_submit", value="Upload").btn.btn-success.btn-large
+      .modal-footer
+        button.btn(data-dismiss='modal') Cancel
     // /container
     //
     // Placed at the end of the document so the pages load faster
@@ -409,6 +424,9 @@ html(lang='en')
       });
       $('.ui-slider-handle').hide();
       });
+      $('.upload-modal-trigger').click(function () {
+        $('#upload-modal').modal('show');
+      });
     script#employee-template(type='text/x-handlebars-template')
       <div class="well">
       <h1 class="name"><%= name =></h1>
@@ -427,3 +445,96 @@ html(lang='en')
       <div class="span1 btn save-shift">Save</div>
     script#schedule-template(type='text/template')
     script#approval-template(type='text/template')
+
+  script
+    //Helpers
+    function uploadProgress(evt) {
+      if (evt.lengthComputable) {
+        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+        document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+      }
+      else {
+        document.getElementById('progressNumber').innerHTML = 'unable to compute';
+      }
+    }
+
+    function uploadComplete(evt) {
+      /* This event is raised when the server send back a response */
+      alert("Done - " + evt.target.responseText );
+    }
+
+    function uploadFailed(evt) {
+      alert("There was an error attempting to upload the file." + evt);
+    }
+
+    function uploadCanceled(evt) {
+      alert("The upload has been canceled by the user or the browser dropped the connection.");
+    }
+
+    function postCallback ( id ) {
+
+    }
+
+    function processResponse( res1 ) {
+      window.res = JSON.parse(res1);
+
+      console.log(res);
+      console.log(res.key.toString());
+
+      //$("#fld_redirect").val(res.s3Redirect);
+      $("#fld_AWSAccessKeyId").val(res.s3Key);
+      $("#fld_Policy").val(res.s3PolicyBase64);
+      $("#fld_Signature").val(res.s3Signature);
+      $("#fld_contenttype").val('application/pdf');
+      $("#fld_key").val(res.key);
+      $("#fld_acl").val(res.acl);
+
+      console.log('Policy: '+$("#fld_Policy").val());
+      console.log('Key: '+$("#fld_key").val());
+      console.log('Redirect: '+$("#fld_redirect").val());
+
+      /*
+      var file = $('#schedule').val();
+      var fd = new FormData();
+
+      fd.append('key', res.s3Key);
+      fd.append('acl', 'public-read'); 
+      fd.append('Content-Type', 'application/pdf');      
+      fd.append('AWSAccessKeyId', res.s3Key);
+      fd.append('policy', res.s3PolicyBase64)
+      fd.append('signature',res.s3Signature);
+      fd.append('file', file);
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener("progress", uploadProgress, false);
+      xhr.addEventListener("load", uploadComplete, false);
+      xhr.addEventListener("error", uploadFailed, false);
+      xhr.addEventListener("abort", uploadCanceled, false);
+
+      xhr.open('POST', 'https://nrmitchi.schedules.s3.amazonaws.com/', true); //MUST BE LAST LINE BEFORE YOU SEND 
+
+      xhr.send(fd);
+      */
+
+      $('#myform').submit();
+    }
+
+    requestCredentials = function(event) {
+      event.preventDefault();
+
+      $.ajax({
+        url: "/upload",
+        type: 'POST',
+        data: '',
+        success: function (res) {
+          console.log('received success');
+          processResponse(res);
+        },
+        error: function(res, status, error) {
+          console.log('received an error');
+        }
+      });
+    }
+
+    $( "#upload_submit" ).bind( "click", requestCredentials );

@@ -75,14 +75,10 @@ exports.load = function (req, res) {
 };
 exports.clientUpload = function(req, res) {
 
-	var sendCreds = function (id) {
+	var sendCreds = function (id, key) {
 		var createS3Policy;
 		var s3Signature;
 		var s3Credentials;
-
-		var key = new Date().getTime().toString(); //Use the current time as key for testing
-		var rand = 'dflkasjceo;ajsclkajs'; //Random string
-		key = crypto.createHmac('sha1', rand).update(key).digest('hex')+'.pdf';
 
 		var s3PolicyBase64, _date, _s3Policy;
 		_date = new Date();
@@ -93,7 +89,7 @@ exports.clientUpload = function(req, res) {
 				//["starts-with", "$Content-Disposition", ""], 
 				["starts-with", "$key", ""], 
 				{ "acl": "public-read" },
-				{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
+				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				["content-length-range", 0, 2147483648],
 				["eq", "$Content-Type", 'application/pdf']
 			]
@@ -112,7 +108,9 @@ exports.clientUpload = function(req, res) {
 		res.end(JSON.stringify(s3Credentials));
 	}
 
-	var file_name = req.session.employerid+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
+	var file_name = new Date().getTime().toString(); //Use the current time as key for testing
+	var rand = 'dflkasjceo;ajsclkajs'; //Random string
+	file_name = crypto.createHmac('sha1', rand).update(file_name).digest('hex')+'.pdf';
 
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,
@@ -126,7 +124,7 @@ exports.clientUpload = function(req, res) {
 	schedule.save(function (err, s) {
 		if (!err) {
 			console.log('New Schedule created: id: '+s.id);
-			sendCreds(s.id);
+			sendCreds(s.id, file_name);
 		} else { //There was an error
 			console.log('There was an error creating a schedule: '+err);
 			res.statusCode = 500;
