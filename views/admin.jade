@@ -104,6 +104,8 @@ html(lang='en')
     script(src='./js/underscore.js')
     script(src='./js/backbone.js')
     script(src='./js/admin-application.js')
+    script(src='./js/jquery.fileupload.js')
+    script(src='./js/jquery.ui.widget.js')
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
@@ -340,11 +342,14 @@ html(lang='en')
         form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
           input(type="hidden", name="key", id="fld_key")
           input(type="hidden", name="acl", id="fld_acl")
+          input(type="hidden", name="success_action_redirect", id="fld_redirect")
           input(type="hidden", name="policy", id="fld_Policy")
           input(type="hidden", name="Content-Type", id="fld_contenttype")
           input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
           input(type="hidden", name="signature", id="fld_Signature")
           input(type="file", name="file", id="file", placeholder="file")
+          .progress.progress-striped.active
+            .bar
           input(type="submit", name="submit2", id="upload_submit", value="Upload").btn.btn-success.btn-large
       .modal-footer
         button.btn(data-dismiss='modal') Cancel
@@ -481,7 +486,7 @@ html(lang='en')
       console.log(res);
       console.log(res.key.toString());
 
-      //$("#fld_redirect").val(res.s3Redirect);
+      $("#fld_redirect").val(res.s3Redirect);
       $("#fld_AWSAccessKeyId").val(res.s3Key);
       $("#fld_Policy").val(res.s3PolicyBase64);
       $("#fld_Signature").val(res.s3Signature);
@@ -493,7 +498,6 @@ html(lang='en')
       console.log('Key: '+$("#fld_key").val());
       console.log('Redirect: '+$("#fld_redirect").val());
 
-      /*
       var file = $('#schedule').val();
       var fd = new FormData();
 
@@ -505,6 +509,20 @@ html(lang='en')
       fd.append('signature',res.s3Signature);
       fd.append('file', file);
 
+      $.ajax({
+        url: 'http://nrmitchi.schedules.s3.amazonaws.com/',
+        type: 'POST',
+        dateType: 'multipart/form-data',
+        data: $('#myform').serialize(),
+        success: function () {
+          alert('success');
+        }, error: function () {
+          alert('error');
+        }, complete: function () {
+          alert('complete');
+        }
+      });
+      /*
       var xhr = new XMLHttpRequest();
 
       xhr.upload.addEventListener("progress", uploadProgress, false);
@@ -517,7 +535,7 @@ html(lang='en')
       xhr.send(fd);
       */
 
-      $('#myform').submit();
+      //$('#myform').submit();
     }
 
     requestCredentials = function(event) {
@@ -538,3 +556,59 @@ html(lang='en')
     }
 
     $( "#upload_submit" ).bind( "click", requestCredentials );
+
+
+    /*$(function() {
+
+      //$('.direct-upload').each(function() {
+
+        //var form = $(this)
+        var form = $('#myform');
+
+        $('#myform').fileupload({
+          url: form.attr('action'),
+          type: 'POST',
+          autoUpload: true,
+          dataType: 'xml', // This is really important as s3 gives us back the url of the file in a XML document
+          add: function (event, data) {
+            $.ajax({
+              url: "/upload",
+              type: 'POST',
+              dataType: 'json',
+              data: '',
+              async: false,
+              success: function(data) {
+                // Now that we have our data, we update the form so it contains all the needed data to sign the request
+                console.log('received success');
+                processResponse(res);
+              }
+            })
+            data.submit();
+          },
+          send: function(e, data) {
+            $('.progress').fadeIn();
+          },
+          progress: function(e, data){
+            // This is what makes everything really cool, thanks to that callback
+            // you can now update the progress bar based on the upload progress
+            var percent = Math.round((e.loaded / e.total) * 100)
+            $('.bar').css('width', percent + '%')
+          },
+          fail: function(e, data) {
+            console.log('fail')
+          },
+          success: function(data) {
+            // Here we get the file url on s3 in an xml doc
+            var url = $(data).find('Location').text()
+            console.log('success!');
+            $('#real_file_url').val(url) // Update the real input in the other form
+          },
+          done: function (event, data) {
+            //$('.progress').fadeOut(300, function() {
+            //  $('.bar').css('width', 0)
+            //})
+            alert('done!');
+          },
+        })
+      //})
+    })*/
