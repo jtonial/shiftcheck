@@ -1,5 +1,9 @@
 use schedule
 
+db.employees.drop();
+db.employers.drop();
+db.schedules.drop();
+
 db.createCollection('employees');
 db.createCollection('employers');
 db.createCollection('schedules');
@@ -132,6 +136,16 @@ db.schedules.insert(
 		creation_time: new Date(),
 		image_loc: '1234567891012131415.pdf',
 		shifts: []
+	}
+)
+db.schedules.insert(
+	{
+		employer:employerId('McDonalds'),
+		date:ISODate('2012-12-21'),
+		creation_time: new Date(),
+		image_loc: '1234567891012131415.pdf',
+		shifts: [],
+		awaitingupload: true
 	}
 )
 db.schedules.insert(

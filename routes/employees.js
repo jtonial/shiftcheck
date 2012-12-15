@@ -21,9 +21,8 @@ exports.bootstrap = function(req, res){
 				response.last_name = doc.last_name;
 
 				//Fetch Schedule locations
-				models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }/*, $exists: {'awaitingupload': false}*/ }, function (err, docs) {
+				models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 					if (!err) {
-						console.log('test');
 						response.schedules = new Array();
 
 						docs.forEach(function (x) {
@@ -31,16 +30,17 @@ exports.bootstrap = function(req, res){
 							var tmp = new Object();
 							tmp.date = x.date;
 							tmp.creation_time = x.creation_time;
-							tmp.last_modified = x.last_modified;
+							//tmp.last_modified = x.last_modified;
 							tmp.url = x.image_loc;
 							response.schedules.push(tmp);
-						})
+						});
 
 						res.setHeader('Content-Type', 'application/json');
 						res.end(JSON.stringify(response));
 					} else {
 						console.log('Error fetching Employee: '+err);
 						res.statusCode = 500;
+						res.end();
 					}
 				});
 			} else {

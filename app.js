@@ -92,26 +92,24 @@ app.configure(function(){
 		res.render('testupload', { title: 'testupload' });
 	});
 	app.post('/upload', function (req, res) {
-		//if (employer) {
+		if (employer) {
 			schedules.clientUpload(req, res);
-		//} else {
-		//	res.statusCode = 403;
-		//	res.end();
-		//}
+		} else {
+			res.statusCode = 403;
+			res.end();
+		}
 	});
-	app.post('/verifyUpload', schedules.verifyUpload);
+	app.get('/verifyUpload', function (req, res) {
+		console.log('GET - verifyUpload');		
+		schedules.verifyUpload(req,res);
+	});
+	app.post('/verifyUpload', function (req, res) {
+		console.log('POST - verifyUpload');
+		schedules.verifyUpload(req,res);
+	});
 
 	app.get('/testupload', function (req, res) {
 		res.render('testupload', { title: 'testupload' });
-	});
-	app.get('/uploadsuccess', function (req, res) {
-		//This is what should get pinged on successful upload. This will remove the 'incomplete' flag on the item specified in a parameter
-		console.log('GET - uploadsuccess');
-		res.end('GET - uploadsuccess');
-	});
-	app.post('/uploadsuccess', function (req, res) {
-		console.log('POST - uploadsuccess');
-		res.end('POST - uploadsuccess');
 	});
 
 	//Me

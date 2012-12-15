@@ -32,18 +32,18 @@ $(function() {
 
 	Scheduleme.classes.models.Schedule = Backbone.Model.extend({
 		//url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
-		model: Scheduleme.classes.models.Shift,
+		//model: Scheduleme.classes.models.Shift,
 
 		initialize: function () {
 			//this.shifts = new Scheduleme.classes.collections.Shifts();
 			//this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
 
-			var that = this;
+			/*var that = this;
 			$.each(this.get('shifts'), function (index, shift) {
 				console.log('adding shift: '+index);
 				that.shifts.add({model: shift});
 				//that.shifts.add(new Scheduleme.classes.model.Shift({model:shift});
-			});
+			});*/
 
 		}
 
@@ -93,9 +93,10 @@ $(function() {
 
 	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
-		//template: Handlebars.compile($('#receipt-template').html()),
-//		template: _.template($('#schedule-template').html()),
+		template: Handlebars.compile($('#schedule-template').html()),
 		
+		className: 'tab-pane',
+
 		//Create the frame
 		initialize: function () {
 			var that=this;
@@ -110,8 +111,11 @@ $(function() {
 
 		//Add in views for each shift in the schedule
 		render: function () {
-//			$(this.el).html(this.template(this.model.toJSON()));
-			return this;
+			$(this.el).attr('id',this.model.get('datenum'));
+			var tmp = this.template(this.model.toJSON());
+			console.log('LOG:::: '+tmp);
+			$(this.el).html(tmp);
+			return $(this.el);
 		}
 
 	});
@@ -132,14 +136,17 @@ $(function() {
 
 			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
 			var d = new Date(datenum);
+			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate()+1);
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
+			schedule.set('datenum', datenum);
+			schedule.set('datestring', datestring);
 			//var test = d.getDate()+1; console.log('Date: '+test+'; %10: '+test%10+'; sup: '+Sups[test%10]);
 			this.$('#dates.nav-tabs').append('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 
-			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule});
+			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule, datenum: datenum});
 
-			//this.$('.tab-content').append(view.render());
-			this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
+			this.$('.tab-content').append(view.render());
+			//this.$('.tab-content').append('<div id="'+datenum+'" class="tab-pane"></div>');
 			
 		},
 	});
@@ -186,10 +193,23 @@ $(function() {
 	});
 //------------------PAYLOAD----------------------------
 
-		//Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
-		//Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
+	Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+	Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
 
-		Scheduleme.Router = new AppRouter;
-		Backbone.history.start();
+	Scheduleme.Router = new AppRouter;
+	Backbone.history.start();
 
+	Handlebars.registerHelper('outputDate', function() {
+		var t = new Date();
+		var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
+		var output = '';
+		if (this.datenum == today) {
+			return 'Today';
+		} else {
+			return this.datestring;
+		}
+	});
+
+	Scheduleme.Schedules.add({"date":"2012-12-18T00:00:00.000Z","creation_time":"2012-12-15T07:22:41.971Z","url":"12BarzTickets.pdf"});
+	Scheduleme.Schedules.add({"date":"2012-12-19T00:00:00.000Z","creation_time":"2012-12-15T07:22:41.971Z","url":"12BarzTickets.pdf"});
 });
