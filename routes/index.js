@@ -46,16 +46,16 @@ exports.loginProcess = function (req, res) {
 	var where = new Object();
 	var is_email = true; //This should be a regex match
 	if (is_email) {
-		console.log('is an email');
+		//console.log('is an email');
 		where.email = email;
 	} else { //is username
-		console.log('is not email... somethigns wrong');
+		//console.log('is not email... somethigns wrong');
 		where.email = email;
 	}
 	console.log(where)
 	//Access db to get users info
 	models.Employee.findOne ( where, function (err, doc) {
-		console.log('in signin callback - employee');
+		//console.log('in signin callback - employee');
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
@@ -70,7 +70,7 @@ exports.loginProcess = function (req, res) {
 
 					res.statusCode = 200;
 					res.end();
-					console.log('login success');
+					//console.log('login success');
 					models.Employee.update({ _id:doc._id },
 						{ $inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
 							if (err) {
@@ -107,7 +107,7 @@ exports.adminloginProcess = function (req, res) {
 
 	//Access db to get users info
 	models.Employer.findOne ( {email: email}, function (err, doc) {
-		console.log('in signin callback - admin');
+		//console.log('in signin callback - admin');
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
@@ -121,7 +121,7 @@ exports.adminloginProcess = function (req, res) {
 
 					res.statusCode = 200;
 					res.end();
-					console.log('login success');
+					//console.log('login success');
 					models.Employer.update({ _id:doc._id },
 						{$inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
 							if (err) {

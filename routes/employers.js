@@ -9,7 +9,7 @@ calcHash = function (val) {
 	return shasum.update(val+salt).digest('hex');
 }
 
-exports.loadMe = function(req, res){
+exports.bootstrap = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		console.log('Load EmployerID: '+req.session.employerid);
 		models.Employer.findOne({ _id:req.session.employerid }, function (err, doc) {
@@ -20,15 +20,15 @@ exports.loadMe = function(req, res){
 				res.statusCode = 200;
 				res.write(JSON.stringify(response));
 			} else {
-				console.log('Error fetching Project: '+err);
-				res.statusCode = 499;
+				console.log('Error fetching Employer: '+err);
+				res.statusCode = 500;
 			}
 			res.end();
 		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?
 		res.end();
-		console.log('Unauthorized access attempt: loadOne employee');
+		console.log('Unauthorized access attempt: employer bootstrap');
 	}
 };
 
@@ -47,7 +47,7 @@ exports.load = function (req, res) {
 			res.write(JSON.stringify(response));
 		} else {
 			console.log('Error fetching Projectss: '+err);
-			res.statusCode = 499;
+			res.statusCode = 500;
 		}
 		res.end();
 	});
@@ -144,8 +144,8 @@ exports.changePassword = function(req,res){
 				res.statusCode = 200;
 				res.end("Password Updated");
 			} else { //An error
-				res.statusCode = 499;
-				res.end('There was an error.. not sure what i should do here');
+				res.statusCode = 500;
+				res.end('There was an error.. password was not changed.');
 			}
 		});
 	} else {
@@ -162,6 +162,6 @@ exports.delete = function(req, res) {
 	} else {
 		res.statusCode = 403; //Unauthorized access?
 		res.end();
-		console.log('Unauthorized access attempt: create employee');
+		console.log('Unauthorized access attempt: delete employee');
 	}
 };

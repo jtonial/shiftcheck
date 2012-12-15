@@ -9,27 +9,29 @@ calcHash = function (val) {
 	return shasum.update(val+salt).digest('hex');
 }
 
-exports.loadMe = function(req, res){
+exports.bootstrap = function(req, res){
 	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
 		console.log('Load EmployeeID: '+req.session.employeeid);
 		models.Employee.findOne({ _id:req.session.employeeid }, function (err, doc) {
 			if (!err) {
 				var response = new Object();
 				//Note: I cannot just response = doc. If I do this I cannot seem to add to the response object
-//				response.email = doc.email;
-//				response.first_name = doc.first_name;
-//				response.last_name = doc.last_name;
+				response.email = doc.email;
+				response.first_name = doc.first_name;
+				response.last_name = doc.last_name;
 
 				//Fetch Schedule locations
-				models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() } }, function (err, docs) {
+				models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }/*, $exists: {'awaitingupload': false}*/ }, function (err, docs) {
 					if (!err) {
 						console.log('test');
 						response.schedules = new Array();
 
 						docs.forEach(function (x) {
-							console.log(x);
+							//console.log(x);
 							var tmp = new Object();
 							tmp.date = x.date;
+							tmp.creation_time = x.creation_time;
+							tmp.last_modified = x.last_modified;
 							tmp.url = x.image_loc;
 							response.schedules.push(tmp);
 						})
@@ -37,19 +39,19 @@ exports.loadMe = function(req, res){
 						res.setHeader('Content-Type', 'application/json');
 						res.end(JSON.stringify(response));
 					} else {
-						console.log('Error fetching Project: '+err);
+						console.log('Error fetching Employee: '+err);
 						res.statusCode = 500;
 					}
 				});
 			} else {
-				console.log('Error fetching Project: '+err);
+				console.log('Error fetching Employee: '+err);
 				res.statusCode = 500;
 				res.end();
 			}
 		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?
-		console.log('Unauthorized access attempt: loadOne employee');
+		console.log('Unauthorized access attempt: employee bootstrap');
 		res.end();
 	}
 };

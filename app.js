@@ -115,11 +115,11 @@ app.configure(function(){
 	});
 
 	//Me
-	app.get('/me', function (req, res) {
+	app.get('/bootstrap', function (req, res) {
 		if (employee) { //An employee is signed in
-			employees.loadMe(req, res); // TODO: Write this function
+			employees.bootstrap(req, res); // TODO: Write this function
 		} else if (employer) {
-			employers.loadMe(req, res); //TODO: Write this function
+			employers.bootstrap(req, res); //TODO: Write this function
 		} else {
 			res.statusCode = 403;
 			res.end();

@@ -63,6 +63,7 @@ var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
 	date: Date,
 	creation_time: Date,
+	last_modified: Date,
 	image_loc: String,
 	shifts: [ShiftSchema],
 	awaitingupload: Boolean
