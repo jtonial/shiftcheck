@@ -44,9 +44,7 @@ $(function() {
 				that.shifts.add({model: shift});
 				//that.shifts.add(new Scheduleme.classes.model.Shift({model:shift});
 			});*/
-
 		}
-
 	});
 
 	Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
@@ -210,6 +208,21 @@ $(function() {
 		}
 	});
 
-	Scheduleme.Schedules.add({"date":"2012-12-18T00:00:00.000Z","creation_time":"2012-12-15T07:22:41.971Z","url":"12BarzTickets.pdf"});
-	Scheduleme.Schedules.add({"date":"2012-12-19T00:00:00.000Z","creation_time":"2012-12-15T07:22:41.971Z","url":"12BarzTickets.pdf"});
+	$(document).ready(function () {
+		$.ajax({
+			url: '/bootstrap',
+			success: function (res) {
+				//Removing loading div
+				$.each(res.schedules, function () {
+					console.log(JSON.stringify(this));
+					Scheduleme.Schedules.add(this);
+				})
+				$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+			}, error: function () {
+				//Remove loading div
+				console.log('An error occured');
+				alert('We seem to be having some technical difficulties');
+			}
+		})
+	});
 });

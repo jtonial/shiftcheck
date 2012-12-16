@@ -104,8 +104,6 @@ html(lang='en')
     script(src='./js/underscore.js')
     script(src='./js/backbone.js')
     script(src='./js/admin-application.js')
-    script(src='./js/jquery.fileupload.js')
-    script(src='./js/jquery.ui.widget.js')
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
@@ -342,7 +340,6 @@ html(lang='en')
         form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
           input(type="hidden", name="key", id="fld_key")
           input(type="hidden", name="acl", id="fld_acl")
-          input(type="hidden", name="success_action_redirect", id="fld_redirect")
           input(type="hidden", name="policy", id="fld_Policy")
           input(type="hidden", name="Content-Type", id="fld_contenttype")
           input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
@@ -486,7 +483,7 @@ html(lang='en')
       console.log(res);
       console.log(res.key.toString());
 
-      $("#fld_redirect").val(res.s3Redirect);
+      //$("#fld_redirect").val(res.s3Redirect);
       $("#fld_AWSAccessKeyId").val(res.s3Key);
       $("#fld_Policy").val(res.s3PolicyBase64);
       $("#fld_Signature").val(res.s3Signature);
@@ -509,21 +506,18 @@ html(lang='en')
       fd.append('signature',res.s3Signature);
       fd.append('file', file);
 
-      $.ajax({
+      /*$.ajax({
         url: 'http://nrmitchi.schedules.s3.amazonaws.com/',
         type: 'POST',
-        dateType: 'multipart/form-data',
         data: $('#myform').serialize(),
         success: function () {
           alert('success');
         }, error: function () {
           alert('error');
-        }, complete: function () {
-          alert('complete');
         }
-      });
-      /*
-      var xhr = new XMLHttpRequest();
+      });*/
+
+      /*var xhr = new XMLHttpRequest();
 
       xhr.upload.addEventListener("progress", uploadProgress, false);
       xhr.addEventListener("load", uploadComplete, false);
@@ -532,10 +526,9 @@ html(lang='en')
 
       xhr.open('POST', 'https://nrmitchi.schedules.s3.amazonaws.com/', true); //MUST BE LAST LINE BEFORE YOU SEND 
 
-      xhr.send(fd);
-      */
+      xhr.send(fd);*/
 
-      //$('#myform').submit();
+      $('#myform').submit();
     }
 
     requestCredentials = function(event) {
@@ -581,9 +574,9 @@ html(lang='en')
                 // Now that we have our data, we update the form so it contains all the needed data to sign the request
                 console.log('received success');
                 processResponse(res);
+                data.submit();
               }
             })
-            data.submit();
           },
           send: function(e, data) {
             $('.progress').fadeIn();

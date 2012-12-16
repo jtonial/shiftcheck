@@ -86,8 +86,6 @@ exports.clientUpload = function(req, res) {
 			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()+12) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
 			"conditions": [
 				{ "bucket": "nrmitchi.schedules" }, 
-				//["starts-with", "$Content-Disposition", ""], 
-				["starts-with", "$key", ""], 
 				{ "acl": "public-read" },
 				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				["content-length-range", 0, 2147483648],
@@ -117,8 +115,8 @@ exports.clientUpload = function(req, res) {
 		date: new Date(req.body.date),
 		creation_time: Date(),
 		image_loc: file_name,
-		shifts: new Array(),//shifts
-		awaitingupload: true
+		shifts: new Array()//,//shifts
+		//awaitingupload: true
 	});
 
 	schedule.save(function (err, s) {
