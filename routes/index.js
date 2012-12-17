@@ -3,37 +3,17 @@ var models = require('../models/models.js')
 	, mongoose = require('mongoose')
 	;
 
+//Helpers
 calcHash = function (val) {
 	var shasum = crypto.createHash('sha1')
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-	//return val;
 }
 
-exports.index = function(req, res){
-	res.setHeader('Content-Type','text/html');
-	if (typeof req.session.loggedin != 'undefined') {
-		if (typeof req.session.employeeid != 'undefined') {
-			res.render('dash', { title: 'Schedule.me' });
-		} else { //It is an employer signed in
-			res.render('admin', { title: 'Schedule.me' });
-		}
-	} else {
-		res.render('welcome', { title: 'Schedule.me' });
-	}
-};
-
-exports.logout = function (req, res) {
-	var message = 'Logged out';
-	req.session.destroy();
-	console.log(message);
-	res.redirect('/');
-};
-
-exports.loginPage = function (req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('login', { title: 'Schedule.me' });
+is_email = function (email) {
+	var reg_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return reg_email.test(email);
 };
 
 exports.loginProcess = function (req, res) {
@@ -44,18 +24,16 @@ exports.loginProcess = function (req, res) {
 
 	//Determine if it is a username or email
 	var where = new Object();
-	var is_email = true; //This should be a regex match
-	if (is_email) {
-		//console.log('is an email');
+
+	if (is_email(email)) {
+		console.log('is an email');
 		where.email = email;
 	} else { //is username
-		//console.log('is not email... somethigns wrong');
 		where.email = email;
 	}
-	console.log(where)
+
 	//Access db to get users info
-	models.Employee.findOne ( where, function (err, doc) {
-		//console.log('in signin callback - employee');
+	models.Employee.findOne ( where , function (err, doc) {
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
@@ -70,7 +48,7 @@ exports.loginProcess = function (req, res) {
 
 					res.statusCode = 200;
 					res.end();
-					//console.log('login success');
+
 					models.Employee.update({ _id:doc._id },
 						{ $inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
 							if (err) {
@@ -94,20 +72,24 @@ exports.loginProcess = function (req, res) {
 	});
 };
 
-exports.adminloginPage = function (req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('admin-login', { title: 'Schedule.me' });
-};
-
 exports.adminloginProcess = function (req, res) {
 	var email = req.body.email;
 	//This will have to be the hashed/salted password
 	var password = calcHash(req.body.password);
 	console.log('Email: '+email+'; Password: '+password);
 
+	//Determine if it is a username or email
+	var where = new Object();
+
+	if (is_email(email)) {
+		console.log('is an email');
+		where.email = email;
+	} else { //is username
+		where.email = email;
+	}
+
 	//Access db to get users info
-	models.Employer.findOne ( {email: email}, function (err, doc) {
-		//console.log('in signin callback - admin');
+	models.Employer.findOne ( where , function (err, doc) {
 		if (!err) {
 			if (doc) {
 				if (doc.password == password) { //If signed in; If I add password:password check in db query i dont have to check it here
@@ -121,7 +103,7 @@ exports.adminloginProcess = function (req, res) {
 
 					res.statusCode = 200;
 					res.end();
-					//console.log('login success');
+
 					models.Employer.update({ _id:doc._id },
 						{$inc: {login_count:1}, $set: {last_login: new Date()}}, false, false, function (err) {
 							if (err) {
@@ -145,6 +127,9 @@ exports.adminloginProcess = function (req, res) {
 	});
 };
 
-exports.signup = function (req, res) {
-	res.render('signup', { title: 'Schedule.me' });
+exports.logout = function (req, res) {
+	var message = 'Logged out';
+	req.session.destroy();
+	console.log(message);
+	res.redirect('/');
 };

@@ -1,6 +1,7 @@
 var express = require('express')
 	, config = require('./config/config')
 	, routes = require('./routes')
+	, render = require('./routes/render')
 	, employees = require('./routes/employees')
 	, employers = require('./routes/employers')
 	, schedules = require('./routes/schedules')
@@ -46,11 +47,12 @@ app.configure(function(){
 		employer = (typeof req.session.employerid != 'undefined');
 
 		next();
-	})
-	app.get('/', routes.index);
+	});
+
+	app.get('/', render.index);
 	app.get('/login', function (req, res) {
 		if (!employee && !employer) {
-			routes.loginPage(req, res);
+			render.loginPage(req, res);
 		} else {
 			res.redirect('/');
 		}
@@ -68,7 +70,7 @@ app.configure(function(){
 
 	app.get('/admin-login', function (req, res) {
 		if (!employee && !employer) {
-			routes.adminloginPage(req, res);
+			render.adminloginPage(req, res);
 		} else {
 			res.redirect('/');
 		}
@@ -83,7 +85,7 @@ app.configure(function(){
 
 	app.get('/signup', function (req, res) {
 		if (!employee && !employer) {
-			routes.signup(req, res);
+			render.signup(req, res);
 		} else {
 			res.redirect('/');
 		}
@@ -95,8 +97,7 @@ app.configure(function(){
 		if (employer) {
 			schedules.clientUpload(req, res);
 		} else {
-			res.statusCode = 403;
-			res.end();
+			render.code403(req, res);
 		}
 	});
 	app.post('/serverupload', schedules.upload);
@@ -121,8 +122,7 @@ app.configure(function(){
 		} else if (employer) {
 			employers.bootstrap(req, res); //TODO: Write this function
 		} else {
-			res.statusCode = 403;
-			res.end();
+			render.code403(req, res);
 		}
 	});
 	
@@ -175,8 +175,7 @@ app.configure(function(){
 	*/
 
 	app.all('*', function (req, res) {
-		res.statusCode = 404;
-		res.end();
+		render.code404(req, res);
 	});
 
 });

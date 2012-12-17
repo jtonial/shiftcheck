@@ -17,13 +17,35 @@ exports.bootstrap = function(req, res){
 				console.log('returning signed in employer');
 				var response = new Object();
 				response.data = (doc);
-				res.statusCode = 200;
-				res.write(JSON.stringify(response));
+
+				//Fetch Schedule locations
+				models.Schedule.find({employer: req.session.employerid, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+					if (!err) {
+						response.schedules = new Array();
+
+						docs.forEach(function (x) {
+							//console.log(x);
+							var tmp = new Object();
+							tmp.date = x.date;
+							tmp.creation_time = x.creation_time;
+							//tmp.last_modified = x.last_modified;
+							tmp.url = x.image_loc;
+							response.schedules.push(tmp);
+						});
+
+						res.setHeader('Content-Type', 'application/json');
+						res.end(JSON.stringify(response));
+					} else {
+						console.log('Error fetching Employer: '+err);
+						res.statusCode = 500;
+						res.end();
+					}
+				});
 			} else {
 				console.log('Error fetching Employer: '+err);
 				res.statusCode = 500;
+				res.end();
 			}
-			res.end();
 		});
 	} else {
 		res.statusCode = 403; //Unauthorized access?

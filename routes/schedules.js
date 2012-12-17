@@ -90,6 +90,8 @@ exports.clientUpload = function(req, res) {
 				[ "starts-with", "$key", ""],
 				{ "acl": "public-read" },
 				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
+				//If I make this redirect a hash, I can use a route to trigger an ajax ping to verifyUpload, thus not leaving the page
+					//Note: I  tried this and s3 returned a 204 instead of a redirect to the hash
 				{ "redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				["content-length-range", 0, 2147483648],
 				["eq", "$Content-Type", 'application/pdf']
@@ -112,6 +114,8 @@ exports.clientUpload = function(req, res) {
 	var file_name = new Date().getTime().toString(); //Use the current time as key for testing
 	var rand = 'dflkasjceo;ajsclkajs'; //Random string
 	file_name = crypto.createHmac('sha1', rand).update(file_name).digest('hex')+'.pdf';
+
+	console.log(JSON.stringify(req.body));
 
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,

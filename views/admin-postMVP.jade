@@ -119,7 +119,18 @@ html(lang='en')
           a.brand(href='#') schedule.me
           .nav-collapse
             ul.nav
-
+              li.link.schedules.active
+                a(href='#schedules') Schedules
+              li.link.employees
+                a(href='#employees') Employees
+              li.link.approvals
+                a(href='#approvals')
+                  | Approvals
+                  span.badge.badge-important 3
+              li.link.exchanges
+                a(href='#exchanges')
+                  | Exchange
+                  span.badge.badge-info 5
             ul.nav.pull-right
               li.dropdown
                 a.dropdown-toggle(href='#', data-toggle='dropdown')
@@ -132,25 +143,161 @@ html(lang='en')
                   li
                     a(href='logout') Logout
           // /.nav-collapse
-    .container
+    .container-fluid
       .page.schedules.active
         .row
           .tabbable.tabs-left
             ul#dates.nav.nav-tabs.span3
               li.nav-header Dates
+              li.active
+                a(href='#2012-08-20', data-toggle='tab') Today
+              li
+                a(href='#2012-08-21', data-toggle='tab')
+                  | Tuesday, August 21
+                  sup st
+              li
+                a(href='#2012-08-22', data-toggle='tab')
+                  | Wednesday, August 22
+                  sup nd
+              li
+                a(href='#2012-08-23', data-toggle='tab')
+                  | Thursday, August 23
+                  sup rd
+              li
+                a(href='#2012-08-24', data-toggle='tab')
+                  | Friday, August 24
+                  sup th
               li.nav-header#prependHere
                 hl
               div
-                button.btn.btn-success.btn-block.upload-modal-trigger#add_schedule(style="width:222px;")
+                button.btn.btn-success.btn-block.upload-modal-trigger#add_schedule
                   Upload New Schedule
               li.nav-header
                 hl
               div
                 li.nav-header Past Schedules
                 li
-                  input.datepicker#sched-date.input-large(type='text')
+                  input#sched-date(type='text', style='width: 90%;')
             .tab-content
-              
+              #2012-08-20.tab-pane.active
+                h1
+                  | August 20
+                  small Today
+                .schedule
+                  // Schedule header
+                  .schedule-row.schedule-header.row-fluid.clearfix
+                    .span2
+                    .span9
+                      .snpan24 6
+                      .snpan24 7
+                      .snpan24 8
+                      .snpan24 9
+                      .snpan24 10
+                      .snpan24 11
+                      .snpan24 12
+                      .snpan24 1
+                      .snpan24 2
+                      .snpan24 3
+                      .snpan24 4
+                      .snpan24 5
+                      .snpan24 6
+                      .snpan24 7
+                      .snpan24 8
+                      .snpan24 9
+                      .snpan24 10
+                      .snpan24 11
+                      .snpan24 12
+                      .snpan24 1
+                      .snpan24 2
+                      .snpan24 3
+                      .snpan24 4
+                      .snpan24 5
+                  // Shift Template
+                  .schedule-row.row-fluid.clearfix
+                    .span2
+                      .span6.name Amanda
+                      .span6.station WN
+                    .span9
+                      .shift-slider
+                    .span1
+                      .edit.btn Edit
+                      .save.btn.btn-primary(style='display: none;') Save
+                  .schedule-row.row-fluid.clearfix
+                    .span2
+                      .span6.name Brandon
+                      .span6.station DT
+                    .span9
+                      .shift-slider
+                    .span1
+                      .edit.btn Edit
+                      .save.btn.btn-primary(style='display: none;') Save
+                  .schedule-row.row-fluid.clearfix
+                    .span2
+                      .span6.name Christina
+                      .span6.station BK
+                    .span9
+                      .shift-slider
+                    .span1
+                      .edit.btn Edit
+                      .save.btn.btn-primary(style='display: none;') Save
+              #2012-08-21.tab-pane
+                h1 August 21
+              #2012-08-22.tab-pane
+                h1 August 22
+              #2012-08-23.tab-pane
+                h1 August 23
+              #2012-08-24.tab-pane
+                h1 August 24
+      .page.employees
+        .page-header
+          h1
+            | Employees
+            small All your employees with access to this system
+        .row-fluid
+          .well.clearfix
+            .form-inline.span6.clearfix
+              input.span6.employee-typeahead(type='text', placeholder='Search Employees...', data-provide='typeahead')
+              .span6
+                label.checkbox
+                  input(type='checkbox')
+                  | WN
+                label.checkbox
+                  input(type='checkbox')
+                  | BK
+                label.checkbox
+                  input(type='checkbox')
+                  | DT
+            .add-another-wrap.span6.pull-right.clearfix
+              .add-another(href='#', rel='#reward_template')
+                .button
+                  strong Add another employee
+        .row-fluid
+          .span4
+            .well
+          .span4
+            .well
+          .span4
+            .well
+        .row-fluid
+          .span4
+            .well
+          .span4
+            .well
+          .span4
+            .well
+      .page.approvals
+        .page-header
+          h1
+            | Approvals
+            small Outstanding requests that still require responses
+      .page.exchanges
+        .page-header
+          h1
+            | Exchange
+            small Shifts that are available in your schedules
+        #search.row-fluid
+        #results.row-fluid
+          ul#results-list
       .page.account
         .row-fluid
           .tabbable.tabs-left
@@ -203,7 +350,6 @@ html(lang='en')
           input(type="file", name="file", id="file", placeholder="file")
           input.btn.btn-success.btn-large(type="submit", name="submit2", id="upload_submit")
 
-          input.datepicker#upload-schedule-date(type="text", name="date", placeholder="YYYY-MM-DD")
       .modal-footer
         button.btn(data-dismiss='modal') Cancel
 
@@ -218,11 +364,6 @@ html(lang='en')
           showOtherMonths: true,
           dateFormat: 'yy-mm-dd',
           maxDate: "+0D"
-        });
-        $('#upload-schedule-date').datepicker({
-          showOtherMonths: true,
-          dateFormat: 'yy-mm-dd',
-          minDate: "+0D"
         });
         $( ".shift-slider" ).slider({
           range: true,
@@ -308,11 +449,8 @@ html(lang='en')
       </div>
       <div class="span1 btn edit-shift">Edit</div>
       <div class="span1 btn save-shift">Save</div>
+    script#schedule-template(type='text/template')
     script#approval-template(type='text/template')
-
-    script(id='schedule-template', type='text/x-handlebars-template')
-      <h1>{{outputDate}}</h1>
-      <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/{{url}}&embedded=true" style="width:100%; min-width:200px; height:700px;" frameborder="0"></iframe>
 
     script
       function processResponse( res1 ) {
@@ -335,7 +473,7 @@ html(lang='en')
         $.ajax({
           url: "/upload",
           type: 'POST',
-          data: $('#upload-schedule-date').serialize(),
+          data: '',
           success: function (res) {
             console.log('received success');
             processResponse(res);
