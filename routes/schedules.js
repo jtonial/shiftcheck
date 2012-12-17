@@ -146,9 +146,9 @@ exports.verifyUpload = function (req, res) {
 			console.log('update complete of schedule: '+req.query.x);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
-				render.verifyUploadFailed(req, res);
+				render.uploadVerifiedFailed(req, res);
 			} else {
-				render.verifyUpload(req, res);
+				render.uploadVerified(req, res);
 			}
 		});
 	} else {

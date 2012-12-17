@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 //Make Schemas and models
 var EmployeeSchema = new mongoose.Schema({
 	email: String,
+	username: String,
 	password: String,
 	first_name: String,
 	last_name: String,
