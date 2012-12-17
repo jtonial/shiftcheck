@@ -1,4 +1,5 @@
 var models = require('../models/models.js')
+	, render = require('../routes/render')
 	, mongoose = require('mongoose')
 	, crypto = require('crypto')
 	, fs = require('fs')
@@ -145,16 +146,15 @@ exports.verifyUpload = function (req, res) {
 			console.log('update complete of schedule: '+req.query.x);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
-				res.end('Something went wrong, please try again or contact us.');
+				render.verifyUploadFailed(req, res);
 			} else {
-				res.end('Upload Successful');
+				render.verifyUpload(req, res);
 			}
 		});
 	} else {
 		//Do nothing, no parameter supplied
 		console.log('No id provided or invalid id');
-		res.statusCode = 400;
-		res.end();
+		render.uploadVerifiedBadReq(req, res);
 	}
 }
 //This seems to work for uploading a pdf and adding a schedule to a database

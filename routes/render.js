@@ -23,6 +23,16 @@ exports.index = function(req, res){
 	}
 };
 
+exports.uploadVerified = function (req, res) {
+	res.render('uploadVerified', { title: 'Schedule.me' });
+};
+exports.uploadVerifiedBadReq = function (req, res) {
+	res.statusCode = 400;
+	res.render('uploadVerifiedBadReq', { title: 'Schedule.me' });
+};
+exports.uploadVerifiedFailed = function (req, res) {
+	res.render('uploadVerifiedFailed', { title: 'Schedule.me' });
+};
 //Codes
 exports.code403 = function (req, res) {
 	res.statusCode = 403;
