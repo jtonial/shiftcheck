@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "schedule-me",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,9 +9,9 @@
     "express": "3.0.0rc4",
     "jade": "*",
     "less-middleware": "*",
-		"mongoose": "*",
-		"bouncy" : "*",
-		"knox" : "*"
+    "mongoose": "*",
+    "bouncy": "*",
+    "knox": "*",
   },
   "engines": {
     "node": "0.8.x",

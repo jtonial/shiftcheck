@@ -9,7 +9,8 @@ block content
 		input(type="hidden", name="Content-Type", id="fld_contenttype")
 		input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
 		input(type="hidden", name="signature", id="fld_Signature")
-		input(type="hidden", name="success_action_redirect", id="fld_redirect")
+		//- input(type="hidden", name="success_action_redirect", id="fld_redirect")
+		input(type="hidden", name="redirect", id="fld_redirect")
 		input(type="file", name="file", id="file", placeholder="file")
 		input(type="submit", name="submit2", id="btn_submit")
 
@@ -85,6 +86,38 @@ block content
 			*/
 
 			$('#myform').submit();
+		}
+
+		submitTest = function () {
+			event.preventDefault();
+
+			var formData = new FormData($('#myform')[0]);
+			$.ajax({
+				url: 'serverupload',
+				type: 'POST',
+				/*xhr: function() {  // custom xhr
+					myXhr = $.ajaxSettings.xhr();
+					console.log(myXhr.upload);
+					if(myXhr.upload){ // check if upload property exists
+						myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // for handling the progress of the upload
+					}
+					return myXhr;
+				},*/
+				//Ajax events
+				//beforeSend: beforeSendHandler,
+				success: function () {
+					console.log('success');
+				},
+				error: function () {
+					console.log('error');
+				},
+				// Form data
+				data: formData,
+				//Options to tell JQuery not to process data or worry about content-type
+				cache: false,
+				contentType: false,
+				processData: false
+			});
 		}
 
 		requestCredentials = function(event) {

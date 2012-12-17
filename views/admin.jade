@@ -104,6 +104,7 @@ html(lang='en')
     script(src='./js/underscore.js')
     script(src='./js/backbone.js')
     script(src='./js/admin-application.js')
+
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
@@ -337,98 +338,101 @@ html(lang='en')
       .modal-header
         h3 Upload Schedule
       .modal-body
-        form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="myform")
+        form(action="http://nrmitchi.schedules.s3.amazonaws.com/",method="post",enctype="multipart/form-data",id="s3-upload-form")
           input(type="hidden", name="key", id="fld_key")
           input(type="hidden", name="acl", id="fld_acl")
           input(type="hidden", name="policy", id="fld_Policy")
           input(type="hidden", name="Content-Type", id="fld_contenttype")
           input(type="hidden", name="AWSAccessKeyId", id="fld_AWSAccessKeyId")
           input(type="hidden", name="signature", id="fld_Signature")
+          //- input(type="hidden", name="success_action_redirect", id="fld_redirect")
+          input(type="hidden", name="redirect", id="fld_redirect")
           input(type="file", name="file", id="file", placeholder="file")
-          .progress.progress-striped.active
-            .bar
-          input(type="submit", name="submit2", id="upload_submit", value="Upload").btn.btn-success.btn-large
+          input(type="submit", name="submit2", id="upload_submit")
+
       .modal-footer
         button.btn(data-dismiss='modal') Cancel
-    // /container
-    //
+
     // Placed at the end of the document so the pages load faster
     script(src='./js/bootstrap.js')
     script
       $(document).ready(function() {
-      //This should instead pluck the names of all employees
-      var data = new Array("Andrew","Brandon","Connor","David","Julie","Michelle","Janice","Jackson","Nicole","Samanth","Evan","Nick","Johnathan","Matt");
-      $('.employee-typeahead').typeahead({source: data});
-      $('#sched-date').datepicker({
-      showOtherMonths: true,
-      dateFormat: 'yy-mm-dd',
-      maxDate: "+0D"
+        //This should instead pluck the names of all employees
+        var data = new Array("Andrew","Brandon","Connor","David","Julie","Michelle","Janice","Jackson","Nicole","Samanth","Evan","Nick","Johnathan","Matt");
+        $('.employee-typeahead').typeahead({source: data});
+        $('#sched-date').datepicker({
+          showOtherMonths: true,
+          dateFormat: 'yy-mm-dd',
+          maxDate: "+0D"
+        });
+        $( ".shift-slider" ).slider({
+          range: true,
+          min: 6,
+          max: 30,
+          values: [ 8, 12 ],
+          step: 0.25,
+          slide: function( event, ui ) {
+            var start = ui.values[0];
+            var start_12 = Math.floor(start % 12);
+            var end = ui.values[1];
+            var end_12 = Math.floor(end % 12);
+            var start_minutes = (start % 1)*60;
+            start_minutes = (start_minutes < 10 ? '0' : '') + start_minutes;
+            var end_minutes = (end % 1)*60;
+            end_minutes = (end_minutes < 10 ? '0' : '') + end_minutes;
+            $('#amount').val( (start_12 != '0' ? start_12 : '12' ) + ':' + start_minutes + ((start<12 || start>=24) ? "am" : "pm") + " - " + (end_12 != '0' ? end_12 : '12') + ':' + end_minutes + ((end<12 || end>=24) ? "am" : "pm") );
+          }
+        });
+        $('#edit-email-trigger').click(function () {
+          $('#email').removeAttr('disabled');
+          $('#save-email-trigger').show();
+          $(this).hide();
+        });
+        $('#save-email-trigger').click(function () {
+          function validateEmail(email) {
+            var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+          }
+
+          if (validateEmail($('#email').val())) {
+            console.log('email valid. changing email');
+            $('#email').attr('disabled','');
+            $('#edit-email-trigger').show();
+            $(this).hide();
+          } else {
+            console.log('the entered email is not valid');
+          }
+        });
+        $('#change-password-trigger').click(function () {
+          function validateOldPasswords () {
+            var newpass = $('#newpassword').val();
+            var newpass1 = $('#newpassword1').val();
+            if (newpass.length < 6) {
+              return 3;
+            }
+            if (newpass != newpass1) {
+              return 2;
+            }
+            return 1;
+          }
+
+          console.log('validating password change...');
+          var validate = validateOldPasswords();
+          if (validate == 1) {
+            console.log('Inputs valid.');
+            //Ajax request to change password
+          } else if (validate == 2) {
+            console.log('The new password entries must match.');
+          } else if (validate == 3) {
+            console.log('Your new password must be at last 6 characters long');
+          }
+        });
+        $('.ui-slider-handle').hide();
+        $('.upload-modal-trigger').click(function () {
+          $('#upload-modal').modal('show');
+        });
       });
-      $( ".shift-slider" ).slider({
-      range: true,
-      min: 6,
-      max: 30,
-      values: [ 8, 12 ],
-      step: 0.25,
-      slide: function( event, ui ) {
-      var start = ui.values[0];
-      var start_12 = Math.floor(start % 12);
-      var end = ui.values[1];
-      var end_12 = Math.floor(end % 12);
-      var start_minutes = (start % 1)*60;
-      start_minutes = (start_minutes < 10 ? '0' : '') + start_minutes;
-      var end_minutes = (end % 1)*60;
-      end_minutes = (end_minutes < 10 ? '0' : '') + end_minutes;
-      $('#amount').val( (start_12 != '0' ? start_12 : '12' ) + ':' + start_minutes + ((start<12 || start>=24) ? "am" : "pm") + " - " + (end_12 != '0' ? end_12 : '12') + ':' + end_minutes + ((end<12 || end>=24) ? "am" : "pm") );
-      }
-      });
-      $('#edit-email-trigger').click(function () {
-      $('#email').removeAttr('disabled');
-      $('#save-email-trigger').show();
-      $(this).hide();
-      });
-      $('#save-email-trigger').click(function () {
-      function validateEmail(email) {
-      var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-      }
-      if (validateEmail($('#email').val())) {
-      console.log('email valid. changing email');
-      $('#email').attr('disabled','');
-      $('#edit-email-trigger').show();
-      $(this).hide();
-      } else {
-      console.log('the entered email is not valid');
-      }
-      });
-      $('#change-password-trigger').click(function () {
-      function validateOldPasswords () {
-      var newpass = $('#newpassword').val();
-      var newpass1 = $('#newpassword1').val();
-      if (newpass.length < 6) {
-      return 3;
-      }
-      if (newpass != newpass1) {
-      return 2;
-      }
-      return 1;
-      }
-      console.log('validating password change...');
-      var validate = validateOldPasswords();
-      if (validate == 1) {
-      console.log('Inputs valid.');
-      //Ajax request to change password
-      } else if (validate == 2) {
-      console.log('The new password entries must match.');
-      } else if (validate == 3) {
-      console.log('Your new password must be at last 6 characters long');
-      }
-      });
-      $('.ui-slider-handle').hide();
-      });
-      $('.upload-modal-trigger').click(function () {
-        $('#upload-modal').modal('show');
-      });
+
     script#employee-template(type='text/x-handlebars-template')
       <div class="well">
       <h1 class="name"><%= name =></h1>
@@ -448,160 +452,36 @@ html(lang='en')
     script#schedule-template(type='text/template')
     script#approval-template(type='text/template')
 
-  script
-    //Helpers
-    function uploadProgress(evt) {
-      if (evt.lengthComputable) {
-        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-        document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+    script
+      function processResponse( res1 ) {
+        window.res = JSON.parse(res1);
+
+        $("#fld_redirect").val(res.s3Redirect);
+        $("#fld_AWSAccessKeyId").val(res.s3Key);
+        $("#fld_Policy").val(res.s3PolicyBase64);
+        $("#fld_Signature").val(res.s3Signature);
+        $("#fld_contenttype").val('application/pdf');
+        $("#fld_key").val(res.key);
+        $("#fld_acl").val(res.acl);
+
+        $('#s3-upload-form').submit();
       }
-      else {
-        document.getElementById('progressNumber').innerHTML = 'unable to compute';
-      }
-    }
 
-    function uploadComplete(evt) {
-      /* This event is raised when the server send back a response */
-      alert("Done - " + evt.target.responseText );
-    }
+      requestCredentials = function(event) {
+        event.preventDefault();
 
-    function uploadFailed(evt) {
-      alert("There was an error attempting to upload the file." + evt);
-    }
-
-    function uploadCanceled(evt) {
-      alert("The upload has been canceled by the user or the browser dropped the connection.");
-    }
-
-    function postCallback ( id ) {
-
-    }
-
-    function processResponse( res1 ) {
-      window.res = JSON.parse(res1);
-
-      console.log(res);
-      console.log(res.key.toString());
-
-      //$("#fld_redirect").val(res.s3Redirect);
-      $("#fld_AWSAccessKeyId").val(res.s3Key);
-      $("#fld_Policy").val(res.s3PolicyBase64);
-      $("#fld_Signature").val(res.s3Signature);
-      $("#fld_contenttype").val('application/pdf');
-      $("#fld_key").val(res.key);
-      $("#fld_acl").val(res.acl);
-
-      console.log('Policy: '+$("#fld_Policy").val());
-      console.log('Key: '+$("#fld_key").val());
-      console.log('Redirect: '+$("#fld_redirect").val());
-
-      var file = $('#schedule').val();
-      var fd = new FormData();
-
-      fd.append('key', res.s3Key);
-      fd.append('acl', 'public-read'); 
-      fd.append('Content-Type', 'application/pdf');      
-      fd.append('AWSAccessKeyId', res.s3Key);
-      fd.append('policy', res.s3PolicyBase64)
-      fd.append('signature',res.s3Signature);
-      fd.append('file', file);
-
-      /*$.ajax({
-        url: 'http://nrmitchi.schedules.s3.amazonaws.com/',
-        type: 'POST',
-        data: $('#myform').serialize(),
-        success: function () {
-          alert('success');
-        }, error: function () {
-          alert('error');
-        }
-      });*/
-
-      /*var xhr = new XMLHttpRequest();
-
-      xhr.upload.addEventListener("progress", uploadProgress, false);
-      xhr.addEventListener("load", uploadComplete, false);
-      xhr.addEventListener("error", uploadFailed, false);
-      xhr.addEventListener("abort", uploadCanceled, false);
-
-      xhr.open('POST', 'https://nrmitchi.schedules.s3.amazonaws.com/', true); //MUST BE LAST LINE BEFORE YOU SEND 
-
-      xhr.send(fd);*/
-
-      $('#myform').submit();
-    }
-
-    requestCredentials = function(event) {
-      event.preventDefault();
-
-      $.ajax({
-        url: "/upload",
-        type: 'POST',
-        data: '',
-        success: function (res) {
-          console.log('received success');
-          processResponse(res);
-        },
-        error: function(res, status, error) {
-          console.log('received an error');
-        }
-      });
-    }
-
-    $( "#upload_submit" ).bind( "click", requestCredentials );
-
-
-    /*$(function() {
-
-      //$('.direct-upload').each(function() {
-
-        //var form = $(this)
-        var form = $('#myform');
-
-        $('#myform').fileupload({
-          url: form.attr('action'),
+        $.ajax({
+          url: "/upload",
           type: 'POST',
-          autoUpload: true,
-          dataType: 'xml', // This is really important as s3 gives us back the url of the file in a XML document
-          add: function (event, data) {
-            $.ajax({
-              url: "/upload",
-              type: 'POST',
-              dataType: 'json',
-              data: '',
-              async: false,
-              success: function(data) {
-                // Now that we have our data, we update the form so it contains all the needed data to sign the request
-                console.log('received success');
-                processResponse(res);
-                data.submit();
-              }
-            })
+          data: '',
+          success: function (res) {
+            console.log('received success');
+            processResponse(res);
           },
-          send: function(e, data) {
-            $('.progress').fadeIn();
-          },
-          progress: function(e, data){
-            // This is what makes everything really cool, thanks to that callback
-            // you can now update the progress bar based on the upload progress
-            var percent = Math.round((e.loaded / e.total) * 100)
-            $('.bar').css('width', percent + '%')
-          },
-          fail: function(e, data) {
-            console.log('fail')
-          },
-          success: function(data) {
-            // Here we get the file url on s3 in an xml doc
-            var url = $(data).find('Location').text()
-            console.log('success!');
-            $('#real_file_url').val(url) // Update the real input in the other form
-          },
-          done: function (event, data) {
-            //$('.progress').fadeOut(300, function() {
-            //  $('.bar').css('width', 0)
-            //})
-            alert('done!');
-          },
-        })
-      //})
-    })*/
+          error: function(res, status, error) {
+            console.log('received an error');
+          }
+        });
+      }
+
+      $( "#upload_submit" ).bind( "click", requestCredentials );

@@ -99,6 +99,8 @@ app.configure(function(){
 			res.end();
 		}
 	});
+	app.post('/serverupload', schedules.upload);
+
 	app.get('/verifyUpload', function (req, res) {
 		console.log('GET - verifyUpload');		
 		schedules.verifyUpload(req,res);
