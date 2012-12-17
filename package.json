@@ -11,7 +11,7 @@
     "less-middleware": "*",
     "mongoose": "*",
     "bouncy": "*",
-    "knox": "*",
+    "knox": "*"
   },
   "engines": {
     "node": "0.8.x",
