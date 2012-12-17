@@ -141,11 +141,10 @@ exports.verifyUpload = function (req, res) {
 			console.log('update complete of schedule: '+req.query.x);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
-				res.send('Something went wrong, please try again or contact us.');
+				res.end('Something went wrong, please try again or contact us.');
 			} else {
-				res.send('Upload Successful');
+				res.end('Upload Successful');
 			}
-			res.end();
 		});
 	} else {
 		//Do nothing, no parameter supplied
