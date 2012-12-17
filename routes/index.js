@@ -18,21 +18,18 @@ is_email = function (email) {
 
 exports.loginProcess = function (req, res) {
 	var email = req.body.email;
-	//This will have to be the hashed/salted password
 	var password = calcHash(req.body.password);
-	console.log('Email: '+email+'; Password: '+password);
 
-	//Determine if it is a username or email
+	//Search object for account lookup
 	var where = new Object();
 
 	if (is_email(email)) {
 		console.log('is an email');
 		where.email = email;
 	} else { //is username
-		where.email = email;
+		where.username = email;
 	}
 
-	//Access db to get users info
 	models.Employee.findOne ( where , function (err, doc) {
 		if (!err) {
 			if (doc) {
@@ -74,21 +71,18 @@ exports.loginProcess = function (req, res) {
 
 exports.adminloginProcess = function (req, res) {
 	var email = req.body.email;
-	//This will have to be the hashed/salted password
 	var password = calcHash(req.body.password);
-	console.log('Email: '+email+'; Password: '+password);
 
-	//Determine if it is a username or email
+	//Search object for account lookup
 	var where = new Object();
 
 	if (is_email(email)) {
 		console.log('is an email');
 		where.email = email;
 	} else { //is username
-		where.email = email;
+		where.username = email;
 	}
 
-	//Access db to get users info
 	models.Employer.findOne ( where , function (err, doc) {
 		if (!err) {
 			if (doc) {

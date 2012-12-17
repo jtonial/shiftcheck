@@ -207,6 +207,18 @@ $(function() {
 			return this.datestring;
 		}
 	});
+	Handlebars.registerHelper('isPDF', function (s) {
+		var reg_pdf = /^.+\.pdf$/;
+		return reg_pdf.test(s);
+	});
+	Handlebars.registerHelper('isJPG', function (s) {
+		var reg_jpg = /^.+\.jpg$/;
+		return reg_jpg.test(s);
+	});
+	Handlebars.registerHelper('isPNG', function (s) {
+		var reg_png = /^.+\.png$/;
+		return reg_png.test(s);
+	});
 
 	$(document).ready(function () {
 		$.ajax({

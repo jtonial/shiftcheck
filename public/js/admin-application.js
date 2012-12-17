@@ -215,16 +215,16 @@ $(function() {
 			var url;
 			url = Backbone.history.getFragment();
 			//alert('tracking...: '+url);
-//			if (this.currentMain != url ) {
+		//	if (this.currentMain != url ) {
 				return _gaq.push(['_trackPageview',"/" + url]);
-	//		}
+		//	}
 		},*/
 		routes: {
-			'schedules':'schedules',
-			'employees':'employees',
-			'exchanges':'exchanges',
-			'approvals':'approvals',
-			'account':'account',
+			//'schedules':'schedules',
+			//'employees':'employees',
+			//'exchanges':'exchanges',
+			//'approvals':'approvals',
+			//'account':'account',
 
 			'':'schedules'
 		},
@@ -232,7 +232,7 @@ $(function() {
 		schedules: function () {
 			$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');
-		},
+		}/*,
 		employees: function() {
 			$('.link, .page').removeClass('active');
 			$('.employees').addClass('active');
@@ -248,7 +248,7 @@ $(function() {
 		account: function () {
 			$('.link, .page').removeClass('active');
 			$('.account').addClass('active');
-		}
+		}*/
 	});
 //------------------PAYLOAD----------------------------
 

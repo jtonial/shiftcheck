@@ -1,5 +1,3 @@
-use schedule
-
 db.employees.drop();
 db.employers.drop();
 db.schedules.drop();
