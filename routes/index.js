@@ -10,10 +10,51 @@ calcHash = function (val) {
 
 	return shasum.update(val+salt).digest('hex');
 }
-
 is_email = function (email) {
 	var reg_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return reg_email.test(email);
+};
+getClientIp = function(req) {
+	var ipAddress;
+	// Amazon EC2 / Heroku workaround to get real client IP
+	var forwardedIpsStr = req.header('x-forwarded-for'); 
+	if (forwardedIpsStr) {
+		// 'x-forwarded-for' header may return multiple IP addresses in
+		// the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+		// the first one
+		var forwardedIps = forwardedIpsStr.split(',');
+		ipAddress = forwardedIps[0];
+	}
+	if (!ipAddress) {
+		// Ensure getting client IP address still works in
+		// development environment
+		ipAddress = req.connection.remoteAddress;
+	}
+	return ipAddress;
+};
+trackLogin = function (req, type, id, statusCode) {
+	var o = new Object();
+
+	o.user_type = type;
+
+	if (typeof id != 'undefined' && id != '') {
+		o.id = id;
+	}
+
+	o.method = req.method;
+	o.url = req.url;
+	o.time = Date();
+	o.ip = getClientIp(req);
+	o.statusCode = statusCode;
+
+	var tracking = new models.TrackLogin(o);
+	tracking.save(function(err, s) {
+		if (!err) {
+			console.log();
+		} else {
+			console.log('Error tracking page load...');
+		}
+	});
 };
 
 exports.loginProcess = function (req, res) {
@@ -52,19 +93,24 @@ exports.loginProcess = function (req, res) {
 								console.log('Error updating login count: '+err);
 							}
 						});
+					trackLogin(req, 'employee', doc._id, 200);
 				} else {
 					res.statusCode = 400;
 					res.end();
 					console.log('login failure');
+					trackLogin(req, 'employee', doc._id, 400);
+
 				}
 			} else {
 				res.statusCode = 400;
 				res.end();
 				console.log('login failure');
+				trackLogin(req, 'employee', '', 400);
 			}
 		} else {
 			res.statusCode = 500;
 			res.end();
+			trackLogin(req, 'employee', '', 500);
 		}
 	});
 };
@@ -104,19 +150,23 @@ exports.adminloginProcess = function (req, res) {
 								console.log('Error updating login count: '+err);
 							}
 						});
+					trackLogin(req, 'employer', doc._id, 200);
 				} else {
 					res.statusCode = 400;
 					res.end();
 					console.log('login failure');
+					trackLogin(req, 'employer', doc._id, 400);
 				}
 			} else {
 				res.statusCode = 400;
 				res.end();
 				console.log('login failure');
+				trackLogin(req, 'employer', '', 400);
 			}
 		} else {
 			res.statusCode = 500;
 			res.end();
+			trackLogin(req, 'employer', '', 500);
 		}
 	});
 };

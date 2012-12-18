@@ -5,6 +5,7 @@ db.schedules.drop();
 db.createCollection('employees');
 db.createCollection('employers');
 db.createCollection('schedules');
+db.createCollection('access_logs');
 
 db.employees.ensureIndex({ email:1 },{unique:true});
 db.employees.ensureIndex({ username:1 },{unique:true});

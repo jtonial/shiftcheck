@@ -7,6 +7,8 @@ db.schedules.drop();
 db.createCollection('employees');
 db.createCollection('employers');
 db.createCollection('schedules');
+db.createCollection('logs_login');
+db.createCollection('logs_access');
 
 db.employees.ensureIndex({ email:1 },{unique:true});
 db.employees.ensureIndex({ username:1 },{unique:true});
@@ -134,7 +136,7 @@ db.schedules.insert(
 		employer:employerId('McDonalds'),
 		date:ISODate('2012-12-20'),
 		creation_time: new Date(),
-		image_loc: 'abcdefghijklmnopqrstuvwxyz.pdf',
+		image_loc: '12BarzTickets.pdf',
 		shifts: []
 	}
 )
@@ -143,7 +145,7 @@ db.schedules.insert(
 		employer:employerId('McDonalds'),
 		date:ISODate('2012-12-21'),
 		creation_time: new Date(),
-		image_loc: '1234567891012131415.pdf',
+		image_loc: '12BarzTickets.pdf',
 		shifts: []
 	}
 )
@@ -152,7 +154,7 @@ db.schedules.insert(
 		employer:employerId('McDonalds'),
 		date:ISODate('2012-12-21'),
 		creation_time: new Date(),
-		image_loc: '1234567891012131415.pdf',
+		image_loc: '12BarzTickets.pdf',
 		shifts: [],
 		awaitingupload: true
 	}
@@ -162,7 +164,7 @@ db.schedules.insert(
 		employer:employerId('Tim Hortons'),
 		date:ISODate('2012-10-20'),
 		creation_time: new Date(),
-		image_loc: 'zyxwvutsrqponmlkjihgfedcba.pdf',
+		image_loc: '12BarzTickets.pdf',
 		shifts: [
 			{
 				_id:new ObjectId(),

@@ -6,6 +6,7 @@ var express = require('express')
 	, employers = require('./routes/employers')
 	, schedules = require('./routes/schedules')
 	, grabs = require('./routes/grabs')
+	, models = require('./models/models.js')
 	, http = require('http')
 	, https = require('https')
 	, path = require('path')
@@ -42,9 +43,57 @@ app.configure(function(){
 	var employee;
 	var employer;
 
+	getClientIp = function(req) {
+		var ipAddress;
+		// Amazon EC2 / Heroku workaround to get real client IP
+		var forwardedIpsStr = req.header('x-forwarded-for'); 
+		if (forwardedIpsStr) {
+			// 'x-forwarded-for' header may return multiple IP addresses in
+			// the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+			// the first one
+			var forwardedIps = forwardedIpsStr.split(',');
+			ipAddress = forwardedIps[0];
+		}
+		if (!ipAddress) {
+			// Ensure getting client IP address still works in
+			// development environment
+			ipAddress = req.connection.remoteAddress;
+		}
+		return ipAddress;
+	};
+	trackRequest = function (req) {
+		var o = new Object();
+
+		if (employee) {
+			o.user_type = 'employee';
+			o.id = req.session.employeeid;
+		} else if (employer) {
+			o.user_type = 'employer';
+			o.id = req.session.employerid;
+		} else {
+			o.user_type = 'undefined';
+		}
+		o.method = req.method;
+		o.url = req.url;
+		o.time = Date();
+		o.ip = getClientIp(req);
+
+		var tracking = new models.Tracking(o);
+		tracking.save(function(err, s) {
+			if (!err) {
+				console.log();
+			} else {
+				console.log('Error tracking page load...');
+			}
+		})
+	};
+
+
 	app.all('*', function (req, res, next) {
 		employee = (typeof req.session.employeeid != 'undefined');
 		employer = (typeof req.session.employerid != 'undefined');
+
+		trackRequest(req);
 
 		next();
 	});

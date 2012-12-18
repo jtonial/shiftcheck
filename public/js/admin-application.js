@@ -146,9 +146,7 @@ $(function() {
 		//Add in views for each shift in the schedule
 		render: function () {
 			$(this.el).attr('id',this.model.get('datenum'));
-			var tmp = this.template(this.model.toJSON());
-			console.log('LOG:::: '+tmp);
-			$(this.el).html(tmp);
+			$(this.el).html(this.template(this.model.toJSON()));
 			return $(this.el);
 		}
 
@@ -209,16 +207,16 @@ $(function() {
 		init:0,
 	
 		initialize: function() {
-			//return this.bind('all', this._trackPageview);
+			return this.bind('all', this._trackPageview);
 		},
-		/*_trackPageview: function() {
+		_trackPageview: function() {
 			var url;
 			url = Backbone.history.getFragment();
 			//alert('tracking...: '+url);
 		//	if (this.currentMain != url ) {
-				return _gaq.push(['_trackPageview',"/" + url]);
+				return _gaq.push(['_trackPageview',"/employer/" + url]);
 		//	}
-		},*/
+		},
 		routes: {
 			//'schedules':'schedules',
 			//'employees':'employees',
@@ -264,7 +262,6 @@ $(function() {
 			success: function (res) {
 				//Removing loading div
 				$.each(res.schedules, function () {
-					console.log(JSON.stringify(this));
 					Scheduleme.Schedules.add(this);
 				})
 				$('#dates.nav.nav-tabs li:nth-child(2) a').click();

@@ -76,6 +76,22 @@ var ScheduleSchema = new mongoose.Schema({
 	awaitingupload: Boolean
 })
 
+//Tracking
+var TrackingSchema = new mongoose.Schema({
+	user_type: String,
+	id: mongoose.Schema.ObjectId,
+	method: String,
+	url: String,
+	time: Date,
+	ip: String
+})
+var TrackingLoginSchema = new mongoose.Schema({
+	user_type: String,
+	id: mongoose.Schema.ObjectId,
+	time: Date,
+	ip: String,
+	statusCode: Number
+})
 
 var dbhost = process.env.MONGOLAB_URI || config.mongo_host
 	, dbdb = config.mongo_db
@@ -99,5 +115,7 @@ db.once('open', function () {
 exports.Employee = db.model('employees', EmployeeSchema);
 exports.Employer = db.model('employers', EmployerSchema);
 exports.Schedule = db.model('schedules', ScheduleSchema);
+exports.Tracking = db.model('logs_requests', TrackingSchema);
+exports.TrackLogin = db.model('logs_logins', TrackingLoginSchema);
 exports.HistorySchema = HistorySchema;
 exports.RequestSchema = RequestSchema;

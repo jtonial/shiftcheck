@@ -110,9 +110,7 @@ $(function() {
 		//Add in views for each shift in the schedule
 		render: function () {
 			$(this.el).attr('id',this.model.get('datenum'));
-			var tmp = this.template(this.model.toJSON());
-			console.log('LOG:::: '+tmp);
-			$(this.el).html(tmp);
+			$(this.el).html(this.template(this.model.toJSON()));
 			return $(this.el);
 		}
 
@@ -175,7 +173,7 @@ $(function() {
 		schedules: function () {
 			$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');
-		},
+		}/*,
 		employees: function() {
 			$('.link, .page').removeClass('active');
 			$('.employees').addClass('active');
@@ -187,7 +185,7 @@ $(function() {
 		account: function () {
 			$('.link, .page').removeClass('active');
 			$('.account').addClass('active');
-		}
+		}*/
 	});
 //------------------PAYLOAD----------------------------
 
@@ -226,7 +224,6 @@ $(function() {
 			success: function (res) {
 				//Removing loading div
 				$.each(res.schedules, function () {
-					console.log(JSON.stringify(this));
 					Scheduleme.Schedules.add(this);
 				})
 				$('#dates.nav.nav-tabs li:nth-child(2) a').click();
