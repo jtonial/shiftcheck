@@ -60,7 +60,7 @@ trackLogin = function (req, type, id, statusCode) {
 exports.loginProcess = function (req, res) {
 	var email = req.body.email;
 	var password = calcHash(req.body.password);
-
+	console.log('Email: '+email+' Password: '+password);
 	//Search object for account lookup
 	var where = new Object();
 
@@ -118,7 +118,7 @@ exports.loginProcess = function (req, res) {
 exports.adminloginProcess = function (req, res) {
 	var email = req.body.email;
 	var password = calcHash(req.body.password);
-
+	console.log('Email: '+email+' Password: '+password);
 	//Search object for account lookup
 	var where = new Object();
 

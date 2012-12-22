@@ -14,35 +14,37 @@ exports.bootstrap = function(req, res){
 		console.log('Load EmployeeID: '+req.session.employeeid);
 		models.Employee.findOne({ _id:req.session.employeeid }, function (err, doc) {
 			if (!err) {
-				var response = new Object();
-				//Note: I cannot just response = doc. If I do this I cannot seem to add to the response object
-				response.email = doc.email;
-				response.first_name = doc.first_name;
-				response.last_name = doc.last_name;
+				if (doc) {
+					var response = new Object();
+					//Note: I cannot just response = doc. If I do this I cannot seem to add to the response object
+					response.email = doc.email;
+					response.first_name = doc.first_name;
+					response.last_name = doc.last_name;
 
-				//Fetch Schedule locations
-				models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
-					if (!err) {
-						response.schedules = new Array();
+					//Fetch Schedule locations
+					models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+						if (!err) {
+							response.schedules = new Array();
 
-						docs.forEach(function (x) {
-							//console.log(x);
-							var tmp = new Object();
-							tmp.date = x.date;
-							tmp.creation_time = x.creation_time;
-							//tmp.last_modified = x.last_modified;
-							tmp.url = x.image_loc;
-							response.schedules.push(tmp);
-						});
+							docs.forEach(function (x) {
+								//console.log(x);
+								var tmp = new Object();
+								tmp.date = x.date;
+								tmp.creation_time = x.creation_time;
+								//tmp.last_modified = x.last_modified;
+								tmp.url = x.image_loc;
+								response.schedules.push(tmp);
+							});
 
-						res.setHeader('Content-Type', 'application/json');
-						res.end(JSON.stringify(response));
-					} else {
-						console.log('Error fetching Employee: '+err);
-						res.statusCode = 500;
-						res.end();
-					}
-				});
+							res.setHeader('Content-Type', 'application/json');
+							res.end(JSON.stringify(response));
+						} else {
+							console.log('Error fetching Employee: '+err);
+							res.statusCode = 500;
+							res.end();
+						}
+					});
+				}
 			} else {
 				console.log('Error fetching Employee: '+err);
 				res.statusCode = 500;

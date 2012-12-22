@@ -14,33 +14,35 @@ exports.bootstrap = function(req, res){
 		console.log('Load EmployerID: '+req.session.employerid);
 		models.Employer.findOne({ _id:req.session.employerid }, function (err, doc) {
 			if (!err) {
-				console.log('returning signed in employer');
-				var response = new Object();
-				response.data = (doc);
+				if (doc) {
+					console.log('returning signed in employer');
+					var response = new Object();
+					response.data = (doc);
 
-				//Fetch Schedule locations
-				models.Schedule.find({employer: req.session.employerid, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
-					if (!err) {
-						response.schedules = new Array();
+					//Fetch Schedule locations
+					models.Schedule.find({employer: req.session.employerid, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+						if (!err) {
+							response.schedules = new Array();
 
-						docs.forEach(function (x) {
-							//console.log(x);
-							var tmp = new Object();
-							tmp.date = x.date;
-							tmp.creation_time = x.creation_time;
-							//tmp.last_modified = x.last_modified;
-							tmp.url = x.image_loc;
-							response.schedules.push(tmp);
-						});
+							docs.forEach(function (x) {
+								//console.log(x);
+								var tmp = new Object();
+								tmp.date = x.date;
+								tmp.creation_time = x.creation_time;
+								//tmp.last_modified = x.last_modified;
+								tmp.url = x.image_loc;
+								response.schedules.push(tmp);
+							});
 
-						res.setHeader('Content-Type', 'application/json');
-						res.end(JSON.stringify(response));
-					} else {
-						console.log('Error fetching Employer: '+err);
-						res.statusCode = 500;
-						res.end();
-					}
-				});
+							res.setHeader('Content-Type', 'application/json');
+							res.end(JSON.stringify(response));
+						} else {
+							console.log('Error fetching Employer: '+err);
+							res.statusCode = 500;
+							res.end();
+						}
+					});
+				}
 			} else {
 				console.log('Error fetching Employer: '+err);
 				res.statusCode = 500;

@@ -51,8 +51,11 @@ $(function() {
 		url: 'api/schedules',
 		model: Scheduleme.classes.models.Schedule,
 
-		parse: function (data) {
-			return data.data;
+		parse: function (response) {
+			return response.data;
+		},
+		comparator: function (schedule) {
+			return Date.parse(schedule.get('date'));
 		}
 	});
 
@@ -119,8 +122,10 @@ $(function() {
 		el: $('.page.schedules'),
 
 		initialize: function () {
-			//this.collection = typeof
+			this.views = Array();
 			this.collection.bind('add',this.addOneSchedule, this);
+			//This has to listen for a 'reset' event on the collection
+				//and re-render it all
 		},
 
 		//Adds one schedule to the Schedules page.
@@ -137,21 +142,60 @@ $(function() {
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
 			//var test = d.getDate()+1; console.log('Date: '+test+'; %10: '+test%10+'; sup: '+Sups[test%10]);
-			this.$('#dates.nav-tabs').append('<li><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+			this.$('#dates.nav-tabs').append('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 
 			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule, datenum: datenum});
-
+			this.views.push(view);
 			this.$('.tab-content').append(view.render());
 			//this.$('.tab-content').append('<div id="'+datenum+'" class="tab-pane"></div>');
 			
 		},
+		addAllSchedules: function () {
+			var self = this;
+			console.log('adding all schedules... '+JSON.stringify(this.collection));
+			_.each(this.collection.models, function (schedule) {
+				self.addOneSchedule(schedule);
+			});
+		},
+		reRenderTabs: function () { //This works
+			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
+
+			$('.schedule-tab').remove();
+			console.log('Length: '+this.collection.length);
+			_.each(this.collection.models, function(schedule) {
+				var d = new Date(schedule.get('datenum'));
+				this.$('#dates.nav-tabs').append('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				delete d; //Remove the reference to D; it can not be garbage collected
+			});
+		},
+		/*
+			This should work, but hasn't had final testing.
+			I don't know if it's really necessary to rerender the schedules when
+			keeping the tabs in order, so I'm leaving this for now.
+		*/
+		reRenderCollection: function () {
+			//Actually I dont have to re-render the views... I only really have to re-render the tabs
+			console.log('rerendering....');
+			//Clear all views (remove/undelegateEvents)
+			/*_.each(this.views, function (view){
+				console.log('removing view');
+				view.remove();
+				delete view; //Clear reference
+			});
+			this.views = Array(); //Reset array;
+
+			this.addAllSchedules();*/
+		}
 	});
 
 	//-------------------------------ROUTER------------------------------------
 	window.AppRouter = Backbone.Router.extend({
 
 		initialize: function() {
-			//return this.bind('all', this._trackPageview);
+			return this.bind('all', this._trackPageview);
+		},
+		_trackPageview: function() {
+			console.log('tracking pageview... but not really');
 		},
 		/*_trackPageview: function() {
 			var url;
@@ -223,6 +267,7 @@ $(function() {
 			url: '/bootstrap',
 			success: function (res) {
 				//Removing loading div
+				console.log(JSON.stringify(res));
 				$.each(res.schedules, function () {
 					Scheduleme.Schedules.add(this);
 				})
