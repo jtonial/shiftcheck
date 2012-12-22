@@ -271,6 +271,9 @@ $(function() {
 				$.each(res.schedules, function () {
 					Scheduleme.Schedules.add(this);
 				})
+				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
+				//Other option is to reRenderTabs() at the end of addOneSchedule
+				Scheduleme.SchedulesView.reRenderTabs();
 				$('#dates.nav.nav-tabs li:nth-child(2) a').click();
 			}, error: function () {
 				//Remove loading div
