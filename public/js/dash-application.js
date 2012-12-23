@@ -270,7 +270,7 @@ $(function() {
 				console.log(JSON.stringify(res));
 				$.each(res.schedules, function () {
 					Scheduleme.Schedules.add(this);
-				})
+				});
 				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
 				//Other option is to reRenderTabs() at the end of addOneSchedule
 				Scheduleme.SchedulesView.reRenderTabs();
