@@ -199,7 +199,7 @@ $(function() {
 			console.log('Length: '+this.collection.length);
 			_.each(this.collection.models, function(schedule) {
 				var d = new Date(schedule.get('datenum'));
-				this.$('#dates.nav-tabs').append('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				delete d; //Remove the reference to D; it can not be garbage collected
 			});
 		},
