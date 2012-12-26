@@ -103,6 +103,7 @@ html(lang='en')
     script(src='http://heapify.ca/js/jquery/jquery-ui-1.8.21.custom.min.js')
     script(src='/js/underscore.js')
     script(src='/js/backbone.js')
+    script(src='/js/backbone-pushstate-router.js')
     script(src='/js/admin-application.js')
     script(src='/js/ga.js')
 
@@ -128,7 +129,7 @@ html(lang='en')
                   b.caret
                 ul.dropdown-menu
                   li
-                    a(href='#account') Options
+                    a(href='#account', delegate='pushstate') Options
                   li.divider
                   li
                     a(href='logout') Logout
@@ -159,8 +160,6 @@ html(lang='en')
               li.nav-header Options
               li.active
                 a(href='#accountoptions', data-toggle='tab') Account Options
-              li
-                a(href='#billing', data-toggle='tab') Billing
             .tab-content
               #accountoptions.tab-pane.active
                 h1(style='margin-bottom: 15px;') Account Options
@@ -180,14 +179,7 @@ html(lang='en')
                       input#newpassword1.input-large(type='password', style='margin-bottom: 9px;', placeholder='Confirm New Password')
                       button#change-password-trigger.btn.input-large(type='button', style='margin-left: 0;') Change!
                       p
-              #billing.tab-pane
-                h1(style='margin-bottom: 15px;') Billing
-                .form-horizontal
-                  .control-group
-                    label.control-label Label: 
-                    .controls
-                      input#email.input-large(type='text')
-                      p
+                      
     #upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
       .modal-header
         h3 Upload Schedule

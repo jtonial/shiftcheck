@@ -292,6 +292,8 @@ $(function() {
 	window.AppRouter = Backbone.Router.extend({
 		//Note: I'm currently using tabs; another approach would be to make each tab
 			//it's own view, and delete/render tabs instead of hiding/showing
+			//Seperate views is probably a better approach for scalability;
+			// being able to undelegate events when they're not needed
 		init:0,
 	
 		initialize: function() {
@@ -344,10 +346,13 @@ $(function() {
 		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
 
 		Scheduleme.Router = new AppRouter;
+		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be
+			//able to handle it.
 		Backbone.history.start({
 			//pushState: true,
 			//root: '/'
 		});
+		//configPushState();
 
 		$.ajax({
 			url: '/bootstrap',
@@ -366,7 +371,8 @@ $(function() {
 				alert('We seem to be having some technical difficulties');
 			}
 		});
-	}
+	};
+
 	$(document).ready(function () {
 		Scheduleme.Init();
 	});
