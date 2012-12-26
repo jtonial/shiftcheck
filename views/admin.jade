@@ -97,14 +97,14 @@ html(lang='en')
       display:block;
       visibility:visible;
       }
-    link(href='./css/bootstrap-responsive.css', rel='stylesheet')
-    script(src='./js/jquery.js')
-    script(src='./js/handlebars-1.0.0.beta.6.js')
+    link(href='/css/bootstrap-responsive.css', rel='stylesheet')
+    script(src='/js/jquery.js')
+    script(src='/js/handlebars-1.0.0.beta.6.js')
     script(src='http://heapify.ca/js/jquery/jquery-ui-1.8.21.custom.min.js')
-    script(src='./js/underscore.js')
-    script(src='./js/backbone.js')
-    script(src='./js/admin-application.js')
-    script(src='./js/ga.js')
+    script(src='/js/underscore.js')
+    script(src='/js/backbone.js')
+    script(src='/js/admin-application.js')
+    script(src='/js/ga.js')
 
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
@@ -264,7 +264,8 @@ html(lang='en')
           }
         });
         $('#change-password-trigger').click(function () {
-          function validateOldPasswords () {
+          console.log('trying to changing password...');
+          function validatePasswords () {
             var newpass = $('#newpassword').val();
             var newpass1 = $('#newpassword1').val();
             if (newpass.length < 6) {
@@ -277,10 +278,28 @@ html(lang='en')
           }
 
           console.log('validating password change...');
-          var validate = validateOldPasswords();
+
+          var validate = validatePasswords();
           if (validate == 1) {
-            console.log('Inputs valid.');
-            //Ajax request to change password
+            if ( $('#oldpassword').val() != $('#newpassword').val() ) {
+              console.log('Inputs valid.');
+              $.ajax({url: '/me/changePassword',
+                type: 'POST',
+                data: 'oldpassword='+$('#oldpassword').val()+'&newpassword='+$('#newpassword').val(),
+                success: function (response) {
+                  alert ('Password successfully changed!');
+                  //Clear fields
+                  $('#oldpassword').val('');
+                  $('#newpassword').val('');
+                  $('#newpassword1').val('');
+                }, error: function () {
+                  alert ('Password change failed.');
+                }
+              });
+              console.log('after request...');
+            } else {
+              console.log('The new password cannot match the old password');
+            }
           } else if (validate == 2) {
             console.log('The new password entries must match.');
           } else if (validate == 3) {

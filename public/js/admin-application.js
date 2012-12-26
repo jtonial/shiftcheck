@@ -163,6 +163,9 @@ $(function() {
 			this.collection.bind('add',this.addOneSchedule, this);
 		},
 
+		events: {
+			//"click #change-password-trigger" : "changePassword"
+		},
 		//Adds one schedule to the Schedules page.
 		addOneSchedule: function (schedule) {
 
@@ -220,7 +223,51 @@ $(function() {
 			this.views = Array(); //Reset array;
 
 			this.addAllSchedules();*/
-		}
+		}/*,
+
+		changePassword: function () {
+			console.log('trying to changing password...');
+			function validatePasswords () {
+				var newpass = $('#newpassword').val();
+				var newpass1 = $('#newpassword1').val();
+				if (newpass.length < 6) {
+					return 3;
+				}
+				if (newpass != newpass1) {
+					return 2;
+				}
+				return 1;
+			}
+
+			console.log('validating password change...');
+
+			var validate = validatePasswords();
+			if (validate == 1) {
+				if ( $('#oldpassword').val() != $('#newpassword').val() ) {
+					console.log('Inputs valid.');
+					$.ajax({url: '/me/changePassword',
+						type: 'POST',
+						data: 'oldpassword='+$('#oldpassword').val()+'&newpassword='+$('#newpassword').val(),
+						success: function (response) {
+							alert ('Password successfully changed!');
+							//Clear fields
+							$('#oldpassword').val('');
+							$('#newpassword').val('');
+							$('#newpassword1').val('');
+						}, error: function () {
+							alert ('Password change failed.');
+						}
+					});
+					console.log('after request...');
+				} else {
+					console.log('The new password cannot match the old password');
+				}
+			} else if (validate == 2) {
+				console.log('The new password entries must match.');
+			} else if (validate == 3) {
+				console.log('Your new password must be at last 6 characters long');
+			}
+		},*/
 	});
 
 	Scheduleme.classes.models.Approval = Backbone.Model.extend({
@@ -243,6 +290,8 @@ $(function() {
 	});
 	//-------------------------------ROUTER------------------------------------
 	window.AppRouter = Backbone.Router.extend({
+		//Note: I'm currently using tabs; another approach would be to make each tab
+			//it's own view, and delete/render tabs instead of hiding/showing
 		init:0,
 	
 		initialize: function() {
@@ -261,7 +310,7 @@ $(function() {
 			//'employees':'employees',
 			//'exchanges':'exchanges',
 			//'approvals':'approvals',
-			//'account':'account',
+			'account':'account',
 
 			'':'schedules'
 		},
@@ -269,7 +318,7 @@ $(function() {
 		schedules: function () {
 			$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');
-		}/*,
+		},/*,
 		employees: function() {
 			$('.link, .page').removeClass('active');
 			$('.employees').addClass('active');
@@ -281,21 +330,25 @@ $(function() {
 		approvals: function () {
 			$('.link, .page').removeClass('active');
 			$('.approvals').addClass('active');
-		},
+		},*/
 		account: function () {
+			console.log('openning account page');
 			$('.link, .page').removeClass('active');
 			$('.account').addClass('active');
-		}*/
+		}
 	});
 //------------------PAYLOAD----------------------------
 
-	Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
-	Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
+	Scheduleme.Init = function () {
+		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
 
-	Scheduleme.Router = new AppRouter;
-	Backbone.history.start();
+		Scheduleme.Router = new AppRouter;
+		Backbone.history.start({
+			//pushState: true,
+			//root: '/'
+		});
 
-	$(document).ready(function () {
 		$.ajax({
 			url: '/bootstrap',
 			success: function (res) {
@@ -312,7 +365,10 @@ $(function() {
 				console.log('An error occured');
 				alert('We seem to be having some technical difficulties');
 			}
-		})
+		});
+	}
+	$(document).ready(function () {
+		Scheduleme.Init();
 	});
 
 });

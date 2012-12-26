@@ -159,22 +159,25 @@ exports.removePosition = function(req, res) {
 exports.changePassword = function(req,res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		//Update Password
-		var oldPassword = req.body.oldpassword;
-		var newPassword = req.body.newpassword;
-		models.Employer.update( { _id:req.session.employerid, password:oldPassword }, { password:newpassword }, { multi:false }, function(err, numAffected) {
+		var oldPassword = calcHash(req.body.oldpassword);
+		var newPassword = calcHash(req.body.newpassword);
+		models.Employer.update( { _id:req.session.employerid, password:oldPassword }, { password:newPassword }, { multi:false }, function(err, numAffected) {
 			if (!err) {
-				//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
-				console.log('Employer '+req.session.employerid+' password updated');
-				res.statusCode = 200;
-				res.end("Password Updated");
+				if (numAffected) {
+					//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
+					console.log('Employer '+req.session.employerid+' password updated');
+					res.statusCode = 200;
+					res.end("Password Updated");
+				} else {
+					res.statusCode = 400;
+					res.end();
+				}
 			} else { //An error
-				res.statusCode = 500;
-				res.end('There was an error.. password was not changed.');
+				render.code500(req, res);
 			}
 		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
 	}
 }
@@ -184,8 +187,7 @@ exports.delete = function(req, res) {
 		console.log('Delete EmployerID: '+req.params.id);
 	  res.send("Employer - delete");
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code403(req, res);
 		console.log('Unauthorized access attempt: delete employee');
 	}
 };

@@ -145,8 +145,7 @@ exports.create = function(req, res){
 			res.end('Employee - create');
 		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
 	}
 };
@@ -177,8 +176,8 @@ exports.addPosition = function(req, res) {
 exports.changePassword = function(req,res){
 	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
 		//Update Password
-		var oldPassword = req.body.oldpassword;
-		var newPassword = req.body.newpassword;
+		var oldPassword = calcHash(req.body.oldpassword);
+		var newPassword = calcHash(req.body.newpassword);
 
 		//TODO: Validate new password
 
@@ -189,13 +188,11 @@ exports.changePassword = function(req,res){
 				res.statusCode = 200;
 				res.end("Password Updated");
 			} else { //An error
-				res.statusCode = 499;
-				res.end('There was an error.. not sure what i should do here');
+				render.code500(req, res);
 			}
 		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
 	}
 }
@@ -205,8 +202,7 @@ exports.delete = function(req, res) {
 		console.log('Delete  ID: '+req.params.id);
 	  res.send("projects - delete");
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
 	}
 };

@@ -37,7 +37,7 @@ exports.uploadVerifiedFailed = function (req, res) {
 exports.code403 = function (req, res) {
 	res.statusCode = 403;
 	res.render('403', { title: 'Schedule.me' });	
-}
+};
 exports.code404 = function (req, res) {
 	res.statusCode = 404;
 	res.render('404', { title: 'Schedule.me' });
@@ -45,4 +45,4 @@ exports.code404 = function (req, res) {
 exports.code500 = function (req, res) {
 	res.statusCode = 500;
 	res.render('500', { title: 'Schedule.me' });
-}
+};

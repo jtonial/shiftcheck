@@ -139,6 +139,24 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
+	app.post('/me/changePassword', function (req,res) {
+		if (employee) {
+			employees.changePassword(req, res);
+		} else if (employer) {
+			employers.changePassword(req, res);
+		} else {
+			render.code403(req, res);
+		}
+	});
+	app.post('/me/updateContact', function(req, res) {
+		if (employee) {
+			employees.updateContact(req, res);
+		} else if (employer) {
+			employers.updateContact(req, res);
+		} else {
+			render.code403(req, res);
+		}
+	});
 	app.get('/upload', function (req, res) {
 		res.render('testupload', { title: 'testupload' });
 	});
