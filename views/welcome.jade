@@ -1,14 +1,17 @@
 !!! 5
 html(lang='en')
 	head
-		meta(charset='utf-8')
 		title Schedule.me
+		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		meta(name='description', content='')
+		meta(name='description', content='Schedule.me is an application to help business and employees manage schedules')
 		meta(name='author', content='nrmitchi')
 		// Le styles
-		link(href='./css/bootstrap.css', rel='stylesheet')
-		script(src='./js/ga.js')
+		link(href='/css/bootstrap.css', rel='stylesheet')
+		script(src='/js/jquery.js')
+		script(src='/js/bootstrap.js')
+		script(src='/js/ga.js')
+
 		style
 			@media (min-width: 979px) {
 				body {
@@ -39,15 +42,12 @@ html(lang='en')
 								a(href='admin-login') Admin Login
 							li
 								a(href='login') Employee Login
-					// /.nav-collapse
 		.container
 			.row
 				.span6
 					h1 Schedule.me
-					p
-						| Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
-					p
-						| If you would like to discuss how Schedule.me can work with your business, please contact me at 
+					p Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
+					p If you would like to discuss how Schedule.me can work with your business, please contact me at 
 						a(href='mailto:nrmitchi@gmail.com') nrmitchi@gmail.com
 			.row
 				.span12
@@ -55,25 +55,18 @@ html(lang='en')
 				.span4
 					.well
 						h4 Instant Publishing
-						p
-							| Your employees will be notified as soon as schedules are published, and we able to access their schedules from any web-enabled device
+						p Your employees will be notified as soon as schedules are published, and we able to access their schedules from any web-enabled device
 				.span4
 					.well
 						h4 Easy Upload
-						p
-							| You can easily upload your schedule in whatever format your scheduler uses. If your format is not currently supported, we will work quickly to get it working for you
+						p You can easily upload your schedule in whatever format your scheduler uses. If your format is not currently supported, we will work quickly to get it working for you
 				.span4
 					.well
 						h4 Easy Trading
-						p
-							| Your employees can easily offer shifts to co-workers and pick up extra shifts when needed, with you having the final say on all changes.
+						p Your employees can easily offer shifts to co-workers and pick up extra shifts when needed, with you having the final say on all changes.
 			.row
 				.span12
 					h3 Pricing
 				.span12
 					.well
 						p During our beta our service will be free to use! Interested in participating? Get in touch and we'll talk.
-		// /container
-		// Placed at the end of the document so the pages load faster
-		script(src='./js/jquery.js')
-		script(src='./js/bootstrap.js')

@@ -15,19 +15,25 @@ calcHash = function (val) {
 exports.loadDate = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		console.log('Load Schedule: '+req.params.date);
-		models.Schedule.findOne({ date: req.params.date, employerid: req.session.employerid }, function (doc) {
+		var d = new Date(req.params.date);
+		console.log('Date: '+d.toISOString());
+		models.Schedule.findOne({ 'date': Date.parse(req.params.date), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
 			if (!err) {
-				res.statusCode = 200;
-				res.write(doc);
+				if (doc) {
+					res.statusCode = 200;
+					res.end(JSON.stringify(doc));
+				} else {
+					res.statusCode = 404;
+				}
 			} else {
 				console.log('Error fetching Project: '+err);
-				res.statusCode = 499;
+				res.statusCode = 500;
 			}
 			res.end();
 		});
+		delete d; //Clear reference to d
 	} else {
-		res.statusCode = 403;
-		res.end();
+		render.code403(req,res);
 		console.log('Unauthorized access attempt: loadDate schedule');
 	}
 };
@@ -133,8 +139,7 @@ exports.clientUpload = function(req, res) {
 			sendCreds(s.id, file_name);
 		} else { //There was an error
 			console.log('There was an error creating a schedule: '+err);
-			res.statusCode = 500;
-			res.end();
+			render.code500(req,res);
 		}
 	});
 };

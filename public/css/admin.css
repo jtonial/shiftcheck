@@ -1,0 +1,86 @@
+@media (min-width: 979px) {
+	body {
+		padding-top: 60px;
+	}
+}
+@media (max-width: 979px) {
+	body {
+		padding-top: 0px;
+	}
+}
+.page {
+	display:none;
+	visibility:hidden;
+} .page.active {
+	display:block;
+	visibility:visible;
+} .add-another strong {
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-o-border-radius: 2px;
+	-ms-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+	display: block;
+	border: 1px dashed #CCC;
+	line-height: 78px;
+} .add-another {
+	display: block;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+	height: 80px;
+	background: white;
+	border: 1px solid #CCC;
+	padding: 5px;
+	text-align: center;
+	cursor:pointer;
+} .add-another-wrap {
+	background: #EEE;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	-ms-border-radius: 6px;
+	-khtml-border-radius: 6px;
+	border-radius: 6px;
+	padding: 4px;
+} .add-another:hover {
+	background: #E3F0FD;
+} .name, .station {
+	text-align:right; /*testing only*/
+	font-size:12px;
+	line-height:14px;
+} .name {
+	text-align:left;
+}
+.schedule-row {
+	display:block;
+	padding:0;
+	margin-bottom:2px;
+	min-height:14px;
+} .schedule-row [class*="span"] {
+	min-height:14px !important;
+} .schedule-header .snpan24 {
+	width:4.166666666666666%;
+	float:left;
+	/*width:15px;*/
+	text-align:left;
+} .schedule-header .snpan24:hover {
+	background-color:#777;
+} schedule-row .btn.hidden {
+	display:none;
+	visibility:hidden;
+}	.schedule-row .btn {
+	font-size:11px;
+	line-height:12px;
+	padding-top:0px;
+	padding-bottom:0px;
+	display:none;
+	visibility:hidden;
+} .schedule-row:hover .btn {
+	display:block;
+	visibility:visible;
+}

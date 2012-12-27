@@ -224,10 +224,11 @@ app.configure(function(){
 			employees.addPosition (req, res);
 		}
 	});
-
+	*/
 	//Schedules
-	app.get('/schedules', schedules.load);
+	//app.get('/schedules', schedules.load);
 	app.get('/schedules/:date', schedules.loadDate);
+	/*
 	app.post('/schedules', schedules.upload);
 	app.post('/schedules/upload', schedules.processUpload);
 
