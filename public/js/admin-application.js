@@ -16,6 +16,7 @@ $(function() {
 			//pointing to the active one
 		SchedulesView: {},
 		EmployeesView: {},
+		ExchangesView: {},
 		ApprovalsView: {},
 		AccountView: {},
 
@@ -277,6 +278,8 @@ $(function() {
 						Scheduleme.Schedules.add(response.data);
 					}, error: function (xhr) {
 						console.log('DENIED!!');
+					}, complete: function () {
+						$('#sched-date').val('');
 					}
 				});
 			}
@@ -442,16 +445,16 @@ $(function() {
 			Scheduleme.CurrentView.render();*/
 		},/*,
 		employees: function() {
-			$('.link, .page').removeClass('active');
-			$('.employees').addClass('active');
+			console.log('Opening EmployeeView');
+			this.switchView(Scheduleme.EmployeeView);
 		},
 		exchanges: function () {
-			$('.link, .page').removeClass('active');
-			$('.exchanges').addClass('active');
+			console.log('Opening ExchangesView');
+			this.switchView(Scheduleme.ExchangesView);
 		},
 		approvals: function () {
-			$('.link, .page').removeClass('active');
-			$('.approvals').addClass('active');
+			console.log('Opening ApprovalsView');
+			this.switchView(Scheduleme.ApprovalsView);
 		},*/
 		account: function () {
 			console.log('Opening AccountView');
