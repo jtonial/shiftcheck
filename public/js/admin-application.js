@@ -8,12 +8,18 @@ $(function() {
 		},
 		helpers: {},
 
+		data: {},
+
 		Schedules: {},
+
+		//By keeping the views and just undelegatingEvents on switch, with currentView
+			//pointing to the active one
 		SchedulesView: {},
+		AccountView: {},
 
 		Init: function () {},
 
-		AppView: {},
+		CurrentView: {},
 		Router: {},
 	};
 	Scheduleme.classes.models.Employee = Backbone.Model.extend({
@@ -82,7 +88,7 @@ $(function() {
 		}
 	});
 
-	Scheduleme.classes.views.ShiftView = Backbone.View.extend({
+	/*Scheduleme.classes.views.ShiftView = Backbone.View.extend({
 
 		tagName: 'div',
 
@@ -113,7 +119,7 @@ $(function() {
 			});
 			return this;
 		}
-	});
+	});*/
 
 	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 		
@@ -156,19 +162,51 @@ $(function() {
 	});
 
 	Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
-		el: $('.page.schedules'),
+		//This renders directly into the el element; no need to append
+			//Replaces everything in it; and no need to postRender()
+		el: $('#content'),
+
+
+		template: Handlebars.compile($('#schedules-template').html()),
 
 		initialize: function () {
-			//this.collection = typeof
+			this.viewType = 'schedules';
+			//Callback incase I forget to pass reference to collection
+			this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
+
 			this.collection.bind('add',this.addOneSchedule, this);
 		},
 
 		events: {
-			//"click #change-password-trigger" : "changePassword"
+			"change #sched-date" : "loadByDate",
+			"click .upload-modal-trigger" : "openUploadModel"
+		},
+		render: function () {
+			//The JSON passed in does nothing right now, but may in the future
+			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+			this.postRender();
+
+			return $(this.el);
+		},
+		postRender: function () {
+			$('#sched-date').datepicker({
+				showOtherMonths: true,
+				dateFormat: 'yy-mm-dd',
+				maxDate: "+0D"
+			});
+			$('#upload-schedule-date').datepicker({
+				showOtherMonths: true,
+				dateFormat: 'yy-mm-dd',
+				minDate: "+0D"
+			});
+
+			this.addAllSchedules();
+			//Select first schedule
+			$('#dates.nav.nav-tabs li:nth-child(2) a').click();
 		},
 		//Adds one schedule to the Schedules page.
 		addOneSchedule: function (schedule) {
-
+			console.log('adding schedule');
 			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
@@ -188,9 +226,9 @@ $(function() {
 			//this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
 			
 		},
+		//Used after the view has been destroyed then created again to add back schedule views
 		addAllSchedules: function () {
 			var self = this;
-			console.log('adding all schedules... '+JSON.stringify(this.collection));
 			_.each(this.collection.models, function (schedule) {
 				self.addOneSchedule(schedule);
 			});
@@ -199,7 +237,6 @@ $(function() {
 			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
 			$('.schedule-tab').remove();
-			console.log('Length: '+this.collection.length);
 			_.each(this.collection.models, function(schedule) {
 				var d = new Date(schedule.get('datenum'));
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
@@ -223,8 +260,52 @@ $(function() {
 			this.views = Array(); //Reset array;
 
 			this.addAllSchedules();*/
-		}/*,
+		},
+		loadByDate: function () {
+			var dstring = $('#sched-date').val();
+			if (typeof dstring != 'undefined' && dstring != '') {
+				console.log('loading by date');
+				console.log('Date: '+dstring);
 
+				$.ajax({
+					url: '/schedules/'+dstring,
+					type: 'get',
+					success: function (response) {
+						console.log('adding schedule date: '+dstring);
+						Scheduleme.Schedules.add(response.data);
+					}, error: function (xhr) {
+						console.log('DENIED!!');
+					}
+				});
+			}
+		},
+		openUploadModel: function () {
+			$('#upload-modal').modal('show');
+		}
+	});
+
+	Scheduleme.classes.views.AccountView = Backbone.View.extend({
+		el: $('#content'),
+
+		//tagName: 'div',
+		//className: 'page account',
+
+		template: Handlebars.compile($('#account-template').html()),
+
+		initialize: function () {
+			this.viewType = 'account';
+			console.log('Initializing AccountView');
+		},
+
+		events: {
+			"click #change-password-trigger" : "changePassword",
+			"click #edit-email-trigger" : "emailMakeEdittable",
+			"click #save-email-trigger" : "emailSaveChange"
+		},
+		render: function () {
+			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+			return $(this.el);
+		},
 		changePassword: function () {
 			console.log('trying to changing password...');
 			function validatePasswords () {
@@ -267,7 +348,27 @@ $(function() {
 			} else if (validate == 3) {
 				console.log('Your new password must be at last 6 characters long');
 			}
-		},*/
+		},
+		emailMakeEdittable: function () {
+			$('#email').removeAttr('disabled');
+			$('#save-email-trigger').show();
+			$('#edit-email-trigger').hide();
+		},
+		emailSaveChange: function () {
+			function validateEmail(email) {
+				var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return re.test(email);
+			}
+
+			if (validateEmail($('#email').val())) {
+				console.log('email valid. changing email');
+				$('#email').attr('disabled','');
+				$('#edit-email-trigger').show();
+				$('#save-email-trigger').hide();
+			} else {
+				console.log('the entered email is not valid');
+			}
+		}
 	});
 
 	Scheduleme.classes.models.Approval = Backbone.Model.extend({
@@ -317,9 +418,25 @@ $(function() {
 			'':'schedules'
 		},
 
+		switchView: function (view) {
+			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+				Scheduleme.CurrentView.undelegateEvents();
+			}
+			Scheduleme.CurrentView = view;
+			Scheduleme.CurrentView.delegateEvents();
+			Scheduleme.CurrentView.render();
+		},
+
 		schedules: function () {
-			$('.link, .page').removeClass('active');
-			$('.schedules').addClass('active');
+			/*$('.link, .page').removeClass('active');
+			$('.schedules').addClass('active');*/
+			console.log('Opening SchedulesView')
+			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+				Scheduleme.CurrentView.undelegateEvents();
+			}
+			Scheduleme.CurrentView = Scheduleme.SchedulesView;
+			Scheduleme.CurrentView.delegateEvents();
+			Scheduleme.CurrentView.render();
 		},/*,
 		employees: function() {
 			$('.link, .page').removeClass('active');
@@ -334,16 +451,25 @@ $(function() {
 			$('.approvals').addClass('active');
 		},*/
 		account: function () {
-			console.log('openning account page');
-			$('.link, .page').removeClass('active');
-			$('.account').addClass('active');
-		}
+			console.log('Opening AccountView');
+			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+				Scheduleme.CurrentView.undelegateEvents();
+			}
+			Scheduleme.CurrentView = Scheduleme.AccountView;
+			Scheduleme.CurrentView.delegateEvents();
+			Scheduleme.CurrentView.render();		}
 	});
 //------------------PAYLOAD----------------------------
 
 	Scheduleme.Init = function () {
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+
+		//Router takes care of this
 		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
+		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
+
+		//console.log('Rendering View');
+		//Scheduleme.CurrentView.render();
 
 		Scheduleme.Router = new AppRouter;
 		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be
@@ -363,8 +489,15 @@ $(function() {
 				});
 				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
 				//Other option is to reRenderTabs() at the end of addOneSchedule
-				Scheduleme.SchedulesView.reRenderTabs();
-				$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+				if (Scheduleme.CurrentView.viewType == 'schedules') {
+					Scheduleme.CurrentView.reRenderTabs();
+					$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+				}
+
+				//Add data into global object
+				Scheduleme.data.email = res.data.email;
+				Scheduleme.data.name = res.data.name;
+				Scheduleme.data.username = res.data.username;
 			}, error: function () {
 				//Remove loading div
 				console.log('An error occured');

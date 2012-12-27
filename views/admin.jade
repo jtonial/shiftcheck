@@ -2,105 +2,20 @@
 html(lang='en')
   head
     meta(charset='utf-8')
-    title Schedule.me
+    title Schedule.me | Admin
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
     // Le styles
-    link(href='./css/bootstrap.css', rel='stylesheet')
-    link(href='./css/bootstrap-responsive.css', rel='stylesheet')
-    link(rel='stylesheet', type='text/css', media='screen,print', href='./css/jquery-ui-1.8.21.custom.css')
-    style
-      @media (min-width: 979px) {
-        body {
-          padding-top: 60px;
-        }
-      }
-      @media (max-width: 979px) {
-        body {
-          padding-top: 0px;
-        }
-      }
-      .page {
-        display:none;
-        visibility:hidden;
-      } .page.active {
-        display:block;
-        visibility:visible;
-      } .add-another strong {
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        -o-border-radius: 2px;
-        -ms-border-radius: 2px;
-        -khtml-border-radius: 2px;
-        border-radius: 2px;
-        display: block;
-        border: 1px dashed #CCC;
-        line-height: 78px;
-      } .add-another {
-        display: block;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -o-border-radius: 3px;
-        -ms-border-radius: 3px;
-        -khtml-border-radius: 3px;
-        border-radius: 3px;
-        height: 80px;
-        background: white;
-        border: 1px solid #CCC;
-        padding: 5px;
-        text-align: center;
-        cursor:pointer;
-      } .add-another-wrap {
-        background: #EEE;
-        -moz-border-radius: 6px;
-        -webkit-border-radius: 6px;
-        -o-border-radius: 6px;
-        -ms-border-radius: 6px;
-        -khtml-border-radius: 6px;
-        border-radius: 6px;
-        padding: 4px;
-      } .add-another:hover {
-        background: #E3F0FD;
-      } .name, .station {
-        text-align:right; /*testing only*/
-        font-size:12px;
-        line-height:14px;
-      } .name {
-        text-align:left;
-      }
-      .schedule-row {
-      display:block;
-      padding:0;
-      margin-bottom:2px;
-      min-height:14px;
-      } .schedule-row [class*="span"] {
-      min-height:14px !important;
-      } .schedule-header .snpan24 {
-      width:4.166666666666666%;
-      float:left;
-      /*width:15px;*/
-      text-align:left;
-      } .schedule-header .snpan24:hover {
-      background-color:#777;
-      } schedule-row .btn.hidden {
-      display:none;
-      visibility:hidden;
-      }	.schedule-row .btn {
-      font-size:11px;
-      line-height:12px;
-      padding-top:0px;
-      padding-bottom:0px;
-      display:none;
-      visibility:hidden;
-      } .schedule-row:hover .btn {
-      display:block;
-      visibility:visible;
-      }
+    link(href='/css/bootstrap.css', rel='stylesheet')
     link(href='/css/bootstrap-responsive.css', rel='stylesheet')
+    link(href='/css/jquery-ui-1.8.21.custom.css', rel='stylesheet')
+    link(href='/css/admin.css', rel='stylesheet')
+    link(href='/css/bootstrap-responsive.css', rel='stylesheet')
+
     script(src='/js/jquery.js')
     script(src='/js/handlebars-1.0.0.beta.6.js')
-    script(src='http://heapify.ca/js/jquery/jquery-ui-1.8.21.custom.min.js')
+    script(src='/js/jquery-ui-1.8.21.custom.min.js')
     script(src='/js/underscore.js')
     script(src='/js/backbone.js')
     script(src='/js/backbone-pushstate-router.js')
@@ -133,26 +48,7 @@ html(lang='en')
                   li.divider
                   li
                     a(href='logout') Logout
-          // /.nav-collapse
-    .container
-      .page.schedules.active
-        .row
-          .tabbable.tabs-left
-            ul#dates.nav.nav-tabs.span3
-              li.nav-header Dates
-              li.nav-header#prependHere
-                hl
-              div
-                button.btn.btn-success.btn-block.upload-modal-trigger#add_schedule(style="width:90%")
-                  Upload New Schedule
-              li.nav-header
-                hl
-              div
-                li.nav-header Past Schedules
-                li
-                  input.datepicker#sched-date(type='text', style="width:90%")
-            .tab-content
-              
+    .container#content
       .page.account
         .row-fluid
           .tabbable.tabs-left
@@ -178,8 +74,7 @@ html(lang='en')
                       input#newpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='New Password')
                       input#newpassword1.input-large(type='password', style='margin-bottom: 9px;', placeholder='Confirm New Password')
                       button#change-password-trigger.btn.input-large(type='button', style='margin-left: 0;') Change!
-                      p
-                      
+
     #upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
       .modal-header
         h3 Upload Schedule
@@ -217,24 +112,7 @@ html(lang='en')
           dateFormat: 'yy-mm-dd',
           minDate: "+0D"
         });
-        $( ".shift-slider" ).slider({
-          range: true,
-          min: 6,
-          max: 30,
-          values: [ 8, 12 ],
-          step: 0.25,
-          slide: function( event, ui ) {
-            var start = ui.values[0];
-            var start_12 = Math.floor(start % 12);
-            var end = ui.values[1];
-            var end_12 = Math.floor(end % 12);
-            var start_minutes = (start % 1)*60;
-            start_minutes = (start_minutes < 10 ? '0' : '') + start_minutes;
-            var end_minutes = (end % 1)*60;
-            end_minutes = (end_minutes < 10 ? '0' : '') + end_minutes;
-            $('#amount').val( (start_12 != '0' ? start_12 : '12' ) + ':' + start_minutes + ((start<12 || start>=24) ? "am" : "pm") + " - " + (end_12 != '0' ? end_12 : '12') + ':' + end_minutes + ((end<12 || end>=24) ? "am" : "pm") );
-          }
-        });
+
         $('#edit-email-trigger').click(function () {
           $('#email').removeAttr('disabled');
           $('#save-email-trigger').show();
@@ -298,7 +176,6 @@ html(lang='en')
             console.log('Your new password must be at last 6 characters long');
           }
         });
-        $('.ui-slider-handle').hide();
         $('.upload-modal-trigger').click(function () {
           $('#upload-modal').modal('show');
         });
@@ -309,24 +186,18 @@ html(lang='en')
       <h1 class="name"><%= name =></h1>
       <p class="number"><$= enumber =></p>
       </div>
-    // Note: I will probably use the jquery UI slider for each shift on admin page
-    script#shift-template(type='text/x-handlebars-template')
-      <div class="span2">
-      <div class="span6 name">{{name}}</div>
-      <div class="span6 station">{{pos}}</div>
-      </div>
-      <div class="span9">
-      <div class="shift-slider"></div>
-      </div>
-      <div class="span1 btn edit-shift">Edit</div>
-      <div class="span1 btn save-shift">Save</div>
-    script#approval-template(type='text/template')
+
+    script(id='approval-template', type='text/template')
 
     script(id='schedule-template', type='text/x-handlebars-template')
-      <h1>{{outputDate}}</h1>
-      <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/{{url}}&embedded=true" style="width:100%; min-width:200px; height:700px;" frameborder="0"></iframe>
+      <h1>{{outputDate}}</h1><iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/{{url}}&embedded=true" style="width:100%; min-width:200px; height:700px;" frameborder="0"></iframe>
 
-    script
+    script(id='schedules-template', type='text/x-handlebars-template')
+      <div class="row"><div class="tabbable tabs-left"><ul id="dates" class="nav nav-tabs span3"><li class="nav-header">Dates</li><li id="prependHere" class="nav-header"><hl></hl></li><div><button id="add_schedule" style="width:90%" class="btn btn-success btn-block upload-modal-trigger"><Upload>New Schedule</Upload></button></div><li class="nav-header"><hl></hl></li><div><li class="nav-header">Past Schedules</li><li><input id="sched-date" type="text" style="width:90%" class="datepicker"/></li></div></ul><div class="tab-content"></div></div></div>
+    script(id='account-template', type='text/x-handlebars-template')
+      <div class="row-fluid"><div class="tabbable tabs-left"><ul class="nav nav-tabs"><li class="nav-header">Options</li><li class="active"><a href="#accountoptions" data-toggle="tab">Account Options</a></li></ul><div class="tab-content"><div id="accountoptions" class="tab-pane active"><h1 style="margin-bottom: 15px;">Account Options</h1><div class="form-horizontal"><div class="control-group"><label class="control-label">Email: </label><div class="controls"><input id="email" type="text" disabled="disabled" class="input-large"/><button id="edit-email-trigger" class="btn">Edit</button><button id="save-email-trigger" style="display: none;" class="btn btn-primary">Save</button><p></p></div></div><div class="control-group"><label class="control-label">Change Password:</label><div class="controls input-large"><input id="oldpassword" type="password" style="margin-bottom: 9px;" placeholder="Current Password" class="input-large"/><input id="newpassword" type="password" style="margin-bottom: 9px;" placeholder="New Password" class="input-large"/><input id="newpassword1" type="password" style="margin-bottom: 9px;" placeholder="Confirm New Password" class="input-large"/><button id="change-password-trigger" type="button" style="margin-left: 0;" class="btn input-large">Change!</button></div></div></div></div></div></div></div>
+
+    script#handle-upload-script
       function processResponse( res1 ) {
         window.res = JSON.parse(res1);
 
