@@ -15,6 +15,8 @@ $(function() {
 		//By keeping the views and just undelegatingEvents on switch, with currentView
 			//pointing to the active one
 		SchedulesView: {},
+		EmployeesView: {},
+		ApprovalsView: {},
 		AccountView: {},
 
 		Init: function () {},
@@ -359,7 +361,7 @@ $(function() {
 				var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 				return re.test(email);
 			}
-
+			console.log('new email: '+$('#email').val());
 			if (validateEmail($('#email').val())) {
 				console.log('email valid. changing email');
 				$('#email').attr('disabled','');
@@ -431,12 +433,13 @@ $(function() {
 			/*$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');*/
 			console.log('Opening SchedulesView')
-			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+			this.switchView(Scheduleme.SchedulesView);
+			/*if (typeof Scheduleme.CurrentView.viewType !='undefined') {
 				Scheduleme.CurrentView.undelegateEvents();
 			}
 			Scheduleme.CurrentView = Scheduleme.SchedulesView;
 			Scheduleme.CurrentView.delegateEvents();
-			Scheduleme.CurrentView.render();
+			Scheduleme.CurrentView.render();*/
 		},/*,
 		employees: function() {
 			$('.link, .page').removeClass('active');
@@ -452,12 +455,14 @@ $(function() {
 		},*/
 		account: function () {
 			console.log('Opening AccountView');
-			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+			this.switchView(Scheduleme.AccountView);
+			/*if (typeof Scheduleme.CurrentView.viewType !='undefined') {
 				Scheduleme.CurrentView.undelegateEvents();
 			}
 			Scheduleme.CurrentView = Scheduleme.AccountView;
 			Scheduleme.CurrentView.delegateEvents();
-			Scheduleme.CurrentView.render();		}
+			Scheduleme.CurrentView.render();*/
+		}
 	});
 //------------------PAYLOAD----------------------------
 
