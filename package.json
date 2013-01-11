@@ -13,7 +13,10 @@
     "mongoose": "*",
     "bouncy": "*",
     "knox": "*",
-    "winston": "*"
+    "winston": "*",
+    "redis": "*",
+    "url":"*",
+    "connect-redis":"*"
   },
   "engines": {
     "node": "0.8.x",

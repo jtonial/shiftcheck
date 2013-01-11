@@ -10,6 +10,7 @@ var express = require('express')
 	, path = require('path')
 	, fs = require('fs')
 	, crypto = require('crypto')
+	, RedisStore = require('connect-redis')(express)
 	;
 
 //Global
@@ -24,6 +25,14 @@ var https_options = {
 };
 
 var app = express();
+if (process.env.REDISTOGO_URL) {
+	var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+	var redis = require("redis").createClient(rtg.port, rtg.hostname);
+
+	redis.auth(rtg.auth.split(":")[1]); 
+} else {
+	var redis = require("redis").createClient();
+}
 var store = new express.session.MemoryStore;
 
 app.configure(function(){
@@ -36,7 +45,11 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser('your secret here'));
-	app.use(express.session( {secret:'asdfadsfasdfw4t3t53', store:store} ));
+	app.use(express.session({
+		secret:'asdfadsfasdfw4t3t53', 
+		maxAge : new Date( Date.now() + 7200000),
+    	store: new RedisStore({client: redis})
+    }));
 	app.use(require('less-middleware')({ src: __dirname + '/public' }));
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(app.router);
