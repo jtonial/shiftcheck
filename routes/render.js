@@ -34,6 +34,29 @@ exports.uploadVerifiedFailed = function (req, res) {
 	res.render('uploadVerifiedFailed', { title: 'Schedule.me' });
 };
 //Codes
+exports.code = function (res, obj, xhr) {
+	if (xhr) {
+		res.statusCode = obj.statusCode;
+		res.end(JSON.stringify(obj));
+	} else {
+		res.statusCode = obj.statusCode;
+		switch (obj.statusCode) {
+			case 200:
+				break;
+			case 201:
+				break;
+			case 403:
+				res.render('403', { title: 'Schedule.me' });
+				break;
+			case 404:
+				res.render('404', { title: 'Schedule.me' });
+				break;
+			case 500:
+				res.render('500', { title: 'Schedule.me' });
+				break;
+		}
+	}
+};
 exports.code403 = function (req, res) {
 	res.statusCode = 403;
 	if (req.xhr) {

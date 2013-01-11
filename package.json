@@ -5,13 +5,15 @@
   "scripts": {
     "start": "node app"
   },
+  "author": "nrmitchi",
   "dependencies": {
     "express": "3.0.0rc4",
     "jade": "*",
     "less-middleware": "*",
     "mongoose": "*",
     "bouncy": "*",
-    "knox": "*"
+    "knox": "*",
+    "winston": "*"
   },
   "engines": {
     "node": "0.8.x",

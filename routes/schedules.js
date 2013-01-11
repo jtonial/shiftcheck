@@ -124,10 +124,18 @@ exports.clientUpload = function(req, res) {
 
 	console.log(JSON.stringify(req.body));
 
+	//Validate schedule type; else default to daily
+	var type = 'daily';
+	if (req.body.type == 'weekly' ||
+		req.body.type == 'monthly') {
+		type = req.body.type;
+	}
+
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,
 		date: new Date(req.body.date),
 		creation_time: Date(),
+		type: String,
 		image_loc: file_name,
 		shifts: new Array(),//shifts
 		awaitingupload: true

@@ -120,9 +120,98 @@ exports.create = function(req, res){
 	});
 };
 
+/* This function can update:
+	- name
+	- email
+	- img
+	- schedule_type
+	- contact_info
+*/
 exports.update = function(req, res) {
 	console.log('Update Employer ID: '+req.params.id);
-  res.send("Employer - update");
+	var object = new Object();
+	object = req.body;
+	var numErrors = 0;
+	if (typeof req.body.name != 'undefined') {
+		if (typeof req.body.name == 'string') {
+			object.name = req.body.name;
+		} else {
+			numErrors+=1;
+		}
+	}
+	if (typeof req.body.email != 'undefined') {
+		if (typeof req.body.email == 'string') {
+			object.email = req.body.email;
+		} else {
+			numErrors+=1;
+		}
+	}
+	if (typeof req.body.img != 'undefined') {
+		if (typeof req.body.img == 'string') {
+			object.img = req.body.img;
+		} else {
+			numErrors+=1;
+		}
+	}
+	if (typeof req.body.schedule_type != 'undefined') {
+		if (typeof req.body.schedule_type == 'string' &&
+			(req.body.schedule_type == 'daily' ||
+			req.body.schedule_type == 'weekly' ||
+			req.body.schedule_type == 'monthly')) {
+			object.schedule_type = req.body.schedule_type;
+		} else {
+			numErrors+=1;
+		}
+	}
+	//Contact info validation
+	if (typeof req.body.contact_info != 'undefined') {
+		if (typeof req.body.contact_info.email != 'undefined') {
+			if (typeof req.body.contact_info.email == 'string') {
+				if (typeof object.contact_info == 'undefined') {
+					object.contact_info = new Object();
+				}
+				object.contact_info.email = req.body.contact_info.email;
+			} else {
+				numErrors+=1;
+			}
+		}
+		if (typeof req.body.contact_info.phone != 'undefined') {
+			if (typeof req.body.contact_info.phone == 'string') {
+				if (typeof object.contact_info == 'undefined') {
+					object.contact_info = new Object();
+				}
+				object.contact_info.phone = req.body.contact_info.phone;
+			} else {
+				numErrors+=1;
+			}
+		}
+		if (typeof req.body.contact_info.address != 'undefined') {
+			if (typeof req.body.contact_info.address == 'string') {
+				if (typeof object.contact_info == 'undefined') {
+					object.contact_info = new Object();
+				}
+				object.contact_info.address = req.body.contact_info.address;
+			} else {
+				numErrors+=1;
+			}
+		}
+	}
+
+	if (numErrors = 0) {
+		models.Employer.update( { _id:req.session.employerid },
+			object , false, false, function(err) {
+				if (!err) {
+					res.statusCode = 201;
+				} else {
+					res.statusCode = 500;
+					console.log('Error creating new positions: '+err);
+				}
+				res.end();
+			});
+	} else {
+		res.statusCode = 400;
+		res.end();
+	}
 };
 
 exports.getPositions = function(req, res){
@@ -189,7 +278,7 @@ exports.delete = function(req, res) {
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		//Post all of the employees shifts as up for grabs, and then remove him from the system
 		console.log('Delete EmployerID: '+req.params.id);
-	  res.send("Employer - delete");
+		res.end("Employer - delete: Inactive at current time");
 	} else {
 		render.code403(req, res);
 		console.log('Unauthorized access attempt: delete employee');

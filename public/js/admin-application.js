@@ -30,9 +30,7 @@ $(function() {
 	});
 
 	Scheduleme.classes.collections.Employees = Backbone.Collection.extend({
-	
-		//url:,
-		
+			
 		model: Scheduleme.classes.models.Employee,
 
 	});
@@ -124,20 +122,7 @@ $(function() {
 		}
 	});*/
 
-	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
-		
-		//Create the frame
-		//After MVP
-		/*initialize: function () {
-			var that=this;
-			this._shiftViews = [];
-
-			if (typeof this.collection != 'undefined') {
-				this.collection.each(function(shift) {
-					that._shiftViews.push(new ShiftView ({model: shift}));
-				});
-			}
-		},*/
+	Scheduleme.classes.views.ScheduleView.daily = Backbone.View.extend({
 
 		template: Handlebars.compile($('#schedule-template').html()),
 		
@@ -145,14 +130,6 @@ $(function() {
 
 		//Create the frame
 		initialize: function () {
-			var that=this;
-			//this._shiftViews = [];
-
-			//if (typeof this.collection != 'undefined') {
-			//	this.collection.each(function(shift) {
-			//		that._shiftViews.push(new ShiftView ({model: shift}));
-			//	});
-			//}
 		},
 
 		//Add in views for each shift in the schedule
@@ -161,7 +138,40 @@ $(function() {
 			$(this.el).html(this.template(this.model.toJSON()));
 			return $(this.el);
 		}
+	});
+	Scheduleme.classes.views.ScheduleView.weekly = Backbone.View.extend({
+		
+		template: Handlebars.compile($('#schedule-template').html()),
+		
+		className: 'tab-pane',
 
+		//Create the frame
+		initialize: function () {
+
+		},
+		render: function () {
+			$(this.el).attr('id',this.model.get('datenum'));
+			$(this.el).html(this.template(this.model.toJSON()));
+			return $(this.el);
+		}
+	});
+	Scheduleme.classes.views.ScheduleView.monthly = Backbone.View.extend({
+		
+		template: Handlebars.compile($('#schedule-template').html()),
+		
+		className: 'tab-pane',
+
+		//Create the frame
+		initialize: function () {
+
+		},
+
+		//Add in views for each shift in the schedule
+		render: function () {
+			$(this.el).attr('id',this.model.get('datenum'));
+			$(this.el).html(this.template(this.model.toJSON()));
+			return $(this.el);
+		}
 	});
 
 	Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
@@ -220,10 +230,17 @@ $(function() {
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
-			//var test = d.getDate()+1; console.log('Date: '+test+'; %10: '+test%10+'; sup: '+Sups[test%10]);
-			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 
-			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule});
+			if (schedule.get('type') == 'monthly') {
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
+			} else if (schedule.get('type') == 'weekly') {
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
+			} else { //Defaults to daily schedule
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
+			}
 
 			this.$('.tab-content').append(view.render());
 			//this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
@@ -246,11 +263,7 @@ $(function() {
 				delete d; //Remove the reference to D; it can not be garbage collected
 			});
 		},
-		/*
-			This should work, but hasn't had final testing.
-			I don't know if it's really necessary to rerender the schedules when
-			keeping the tabs in order, so I'm leaving this for now.
-		*/
+
 		reRenderCollection: function () {
 			//Actually I dont have to re-render the views... I only really have to re-render the tabs
 			console.log('rerendering....');

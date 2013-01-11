@@ -1,12 +1,10 @@
 var express = require('express')
 	, config = require('./config/config')
 	, routes = require('./routes')
-	, render = require('./routes/render')
 	, employees = require('./routes/employees')
 	, employers = require('./routes/employers')
 	, schedules = require('./routes/schedules')
 	, grabs = require('./routes/grabs')
-	, models = require('./models/models.js')
 	, http = require('http')
 	, https = require('https')
 	, path = require('path')
@@ -14,6 +12,9 @@ var express = require('express')
 	, crypto = require('crypto')
 	;
 
+//Global
+models = require('./models/models.js');
+render = require('./routes/render');
 
 var key = fs.readFileSync(config.ssl_key);
 var cert = fs.readFileSync(config.ssl_cert)
@@ -113,10 +114,6 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
-
-	app.get('/logout', routes.logout);
-	app.post('/logout', routes.logout);
-
 	app.get('/admin-login', function (req, res) {
 		if (!employee && !employer) {
 			render.adminloginPage(req, res);
@@ -131,6 +128,8 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
+
+	app.get('/logout', routes.logout);
 
 	app.get('/signup', function (req, res) {
 		if (!employee && !employer) {
@@ -148,11 +147,11 @@ app.configure(function(){
 			render.code403(req, res);
 		}
 	});
-	app.post('/me/updateContact', function(req, res) {
+	app.post('/me/update', function(req, res) {
 		if (employee) {
 			employees.updateContact(req, res);
 		} else if (employer) {
-			employers.updateContact(req, res);
+			employers.update(req, res);
 		} else {
 			render.code403(req, res);
 		}

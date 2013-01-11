@@ -34,12 +34,7 @@ var EmployerSchema = new mongoose.Schema({
 		phone: String,
 		address: String
 	},
-	schedule_types: {
-		daily: Boolean,
-		weekly: Boolean,
-		biweekely: Boolean,
-		monthly: Boolean
-	},
+	schedule_type: String,
 	open_requests: [RequestSchema],
 	img: String,
 	last_login: Date,
