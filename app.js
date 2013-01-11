@@ -33,7 +33,6 @@ if (process.env.REDISTOGO_URL) {
 } else {
 	var redis = require("redis").createClient();
 }
-var store = new express.session.MemoryStore;
 
 app.configure(function(){
 	app.set('port', process.env.PORT || config.port );
