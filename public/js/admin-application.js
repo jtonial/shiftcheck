@@ -14,11 +14,11 @@ $(function() {
 
 		//By keeping the views and just undelegatingEvents on switch, with currentView
 			//pointing to the active one
-		SchedulesView: {},
-		EmployeesView: {},
-		ExchangesView: {},
-		ApprovalsView: {},
-		AccountView: {},
+		//SchedulesView: {},
+		//EmployeesView: {},
+		//ExchangesView: {},
+		//ApprovalsView: {},
+		//AccountView: {},
 
 		Init: function () {},
 

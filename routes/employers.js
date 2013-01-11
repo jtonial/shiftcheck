@@ -60,15 +60,19 @@ exports.bootstrap = function(req, res){
 exports.load = function (req, res) {
 	console.log('Load Employers');
 	models.Employer.find( {}, { _id:1, name:1}, function (err, docs) {
-		if (!err && docs) {
-			var response = new Object();
-			response.data = new Array();
-			docs.forEach(function (x) {
-				console.log();
-				response.data.push(x);
-			});
-			res.statusCode = 200;
-			res.write(JSON.stringify(response));
+		if (!err) {
+			if (docs) {
+				var response = new Object();
+				response.data = new Array();
+				docs.forEach(function (x) {
+					console.log();
+					response.data.push(x);
+				});
+				res.statusCode = 200;
+				res.write(JSON.stringify(response));
+			} else {
+				res.statusCode = 404;
+			}
 		} else {
 			console.log('Error fetching Projectss: '+err);
 			res.statusCode = 500;
