@@ -47,7 +47,7 @@ app.configure(function(){
 	app.use(express.session({
 		secret:'asdfadsfasdfw4t3t53', 
 		maxAge : new Date( Date.now() + 7200000),
-    	store: new RedisStore({client: redis})
+		store: new RedisStore({client: redis})
     }));
 	app.use(require('less-middleware')({ src: __dirname + '/public' }));
 	app.use(express.static(path.join(__dirname, 'public')));
