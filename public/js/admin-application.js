@@ -4,7 +4,9 @@ $(function() {
 		classes: {
 			models: {},
 			collections: {},
-			views: {},
+			views: {
+				ScheduleView: {},
+			},
 		},
 		helpers: {},
 
@@ -121,7 +123,6 @@ $(function() {
 			return this;
 		}
 	});*/
-
 	Scheduleme.classes.views.ScheduleView.daily = Backbone.View.extend({
 
 		template: Handlebars.compile($('#schedule-template').html()),
