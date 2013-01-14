@@ -136,7 +136,7 @@ db.employees.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-12-29'),
+		date:ISODate('2012-01-18'),
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: []
@@ -145,7 +145,7 @@ db.schedules.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-12-30'),
+		date:ISODate('2012-01-19'),
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: []
@@ -154,7 +154,7 @@ db.schedules.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-12-31'),
+		date:ISODate('2012-01-20'),
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: [],

@@ -143,10 +143,11 @@ exports.clientUpload = function(req, res) {
 
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,
-		date: {
+		/*date: {
 			date: new Date(req.body.date),
 			length: req.body.length || 1
-		},
+		},*/
+		date: new Date(req.body.date),
 		creation_time: Date(),
 		type: String,
 		image_loc: file_name,
@@ -236,10 +237,13 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 					console.log('Schedule Date: '+req.body.date);
 					var schedule = new models.Schedule ({
 						employer: req.session.employerid,
-						date: new Date(req.body.date),
+						date: {
+							date: new Date(req.body.date),
+							lenght: req.body.length || 1
+						},
 						creation_time: Date(),
 						image_loc: file_name,
-						shifts: new Array()//shifts
+						shifts: []//shifts
 					});
 
 					schedule.save(function (err) {
