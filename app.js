@@ -18,7 +18,7 @@ models = require('./models/models.js');
 render = require('./routes/render');
 
 var key = fs.readFileSync(config.ssl_key);
-var cert = fs.readFileSync(config.ssl_cert)
+var cert = fs.readFileSync(config.ssl_cert);
 var https_options = {
 	key: key,
 	cert: cert
@@ -75,7 +75,7 @@ app.configure(function(){
 		return ipAddress;
 	};
 	trackRequest = function (req) {
-		var o = new Object();
+		var o = {};
 
 		if (employee) {
 			o.user_type = 'employee';
@@ -98,7 +98,7 @@ app.configure(function(){
 			} else {
 				console.log('Error tracking page load...');
 			}
-		})
+		});
 	};
 
 
@@ -211,14 +211,14 @@ app.configure(function(){
 	app.get('/employees/:id', employees.loadOne);
 	app.post('employees', employees.create);
 	app.put('/employees', employees.update);
-	app.delete('/employees/:id', employees.delete);
+	app.delete('/employees/:id', employees.deleteEmployee);
 
 	//Employers
 	app.get('/employers', employers.load);
 	app.get('/employers/all', employers.loadOne);
 	app.post('/employers', employers.create);
 	app.put('/employers/:id', employers.update);
-	app.delete('/employers/:id', employers.delete);
+	app.delete('/employers/:id', employers.deleteEmployer);
 
 	app.get('/positions', function (req, res) {
 		if (employer) {
@@ -263,7 +263,7 @@ app.configure('development', function() {
   app.use(express.errorHandler());
 });
 
-if (typeof process.env.PORT == 'undefined') {
+if (false/*typeof process.env.PORT == 'undefined'*/) {
 	//Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
 	http.createServer(function (req, res) {		
 		var to = 'https://'+req.headers.host+req.url;
@@ -277,10 +277,10 @@ if (typeof process.env.PORT == 'undefined') {
 	});
 	https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
 		console.log('HTTPS server listening on %s', app.get('ssl_port'));
-	})
+	});
 } else {
 	//Heroku Specific
 	http.createServer(app).listen(app.get('port'), function () {
 		console.log('HTTP server listening on %s', app.get('port'));
-	})
+	});
 }

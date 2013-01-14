@@ -7,8 +7,7 @@ calcHash = function (val) {
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-}
-
+};
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		console.log('Load EmployerID: '+req.session.employerid);
@@ -16,17 +15,17 @@ exports.bootstrap = function(req, res){
 			if (!err) {
 				if (doc) {
 					console.log('returning signed in employer');
-					var response = new Object();
+					var response = {};
 					response.data = (doc);
 
 					//Fetch Schedule locations
 					models.Schedule.find({employer: req.session.employerid, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 						if (!err) {
-							response.schedules = new Array();
+							response.schedules = [];
 
 							docs.forEach(function (x) {
 								//console.log(x);
-								var tmp = new Object();
+								var tmp = {};
 								tmp.date = x.date;
 								tmp.creation_time = x.creation_time;
 								//tmp.last_modified = x.last_modified;
@@ -62,8 +61,8 @@ exports.load = function (req, res) {
 	models.Employer.find( {}, { _id:1, name:1}, function (err, docs) {
 		if (!err) {
 			if (docs) {
-				var response = new Object();
-				response.data = new Array();
+				var response = {};
+				response.data = [];
 				docs.forEach(function (x) {
 					console.log();
 					response.data.push(x);
@@ -129,7 +128,7 @@ exports.create = function(req, res){
 */
 exports.update = function(req, res) {
 	console.log('Update Employer ID: '+req.params.id);
-	var object = new Object();
+	var object = {};
 	object = req.body;
 	var numErrors = 0;
 	if (typeof req.body.name != 'undefined') {
@@ -168,7 +167,7 @@ exports.update = function(req, res) {
 		if (typeof req.body.contact_info.email != 'undefined') {
 			if (typeof req.body.contact_info.email == 'string') {
 				if (typeof object.contact_info == 'undefined') {
-					object.contact_info = new Object();
+					object.contact_info = {};
 				}
 				object.contact_info.email = req.body.contact_info.email;
 			} else {
@@ -178,7 +177,7 @@ exports.update = function(req, res) {
 		if (typeof req.body.contact_info.phone != 'undefined') {
 			if (typeof req.body.contact_info.phone == 'string') {
 				if (typeof object.contact_info == 'undefined') {
-					object.contact_info = new Object();
+					object.contact_info = {};
 				}
 				object.contact_info.phone = req.body.contact_info.phone;
 			} else {
@@ -188,7 +187,7 @@ exports.update = function(req, res) {
 		if (typeof req.body.contact_info.address != 'undefined') {
 			if (typeof req.body.contact_info.address == 'string') {
 				if (typeof object.contact_info == 'undefined') {
-					object.contact_info = new Object();
+					object.contact_info = {};
 				}
 				object.contact_info.address = req.body.contact_info.address;
 			} else {
@@ -197,7 +196,7 @@ exports.update = function(req, res) {
 		}
 	}
 
-	if (numErrors = 0) {
+	if (numErrors === 0) {
 		models.Employer.update( { _id:req.session.employerid },
 			object , false, false, function(err) {
 				if (!err) {
@@ -273,8 +272,8 @@ exports.changePassword = function(req,res){
 		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
 	}
-}
-exports.delete = function(req, res) {
+};
+exports.deleteEmployer = function(req, res) {
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		//Post all of the employees shifts as up for grabs, and then remove him from the system
 		console.log('Delete EmployerID: '+req.params.id);

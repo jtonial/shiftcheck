@@ -9,7 +9,7 @@ calcHash = function (val) {
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-}
+};
 is_email = function (email) {
 	var reg_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return reg_email.test(email);
@@ -33,11 +33,11 @@ getClientIp = function(req) {
 	return ipAddress;
 };
 trackLogin = function (req, type, id, statusCode) {
-	var o = new Object();
+	var o = {};
 
 	o.user_type = type;
 
-	if (typeof id != 'undefined' && id != '') {
+	if (typeof id != 'undefined' && id !== '') {
 		o.id = id;
 	}
 
@@ -62,7 +62,7 @@ exports.loginProcess = function (req, res) {
 	var password = calcHash(req.body.password);
 	console.log('Email: '+email+' Password: '+password);
 	//Search object for account lookup
-	var where = new Object();
+	var where = {};
 
 	if (is_email(email)) {
 		console.log('is an email');
@@ -120,7 +120,7 @@ exports.adminloginProcess = function (req, res) {
 	var password = calcHash(req.body.password);
 	console.log('Email: '+email+' Password: '+password);
 	//Search object for account lookup
-	var where = new Object();
+	var where = {};
 
 	if (is_email(email)) {
 		console.log('is an email');

@@ -63,7 +63,10 @@ var ShiftSchema = new mongoose.Schema({
 })
 var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
-	date: Date,
+	date: {
+		date: Date,
+		length: Number
+	}, //Number of days in the schedule
 	creation_time: Date,
 	last_modified: Date,
 	image_loc: String,

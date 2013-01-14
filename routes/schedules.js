@@ -10,8 +10,7 @@ calcHash = function (val) {
 		, salt = 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
-}
-
+};
 exports.loadDate = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		console.log('Load Schedule: '+req.params.date);
@@ -31,7 +30,7 @@ exports.loadDate = function(req, res){
 			}
 			res.end();
 		});
-		delete d; //Clear reference to d
+		//delete d; //Clear reference to d //jsHint told me this was bad...
 	} else {
 		render.code403(req,res);
 		console.log('Unauthorized access attempt: loadDate schedule');
@@ -46,8 +45,8 @@ exports.load = function (req, res) {
 		models.Schedule.find({ employerid: req.session.employerid }, function (err, docs) {
 			if (!err) {
 				if (docs) {
-					var response = new Object();
-					response.data = new Array();
+					var response = [];
+					response.data = [];
 					docs.forEach(function (x) {
 						console.log();
 						response.data.push(x);
@@ -65,9 +64,22 @@ exports.load = function (req, res) {
 		});
 	} else if (typeof req.session.employeeid != 'undefined') {
 		//Load schedule for the signed in employee
-		models.Schedule.find( {employeeid: req.session.employeeid}, function (err, docs) {
+		models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 			if (!err) {
-				docs.forEach
+				response.schedules = [];
+
+				docs.forEach(function (x) {
+					//console.log(x);
+					var tmp = {};
+					tmp.date = x.date;
+					tmp.creation_time = x.creation_time;
+					//tmp.last_modified = x.last_modified;
+					tmp.url = x.image_loc;
+					response.schedules.push(tmp);
+				});
+
+				res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify(response));
 			} else {
 				console.log('Error fetching Projects: '+err);
 				res.statusCode = 500;
@@ -86,9 +98,7 @@ exports.clientUpload = function(req, res) {
 	var sendCreds = function (id, key) {
 		var createS3Policy;
 		var s3Signature;
-		var s3Credentials;
-
-		var s3PolicyBase64, _date, _s3Policy;
+		var _date, _s3Policy;
 		_date = new Date();
 		s3Policy = {
 			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()+12) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
@@ -104,9 +114,9 @@ exports.clientUpload = function(req, res) {
 				["eq", "$Content-Type", 'application/pdf']
 			]
 		};
-		var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' ),
+		var s3PolicyBase64 = new Buffer( JSON.stringify( s3Policy ) ).toString( 'base64' );
 
-		s3Credentials = {
+		var s3Credentials = {
 			key: key,
 			acl: 'public-read',
 			s3PolicyBase64: s3PolicyBase64,
@@ -114,9 +124,9 @@ exports.clientUpload = function(req, res) {
 			s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
 			s3Redirect: "http://schedule-me.herokuapp.com/verifyUpload?x="+id, 
 			s3Policy: s3Policy
-		}
+		};
 		res.end(JSON.stringify(s3Credentials));
-	}
+	};
 
 	var file_name = new Date().getTime().toString(); //Use the current time as key for testing
 	var rand = 'dflkasjceo;ajsclkajs'; //Random string
@@ -133,11 +143,14 @@ exports.clientUpload = function(req, res) {
 
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,
-		date: new Date(req.body.date),
+		date: {
+			date: new Date(req.body.date),
+			length: req.body.length || 1
+		},
 		creation_time: Date(),
 		type: String,
 		image_loc: file_name,
-		shifts: new Array(),//shifts
+		shifts: [],//shifts
 		awaitingupload: true
 	});
 
@@ -169,7 +182,7 @@ exports.verifyUpload = function (req, res) {
 		console.log('No id provided or invalid id');
 		render.uploadVerifiedBadReq(req, res);
 	}
-}
+};
 //This seems to work for uploading a pdf and adding a schedule to a database
 exports.upload = function(req,res){ //Used to process a file containing a schedule
 	//Commented for easing testing
@@ -305,4 +318,4 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 		res.statusCode = 403;
 		res.end();
 	}*/
-}
+};
