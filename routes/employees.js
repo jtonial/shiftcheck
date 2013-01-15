@@ -21,7 +21,7 @@ exports.bootstrap = function(req, res){
 					response.last_name = doc.last_name;
 
 					//Fetch Schedule locations
-					models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+					models.Schedule.find({employer: req.session.employer, 'date.date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 						if (!err) {
 							response.schedules = [];
 
@@ -174,17 +174,20 @@ exports.changePassword = function(req,res){
 		var newPassword = calcHash(req.body.newpassword);
 
 		//TODO: Validate new password
-
-		models.Employee.update( { _id:req.session.employeeid, password:oldPassword }, { password:newpassword }, { multi:false }, function(err, numAffected) {
-			if (!err) {
-				//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
-				console.log('Employee '+req.session.employeeid+' password updated');
-				res.statusCode = 200;
-				res.end("Password Updated");
-			} else { //An error
-				render.code500(req, res);
-			}
-		});
+		if (newPassword.length) {
+			models.Employee.update( { _id:req.session.employeeid, password:oldPassword }, { password:newpassword }, { multi:false }, function(err, numAffected) {
+				if (!err) {
+					//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
+					console.log('Employee '+req.session.employeeid+' password updated');
+					res.statusCode = 200;
+					res.end("Password Updated");
+				} else { //An error
+					render.code500(req, res);
+				}
+			});
+		} else {
+			render.400(req, res);
+		}
 	} else {
 		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');

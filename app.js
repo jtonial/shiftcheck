@@ -204,54 +204,7 @@ app.configure(function(){
 		}
 	});
 	
-/* //NOT INCLUDED IN MVP
-	Note: I may have to include the schedule paths to work with backbone
-	//Employee
-	app.get('/employees', employees.load);
-	app.get('/employees/:id', employees.loadOne);
-	app.post('employees', employees.create);
-	app.put('/employees', employees.update);
-	app.delete('/employees/:id', employees.deleteEmployee);
-
-	//Employers
-	app.get('/employers', employers.load);
-	app.get('/employers/all', employers.loadOne);
-	app.post('/employers', employers.create);
-	app.put('/employers/:id', employers.update);
-	app.delete('/employers/:id', employers.deleteEmployer);
-
-	app.get('/positions', function (req, res) {
-		if (employer) {
-			employers.getPositions(req, res);
-		}
-	});
-	app.post('/positions/', function (req, res) {
-		if (employer) {
-			employers.createPosition (req, res);
-		}
-	});
-	app.post('/positions/:eid', function (req, res) {
-		if (employer) {
-			employees.addPosition (req, res);
-		}
-	});
-	*/
-	//Schedules
-	//app.get('/schedules', schedules.load);
 	app.get('/schedules/:date', schedules.loadDate);
-	/*
-	app.post('/schedules', schedules.upload);
-	app.post('/schedules/upload', schedules.processUpload);
-
-	//Grabs and Requests
-	app.get('/exchanges', grabs.load);
-	app.post('/exchanges/:id', grabs.create);
-	app.post('/exchanges/:id/request', grabs.addRequest);
-
-	app.get('/requests', grabs.getRequests);
-	app.post('/requests/:id', grabs.respondRequest);
-	app.delete('/requests/:id', grabs.deleteRequest);
-	*/
 
 	app.all('*', function (req, res) {
 		render.code404(req, res);

@@ -19,7 +19,7 @@ exports.bootstrap = function(req, res){
 					response.data = (doc);
 
 					//Fetch Schedule locations
-					models.Schedule.find({employer: req.session.employerid, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+					models.Schedule.find({employer: req.session.employerid, 'date.date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 						if (!err) {
 							response.schedules = [];
 
@@ -253,21 +253,26 @@ exports.changePassword = function(req,res){
 		//Update Password
 		var oldPassword = calcHash(req.body.oldpassword);
 		var newPassword = calcHash(req.body.newpassword);
-		models.Employer.update( { _id:req.session.employerid, password:oldPassword }, { password:newPassword }, { multi:false }, function(err, numAffected) {
-			if (!err) {
-				if (numAffected) {
-					//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
-					console.log('Employer '+req.session.employerid+' password updated');
-					res.statusCode = 200;
-					res.end("Password Updated");
-				} else {
-					res.statusCode = 400;
-					res.end();
+		//Validate
+		if (newPassword.length > 6) {
+			models.Employer.update( { _id:req.session.employerid, password:oldPassword }, { password:newPassword }, { multi:false }, function(err, numAffected) {
+				if (!err) {
+					if (numAffected) {
+						//Note that I am making the assumption that if there is no error, than a row was updated (not checking numAffected)
+						console.log('Employer '+req.session.employerid+' password updated');
+						res.statusCode = 200;
+						res.end("Password Updated");
+					} else {
+						res.statusCode = 400;
+						res.end();
+					}
+				} else { //An error
+					render.code500(req, res);
 				}
-			} else { //An error
-				render.code500(req, res);
-			}
-		});
+			});
+		} else {
+			render.code400(req, res);
+		}
 	} else {
 		render.code403(req, res);
 		console.log('Unauthorized access attempt: create employee');
