@@ -3,7 +3,6 @@ db.employers.drop();
 db.schedules.drop();
 db.logs_login.drop();
 db.logs_access.drop();
-db.access_logs.drop();
 
 db.createCollection('employees');
 db.createCollection('employers');
