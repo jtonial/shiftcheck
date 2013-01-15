@@ -186,7 +186,7 @@ exports.changePassword = function(req,res){
 				}
 			});
 		} else {
-			render.400(req, res);
+			render.code400(req, res);
 		}
 	} else {
 		render.code403(req, res);
