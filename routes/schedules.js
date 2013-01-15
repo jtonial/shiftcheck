@@ -17,7 +17,7 @@ exports.loadDate = function(req, res){
 		var d = new Date(req.params.date);
 		console.log('Date: '+d.toISOString());
 		//This will have to be changed to accomodate different scehdule lengths (ie, 01-15-2013 will match a schedule of length and date 01-12-2013)
-		models.Schedule.findOne({ 'date.date': Date.parse(req.params.date), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
+		models.Schedule.findOne({ 'date': Date.parse(req.params.date), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
 			if (!err) {
 				if (doc) {
 					res.statusCode = 200;
@@ -65,7 +65,7 @@ exports.load = function (req, res) {
 		});
 	} else if (typeof req.session.employeeid != 'undefined') {
 		//Load schedule for the signed in employee
-		models.Schedule.find({employer: req.session.employer, 'date.date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+		models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 			if (!err) {
 				response.schedules = [];
 
@@ -145,11 +145,8 @@ exports.clientUpload = function(req, res) {
 
 	var schedule = new models.Schedule ({
 		employer: req.session.employerid,
-		date: {
-			date: new Date(req.body.date),
-			type: type || 'day'
-		},
-		//date: new Date(req.body.date),
+		date: new Date(req.body.date),
+		type: type || 'day',
 		creation_time: Date(),
 		type: String,
 		image_loc: file_name,

@@ -21,7 +21,7 @@ exports.bootstrap = function(req, res){
 					response.last_name = doc.last_name;
 
 					//Fetch Schedule locations
-					models.Schedule.find({employer: req.session.employer, 'date.date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+					models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 						if (!err) {
 							response.schedules = [];
 
