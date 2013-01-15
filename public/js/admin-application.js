@@ -111,6 +111,22 @@ $(function() {
 			return $(this.el);
 		}
 	});
+	Scheduleme.classes.views.ScheduleView.biweekly = Backbone.View.extend({
+		
+		template: Handlebars.compile($('#schedule-template').html()),
+		
+		className: 'tab-pane',
+
+		//Create the frame
+		initialize: function () {
+
+		},
+		render: function () {
+			$(this.el).attr('id',this.model.get('datenum'));
+			$(this.el).html(this.template(this.model.toJSON()));
+			return $(this.el);
+		}
+	});
 	Scheduleme.classes.views.ScheduleView.monthly = Backbone.View.extend({
 		
 		template: Handlebars.compile($('#schedule-template').html()),
@@ -187,15 +203,20 @@ $(function() {
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
 
-			if (schedule.get('type') == 'monthly') {
+			if (schedule.get('type') == 'month') {
 				var datestring = d.getMonth();
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
-			} else if (schedule.get('type') == 'weekly') {
+			} else if (schedule.get('type') == 'week') {
 				var nd = Scheduleme.helpers.addDays(d, 7);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
+			else if (schedule.get('type') == 'twoweek') {
+				var nd = Scheduleme.helpers.addDays(d, 14);
+				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+				var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
 			} else { //Defaults to daily schedule
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});

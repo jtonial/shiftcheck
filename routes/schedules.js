@@ -65,7 +65,7 @@ exports.load = function (req, res) {
 		});
 	} else if (typeof req.session.employeeid != 'undefined') {
 		//Load schedule for the signed in employee
-		models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+		models.Schedule.find({employer: req.session.employer, 'date.date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 			if (!err) {
 				response.schedules = [];
 
@@ -136,9 +136,10 @@ exports.clientUpload = function(req, res) {
 	console.log(JSON.stringify(req.body));
 
 	//Validate schedule type; else default to daily
-	var type = 'daily';
-	if (req.body.type == 'weekly' ||
-		req.body.type == 'monthly') {
+	var type = 'day';
+	if (req.body.type == 'week' ||
+		req.body.type == 'twoweek' ||
+		req.body.type == 'month') {
 		type = req.body.type;
 	}
 
@@ -146,7 +147,7 @@ exports.clientUpload = function(req, res) {
 		employer: req.session.employerid,
 		date: {
 			date: new Date(req.body.date),
-			length: req.body.length || 1
+			type: type || 'day'
 		},
 		//date: new Date(req.body.date),
 		creation_time: Date(),

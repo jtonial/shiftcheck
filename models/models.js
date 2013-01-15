@@ -65,7 +65,7 @@ var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
 	date: {
 		date: Date,
-		length: Number
+		type: String
 	}, //Number of days in the schedule
 	//date: Date,
 	creation_time: Date,
