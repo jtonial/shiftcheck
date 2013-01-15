@@ -20,25 +20,6 @@ $(function() {
 		Router: {},
 	};
 
-	//-------------------------------------------
-	/*
-		Extend the Date object for use with monthly schedules
-	*/
-	function prevMonth(){
-		var thisMonth = this.getMonth();
-		this.setMonth(thisMonth-1);
-		if(this.getMonth() != thisMonth-1 && (this.getMonth() != 11 || (thisMonth == 11 && this.getDate() == 1))) this.setDate(0);
-	}
-	function nextMonth(){
-		var thisMonth = this.getMonth();
-		this.setMonth(thisMonth+1);
-		if(this.getMonth() != thisMonth+1 && this.getMonth() != 0) this.setDate(0);
-	}
-	 
-	Date.prototype.nextMonth = nextMonth;
-	Date.prototype.prevMonth = prevMonth;
-	//-------------------------------------------
-
 	Scheduleme.helpers.addDays = function(date, adding) {
 		return new Date(date.getTime() + adding*1440000);
 	};
@@ -447,6 +428,9 @@ $(function() {
 
 				//Add data into global object
 				Scheduleme.data.email = res.data.email;
+				if (Scheduleme.CurrentView.viewType !='undefined') {
+					$('#email').val(Scheduleme.data.email);
+				}
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
 			}, error: function () {
