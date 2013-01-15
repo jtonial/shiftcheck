@@ -212,7 +212,7 @@ $(function() {
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
-			else if (schedule.get('type') == 'twoweek') {
+			} else if (schedule.get('type') == 'twoweek') {
 				var nd = Scheduleme.helpers.addDays(d, 14);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
