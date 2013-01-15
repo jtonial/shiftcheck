@@ -300,6 +300,7 @@ $(function() {
 		},
 		render: function () {
 			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+			$('#email').val(Scheduleme.data.email);
 			return $(this.el);
 		},
 		changePassword: function () {
