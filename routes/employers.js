@@ -41,6 +41,9 @@ exports.bootstrap = function(req, res){
 							res.end();
 						}
 					});
+				} else {
+					//Current user doc doesn't exist; probably due to it being deleted while the user is signed in
+					render.code403(req,res);
 				}
 			} else {
 				console.log('Error fetching Employer: '+err);
