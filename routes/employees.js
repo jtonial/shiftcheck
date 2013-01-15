@@ -29,6 +29,7 @@ exports.bootstrap = function(req, res){
 								//console.log(x);
 								var tmp = {};
 								tmp.date = x.date;
+								tmp.type = x.type;
 								tmp.creation_time = x.creation_time;
 								//tmp.last_modified = x.last_modified;
 								tmp.url = x.image_loc;
