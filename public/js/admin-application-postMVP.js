@@ -14,35 +14,19 @@ $(function() {
 
 		Schedules: {},
 
+		//By keeping the views and just undelegatingEvents on switch, with currentView
+			//pointing to the active one
+		//SchedulesView: {},
+		//EmployeesView: {},
+		//ExchangesView: {},
+		//ApprovalsView: {},
+		//AccountView: {},
+
 		Init: function () {},
 
 		CurrentView: {},
 		Router: {},
 	};
-
-	//-------------------------------------------
-	/*
-		Extend the Date object for use with monthly schedules
-	*/
-	function prevMonth(){
-		var thisMonth = this.getMonth();
-		this.setMonth(thisMonth-1);
-		if(this.getMonth() != thisMonth-1 && (this.getMonth() != 11 || (thisMonth == 11 && this.getDate() == 1))) this.setDate(0);
-	}
-	function nextMonth(){
-		var thisMonth = this.getMonth();
-		this.setMonth(thisMonth+1);
-		if(this.getMonth() != thisMonth+1 && this.getMonth() != 0) this.setDate(0);
-	}
-	 
-	Date.prototype.nextMonth = nextMonth;
-	Date.prototype.prevMonth = prevMonth;
-	//-------------------------------------------
-
-	Scheduleme.helpers.addDays = function(date, adding) {
-		return new Date(date.getTime() + adding*1440000);
-	};
-
 	Scheduleme.classes.models.Employee = Backbone.Model.extend({
 		
 	});
@@ -81,6 +65,16 @@ $(function() {
 		model: Scheduleme.classes.models.Shift,
 
 		initialize: function () {
+		/*	this.shifts = new Scheduleme.classes.collections.Shifts();
+			this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
+
+			var that = this;
+			$.each(this.get('shifts'), function (index, shift) {
+				console.log('adding shift: '+index);
+				that.shifts.add({model: shift});
+				//that.shifts.add(new Scheduleme.classes.model.Shift({model:shift});
+			});
+		*/
 		}
 
 	});
@@ -97,6 +91,38 @@ $(function() {
 		}
 	});
 
+	/*Scheduleme.classes.views.ShiftView = Backbone.View.extend({
+
+		tagName: 'div',
+
+		template: _.template($('#shift-template').html()),
+
+		events: {
+			"click .edit" : "toggleEditOn",
+			"click .save" : "saveChanges"
+		},
+
+		toggleEditOn: function () {
+			$('.btn.edit').addClass('hidden');
+			$('.btn.save').removeClass('hidden');
+		},
+		saveChanges: function () {
+			$('.btn.edit').removeClass('hidden');
+			$('.btn.save').addClass('hidden');
+			console.log('saving...');
+		},
+		render: function () {
+			$(this.el).html(this.template(this.model.toJSON()));
+			this.$('.shift-slider').slider({
+				range: true,
+				min: 6,
+				max: 30,
+				values: [ 8, 12 ], //values: [this.model.get('start_time'), this.model.get('end_time')],
+				step: 0.25
+			});
+			return this;
+		}
+	});*/
 	Scheduleme.classes.views.ScheduleView.daily = Backbone.View.extend({
 
 		template: Handlebars.compile($('#schedule-template').html()),
@@ -207,13 +233,10 @@ $(function() {
 			schedule.set('datestring', datestring);
 
 			if (schedule.get('type') == 'monthly') {
-				var datestring = d.getMonth();
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 			} else if (schedule.get('type') == 'weekly') {
-				var nd = Scheduleme.helpers.addDays(d, 7);
-				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 			} else { //Defaults to daily schedule
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
@@ -367,6 +390,24 @@ $(function() {
 		}
 	});
 
+	Scheduleme.classes.models.Approval = Backbone.Model.extend({
+	
+	});
+
+	Scheduleme.classes.collections.Approvals = Backbone.Collection.extend({
+		//url:,
+		model: Scheduleme.classes.models.Shift,
+	});
+
+	Scheduleme.classes.views.ApprovalView = Backbone.View.extend({
+
+		tagName: 'div',
+		template: _.template($('#approval-template').html()),
+		render: function () {
+			$(this.el).html(this.template(this.model.toJSON()));
+			return this;
+		}
+	});
 	//-------------------------------ROUTER------------------------------------
 	window.AppRouter = Backbone.Router.extend({
 		//Note: I'm currently using tabs; another approach would be to make each tab
@@ -387,6 +428,10 @@ $(function() {
 		//	}
 		},
 		routes: {
+			//'schedules':'schedules',
+			//'employees':'employees',
+			//'exchanges':'exchanges',
+			//'approvals':'approvals',
 			'account':'account',
 
 			'':'schedules'
@@ -406,10 +451,34 @@ $(function() {
 			$('.schedules').addClass('active');*/
 			console.log('Opening SchedulesView')
 			this.switchView(Scheduleme.SchedulesView);
+			/*if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+				Scheduleme.CurrentView.undelegateEvents();
+			}
+			Scheduleme.CurrentView = Scheduleme.SchedulesView;
+			Scheduleme.CurrentView.delegateEvents();
+			Scheduleme.CurrentView.render();*/
+		},/*,
+		employees: function() {
+			console.log('Opening EmployeeView');
+			this.switchView(Scheduleme.EmployeeView);
 		},
+		exchanges: function () {
+			console.log('Opening ExchangesView');
+			this.switchView(Scheduleme.ExchangesView);
+		},
+		approvals: function () {
+			console.log('Opening ApprovalsView');
+			this.switchView(Scheduleme.ApprovalsView);
+		},*/
 		account: function () {
 			console.log('Opening AccountView');
 			this.switchView(Scheduleme.AccountView);
+			/*if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+				Scheduleme.CurrentView.undelegateEvents();
+			}
+			Scheduleme.CurrentView = Scheduleme.AccountView;
+			Scheduleme.CurrentView.delegateEvents();
+			Scheduleme.CurrentView.render();*/
 		}
 	});
 //------------------PAYLOAD----------------------------
@@ -420,6 +489,9 @@ $(function() {
 		//Router takes care of this
 		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
 		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
+
+		//console.log('Rendering View');
+		//Scheduleme.CurrentView.render();
 
 		Scheduleme.Router = new AppRouter;
 		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be

@@ -1,11 +1,14 @@
 db.employees.drop();
 db.employers.drop();
 db.schedules.drop();
+db.logs_login.drop();
+db.logs_access.drop();
 
 db.createCollection('employees');
 db.createCollection('employers');
 db.createCollection('schedules');
-db.createCollection('access_logs');
+db.createCollection('logs_login');
+db.createCollection('logs_access');
 
 db.employees.ensureIndex({ email:1 },{unique:true});
 db.employees.ensureIndex({ username:1 },{unique:true});
