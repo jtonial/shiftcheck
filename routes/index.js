@@ -95,21 +95,17 @@ exports.loginProcess = function (req, res) {
 						});
 					trackLogin(req, 'employee', doc._id, 200);
 				} else {
-					res.statusCode = 400;
-					res.end();
+					render.code400(req,res);
 					console.log('login failure');
 					trackLogin(req, 'employee', doc._id, 400);
-
 				}
 			} else {
-				res.statusCode = 400;
-				res.end();
+				render.code400(req,res);
 				console.log('login failure');
 				trackLogin(req, 'employee', '', 400);
 			}
 		} else {
-			res.statusCode = 500;
-			res.end();
+			render.code500(req,res);
 			trackLogin(req, 'employee', '', 500);
 		}
 	});

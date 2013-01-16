@@ -11,6 +11,7 @@ var express = require('express')
 	, fs = require('fs')
 	, crypto = require('crypto')
 	, RedisStore = require('connect-redis')(express)
+	, authenticate = require('./middleware/authenticate')
 	;
 
 //Global
@@ -46,12 +47,16 @@ app.configure(function(){
 	app.use(express.cookieParser('your secret here'));
 	app.use(express.session({
 		secret:'asdfadsfasdfw4t3t53', 
-		maxAge : new Date( Date.now() + 7200000),
+		maxAge : new Date( Date.now() + 1800000), // 30 minutes
 		store: new RedisStore({client: redis})
     }));
 	app.use(require('less-middleware')({ src: __dirname + '/public' }));
 	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(authenticate());
 	app.use(app.router);
+	app.use(function (req, res) {
+		render.code404(req, res);
+	});
 
 	var employee;
 	var employer;
@@ -205,10 +210,6 @@ app.configure(function(){
 	});
 	
 	app.get('/schedules/:date', schedules.loadDate);
-
-	app.all('*', function (req, res) {
-		render.code404(req, res);
-	});
 
 });
 

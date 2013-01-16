@@ -12,9 +12,9 @@ exports.bootstrap = function(req, res){
 	if (typeof req.session.employeeid != 'undefined') {//If an employer is signed in
 		console.log('Load EmployeeID: '+req.session.employeeid);
 		models.Employee.findOne({ _id:req.session.employeeid }, function (err, doc) {
+			var response = {};
 			if (!err) {
 				if (doc) {
-					var response = {};
 					//Note: I cannot just response = doc. If I do this I cannot seem to add to the response object
 					response.email = doc.email;
 					response.first_name = doc.first_name;
@@ -37,21 +37,20 @@ exports.bootstrap = function(req, res){
 							});
 
 							res.setHeader('Content-Type', 'application/json');
-							res.end(JSON.stringify(response));
+							response.statusCode == 200;
 						} else {
 							console.log('Error fetching Employee: '+err);
-							res.statusCode = 500;
-							res.end();
+							response.statusCode = 500;
 						}
+						render.code(req.xhr, res, response);
 					});
 				} else {
 					//Current user doc doesn't exist; probably due to it being deleted while the user is signed in
-					render.code403(req,res);
+					render.code401(req,res);
 				}
 			} else {
 				console.log('Error fetching Employee: '+err);
-				res.statusCode = 500;
-				res.end();
+				render.code500(req,res);
 			}
 		});
 	} else {
@@ -62,26 +61,24 @@ exports.bootstrap = function(req, res){
 };
 exports.loadOne = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
+		var response = {};
 		console.log('Load EmployeeID: '+req.params.id);
 		models.Employee.findOne({ _id: req.params.id, employerid: req.session.employerid }, function (err, docs) {
 			if (!err) {
 				console.log('returning apis');
-				var response = {};
 				response.data = [];
 				docs.forEach(function (x) {
 					response.data.push(x);
 				});
-				res.statusCode = 200;
-				res.write(JSON.stringify(response));
+				response.statusCode = 200;
 			} else {
 				console.log('Error fetching Project: '+err);
-				res.statusCode = 500;
+				response.statusCode = 500;
 			}
-			res.end();
+			render.code(req.xhr, res, response);
 		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		render.code401(req, res);
 		console.log('Unauthorized access attempt: loadOne employee');
 	}
 };

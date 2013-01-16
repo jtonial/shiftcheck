@@ -34,7 +34,7 @@ exports.uploadVerifiedFailed = function (req, res) {
 	res.render('uploadVerifiedFailed', { title: 'Schedule.me' });
 };
 //Codes
-exports.code = function (res, obj, xhr) {
+exports.code = function (xhr, res, obj) {
 	if (xhr) {
 		res.statusCode = obj.statusCode;
 		res.end(JSON.stringify(obj));
@@ -42,8 +42,12 @@ exports.code = function (res, obj, xhr) {
 		res.statusCode = obj.statusCode;
 		switch (obj.statusCode) {
 			case 200:
+				res.end(JSON.stringify(obj));
 				break;
 			case 201:
+				break;
+			case 401:
+				res.render('403', { title: 'Schedule.me' });
 				break;
 			case 403:
 				res.render('403', { title: 'Schedule.me' });
@@ -55,6 +59,14 @@ exports.code = function (res, obj, xhr) {
 				res.render('500', { title: 'Schedule.me' });
 				break;
 		}
+	}
+};
+exports.code401 = function (req, res) {
+	res.statusCode = 401;
+	if (req.xhr) {
+		res.end();
+	} else {
+		res.render('401', { title: 'Schedule.me' });
 	}
 };
 exports.code403 = function (req, res) {
