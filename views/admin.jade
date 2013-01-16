@@ -91,7 +91,19 @@ html(lang='en')
           input(type="file", name="file", id="file", placeholder="file")
           input.btn.btn-success.btn-large(type="submit", name="submit2", id="upload_submit")
 
-          input.datepicker#upload-schedule-date(type="text", name="date", placeholder="YYYY-MM-DD")
+          .form-horizontal
+            .control-group
+              label.control-label(for="date") Date
+              .controls
+                input.datepicker#upload-schedule-date.upload-schedule-info(type="text", name="date", placeholder="YYYY-MM-DD")
+            .control-group
+              label.control-label(for="type") Length
+              .controls
+                select#upload-schedule-type.upload-schedule-info(name="type")
+                  option(value="day") 1 Day
+                  option(value="week") Week
+                  option(value="twoweek") 2 Weeks
+                  option(value="month") Month
       .modal-footer
         button.btn(data-dismiss='modal') Cancel
 
@@ -218,7 +230,7 @@ html(lang='en')
         $.ajax({
           url: "/upload",
           type: 'POST',
-          data: $('#upload-schedule-date').serialize(),
+          data: $('.upload-schedule-info').serialize(),
           success: function (res) {
             console.log('received success');
             processResponse(res);

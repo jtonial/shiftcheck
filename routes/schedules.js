@@ -136,6 +136,7 @@ exports.clientUpload = function(req, res) {
 	console.log(JSON.stringify(req.body));
 
 	//Validate schedule type; else default to daily
+	console.log('Uploading new schedule: Day: '+req.body.date+' Type: '+req.body.type);
 	var type = 'day';
 	if (req.body.type == 'week' ||
 		req.body.type == 'twoweek' ||
