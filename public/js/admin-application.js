@@ -250,13 +250,14 @@ $(function() {
 				} else if (schedule.get('type') == 'week') {
 					var nd = new Date(schedule.get('ndatestring'));
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+schedule.get('ndatestring')+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+					delete nd;
 				} else if (schedule.get('type') == 'twoweek') {
 					var nd = new Date(schedule.get('ndatestring'));
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+schedule.get('ndatestring')+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+					delete nd;
 				} else { //Defaults to daily schedule
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				}
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
 				delete d; //Remove the reference to D; it can not be garbage collected
 			});
 		},
