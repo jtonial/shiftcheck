@@ -21,7 +21,9 @@ $(function() {
 	};
 
 	Scheduleme.helpers.addDays = function(date, adding) {
-		return new Date(date.getTime() + adding*1440000);
+		var nd = new Date();
+		nd.setDate(date.getDate() + adding);
+		return nd;
 	};
 
 	Scheduleme.classes.models.Employee = Backbone.Model.extend({

@@ -2,7 +2,7 @@
 
 module.exports = function() {    
     return function(req, res, next) {
-        console.log('Authentication middleware running...');
+        //console.log('Authentication middleware running...');
         next();
     }
     
