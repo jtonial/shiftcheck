@@ -205,6 +205,7 @@ $(function() {
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
 
+			console.log('Schedule type: '+schedule.get('type'));
 			if (schedule.get('type') == 'month') {
 				var datestring = d.getMonth();
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
@@ -212,6 +213,7 @@ $(function() {
 			} else if (schedule.get('type') == 'week') {
 				var nd = Scheduleme.helpers.addDays(d, 7);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+				console.log('New date string: '+ndatestring);
 				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 			} else if (schedule.get('type') == 'twoweek') {
