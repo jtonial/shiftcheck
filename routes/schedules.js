@@ -149,7 +149,7 @@ exports.clientUpload = function(req, res) {
 		date: new Date(req.body.date),
 		type: type || 'day',
 		creation_time: Date(),
-		type: String,
+		type: type,
 		image_loc: file_name,
 		shifts: [],//shifts
 		awaitingupload: true
