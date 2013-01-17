@@ -17,7 +17,7 @@ exports.loadDate = function(req, res){
 		var d = new Date(req.params.date);
 		console.log('Date: '+d.toISOString());
 		//This will have to be changed to accomodate different scehdule lengths (ie, 01-15-2013 will match a schedule of length and date 01-12-2013)
-		models.Schedule.findOne({ 'date': d.toISOString(), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
+		models.Schedule.findOne({ 'date': {$eq: Date() }, employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
 			if (!err) {
 				if (doc) {
 					res.statusCode = 200;
@@ -65,7 +65,20 @@ exports.load = function (req, res) {
 		});
 	} else if (typeof req.session.employeeid != 'undefined') {
 		//Load schedule for the signed in employee
-		models.Schedule.find({employer: req.session.employer, 'date': {$gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
+		var today = new Date();
+		var weekAgo = new Date();
+		weekAgo.setDate(today.getDate() - 7);
+		var twoAgo = new Date();
+		twoAgo.setDate(today.getDate() - 14);
+		var month = new Date(today.getFullYear() - today.getMonth());
+		models.Schedule.find({employer: req.session.employer, 
+				$or: [ 
+					$and: [ 'type': 'day', 'date': { $gte: Date() } ], 
+					$and: [ 'type': 'week', 'date': { $gte: weekAgo } ], 
+					$and: [ 'type': 'twoweek', 'date': { $get: twoAgo } ],
+					$and: [ 'type': 'month', 'date': { $eq: month } ] 
+				], 
+				'awaitingupload': { $exists: false } }, function (err, docs) {
 			if (!err) {
 				response.schedules = [];
 
@@ -142,6 +155,17 @@ exports.clientUpload = function(req, res) {
 		req.body.type == 'twoweek' ||
 		req.body.type == 'month') {
 		type = req.body.type;
+	}
+	var date;
+	var tmpDate = new Date(req.body.date);
+	if (type == 'day') {
+		date = tmpDate;
+	} else if (type == 'week') {
+		date = tmpDate;
+	} else if (type == 'twoweek') {
+		date = tmpDate;
+	} else if (type == 'month') {
+		date = new Date(tmpDate.getFullYear() - tmpDate.getMonth());
 	}
 
 	var schedule = new models.Schedule ({
