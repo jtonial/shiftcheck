@@ -207,8 +207,9 @@ $(function() {
 
 			console.log('Schedule type: '+schedule.get('type'));
 			if (schedule.get('type') == 'month') {
-				var datestring = d.getMonth();
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				datestring = Months[d.getMonth()];
+				schedule.set('datestring', datestring);
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 			} else if (schedule.get('type') == 'week') {
 				var nd = Scheduleme.helpers.addDays(d, 7);
@@ -245,8 +246,7 @@ $(function() {
 			_.each(this.collection.models, function(schedule) {
 				var d = new Date(schedule.get('datenum'));
 				if (schedule.get('type') == 'month') {
-					var datestring = d.getMonth();
-					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'</a></li>');
 				} else if (schedule.get('type') == 'week') {
 					var nd = new Date(schedule.get('ndatestring'));
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - '+schedule.get('ndatestring')+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
