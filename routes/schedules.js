@@ -17,7 +17,7 @@ exports.loadDate = function(req, res){
 		var d = new Date(req.params.date);
 		console.log('Date: '+d.toISOString());
 		//This will have to be changed to accomodate different scehdule lengths (ie, 01-15-2013 will match a schedule of length and date 01-12-2013)
-		models.Schedule.findOne({ 'date': Date.parse(req.params.date), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
+		models.Schedule.findOne({ 'date': d.toISOString(), employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
 			if (!err) {
 				if (doc) {
 					res.statusCode = 200;
