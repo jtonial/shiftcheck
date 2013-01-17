@@ -71,14 +71,7 @@ exports.load = function (req, res) {
 		var twoAgo = new Date();
 		twoAgo.setDate(today.getDate() - 14);
 		var month = new Date(today.getFullYear() - today.getMonth());
-		models.Schedule.find({employer: req.session.employer, 
-				$or: [ 
-					$and: [ 'type': 'day', 'date': { $gte: Date() } ], 
-					$and: [ 'type': 'week', 'date': { $gte: weekAgo } ], 
-					$and: [ 'type': 'twoweek', 'date': { $get: twoAgo } ],
-					$and: [ 'type': 'month', 'date': { $eq: month } ] 
-				], 
-				'awaitingupload': { $exists: false } }, function (err, docs) {
+		models.Schedule.find({employer: req.session.employer, 'date': { $gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
 			if (!err) {
 				response.schedules = [];
 
