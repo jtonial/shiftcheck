@@ -232,11 +232,14 @@ html(lang='en')
 
       requestCredentials = function(event) {
         event.preventDefault();
-
+        var date = new Date($('#upload-schedule-date').val());
+        console.log('Date: '+date.toISOString());
+        var data = 'date='+$('#upload-schedule-date').val()+'&type='+$('#upload-schedule-type').val();
+        console.log('Data: '+data);
         $.ajax({
           url: "/upload",
           type: 'POST',
-          data: $('.upload-schedule-info').serialize(),
+          data: data,
           success: function (res) {
             console.log('received success');
             processResponse(res);

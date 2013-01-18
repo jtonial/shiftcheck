@@ -136,7 +136,8 @@ db.employees.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-01-18'),
+		date: ISODate('2013-01-20'),
+		type: 'day',
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: []
@@ -145,7 +146,8 @@ db.schedules.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-01-19'),
+		date: ISODate('2013-01-21'),
+		type: 'day',
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: []
@@ -154,19 +156,30 @@ db.schedules.insert(
 db.schedules.insert(
 	{
 		employer:employerId('McDonalds'),
-		date:ISODate('2012-01-20'),
+		date: ISODate('2013-01-22'),
+		type: 'day',
 		creation_time: new Date(),
 		image_loc: '12BarzTickets.pdf',
 		shifts: [],
-		awaitingupload: true
+	}
+)
+db.schedules.insert(
+	{
+		employer:employerId('McDonalds'),
+		date: ISODate('2013-01-23'),
+		type: 'week',
+		creation_time: new Date(),
+		image_loc: '12BarzTickets.pdf',
+		shifts: [],
 	}
 )
 db.schedules.insert(
 	{
 		employer:employerId('Tim Hortons'),
-		date:ISODate('2012-10-20'),
+		date: ISODate('2012-10-20'),
+		type: 'day',
 		creation_time: new Date(),
-		image_loc: '12BarzTickets.pdf',
+		image_loc: 'zyxwvutsrqponmlkjihgfedcba.pdf',
 		shifts: [
 			{
 				_id:new ObjectId(),

@@ -20,6 +20,12 @@ $(function() {
 		Router: {},
 	};
 
+	Scheduleme.helpers.addMinutes = function(date, adding) {
+	    return new Date(date.getTime() + minutes*60000);
+	};
+	Scheduleme.helpers.UTCify = function (date) {
+		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+	};
 	Scheduleme.helpers.addDays = function(date, adding) {
 		var nd = new Date();
 		nd.setDate(date.getDate() + adding);
@@ -200,8 +206,11 @@ $(function() {
 
 			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
 			var d = new Date(datenum);
-			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate()+1);
-			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
+
+			d = Scheduleme.helpers.UTCify(d);
+
+			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
+			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
 
@@ -245,6 +254,9 @@ $(function() {
 			$('.schedule-tab').remove();
 			_.each(this.collection.models, function(schedule) {
 				var d = new Date(schedule.get('datenum'));
+				console.log('Day1: '+d);
+				d = Scheduleme.helpers.UTCify(d);
+				console.log('Day2: '+d);
 				if (schedule.get('type') == 'month') {
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'</a></li>');
 				} else if (schedule.get('type') == 'week') {

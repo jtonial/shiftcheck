@@ -16,20 +16,27 @@ exports.loadDate = function(req, res){
 		console.log('Load Schedule: '+req.params.date);
 		var d = new Date(req.params.date);
 		console.log('Date: '+d.toISOString());
+		console.log('Date: '+d.toString());
+		console.log('Date: '+d);
 		//This will have to be changed to accomodate different scehdule lengths (ie, 01-15-2013 will match a schedule of length and date 01-12-2013)
-		models.Schedule.findOne({ 'date': d.toString() , employerid: req.session.employerid, 'awaitingupload': { $exists: false } }, function (err, doc) {
+		//I feel like this is unstable, but I will use it for now
+			//I also need to fetch schedules in which the given date is in the week/twoWeek/month
+		models.Schedule.findOne({employer: req.session.employerid, 'date': { $gte: d.toString() }, /*'date': { $lte: d.toString() }, */'awaitingupload': { $exists: false } }, function (err, doc) {
 			if (!err) {
 				if (doc) {
 					res.statusCode = 200;
+					console.log('Doc: '+JSON.stringify(doc));
 					res.end(JSON.stringify(doc));
 				} else {
+					console.log('404HERE');
 					res.statusCode = 404;
+					res.end();
 				}
 			} else {
 				console.log('Error fetching Project: '+err);
 				res.statusCode = 500;
+				res.end();
 			}
-			res.end();
 		});
 		//delete d; //Clear reference to d //jsHint told me this was bad...
 	} else {
