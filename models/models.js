@@ -64,6 +64,7 @@ var ShiftSchema = new mongoose.Schema({
 var ScheduleSchema = new mongoose.Schema({
 	employer: mongoose.Schema.ObjectId,
 	date: Date,
+	//timezome: Number, //Number of minutes from UTC; This should probably be attached to the schedule incase someone is looking at it from a different timezone. The schedule should be the same independent of viewing location
 	type: String,
 	creation_time: Date,
 	last_modified: Date,
