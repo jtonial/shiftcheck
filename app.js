@@ -15,7 +15,6 @@ var express = require('express')
 	;
 
 //Global
-models = require('./models/models.js');
 render = require('./routes/render');
 
 var key = fs.readFileSync(config.ssl_key);
@@ -25,6 +24,7 @@ var https_options = {
 	cert: cert
 };
 
+//MySQL
 var app = express();
 if (process.env.REDISTOGO_URL) {
 	var rtg   = require("url").parse(process.env.REDISTOGO_URL);
@@ -34,6 +34,59 @@ if (process.env.REDISTOGO_URL) {
 } else {
 	var redis = require("redis").createClient();
 }
+
+if (typeof process.env.PORT == 'undefined') {
+	//Create the MySQL connection
+	db = mysql.createConnection({
+		host     : process.env.CLEARDB_DATABASE_URL || 'localhost',
+		user     : process.env.CLEARDB_DATABASE_USER || 'root',
+		password : process.env.CLEARDB_DATABASE_PASSWORD || 'password',
+		database : process.env.CLEARDB_DATABASE_DB || 'scheduleme'
+	});
+} else {
+	//Heroku specific
+	//Create the MySQL connection
+	db = mysql.createConnection({
+		host     : process.env.CLEARDB_DATABASE_URL,
+		user     : process.env.CLEARDB_DATABASE_USER,
+		password : process.env.CLEARDB_DATABASE_PASSWORD,
+		database : process.env.CLEARDB_DATABASE_DB
+	});
+}
+
+db.connect(function (err) {
+	if (err) {
+		console.log('There was an error connecting to db: '+err);
+	} else {
+		console.log('db connection open:');
+	}
+});
+
+function handleDisconnect(db) {
+	db.on('error', function(err) {
+		if (!err.fatal) {
+			return;
+		}
+
+		if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
+			throw err;
+		}
+
+		console.log('Re-connecting lost connection: ' + err.stack);
+
+		db = mysql.createConnection(db.config);
+		handleDisconnect(db);
+		db.connect(function (err) {
+			if (err) {
+				console.log('There was an error connecting to db: '+err);
+			} else {
+				console.log('db connection open:');
+			}
+		});
+	});
+}
+//Add disconnect handlers
+handleDisconnect(db);
 
 app.configure(function(){
 	app.set('port', process.env.PORT || config.port );
