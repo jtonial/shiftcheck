@@ -10,6 +10,7 @@ module.exports = config = {
 	"mongo_db" : "schedule",
 
 	"ssl_key" : "./config/ssl/key.pem",
-	"ssl_cert" : "./config/ssl/cert.pem"
+	"ssl_cert" : "./config/ssl/cert.pem",
 
+	"debug": true
 }
