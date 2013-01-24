@@ -90,8 +90,8 @@ var TrackingLoginSchema = new mongoose.Schema({
 	statusCode: Number
 })
 
-var dbhost = process.env.MONGOLAB_URI || config.mongo_host
-	, dbdb = config.mongo_db
+var dbhost = process.env.MONGOLAB_URI || Scheduleme.Config.mongo_host
+	, dbdb = Scheduleme.Config.mongo_db
 	;
 var db;
 if (typeof process.env.PORT == 'undefined') {

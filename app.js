@@ -1,21 +1,3 @@
-Scheduleme = {
-	Helpers : {
-		Render	: require('./helpers/render'),
-		Helpers : require('./helpers/helpers')
-	},
-	Controllers : {
-		Employees : require('./controllers/employees'),
-		Employers : require('./controllers/employers'),
-		Schedules : require('./controllers/schedules'),
-		Grabs : require('./controllers/grabs')
-	},
-	Models : {
-		Employee : require('./models/employee'),
-		Employer : require('./models/employer'),
-		Schedule : require('./models/schedule')
-	}
-}
-
 var express = require('express')
 	, http = require('http')
 	, https = require('https')
@@ -27,11 +9,10 @@ var express = require('express')
 	, mysql = require('mysql')
 	;
 
-//Global
-config = require('./config/config')
+var Scheduleme = require('./helpers/global');
 
-var key = fs.readFileSync(config.ssl_key);
-var cert = fs.readFileSync(config.ssl_cert);
+var key = fs.readFileSync(Scheduleme.Config.ssl_key);
+var cert = fs.readFileSync(Scheduleme.Config.ssl_cert);
 var https_options = {
 	key: key,
 	cert: cert
@@ -102,8 +83,8 @@ function handleDisconnect(db) {
 handleDisconnect(db);
 
 app.configure(function(){
-	app.set('port', process.env.PORT || config.port );
-	app.set('ssl_port', process.env.PORT || config.ssl_port );
+	app.set('port', process.env.PORT || Scheduleme.Config.port );
+	app.set('ssl_port', process.env.PORT || Scheduleme.Config.ssl_port );
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.favicon());
@@ -125,53 +106,23 @@ app.configure(function(){
 		employee = (typeof req.session.employee_id != 'undefined');
 		employer = (typeof req.session.employer_id != 'undefined');
 
-		if (employee) {
-			console.log('Employee is signed in');
-			//load employee into req.employee
-		} else if (employer) {
-			console.log('Employer is signed in');
-			//load employee into req.employee
-		} else {
-			console.log('no one signed in');
-		}
+		next();
+	});
+	app.use(function (req, res, next) {
+		if (Scheduleme.Config.debug) console.log('Tracking...');
+
 		next();
 	});
 	app.use(function (req, res, next) {
 		//trackRequest(req);
 
-		next()
+		next();
 	});
 	app.use(app.router);
 	app.use(function (req, res) {
 		Scheduleme.Helpers.Render.code404(req, res);
 	});
 
-	/*trackRequest = function (req) {
-		var o = {};
-
-		if (employee) {
-			o.user_type = 'employee';
-			o.id = req.session.employeeid;
-		} else if (employer) {
-			o.user_type = 'employer';
-			o.id = req.session.employerid;
-		} else {
-			o.user_type = 'undefined';
-		}
-		o.method = req.method;
-		o.url = req.url;
-		o.time = Date();
-		o.ip = Scheduleme.Helpers.Helpers.getClientIp(req);
-
-		var tracking = new models.Tracking(o);
-		tracking.save(function(err, s) {
-			if (!err) {
-				console.log();
-			} else {
-				console.log('Error tracking page load...');
-			}
-		});
-	};*/
 
 	app.get('/', Scheduleme.Helpers.Render.index);
 	app.get('/login', function (req, res) {
@@ -191,7 +142,7 @@ app.configure(function(){
 
 	app.post('/login', function (req, res) {
 		if (!employee) {
-			Scheduleme.Controllers.Employees.loginProcess(req, res);
+			Scheduleme.Controllers.Employees.processLogin(req, res);
 		} else {
 			res.redirect('/');
 		}
@@ -231,10 +182,8 @@ app.configure(function(){
 		} else {
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
-	});
-	app.get('/upload', function (req, res) {
-		res.render('testupload', { title: 'testupload' });
 	});*/
+
 	app.post('/upload', function (req, res) {
 		if (employer) {
 			Scheduleme.Controllers.Schedules.clientUpload(req, res);
@@ -265,7 +214,7 @@ app.configure(function(){
 		}
 	});
 	
-	//app.get('/schedules/:date', Scheduleme.Controllers.Schedules.loadDate);
+	app.get('/schedules/:date', Scheduleme.Controllers.Schedules.loadDate);
 
 });
 

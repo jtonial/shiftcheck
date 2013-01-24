@@ -1,12 +1,7 @@
+var Scheduleme = require('../helpers/global');
+
 var crypto = require('crypto')
 	;
-
-calcHash = function (val) {
-	var shasum = crypto.createHash('sha1')
-		, salt = 'schedule12101991';
-
-	return shasum.update(val+salt).digest('hex');
-}
 
 //This will load all employees for the given employer
 exports.load = function (req, res) {
@@ -38,7 +33,7 @@ exports.load = function (req, res) {
 exports.create = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		var email = req.body.email;
-		var password = calcHash(req.body.password);
+		var password = Scheduleme.Helpers.helpers.calcHash(req.body.password);
 		var first_name = req.body.first_name;
 		var last_name = req.body.last_name;
 		var employer = req.session.employerid; //Current employer

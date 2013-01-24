@@ -42,18 +42,19 @@ exports.code = function (xhr, res, obj) {
 		// endTime
 		// duration
 		
+	res.statusCode = obj.statusCode;
+
 	if (xhr) {
-		res.statusCode = obj.statusCode;
+		res.header('Content-Type', 'application/json');
 		res.end(JSON.stringify(obj));
 	} else {
-		res.statusCode = obj.statusCode;
 		switch (obj.statusCode) {
 			case 200: // Okay
-				res.set('Content-Type', 'application/json');
+				res.header('Content-Type', 'application/json');
 				res.end(JSON.stringify(obj));
 				break;
 			case 201: // Created
-				res.set('Content-Type', 'application/json');
+				res.header('Content-Type', 'application/json');
 				res.end(JSON.stringify(obj));
 				break;
 			case 401:

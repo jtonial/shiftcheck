@@ -1,3 +1,4 @@
+var Scheduleme = require('../helpers/global');
 
 var queries = {};
 queries['selectEmployee'] = 'SELECT * FROM employees WHERE employee_id=? LIMIT 1';
@@ -5,60 +6,27 @@ queries['selectSchedules'] = 'SELECT * FROM schedules WHERE employer_id=? AND aw
 
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employee_id != 'undefined') {//If an employer is signed in
-		console.log('Load EmployeeID: '+req.session.employee_id);
 
-		var response = {};
+		var input = {
+			id 			: req.session.employee_id,
+			employer 	: req.session.employer,
+			xhr			: req.xhr,
+			res 		: res,
+			response	: {}
+		}
 
-		db.query(queries['selectEmployee'], [req.session.employee_id], function (err, row) {
-			if (err) {
-				response.statusCode = 500;
-				response.message = err.code;
-				console.log(err.code);
-				Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		Scheduleme.Models.Employee.fetch(input, 
+			Scheduleme.Models.Employee.fetchSchedules)
 
-			} else {
-				if (row[0]) {
-					response.statusCode = 200;
-
-					response.data = row;
-
-					response.schedules = [];
-					db.query(queries['selectSchedules'], [req.session.employee_uid])
-						.on('error', function (err) {
-							//Handle error, and 'end' event will be emitted after this.
-							response.statusCode = 500;
-							response.message = err.code;
-							response.schedules = [];
-							console.log(err.code);
-						})
-						.on('fields', function (fields) {
-							//The field packets for the rows to follow
-
-							//This fires once, whether or not row are returned
-							//console.log ('in fields callback');
-						})
-						.on('result', function (row) {
-					
-							console.log('result: '+JSON.stringify(row));
-							response.schedules.push(row);
-						})
-						.on('end', function () {
-							Scheduleme.Helpers.Render.code(req.xhr, res, response);
-						})
-				} else {
-					response.statusCode = 404;
-					Scheduleme.Helpers.Render.code(req.xhr, res, response);
-				}
-			}
-		});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		console.log('Unauthorized access attempt: employee bootstrap');
-		res.end();
+		var response = {
+			statusCode: 403
+		};
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		console.log('Unauthorized access attempt: employer bootstrap');
 	}
 };
 exports.processLogin = function (req, res) {
-	console.log('in Controller.Employee.processLogin');
 	Scheduleme.Models.Employee.login(req, res);
 }
 /*exports.loadOne = function(req, res){

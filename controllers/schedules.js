@@ -1,5 +1,13 @@
+var Scheduleme = require('../helpers/global');
+
 var crypto = require('crypto')
 	;
+
+//Have to test this
+
+//Shortcut Scheduleme.debug maybe, or use winston (probably has environment stuff built in)
+//Add a log statement to the top of each included file; would give a good output
+	//and I can see when they're actually being loaded
 
 exports.loadDate = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
@@ -12,23 +20,15 @@ exports.loadDate = function(req, res){
 		//I feel like this is unstable, but I will use it for now
 			//I also need to fetch schedules in which the given date is in the week/twoWeek/month
 
-		models.Schedule.findOne({employer: req.session.employerid, 'date': { $gte: d.toString() }, /*'date': { $lte: d.toString() }, */'awaitingupload': { $exists: false } }, function (err, doc) {
-			if (!err) {
-				if (doc) {
-					res.statusCode = 200;
-					console.log('Doc: '+JSON.stringify(doc));
-					res.end(JSON.stringify(doc));
-				} else {
-					console.log('404HERE');
-					res.statusCode = 404;
-					res.end();
-				}
-			} else {
-				console.log('Error fetching Project: '+err);
-				res.statusCode = 500;
-				res.end();
-			}
-		});
+		var input = {
+			id 		: req.session.employer_id,
+			date 	: req.params.date,
+			xhr 	: req.xhr,
+			res 	: res
+		}
+
+		Scheduleme.Models.Schedules.getByEmployerDate(input);
+
 		//delete d; //Clear reference to d //jsHint told me this was bad...
 	} else {
 		Scheduleme.Helpers.Render.code403(req,res);
@@ -178,6 +178,7 @@ exports.clientUpload = function(req, res) {
 		}
 	});
 };
+
 exports.verifyUpload = function (req, res) {
 
 	var id = req.query.x;

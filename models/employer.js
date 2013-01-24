@@ -1,17 +1,19 @@
+var Scheduleme = require('../helpers/global');
+
 var Employer = {
 
 	data: {
 
 	},
 	save : function () {
-		if (config.debug) console.log('Saving Employee');
+		if (Scheduleme.Config.debug) console.log('Saving Employee');
 		return true;
 	},
 	update : function () {
-		if (config.debug)console.log('Updating Employee');
+		if (Scheduleme.Config.debug)console.log('Updating Employee');
 	},
 	delete : function () {
-		if (config.debug)console.log('Updating Employee');
+		if (Scheduleme.Config.debug)console.log('Updating Employee');
 	},
 
 	login : function (req, res) {
@@ -19,7 +21,7 @@ var Employer = {
 		var email = req.body.email;
 		if (typeof email != 'undefined' && email != '' && typeof req.body.password != 'undefined') {
 			var password = Scheduleme.Helpers.Helpers.calcHash(req.body.password);
-			console.log('Email: '+email+' Password: '+password);
+			//console.log('Email: '+email+' Password: '+password);
 			//Search object for account lookup
 			var where = new Object();
 			var loginQuery='';
@@ -49,12 +51,9 @@ var Employer = {
 						req.session.email = row[0].email;
 						req.session.username = row[0].username;
 
-						console.log('Session: '+JSON.stringify(req.session));
-
 						response.statusCode = 200;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 
-						console.log('login success');
 						db.query("UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?", [req.session.employer_id], function (err, result) {
 							if (err) {
 								console.log('ERROR:: Updating employer login: '+err);
@@ -64,7 +63,6 @@ var Employer = {
 						})
 
 					} else {
-						console.log('login failure');
 						response.statusCode = 400;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 					}
@@ -116,7 +114,7 @@ exports.fetch = function (obj, next) {
 			if (row[0]) {
 				response.statusCode = 200;
 
-				response.data = row;
+				response.data = row[0];
 
 				obj.response = response;
 
@@ -137,7 +135,7 @@ exports.fetchSchedules = function (obj) {
 
 	response.schedules = [];
 
-	query = 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false'
+	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false';
 
 	db.query(query, [id])
 		.on('error', function (err) {

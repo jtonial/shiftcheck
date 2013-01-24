@@ -88,10 +88,37 @@ CREATE TABLE shifts (
 	end DATETIME NOT NULL,
 
 	position_id INT UNSIGNED NOT NULL,
-	employee_id INT UNSIGNED NOT NULL
+	employee_id INT UNSIGNED NOT NULL,
 
 	CONSTRAINT FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
 	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id),
 	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+
+) ENGINE=innodb;
+
+CREATE TABLE requests (
+	request_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	shift_id INT UNSIGNED NOT NULL,
+
+	from_employee INT UNSIGNED NOT NULL,
+	to_employee INT UNSIGNED NOT NULL,
+
+	status ENUM('pending','declined','approved') NOT NULL,
+	response_by INT UNSIGNED NOT NULL,
+
+	request_time DATETIME,
+	response_time DATETIME,
+
+	CONSTRAINT FOREIGN KEY (shift_id) REFERENCES shifts(shift_id),
+	CONSTRAINT FOREIGN KEY (from_employee) REFERENCES employees(employee_id),
+	CONSTRAINT FOREIGN KEY (to_employee) REFERENCES employees(employee_id)
+
+) ENGINE=innodb;
+CREATE TABLE shift_history (
+	history_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	shift_id INT UNSIGNED NOT NULL,
+
+	from_employee INT UNSIGNED NOT NULL,
+	to_employee INT UNSIGNED NOT NULL
 
 ) ENGINE=innodb;

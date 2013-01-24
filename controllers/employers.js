@@ -1,3 +1,4 @@
+var Scheduleme = require('../helpers/global');
 
 var queries = {};
 queries['selectEmployer'] = 'SELECT * FROM employers WHERE employer_id=? LIMIT 1';
@@ -5,7 +6,6 @@ queries['selectSchedules'] = 'SELECT * FROM schedules WHERE employer_id=? AND aw
 
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employer_id != 'undefined') {//If an employer is signed in
-		console.log('Load EmployerID: '+req.session.employer_id);
 
 		var input = {
 			id 			: req.session.employer_id,
@@ -18,13 +18,14 @@ exports.bootstrap = function(req, res){
 			Scheduleme.Models.Employer.fetchSchedules)
 
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
+		response = {
+			statusCode: 403
+		};
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
 		console.log('Unauthorized access attempt: employer bootstrap');
 	}
 };
 exports.processLogin = function (req, res) {
-	console.log('in Controller.Employer.processLogin');
 	Scheduleme.Models.Employer.login(req, res);
 }
 //This will load all employees for the given employer
