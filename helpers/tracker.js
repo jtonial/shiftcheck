@@ -2,54 +2,47 @@ var Scheduleme = require('../helpers/global');
 
 exports.trackRequest = function (req) {
 	if (Scheduleme.Config.debug) console.log('Tracking Request');
-	/*var o = {};
 
-	if (employee) {
-		o.user_type = 'employee';
-		o.id = req.session.employeeid;
-	} else if (employer) {
-		o.user_type = 'employer';
-		o.id = req.session.employerid;
+	var user_type = '';
+	if (typeof req.session.employer_id !== 'undefined') {
+		user_type 	= 'employer';
+		id 		= req.session.employer_id;
+	} else if (typeof req.session.employee_id !== 'undefined') {
+		user_type 	= 'employee';
+		id 		= req.session.employee_id;
 	} else {
-		o.user_type = 'undefined';
-	}
-	o.method = req.method;
-	o.url = req.url;
-	o.time = Date();
-	o.ip = Scheduleme.Helpers.Helpers.getClientIp(req);
+		user_type 	= 'none';
+		id 		= null;
+	} 
 
-	var tracking = new models.Tracking(o);
-	tracking.save(function(err, s) {
-		if (!err) {
-			console.log();
-		} else {
-			console.log('Error tracking page load...');
+	var method 	= req.method.toUpperCase();
+	var url 	= req.url;
+	var time 	= Date();
+	var ip 		= Scheduleme.Helpers.Helpers.getClientIp(req);
+
+	var query = "INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)"
+
+	db.query(query, [user_type, id, method, url, time, ip], function (err, result) {
+		if (err) {
+			console.log('Insert error in trackRequest');
 		}
-	});*/
+	});
 };
 
-exports.trackLogin = function (req, type, id, statusCode) {
+exports.trackLogin = function (obj) { //req, type, id, statusCode) {
 	if (Scheduleme.Config.debug) console.log('Tracking Login');
-	/*var o = {};
 
-	o.user_type = type;
+	var user_type 	= obj.type;
+	var id 			= obj.id;
+	var time 		= Date();
+	var ip 			= obj.ip;
+	var statusCode	= obj.statusCode;
 
-	if (typeof id != 'undefined' && id !== '') {
-		o.id = id;
-	}
+	var query = "INSERT INTO track_request (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)"
 
-	o.method = req.method;
-	o.url = req.url;
-	o.time = Date();
-	o.ip = getClientIp(req);
-	o.statusCode = statusCode;
-
-	var tracking = new models.TrackLogin(o);
-	tracking.save(function(err, s) {
-		if (!err) {
-			console.log();
-		} else {
-			console.log('Error tracking page load...');
+	db.query(query, [user_type, id, time, ip, statusCode], function (err, result) {
+		if (err) {
+			console.log('Insert error in trackRequest');
 		}
-	});*/
+	});
 };

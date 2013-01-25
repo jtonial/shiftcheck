@@ -10,13 +10,14 @@ exports.bootstrap = function(req, res){
 		var input = {
 			id 			: req.session.employee_id,
 			employer 	: req.session.employer,
-			xhr			: req.xhr,
-			res 		: res,
 			response	: {}
 		}
 
 		Scheduleme.Models.Employee.fetch(input, 
-			Scheduleme.Models.Employee.fetchSchedules)
+			Scheduleme.Models.Schedule.getByEmployer,
+				function (obj) {
+					Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+				});
 
 	} else {
 		var response = {
@@ -28,7 +29,33 @@ exports.bootstrap = function(req, res){
 };
 exports.processLogin = function (req, res) {
 	Scheduleme.Models.Employee.login(req, res);
-}
+};
+exports.changePassword = function (req, res) {
+
+	if (Scheduleme.Helpers.helpers.validatePassword(req.body.newpassword)) {
+		var input = {
+			id 			: req.session.employee_id,
+			oldpassword : Scheduleme.Helpers.helpers.calcHash(req.body.oldpassword),
+			newpassword : Scheduleme.Helpers.helpers.calcHash(req.body.newpassword),
+		};
+		Scheduleme.Models.Employee.changePassword(input, function (err) {
+			response = {};
+			if (err) {
+				response.statusCode = 400;
+			} else {
+				response.statusCode = 200;
+			}
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		});
+	} else {
+		response = {
+			statusCode 	: 400,
+			message 	: 'Invalid password'
+		}
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	}
+};
+
 /*exports.loadOne = function(req, res){
 	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
 		var response = {};

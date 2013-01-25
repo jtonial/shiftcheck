@@ -15,7 +15,6 @@ var Employee = {
 	delete : function () {
 		if (Scheduleme.Config.debug)console.log('Updating Employee');
 	},
-
 	login : function (req, res) {
 		console.log('in Model.Employee.login');
 		var email = req.body.email;
@@ -58,7 +57,7 @@ var Employee = {
 
 						db.query("UPDATE employees SET login_count=login_count+1, last_login=NOW() WHERE employee_id=?", [req.session.employee_id], function (err, numAffected) {
 							if (err) {
-								console.log('ERROR:: Updating employer login: '+err);
+								console.log('ERROR:: Updating employee login: '+err);
 							}
 						})
 						//Track login
@@ -67,6 +66,15 @@ var Employee = {
 						response.statusCode = 400;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 					}
+
+					var trackingInput = {
+						type 		: 'employee',
+						id 			: row[0].employee_id,
+						ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
+						statusCode	: response.statusCode
+					};
+					
+					Scheduleme.Tracking.trackLogin(trackingInput);
 				}
 			});
 		} else {
@@ -75,7 +83,7 @@ var Employee = {
 			response.message = 'Email is missing or empty';
 			Scheduleme.Helpers.Render.code(req.xhr, res, response);
 		}
-	},
+	}
 };
 
 exports.new = function (object) {
@@ -83,29 +91,19 @@ exports.new = function (object) {
 }
 
 //Export static methods
-exports.fetch = function (obj, next) {
+exports.fetch = function (obj, cb, cb2) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
-	if (typeof obj.res == 'undefined') {
-		console.log('No response object passed');
-		//Exit here or something
-	}
-	if (typeof obj.xhr == 'undefined') {
-		console.log('No xhr status passed');
-		//Exit here or something
-	}
 	if (typeof obj.employer == 'undefined') {
 		console.log('No employer passed');
 		//Exit here or something
 	}
 	if (typeof obj.id == 'undefined') {
-		Scheduleme.Helpers.Render.code(req)
+		console.log('No id; Model.Employer.fetch');
 	}
 
 	id 			= obj.id;
 	employer 	= obj.employer;
-	xhr 		= obj.xhr;
-	res 		= obj.res;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	query = 'SELECT * FROM employees WHERE employee_id=? LIMIT 1';
@@ -114,7 +112,7 @@ exports.fetch = function (obj, next) {
 			response.statusCode = 500;
 			response.message = err.code;
 			console.log(err.code);
-			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+			cb2(response);
 
 		} else {
 			if (row[0]) {
@@ -122,47 +120,32 @@ exports.fetch = function (obj, next) {
 
 				response.data = row[0];
 
+				obj.id = employer;
 				obj.response = response;
-
-				next(obj);
+				cb(obj, cb2);
 			} else {
 				response.statusCode = 404;
-				Scheduleme.Helpers.Render.code(req.xhr, res, response);
+				cb2(response);
 			}
 		}
 	});
 }
-exports.fetchSchedules = function (obj) {
 
-	id 			= obj.id;
-	employer 	= obj.employer;
-	xhr			= obj.xhr;
-	res 		= obj.res;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+/*
+	input = {
+		id 			=> Employee id
+		oldpassword => Employees old password
+		newpassword => Employees new password
+	}
+*/
+exports.changePassword = function (obj, cb) {
 
-	response.schedules = [];
+	//I should probably do some validation here
+	var query = "UPDATE employees SET password=? WHERE employee_id=? AND password=? LIMIT 1";
 
-	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false';
+	db.query(query, [newpassword, id, oldpassword], cb);
 
-	db.query(query, [employer])
-		.on('error', function (err) {
-			//Handle error, and 'end' event will be emitted after this.
-			response.statusCode = 500;
-			response.message = err.code;
-			response.schedules = [];
-			console.log(err.code);
-		})
-		.on('fields', function (fields) {
-			//The field packets for the rows to follow
-
-			//This fires once, whether or not row are returned
-			//console.log ('in fields callback');
-		})
-		.on('result', function (row) {
-			response.schedules.push(row);
-		})
-		.on('end', function () {
-			Scheduleme.Helpers.Render.code(xhr, res, response);
-		})
 }
 exports.login = Employee.login;
+
+

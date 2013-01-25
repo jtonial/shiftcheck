@@ -9,13 +9,14 @@ exports.bootstrap = function(req, res){
 
 		var input = {
 			id 			: req.session.employer_id,
-			xhr			: req.xhr,
-			res 		: res,
 			response	: {}
 		}
 
 		Scheduleme.Models.Employer.fetch(input, 
-			Scheduleme.Models.Employer.fetchSchedules)
+			Scheduleme.Models.Schedule.getByEmployer,
+				function (obj) {
+					Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+				});
 
 	} else {
 		response = {
@@ -27,7 +28,32 @@ exports.bootstrap = function(req, res){
 };
 exports.processLogin = function (req, res) {
 	Scheduleme.Models.Employer.login(req, res);
-}
+};
+exports.changePassword = function (req, res) {
+
+	if (Scheduleme.Helpers.helpers.validatePassword(req.body.newpassword)) {
+		var input = {
+			id 			: req.session.employee_id,
+			oldpassword : Scheduleme.Helpers.helpers.calcHash(req.body.oldpassword),
+			newpassword : Scheduleme.Helpers.helpers.calcHash(req.body.newpassword),
+		};
+		Scheduleme.Models.Employee.changePassword(input, function (err) {
+			response = {};
+			if (err) {
+				response.statusCode = 400;
+			} else {
+				response.statusCode = 200;
+			}
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		});
+	} else {
+		response = {
+			statusCode 	: 400,
+			message 	: 'Invalid password'
+		}
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	}
+};
 //This will load all employees for the given employer
 /*exports.load = function (req, res) {
 	console.log('Load Employers');

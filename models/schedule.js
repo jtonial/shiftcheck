@@ -77,12 +77,17 @@ exports.new = function (obj) {
 }
 exports.verifyUpload = function (id, cb) {
 	var query = "UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?"
-	db.query(query,[id], cb(err, result));
+	db.query(query,[id], function (err, result) {
+		var obj = {
+			err 	: err,
+			result 	: result
+		}
+		cb(obj);
+	});
 }
-exports.getByEmployer = function (obj) {
+exports.getByEmployer = function (obj, cb) {
+	console.log(' Model.Schedule.getByEmployer');
 	id 			= obj.id;
-	xhr			= obj.xhr;
-	res 		= obj.res;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	response.schedules = [];
@@ -107,32 +112,25 @@ exports.getByEmployer = function (obj) {
 			response.schedules.push(row);
 		})
 		.on('end', function () {
-			Scheduleme.Helpers.Render.code(xhr, res, response);
+			cb(response);
 		})
 }
+
 exports.getByEmployerDate = function (obj, cb) {
 	id 			= obj.id;
 	date 		= obj.date;
-	xhr			= obj.xhr;
-	res 		= obj.res;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1';
 
 	db.query(query, [id,date], function (err, row) {
-		if (err) {
-			response.statusCode = 500;
-			response.message = err.code;
-			console.log(err.code);
-		} else {
-			if (row[0]) {
-				response.statusCode = 200;
-				response.data = row[0];
-			} else {
-				response.statusCode = 404;
-				response.message = 'No schedule found for that date';
-			}
+
+		var obj = {
+			err 		: err,
+			row 		: row[0],
+			response 	: response
 		}
-		Scheduleme.Helpers.Render.code(xhr, res, response);
+
+		cb(obj);
 	});
 }

@@ -114,11 +114,38 @@ CREATE TABLE requests (
 	CONSTRAINT FOREIGN KEY (to_employee) REFERENCES employees(employee_id)
 
 ) ENGINE=innodb;
+
 CREATE TABLE shift_history (
 	history_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	shift_id INT UNSIGNED NOT NULL,
 
 	from_employee INT UNSIGNED NOT NULL,
 	to_employee INT UNSIGNED NOT NULL
+
+) ENGINE=innodb;
+
+CREATE TABLE track_requests (
+	tr_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+	method ENUM('GET', 'POST', 'PUT', 'DELETE') NOT NULL,
+	url varchar(100) NOT NULL,
+	time DATETIME NOT NULL,
+	ip varchar(20) NOT NULL,
+
+	user_type ENUM('employer','employee','none') NOT NULL,
+	id INT UNSIGNED
+
+) ENGINE=innodb;
+
+CREATE TABLE track_logins (
+	tl_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+	time DATETIME NOT NULL,
+	ip varchar(20) NOT NULL,
+
+	user_type ENUM('employer','employee') NOT NULL,
+	id INT UNSIGNED,
+
+	statusCode INT UNSIGNED NOT NULL
 
 ) ENGINE=innodb;

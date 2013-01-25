@@ -93,28 +93,23 @@ app.configure(function(){
 	app.use(express.methodOverride());
 	app.use(express.cookieParser('your secret here'));
 	app.use(express.session({
-		secret:'asdfadsfasdfw4t3t53', 
-		maxAge : new Date( Date.now() + 1800000), // 30 minutes
-		store: new RedisStore({client: redis})
+		secret 	:'asdfadsfasdfw4t3t53', 
+		maxAge 	: new Date( Date.now() + 1800000), // 30 minutes
+		store 	: new RedisStore({client: redis})
     }));
 	app.use(require('less-middleware')({ src: __dirname + '/public' }));
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(authenticate());
 	app.use(function (req, res, next) {
-		console.log('in middleware');
-
+		//Initialize shortcuts for checking employee/employer
 		employee = (typeof req.session.employee_id != 'undefined');
 		employer = (typeof req.session.employer_id != 'undefined');
 
 		next();
 	});
 	app.use(function (req, res, next) {
-		if (Scheduleme.Config.debug) console.log('Tracking...');
 
-		next();
-	});
-	app.use(function (req, res, next) {
-		//trackRequest(req);
+		Scheduleme.Tracking.trackRequest(req);
 
 		next();
 	});
@@ -141,14 +136,14 @@ app.configure(function(){
 	});
 
 	app.post('/login', function (req, res) {
-		if (!employee) {
+		if (!employee && !employer) {
 			Scheduleme.Controllers.Employees.processLogin(req, res);
 		} else {
 			res.redirect('/');
 		}
 	});
 	app.post('/admin-login', function (req, res) {
-		if (!employer) {
+		if (!employee && !employer) {
 			console.log('Is employer: '+!employer);
 			Scheduleme.Controllers.Employers.processLogin(req, res);
 		} else {
@@ -165,24 +160,25 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
+	*/
 	app.post('/me/changePassword', function (req,res) {
 		if (employee) {
-			Employees.changePassword(req, res);
+			Scheduleme.Controllers.Employees.changePassword(req, res);
 		} else if (employer) {
-			Employers.changePassword(req, res);
+			Scheduleme.Controllers.Employers.changePassword(req, res);
 		} else {
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
 	});
 	app.post('/me/update', function(req, res) {
 		if (employee) {
-			Employees.updateContact(req, res);
+			Scheduleme.Controllers.Employees.updateContact(req, res);
 		} else if (employer) {
-			Employers.update(req, res);
+			Scheduleme.Controllers.Employers.update(req, res);
 		} else {
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
-	});*/
+	});
 
 	app.post('/upload', function (req, res) {
 		if (employer) {
@@ -191,8 +187,8 @@ app.configure(function(){
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
 	});
-	/*app.post('/serverupload', Schedules.upload);
 
+	/*
 	app.get('/verifyUpload', function (req, res) {
 		console.log('GET - verifyUpload');		
 		Schedules.verifyUpload(req,res);
@@ -222,24 +218,6 @@ app.configure('development', function() {
   app.use(express.errorHandler());
 });
 
-if (false/*typeof process.env.PORT == 'undefined'*/) {
-	//Because of this I should not need to check for req.secure anywhere in the app, as everything has to come in on port 443
-	http.createServer(function (req, res) {		
-		var to = 'https://'+req.headers.host+req.url;
-		console.log('Redirecting to '+to);
-		res.writeHeader(302, {
-			'Location': to
-		});
-		res.end();
-	}).listen(80, function () {
-		console.log('HTTP Redirect listening on 80');
-	});
-	https.createServer(https_options, app).listen(app.get('ssl_port'), function () {
-		console.log('HTTPS server listening on %s', app.get('ssl_port'));
-	});
-} else {
-	//Heroku Specific
-	http.createServer(app).listen(app.get('port'), function () {
-		console.log('HTTP server listening on %s', app.get('port'));
-	});
-}
+http.createServer(app).listen(app.get('port'), function () {
+	console.log('HTTP server listening on %s', app.get('port'));
+});

@@ -1,3 +1,6 @@
+/*
+	Global helper methods. Can all be used blackbox
+*/
 var crypto = require('crypto')
 	;
 	
@@ -29,6 +32,20 @@ exports.getClientIp = function(req) {
 	}
 	return ipAddress;
 };
+/*
+	Global helper method to validate passwords
+		New passwords constraints can be added here
+*/
+exports.validatePassword = function (password) {
+	if (password.length < 6) {
+		return false;
+	}
+
+	return true;
+}
+/*
+	Destroy all session data	
+*/
 exports.logout = function (req, res) {
 	var message = 'Logged out';
 	req.session.destroy();

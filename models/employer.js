@@ -57,8 +57,6 @@ var Employer = {
 						db.query("UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?", [req.session.employer_id], function (err, result) {
 							if (err) {
 								console.log('ERROR:: Updating employer login: '+err);
-							} else {
-								console.log('Updated: Affected Rows: '+result.affectedRows);
 							}
 						})
 
@@ -66,6 +64,14 @@ var Employer = {
 						response.statusCode = 400;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 					}
+
+					var trackingInput = {
+						type 		: 'employer',
+						id 			: row[0].employer_id,
+						ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
+						statusCode	: response.statusCode
+					};
+					Scheduleme.Tracking.trackLogin(trackingInput);
 				}
 			});
 		} else {
@@ -82,24 +88,15 @@ exports.new = function (object) {
 }
 
 //Export static methods
-exports.fetch = function (obj, next) {
+exports.fetch = function (obj, cb, cb2) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
-	if (typeof obj.res == 'undefined') {
-		console.log('No response object passed');
-		//Exit here or something
-	}
-	if (typeof obj.xhr == 'undefined') {
-		console.log('No xhr status passed');
-		//Exit here or something
-	}
 	if (typeof obj.id == 'undefined') {
-		Scheduleme.Helpers.Render.code(req)
+		//Scheduleme.Helpers.Render.code(req)
+		console.log('No id; Model.Employer.fetch');
 	}
 
 	id 			= obj.id;
-	xhr 		= obj.xhr;
-	res 		= obj.res;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	query = 'SELECT * FROM employers WHERE employer_id=? LIMIT 1';
@@ -108,7 +105,7 @@ exports.fetch = function (obj, next) {
 			response.statusCode = 500;
 			response.message = err.code;
 			console.log(err.code);
-			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+			cb2(response);
 
 		} else {
 			if (row[0]) {
@@ -118,44 +115,29 @@ exports.fetch = function (obj, next) {
 
 				obj.response = response;
 
-				next(obj);
+				cb(obj, cb2);
 			} else {
 				response.statusCode = 404;
-				Scheduleme.Helpers.Render.code(req.xhr, res, response);
+				cb2(response);
 			}
 		}
 	});
 }
-exports.fetchSchedules = function (obj) {
 
-	id 			= obj.id;
-	xhr			= obj.xhr;
-	res 		= obj.res;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+/*
+	input = {
+		id 			=> Employer id
+		oldpassword => Employers old password
+		newpassword => Employers new password
+	}
+*/
+exports.changePassword = function (obj, cb) {
 
-	response.schedules = [];
+	//I should probably do some validation here
+	var query = "UPDATE employers SET password=? WHERE employer_id=? AND password=? LIMIT 1";
 
-	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false';
+	db.query(query, [newpassword, id, oldpassword], cb);
 
-	db.query(query, [id])
-		.on('error', function (err) {
-			//Handle error, and 'end' event will be emitted after this.
-			response.statusCode = 500;
-			response.message = err.code;
-			response.schedules = [];
-			console.log(err.code);
-		})
-		.on('fields', function (fields) {
-			//The field packets for the rows to follow
-
-			//This fires once, whether or not row are returned
-			//console.log ('in fields callback');
-		})
-		.on('result', function (row) {
-			response.schedules.push(row);
-		})
-		.on('end', function () {
-			Scheduleme.Helpers.Render.code(xhr, res, response);
-		})
 }
+
 exports.login = Employer.login;

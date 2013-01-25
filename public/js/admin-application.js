@@ -21,7 +21,7 @@ $(function() {
 	};
 
 	Scheduleme.helpers.addMinutes = function(date, adding) {
-	    return new Date(date.getTime() + minutes*60000);
+		return new Date(date.getTime() + minutes*60000);
 	};
 	Scheduleme.helpers.UTCify = function (date) {
 		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
@@ -172,7 +172,9 @@ $(function() {
 
 		events: {
 			"change #sched-date" : "loadByDate",
-			"click .upload-modal-trigger" : "openUploadModel"
+			"click .upload-modal-trigger" : "openUploadModel",
+
+			"click #upload_submit" : "requestCredentials"
 		},
 		render: function () {
 			//The JSON passed in does nothing right now, but may in the future
@@ -309,7 +311,45 @@ $(function() {
 		},
 		openUploadModel: function () {
 			$('#upload-modal').modal('show');
+		},
+
+		//Dealing with uploading schedules
+		processResponse: function ( res ) {
+
+			console.log('here');
+			$("#fld_redirect").val(res.s3Redirect);
+			$("#fld_AWSAccessKeyId").val(res.s3Key);
+			$("#fld_Policy").val(res.s3PolicyBase64);
+			$("#fld_Signature").val(res.s3Signature);
+			$("#fld_contenttype").val('application/pdf');
+			$("#fld_key").val(res.key);
+			$("#fld_acl").val(res.acl);
+
+			$('#s3-upload-form').submit();
+		},
+
+		requestCredentials: function (event) {
+			event.preventDefault();
+			var date = new Date($('#upload-schedule-date').val());
+			console.log('Date: '+date.toISOString());
+			var data = 'date='+$('#upload-schedule-date').val()+'&type='+$('#upload-schedule-type').val();
+			console.log('Data: '+data);
+
+			var that = this;
+			$.ajax({
+				url: "/upload",
+				type: 'POST',
+				data: data,
+				success: function (res) {
+					console.log('received success');
+					that.processResponse(res);
+				},
+				error: function(res, status, error) {
+					console.log('received an error');
+				}
+			});
 		}
+
 	});
 
 	Scheduleme.classes.views.AccountView = Backbone.View.extend({
@@ -328,11 +368,25 @@ $(function() {
 		events: {
 			"click #change-password-trigger" : "changePassword",
 			"click #edit-email-trigger" : "emailMakeEdittable",
-			"click #save-email-trigger" : "emailSaveChange"
+			"click #save-email-trigger" : "emailSaveChange",
+
+			"click .upload-modal-trigger" : "showModal"
 		},
 		render: function () {
 			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
 			$('#email').val(Scheduleme.data.email);
+
+			$('#sched-date').datepicker({
+				showOtherMonths: true,
+				dateFormat: 'yy-mm-dd',
+				maxDate: "+0D"
+			});
+			$('#upload-schedule-date').datepicker({
+				showOtherMonths: true,
+				dateFormat: 'yy-mm-dd',
+				minDate: "+0D"
+			});
+
 			return $(this.el);
 		},
 		changePassword: function () {
@@ -397,6 +451,9 @@ $(function() {
 			} else {
 				console.log('the entered email is not valid');
 			}
+		},
+		showModal: function () {
+			$('#upload-modal').modal('show');
 		}
 	});
 
@@ -462,6 +519,12 @@ $(function() {
 			//root: '/'
 		});
 		//configPushState();
+
+		//AJAX Setup
+		$.ajaxSetup({
+			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
+		});
+		//Add global $.ajaxError handlers
 
 		$.ajax({
 			url: '/bootstrap',

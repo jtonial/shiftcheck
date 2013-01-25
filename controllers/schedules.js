@@ -10,24 +10,39 @@ var crypto = require('crypto')
 	//and I can see when they're actually being loaded
 
 exports.loadDate = function(req, res){
-	if (typeof req.session.employerid != 'undefined') {//If an employer is signed in
-		console.log('Load Schedule: '+req.params.date);
-		var d = new Date(req.params.date);
-		console.log('Date: '+d.toISOString());
-		console.log('Date: '+d.toString());
-		console.log('Date: '+d);
+	if (typeof req.session.employer_id != 'undefined') {//If an employer is signed in
+		console.log('Load Schedule: Employer: '+req.session.employer_id+' Date: '+req.params.date);
+
 		//This will have to be changed to accomodate different scehdule lengths (ie, 01-15-2013 will match a schedule of length and date 01-12-2013)
 		//I feel like this is unstable, but I will use it for now
 			//I also need to fetch schedules in which the given date is in the week/twoWeek/month
 
 		var input = {
 			id 		: req.session.employer_id,
-			date 	: req.params.date,
-			xhr 	: req.xhr,
-			res 	: res
+			date 	: req.params.date
 		}
 
-		Scheduleme.Models.Schedules.getByEmployerDate(input);
+		Scheduleme.Models.Schedule.getByEmployerDate(input, function (obj) {
+
+			err 		= obj.err;
+			row 		= obj.row;
+			response 	= typeof obj.response != 'undefined' ? obj.response : {};
+
+			if (err) {
+				response.statusCode = 500;
+				response.message = err.code;
+				console.log(err.code);
+			} else {
+				if (row) {
+					response.statusCode = 200;
+					response.data = row;
+				} else {
+					response.statusCode = 404;
+					response.message = 'No schedule found for that date';
+				}
+			}
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		});
 
 		//delete d; //Clear reference to d //jsHint told me this was bad...
 	} else {
@@ -37,64 +52,26 @@ exports.loadDate = function(req, res){
 };
 
 exports.load = function (req, res) {
-	if (typeof req.session.employerid != 'undefined') {
-		//Load schedule for the signed in employer
-		console.log('Load Schedule for EmployerID: '+req.session.employerid);
-		//Note this currently returns all schedules; it should only return from current date forward
-		models.Schedule.find({ employerid: req.session.employerid }, function (err, docs) {
-			if (!err) {
-				if (docs) {
-					var response = [];
-					response.data = [];
-					docs.forEach(function (x) {
-						console.log();
-						response.data.push(x);
-					});
-					res.statusCode = 200;
-					res.write(JSON.stringify(response));
-				} else {
-					//No Schedules present
-				}
-			} else {
-				console.log('Error fetching Projects: '+err);
-				res.statusCode = 500;
-			}
-			res.end();
-		});
-	} else if (typeof req.session.employeeid != 'undefined') {
-		//Load schedule for the signed in employee
-		var today = new Date();
-		var weekAgo = new Date();
-		weekAgo.setDate(today.getDate() - 7);
-		var twoAgo = new Date();
-		twoAgo.setDate(today.getDate() - 14);
-		var month = new Date(today.getFullYear() - today.getMonth());
-		models.Schedule.find({employer: req.session.employer, 'date': { $gte: Date() }, 'awaitingupload': { $exists: false } }, function (err, docs) {
-			if (!err) {
-				response.schedules = [];
+	if (typeof req.session.employer_id !== 'undefined' || typeof req.session.employee_id !== 'undefined') {
+		var input = {
+			id : typeof req.session.employer_id !== 'undefined' ? req.session.employer_id : req.session.employee_id,
 
-				docs.forEach(function (x) {
-					//console.log(x);
-					var tmp = {};
-					tmp.date = x.date;
-					tmp.creation_time = x.creation_time;
-					//tmp.last_modified = x.last_modified;
-					tmp.url = x.image_loc;
-					response.schedules.push(tmp);
-				});
+		}
 
-				res.setHeader('Content-Type', 'application/json');
-				res.end(JSON.stringify(response));
-			} else {
-				console.log('Error fetching Projects: '+err);
-				res.statusCode = 500;
-				res.end();//Send appropriate error
-			}
-		});
+		console.log('Load Schedule for EmployerID: '+input.id);
+
+		Scheduleme.Models.Schedule.getByEmployer(input, 
+			function (obj) {
+				Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+			});
 	} else {
-		res.statusCode = 403; //Unauthorized access?
-		res.end();
-		console.log('Unauthorized access attempt: load employees');
+		response = {
+			statusCode : 403
+		}
+
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+
+		console.log('Unauthorized access attempt: load schedules');
 	}
 };
 
@@ -186,7 +163,11 @@ exports.verifyUpload = function (req, res) {
 	if (typeof id != 'undefined') {
 		console.log('Verifying schedule: '+id);
 		//This update hangs and i'm not sure why.... I feel like it may be because it doens't have a db connection but I cant seem to figure it out
-		Scheduleme.Models.Schedule.verifyUpload(id, function (err, result) {
+		Scheduleme.Models.Schedule.verifyUpload(id, function (obj) {
+
+			err 	= obj.err;
+			result 	= obj.result;
+			
 			console.log('update complete of schedule: '+id);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
