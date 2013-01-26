@@ -1,3 +1,5 @@
+console.log('Loading tracker helpers...');
+
 var Scheduleme = require('../helpers/global');
 
 exports.trackRequest = function (req) {

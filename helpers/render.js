@@ -1,3 +1,7 @@
+console.log('Loading render helpers...');
+
+var Scheduleme = require('../helpers/global');
+
 exports.renderLoginPage = function (req, res) {
 	res.render('login', { title: 'Schedule.me' });
 };

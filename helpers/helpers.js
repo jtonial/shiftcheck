@@ -1,6 +1,11 @@
 /*
 	Global helper methods. Can all be used blackbox
 */
+
+console.log('Loading general helpers...');
+
+var Scheduleme = require('../helpers/global');
+
 var crypto = require('crypto')
 	;
 	

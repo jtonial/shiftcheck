@@ -17,3 +17,5 @@ exports.Models 		= {
 	};
 exports.Tracking 	= require('../helpers/tracker');
 exports.Config 		= require('../config/config');
+exports.Cache		= require('../helpers/cache');
+exports.Logger		= require('../helpers/logger');
