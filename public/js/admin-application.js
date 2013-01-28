@@ -174,7 +174,7 @@ $(function() {
 			"change #sched-date" : "loadByDate",
 			"click .upload-modal-trigger" : "openUploadModel",
 
-			"click #upload_submit" : "requestCredentials"
+			"click #upload_submit" : "createUploadObject"
 		},
 		render: function () {
 			//The JSON passed in does nothing right now, but may in the future
@@ -313,10 +313,90 @@ $(function() {
 			$('#upload-modal').modal('show');
 		},
 
-		//Dealing with uploading schedules
-		processResponse: function ( res ) {
+		createUploadObject: function ( event ) {
 
-			console.log('here');
+			event.preventDefault();
+
+			//This works (delegating the task to the helper object)
+			window.obj123 = new uploadObject();
+			obj123.requestCredentials();
+		}
+	});
+
+	function uploadObject () {
+
+		//This is so that I can access the object from within the XMLHTTPRequest event functions
+		var that = this;
+
+		this.uploadFile = function(obj) {
+			console.log('trying to cors...');
+			//Switch this to jQuery
+			var file = document.getElementById('file').files[0];
+			var fd = new FormData();
+
+			fd.append('key', obj.key);
+			fd.append('acl', obj.acl); 
+			fd.append('Content-Type', 'application/pdf');
+			fd.append('AWSAccessKeyId', obj.s3Key);
+			fd.append('policy', obj.s3PolicyBase64)
+			fd.append('signature', obj.s3Signature);
+
+			fd.append("file",file);
+
+			var xhr = new XMLHttpRequest();
+
+			xhr.upload.addEventListener("progress", this.uploadProgress, false);
+			xhr.addEventListener("load", this.uploadComplete, false);
+			xhr.addEventListener("error", this.uploadFailed, false);
+			xhr.addEventListener("abort", this.uploadCanceled, false);
+
+			// Display loading icon
+
+			xhr.open('POST', 'https://schedule-me.s3.amazonaws.com/', true); //MUST BE LAST LINE BEFORE YOU SEND 
+
+			xhr.send(fd);
+		},
+
+		this.uploadProgress = function(evt) {
+			if (evt.lengthComputable) {
+				var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+				console.log('percentComplete: '+percentComplete);
+				//document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+			} else {
+				//document.getElementById('progressNumber').innerHTML = 'unable to compute';
+			}
+		},
+		this.uploadComplete = function(evt) {
+			console.log(evt);
+
+			//This is currently the XMLHTTPRequest... it should be the object
+			console.log('Upload complete! Id: ' + that.id );
+
+			//I'm not sure how I can get the id of the new upload. I was thinking:
+				// Save it as an aspect of the view, but then if another upload is started at the same time the key would get overwritten
+				// Maybe I can send it as a header, which should (maybe?.. I think) be echoed back by S3. would the header be passed to the callback though...
+			$.ajax({
+				url 	  : '/verifyUpload',
+				type 	  : 'POST',
+				data 	  : 'x='+that.id,
+				success   : function (res) {
+					console.log('Upload verified! Id: '+that.id);
+				},
+				error 	  : function (res) {
+					console.log('Upload could not be verified. Id: '+that.id);
+				}
+			});
+		},
+		this.uploadFailed = function(evt) {
+			alert("There was an error attempting to upload the file." + evt);
+		},
+		this.uploadCanceled = function (evt) {
+			alert("The upload has been canceled by the user or the browser dropped the connection.");
+		},
+
+		//Dealing with uploading schedules
+		this.processResponse = function ( res ) {
+
 			$("#fld_redirect").val(res.s3Redirect);
 			$("#fld_AWSAccessKeyId").val(res.s3Key);
 			$("#fld_Policy").val(res.s3PolicyBase64);
@@ -325,11 +405,11 @@ $(function() {
 			$("#fld_key").val(res.key);
 			$("#fld_acl").val(res.acl);
 
-			$('#s3-upload-form').submit();
+			//$('#s3-upload-form').submit();
 		},
 
-		requestCredentials: function (event) {
-			event.preventDefault();
+		this.requestCredentials = function (event) {
+			//event.preventDefault();
 			var date = new Date($('#upload-schedule-date').val());
 			console.log('Date: '+date.toISOString());
 			var data = 'date='+$('#upload-schedule-date').val()+'&type='+$('#upload-schedule-type').val();
@@ -342,7 +422,9 @@ $(function() {
 				data: data,
 				success: function (res) {
 					console.log('received success');
-					that.processResponse(res);
+					//that.processResponse(res);
+					that.id = res.id;
+					that.uploadFile(res);
 				},
 				error: function(res, status, error) {
 					console.log('received an error');
@@ -350,7 +432,7 @@ $(function() {
 			});
 		}
 
-	});
+	};
 
 	Scheduleme.classes.views.AccountView = Backbone.View.extend({
 		el: $('#content'),

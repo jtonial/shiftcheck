@@ -18,5 +18,6 @@ exports.Models 		= {
 exports.Tracking 	= require('../helpers/tracker');
 exports.Config 		= require('../config/config');
 exports.Cache		= require('../helpers/cache');
+//By exporting the Logger here I can modify the transports no problem
 exports.Logger		= require('../helpers/logger');
 exports.Queries		= require('../helpers/queries');

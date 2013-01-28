@@ -50,9 +50,9 @@ if (typeof process.env.PORT == 'undefined') {
 
 db.connect(function (err) {
 	if (err) {
-		console.log('There was an error connecting to db: '+err);
+		Scheduleme.Logger.error('There was an error connecting to db: '+err);
 	} else {
-		console.log('db connection open:');
+		Scheduleme.Logger.info('db connection open:');
 	}
 });
 
@@ -66,15 +66,15 @@ function handleDisconnect(db) {
 			throw err;
 		}
 
-		console.log('Re-connecting lost connection: ' + err.stack);
+		Scheduleme.Logger.warn('Re-connecting lost connection: ' + err.stack);
 
 		db = mysql.createConnection(db.config);
 		handleDisconnect(db);
 		db.connect(function (err) {
 			if (err) {
-				console.log('There was an error connecting to db: '+err);
+				Scheduleme.Logger.error('There was an error connecting to db: '+err);
 			} else {
-				console.log('db connection open:');
+				Scheduleme.Logger.info('db connection open:');
 			}
 		});
 	});
@@ -192,16 +192,10 @@ app.configure(function(){
 		}
 	});
 
-	/*
-	app.get('/verifyUpload', function (req, res) {
-		console.log('GET - verifyUpload');		
-		Schedules.verifyUpload(req,res);
-	});
 	app.post('/verifyUpload', function (req, res) {
 		console.log('POST - verifyUpload');
-		Schedules.verifyUpload(req,res);
+		Scheduleme.Controllers.Schedules.verifyUpload(req,res);
 	});
-	*/
 
 	//Me
 	app.get('/bootstrap', function (req, res) {

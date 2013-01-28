@@ -3,7 +3,7 @@ console.log('Loading tracker helpers...');
 var Scheduleme = require('../helpers/global');
 
 exports.trackRequest = function (req) {
-	if (Scheduleme.Config.debug) console.log('Tracking Request');
+	if (Scheduleme.Config.debug) Scheduleme.Logger.info('Tracking Request');
 
 	var user_type = '';
 	if (typeof req.session.employer_id !== 'undefined') {
@@ -22,17 +22,15 @@ exports.trackRequest = function (req) {
 	var time 	= Date();
 	var ip 		= Scheduleme.Helpers.Helpers.getClientIp(req);
 
-	var query = "INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)"
-
-	db.query(query, [user_type, id, method, url, time, ip], function (err, result) {
+	db.query(Scheduleme.Queries.trackRequest, [user_type, id, method, url, time, ip], function (err, result) {
 		if (err) {
-			console.log('Insert error in trackRequest');
+			Scheduleme.Logger.error('Insert error in trackRequest');
 		}
 	});
 };
 
 exports.trackLogin = function (obj) { //req, type, id, statusCode) {
-	if (Scheduleme.Config.debug) console.log('Tracking Login');
+	if (Scheduleme.Config.debug) Scheduleme.Logger.info('Tracking Login');
 
 	var user_type 	= obj.type;
 	var id 			= obj.id;
@@ -40,11 +38,11 @@ exports.trackLogin = function (obj) { //req, type, id, statusCode) {
 	var ip 			= obj.ip;
 	var statusCode	= obj.statusCode;
 
-	var query = "INSERT INTO track_request (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)"
+	var query = "INSERT INTO track_logins (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)"
 
-	db.query(query, [user_type, id, time, ip, statusCode], function (err, result) {
+	db.query(Scheduleme.Queries.trackLogin, [user_type, id, time, ip, statusCode], function (err, result) {
 		if (err) {
-			console.log('Insert error in trackRequest');
+			Scheduleme.Logger.error('Insert error in trackRequest');
 		}
 	});
 };

@@ -11,6 +11,16 @@ module.exports = queries = {
 	'changeEmployerPassword'	: 'UPDATE employers SET password=? WHERE employer_id=? AND password=? LIMIT 1',
 
 	'updateEmployeeLogin'		: 'UPDATE employees SET login_count=login_count+1, last_login=NOW() WHERE employee_id=?',
-	'updateEmployerLogin' 		: 'UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?'
+	'updateEmployerLogin' 		: 'UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?',
+
+	'verifyUpload' 				: 'UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?',
+
+	'getSchedulesByEmployer'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
+
+	'getScheduleByEmployerDate'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1',
+
+
+	'trackRequest' 				: 'INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)',
+	'trackLogin' 				: 'INSERT INTO track_logins (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)'
 
 }

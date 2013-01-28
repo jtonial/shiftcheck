@@ -31,26 +31,26 @@ var Schedule = {
 		return returnObject;
 	},
 	save : function (cb) {
-		if (Scheduleme.Config.debug) console.log('Saving Schedule');
+		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Schedule');
 
 		if (typeof this.id == 'undefined') { //Create
 			var obj = this.generateInsertQuery();
 
-			if (Scheduleme.Config.debug) console.log('Query object: '+JSON.stringify(obj));
+			if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
 
 			db.query(obj.queryString, obj.values, cb);
 		} else { //Update
 			var obj = this.generateUpdateQuery();
 
-			if (Scheduleme.Config.debug) console.log('Query object: '+JSON.stringify(obj));
+			if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
 
 			db.query(obj.queryString, obj.values, cb);
 		}
 
 		return true;
 	},
-	delete : function (success, failure) {
-		if (Scheduleme.Config.debug)console.log('Updating Employee');
+	delete : function (cb) {
+		if (Scheduleme.Config.debug)Scheduleme.Logger.info('Updating Employee');
 	}
 };
 
@@ -76,8 +76,7 @@ exports.new = function (obj) {
 	return tmp;
 }
 exports.verifyUpload = function (id, cb) {
-	var query = "UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?"
-	db.query(query,[id], function (err, result) {
+	db.query(Scheduleme.Queries.verifyUpload,[id], function (err, result) {
 		var obj = {
 			err 	: err,
 			result 	: result
@@ -86,27 +85,20 @@ exports.verifyUpload = function (id, cb) {
 	});
 }
 exports.getByEmployer = function (obj, cb) {
-	console.log(' Model.Schedule.getByEmployer');
 	id 			= obj.id;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	response.schedules = [];
 
-	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false';
-
-	db.query(query, [id])
+	db.query(Scheduleme.Queries.getSchedulesByEmployer, [id])
 		.on('error', function (err) {
 			//Handle error, and 'end' event will be emitted after this.
 			response.statusCode = 500;
 			response.message = err.code;
 			response.schedules = [];
-			console.log(err.code);
+			Scheduleme.Logger.error(err.code);
 		})
 		.on('fields', function (fields) {
-			//The field packets for the rows to follow
-
-			//This fires once, whether or not row are returned
-			//console.log ('in fields callback');
 		})
 		.on('result', function (row) {
 			response.schedules.push(row);
@@ -121,9 +113,7 @@ exports.getByEmployerDate = function (obj, cb) {
 	date 		= obj.date;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
-	query = 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1';
-
-	db.query(query, [id,date], function (err, row) {
+	db.query(Scheduleme.Queries.getScheduleByEmployerDate, [id,date], function (err, row) {
 
 		var obj = {
 			err 		: err,

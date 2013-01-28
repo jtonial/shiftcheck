@@ -6,26 +6,23 @@ var Employee = {
 
 	},
 	save : function () {
-		if (Scheduleme.Config.debug) console.log('Saving Employee');
+		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Employee');
 		return true;
 	},
 	update : function () {
-		if (Scheduleme.Config.debug)console.log('Updating Employee');
+		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Updating Employee');
 	},
 	delete : function () {
-		if (Scheduleme.Config.debug)console.log('Updating Employee');
+		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Updating Employee');
 	},
 	login : function (req, res) {
-		console.log('in Model.Employee.login');
 		var email = req.body.email;
 		if (typeof email != 'undefined' && email != '' && typeof req.body.password != 'undefined') {
 			var password = Scheduleme.Helpers.Helpers.calcHash(req.body.password);
-			//console.log('Email: '+email+' Password: '+password);
 			//Search object for account lookup
 			var where = new Object();
 			var loginQuery='';
 			if (Scheduleme.Helpers.Helpers.is_email(email)) {
-				console.log('is an email');
 				loginQuery = 'SELECT employee_id, email, username, first_name, last_name, employer_id FROM employees WHERE email=? AND password=? LIMIT 1';
 				where.email = email;
 			} else { //is username
@@ -39,7 +36,7 @@ var Employee = {
 					//Handle error, and 'end' event will be emitted after this.
 					response.statusCode = 500;
 					response.message = err.code;
-					console.log(err.code);
+					Scheduleme.Logger.error(err.code);
 					Scheduleme.Helpers.Render.code(req.xhr, res, response);
 				} else {
 					if (row[0]) {
@@ -57,7 +54,7 @@ var Employee = {
 
 						db.query(Scheduleme.Queries.updateEmployeeLogin, [req.session.employee_id], function (err, numAffected) {
 							if (err) {
-								console.log('ERROR:: Updating employee login: '+err);
+								Scheduleme.Logger.error('ERROR:: Updating employee login: '+err);
 							}
 						})
 						//Track login
@@ -95,11 +92,11 @@ exports.fetch = function (obj, cb, cb2) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
 	if (typeof obj.employer == 'undefined') {
-		console.log('No employer passed');
+		Scheduleme.Logger.info('No employer passed');
 		//Exit here or something
 	}
 	if (typeof obj.id == 'undefined') {
-		console.log('No id; Model.Employer.fetch');
+		Scheduleme.Logger.info('No id; Model.Employer.fetch');
 	}
 
 	id 			= obj.id;
@@ -110,7 +107,7 @@ exports.fetch = function (obj, cb, cb2) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err.code;
-			console.log(err.code);
+			Scheduleme.Logger.error(err.code);
 			cb2(response);
 
 		} else {

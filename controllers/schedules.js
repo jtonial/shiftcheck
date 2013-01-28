@@ -85,13 +85,14 @@ exports.clientUpload = function(req, res) {
 		s3Policy = {
 			"expiration": "" + (_date.getFullYear()) + "-" + (_date.getMonth() + 1) + "-" + (_date.getDate()) + "T" + (_date.getHours()+12) + ":" + (_date.getMinutes()) + ":" + (_date.getSeconds()) + "Z",
 			"conditions": [
-				{ "bucket": "nrmitchi.schedules" },
+				//{ "bucket": "nrmitchi.schedules" },
+				{ "bucket": "schedule-me" },
 				[ "starts-with", "$key", ""],
 				{ "acl": "public-read" },
 				//{ "success_action_redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				//If I make this redirect a hash, I can use a route to trigger an ajax ping to verifyUpload, thus not leaving the page
 					//Note: I  tried this and s3 returned a 204 instead of a redirect to the hash
-				{ "redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
+				//{ "redirect": "http://schedule-me.herokuapp.com/verifyUpload?x="+id },
 				["content-length-range", 0, 2147483648],
 				["eq", "$Content-Type", 'application/pdf']
 			]
@@ -105,7 +106,8 @@ exports.clientUpload = function(req, res) {
 			s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
 			s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
 			s3Redirect: "http://schedule-me.herokuapp.com/verifyUpload?x="+id, 
-			s3Policy: s3Policy
+			s3Policy: s3Policy,
+			id: id
 		};
 		res.end(JSON.stringify(s3Credentials));
 	};
@@ -158,7 +160,7 @@ exports.clientUpload = function(req, res) {
 
 exports.verifyUpload = function (req, res) {
 
-	var id = req.query.x;
+	var id = req.body.x || req.query.x;
 
 	if (typeof id != 'undefined') {
 		console.log('Verifying schedule: '+id);
@@ -174,11 +176,12 @@ exports.verifyUpload = function (req, res) {
 				Scheduleme.Helpers.Render.uploadVerifiedFailed(req, res);
 			} else {
 				if (result.affectedRows) {
-					Scheduleme.Helpers.Render.uploadVerified(req, res);
+					//Scheduleme.Helpers.Render.uploadVerified(req, res);
 				} else {
 					//Nothing changed... for now just do the same
 					Scheduleme.Helpers.Render.uploadVerified(req, res);
 				}
+				Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 200 } );
 			}
 		});
 	} else {
@@ -208,7 +211,7 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 				secure:false
 			});
 
-			var file_name = req.session.employerid+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
+			var file_name = req.session.employer_id+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
 			console.log('Name: '+file_name);
 
 			var s3Headers = {
