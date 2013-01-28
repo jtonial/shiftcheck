@@ -167,7 +167,7 @@ exports.verifyUpload = function (req, res) {
 
 			err 	= obj.err;
 			result 	= obj.result;
-			
+
 			console.log('update complete of schedule: '+id);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
@@ -195,7 +195,6 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 		//Parse the file based on the given type
 
 		//For MVP we only use PDFs
-		//console.log(JSON.stringify(req.files));
 		if (typeof req.files.schedule != 'undefined') {
 			// TODO: validate the upload file
 
@@ -268,61 +267,14 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 			}).on('progress', function (resp) {
 				console.log('Progress: '+resp.written+': '+resp.total+': '+resp.percent);
 			});
-			/*fs.readFile(req.files.schedule.path, function (err, data) {
-				var file_loc = req.session.employerid+'.'+(new Date()).getTime()+'.'+req.files.schedule.name;
-				var newPath = __dirname + "/../schedules/"+file_loc;
-				fs.writeFile(newPath, data, function (err) {
-					if (!err) {
-
-						var shifts = new Array(); //Not used in MVP
-
-						// Not used in MVP
-						// req.body.shifts.forEach(function (x) {
-						// 	var y = new Object();
-						// 	y._id = new mongoose.Schema.ObjectId()
-						// 	y.employee = x.employee;
-						// 	y.start_time = x.start_time;
-						// 	y.end_time = x.end_time;
-						// 	y.position = x.position;
-						// 	y.upforgrabs = false;
-						// 	shifts.push(y);
-						// });
-						console.log('Schedule Date: '+req.body.date);
-						var schedule = new models.Schedule ({
-							employer: req.session.employerid,
-							date: new Date(req.body.date),
-							creation_time: Date(),
-							image_loc: file_loc,
-							shifts: shifts
-						});
-
-
-						schedule.save(function (err) {
-							if (!err) {
-								console.log('New Schedule created');
-								res.statusCode = 201;
-							} else { //There was an error
-								console.log('There was an error creating a schedule: '+err);
-								res.statusCode = 500;
-							}
-							res.end('Schedule - create');
-						});
-
-						res.statusCode = 200;
-					}  else {
-						console.log('There was an error saving a schedule image: '+err);
-						res.statusCode = 500;
-						console.log(err);
-					}
-					res.end();
-				});
-			}); */
 		} else {
 			res.statusCode = 400;
 			res.end('No schedule provided');
 		}
 	/*} else {
-		res.statusCode = 403;
-		res.end();
+		response = {
+			statusCode = 403
+		}
+		Scheduleme.Helpers.Render.code( req.xhr, res, response);
 	}*/
 };
