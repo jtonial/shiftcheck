@@ -1,9 +1,5 @@
 var Scheduleme = require('../helpers/global');
 
-var queries = {};
-queries['selectEmployee'] = 'SELECT * FROM employees WHERE employee_id=? LIMIT 1';
-queries['selectSchedules'] = 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false'
-
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employee_id != 'undefined') {//If an employer is signed in
 

@@ -55,7 +55,7 @@ var Employee = {
 						response.statusCode = 200;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 
-						db.query("UPDATE employees SET login_count=login_count+1, last_login=NOW() WHERE employee_id=?", [req.session.employee_id], function (err, numAffected) {
+						db.query(Scheduleme.Queries.updateEmployeeLogin, [req.session.employee_id], function (err, numAffected) {
 							if (err) {
 								console.log('ERROR:: Updating employee login: '+err);
 							}
@@ -73,7 +73,7 @@ var Employee = {
 						ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
 						statusCode	: response.statusCode
 					};
-					
+
 					Scheduleme.Tracking.trackLogin(trackingInput);
 				}
 			});
@@ -106,8 +106,7 @@ exports.fetch = function (obj, cb, cb2) {
 	employer 	= obj.employer;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
-	query = 'SELECT * FROM employees WHERE employee_id=? LIMIT 1';
-	db.query(query, [id], function (err, row) {
+	db.query(Scheduleme.Queries.selectEmployee, [id], function (err, row) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err.code;
@@ -141,9 +140,7 @@ exports.fetch = function (obj, cb, cb2) {
 exports.changePassword = function (obj, cb) {
 
 	//I should probably do some validation here
-	var query = "UPDATE employees SET password=? WHERE employee_id=? AND password=? LIMIT 1";
-
-	db.query(query, [newpassword, id, oldpassword], cb);
+	db.query(Scheduleme.Queries.changeEmployeePassword, [newpassword, id, oldpassword], cb);
 
 }
 exports.login = Employee.login;

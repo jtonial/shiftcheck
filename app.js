@@ -87,6 +87,10 @@ app.configure(function(){
 	app.set('ssl_port', process.env.PORT || Scheduleme.Config.ssl_port );
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
+	app.locals({
+		site_name: Scheduleme.Config.name,
+		site_name_lower: Scheduleme.Config.name_lower
+	});
 	app.use(express.favicon());
 	//app.use(express.logger());//'dev'));
 	app.use(express.bodyParser());
@@ -127,7 +131,7 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
-	app.get('/admin-login', function (req, res) {
+	app.get('/manager-login', function (req, res) {
 		if (!employee && !employer) {
 			Scheduleme.Helpers.Render.renderAdminloginPage(req, res);
 		} else {
@@ -142,7 +146,7 @@ app.configure(function(){
 			res.redirect('/');
 		}
 	});
-	app.post('/admin-login', function (req, res) {
+	app.post('/manager-login', function (req, res) {
 		if (!employee && !employer) {
 			console.log('Is employer: '+!employer);
 			Scheduleme.Controllers.Employers.processLogin(req, res);

@@ -1,7 +1,7 @@
 !!! 5
 html(lang='en')
 	head
-		title Schedule.me
+		title= site_name
 		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
 		meta(name='description', content='Schedule.me is an application to help business and employees manage schedules')
@@ -35,17 +35,17 @@ html(lang='en')
 						span.icon-bar
 						span.icon-bar
 						span.icon-bar
-					a.brand(href='./') schedule.me
+					a.brand(href='./')= site_name_lower
 					.nav-collapse
 						ul.nav.pull-right
 							li
-								a(href='admin-login') Admin Login
+								a(href='manager-login') Manager Login
 							li
 								a(href='login') Employee Login
 		.container
 			.row
 				.span6
-					h1 Schedule.me
+					h1= site_name
 					p Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
 					p If you would like to discuss how Schedule.me can work with your business, please contact me at 
 						a(href='mailto:nrmitchi@gmail.com') nrmitchi@gmail.com
@@ -64,9 +64,3 @@ html(lang='en')
 					.well
 						h4 Easy Trading
 						p Your employees can easily offer shifts to co-workers and pick up extra shifts when needed, with you having the final say on all changes.
-			.row
-				.span12
-					h3 Pricing
-				.span12
-					.well
-						p During our beta our service will be free to use! Interested in participating? Get in touch and we'll talk.

@@ -1,0 +1,16 @@
+console.log('Loading queries...');
+
+module.exports = queries = {
+
+	'selectEmployee' 			: 'SELECT * FROM employees WHERE employee_id=? LIMIT 1',
+	'selectSchedules' 			: 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false',
+
+	'selectEmployer' 			: 'SELECT * FROM employers WHERE employer_id=? LIMIT 1',
+
+	'changeEmployeePassword'	: 'UPDATE employees SET password=? WHERE employee_id=? AND password=? LIMIT 1',
+	'changeEmployerPassword'	: 'UPDATE employers SET password=? WHERE employer_id=? AND password=? LIMIT 1',
+
+	'updateEmployeeLogin'		: 'UPDATE employees SET login_count=login_count+1, last_login=NOW() WHERE employee_id=?',
+	'updateEmployerLogin' 		: 'UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?'
+
+}

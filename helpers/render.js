@@ -7,7 +7,7 @@ exports.renderLoginPage = function (req, res) {
 };
 
 exports.renderAdminloginPage = function (req, res) {
-	res.render('admin-login', { title: 'Schedule.me' });
+	res.render('manager-login', { title: 'Schedule.me' });
 };
 
 exports.signup = function (req, res) {
@@ -16,15 +16,15 @@ exports.signup = function (req, res) {
 
 exports.index = function(req, res){
 	res.setHeader('Content-Type','text/html');
-	if (typeof req.session.loggedin != 'undefined') {
-		if (typeof req.session.employeeid != 'undefined') {
-			res.render('dash', { title: 'Schedule.me' });
-		} else { //It is an employer signed in
-			res.render('admin', { title: 'Schedule.me' });
-		}
+
+	if (typeof req.session.employee_id != 'undefined') {
+		res.render('dash', { title: 'Schedule.me' });
+	} else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
+		res.render('admin', { title: 'Schedule.me' });
 	} else {
 		res.render('welcome', { title: 'Schedule.me' });
 	}
+
 };
 
 exports.uploadVerified = function (req, res) {

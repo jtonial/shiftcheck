@@ -1,6 +1,7 @@
 module.exports = config = {
 
-	"name" : "Schedule.me",
+	"name" : "Shift-check",
+	"name_lower": "shift-check",
 
 	"port" : 3100,
 	"ssl_port" : 3101,

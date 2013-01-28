@@ -1,0 +1,55 @@
+.row
+  .tabbable.tabs-left
+    ul#dates.nav.nav-tabs.span3
+      li.nav-header Current Schedules
+      li#prependHere.nav-header
+        hl
+      div
+        button#add_schedule.btn.btn-success.btn-block.upload-modal-trigger(style='width: 90%;') Post New Schedule
+      li.nav-header
+        hl
+      div
+        li.nav-header Past Schedules
+        li
+          input#sched-date.datepicker(type='text', style='width: 90%;')
+          span.help-block Select a date to view past schedules
+    .tab-content
+#upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
+  form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
+    .modal-header
+      h3 Upload Schedule
+    .modal-body
+      
+      input#fld_key(type='hidden', name='key')
+      input#fld_acl(type='hidden', name='acl')
+      input#fld_Policy(type='hidden', name='policy')
+      input#fld_contenttype(type='hidden', name='Content-Type')
+      input#fld_AWSAccessKeyId(type='hidden', name='AWSAccessKeyId')
+      input#fld_Signature(type='hidden', name='signature')
+      input#fld_redirect(type='hidden', name='redirect')
+      .form-horizontal
+        .control-group
+          label.control-label(for='file') Schedule
+          .controls
+            input#file(type='file', name='file', placeholder='file')
+        hr
+        .control-group
+          label.control-label(for='date') Date
+          .controls
+            input#upload-schedule-date.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
+            span.help-block For multi-day schedules, select the first day
+        .control-group
+          label.control-label(for='type') Length
+          .controls
+            select#upload-schedule-type.upload-schedule-info(name='type')
+              option(value='day') 1 Day
+              option(value='week') Week
+              option(value='twoweek') 2 Weeks
+              option(value='month') Month
+        hr
+        .control-group
+          //- input#upload_submit.btn.btn-success.btn-block(type='submit', name='submit2')
+    .modal-footer
+      button.btn(data-dismiss='modal') Cancel
+      button.btn.btn-success#upload_submit(type='submit', name='submit2') Upload  
+

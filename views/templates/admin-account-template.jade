@@ -1,0 +1,24 @@
+.row-fluid
+  .tabbable.tabs-left
+    ul.nav.nav-tabs
+      li.nav-header Options
+      li.active
+        a(href='#accountoptions', data-toggle='tab') Account Options
+    .tab-content
+      #accountoptions.tab-pane.active
+        h1(style='margin-bottom: 15px;') Account Options
+        .form-horizontal
+          .control-group
+            label.control-label Email: 
+            .controls
+              input#email.input-large(type='text', disabled='disabled')
+              button#edit-email-trigger.btn Edit
+              button#save-email-trigger.btn.btn-primary(style='display: none;') Save
+              p
+          .control-group
+            label.control-label Change Password:
+            .controls.input-large
+              input#oldpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='Current Password')
+              input#newpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='New Password')
+              input#newpassword1.input-large(type='password', style='margin-bottom: 9px;', placeholder='Confirm New Password')
+              button#change-password-trigger.btn.input-large(type='button', style='margin-left: 0;') Change!

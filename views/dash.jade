@@ -2,7 +2,7 @@
 html(lang='en')
   head
     meta(charset='utf-8')
-    title Schedule.me
+    title= site_name
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
@@ -110,7 +110,7 @@ html(lang='en')
         .row
           .tabbable.tabs-left
             ul#dates.nav.nav-tabs
-              li.nav-header Dates
+              li.nav-header Current Schedules
             .tab-content
       .page.exchanges
         h1 Exchange
@@ -140,5 +140,4 @@ html(lang='en')
 
     });
   script(id='schedule-template', type='text/x-handlebars-template')
-    <h1>{{outputDate}}</h1>
-    <iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/{{url}}&embedded=true" style="width:100%; min-width:200px; height:700px;" frameborder="0"></iframe>
+      include templates/schedule-template

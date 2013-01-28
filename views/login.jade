@@ -2,7 +2,7 @@
 html(lang='en')
   head
     meta(charset='utf-8')
-    title Schedule.me
+    title= site_name
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
@@ -19,10 +19,10 @@ html(lang='en')
     .navbar.navbar-static-top
       .navbar-inner
         .container
-          a.brand(href='/') schedule.me
+          a.brand(href='/') #{site_name_lower}
           ul.nav.pull-right
             li
-              a(href='admin-login') Admin Login
+              a(href='manager-login') Manager Login
             li.active
               a(href='login') Employee Login
     .container

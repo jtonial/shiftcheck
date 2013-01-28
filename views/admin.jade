@@ -2,7 +2,7 @@
 html(lang='en')
   head
     meta(charset='utf-8')
-    title Schedule.me | Admin
+    title #{site_name} | Admin
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
@@ -33,7 +33,7 @@ html(lang='en')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.brand(href='#') schedule.me
+          a.brand(href='#') #{site_name_lower}
           .nav-collapse
             ul.nav
 
@@ -99,9 +99,8 @@ html(lang='en')
     script(id='approval-template', type='text/template')
 
     script(id='schedule-template', type='text/x-handlebars-template')
-      <h1>{{outputDate}}</h1><iframe src="http://docs.google.com/gview?url=https://s3.amazonaws.com/nrmitchi.schedules/{{url}}&embedded=true" style="width:100%; min-width:200px; height:700px;" frameborder="0"></iframe>
-
+      include templates/schedule-template
     script(id='schedules-template', type='text/x-handlebars-template')
-      <div class="row"><div class="tabbable tabs-left"><ul id="dates" class="nav nav-tabs span3"><li class="nav-header">Dates</li><li id="prependHere" class="nav-header"><hl></hl></li><div><button id="add_schedule" style="width:90%" class="btn btn-success btn-block upload-modal-trigger"><Upload>New Schedule</Upload></button></div><li class="nav-header"><hl></hl></li><div><li class="nav-header">Past Schedules</li><li><input id="sched-date" type="text" style="width:90%" class="datepicker"/></li></div></ul><div class="tab-content"></div></div></div><div id="upload-modal" tabindex="-1" aria-hidden="true" data-backdrop="static" style="display: none;" class="modal"><div class="modal-header"><h3>Upload Schedule</h3></div><div class="modal-body"><form action="http://nrmitchi.schedules.s3.amazonaws.com/" method="post" enctype="multipart/form-data" id="s3-upload-form"><input type="hidden" name="key" id="fld_key"/><input type="hidden" name="acl" id="fld_acl"/><input type="hidden" name="policy" id="fld_Policy"/><input type="hidden" name="Content-Type" id="fld_contenttype"/><input type="hidden" name="AWSAccessKeyId" id="fld_AWSAccessKeyId"/><input type="hidden" name="signature" id="fld_Signature"/><input type="hidden" name="redirect" id="fld_redirect"/><div class="form-horizontal"><div class="control-group"><label for="file" class="control-label">Schedule</label><div class="controls"><input type="file" name="file" id="file" placeholder="file"/></div></div><div class="control-group"><label for="date" class="control-label">Date</label><div class="controls"><input id="upload-schedule-date" type="text" name="date" placeholder="YYYY-MM-DD" class="datepicker upload-schedule-info"/><span class="help-block">For multi-day schedules, select the first day</span></div></div><div class="control-group"><label for="type" class="control-label">Length</label><div class="controls"><select id="upload-schedule-type" name="type" class="upload-schedule-info"><option value="day">1 Day</option><option value="week">Week</option><option value="twoweek">2 Weeks</option><option value="month">Month</option></select></div></div><div class="control-group"><input type="submit" name="submit2" id="upload_submit" class="btn btn-success btn-block"/></div></div></form></div><div class="modal-footer"><button data-dismiss="modal" class="btn">Cancel</button></div></div>
+      include templates/admin-dash-template
     script(id='account-template', type='text/x-handlebars-template')
-      <div class="row-fluid"><div class="tabbable tabs-left"><ul class="nav nav-tabs"><li class="nav-header">Options</li><li class="active"><a href="#accountoptions" data-toggle="tab">Account Options</a></li></ul><div class="tab-content"><div id="accountoptions" class="tab-pane active"><h1 style="margin-bottom: 15px;">Account Options</h1><div class="form-horizontal"><div class="control-group"><label class="control-label">Email: </label><div class="controls"><input id="email" type="text" disabled="disabled" class="input-large"/><button id="edit-email-trigger" class="btn">Edit</button><button id="save-email-trigger" style="display: none;" class="btn btn-primary">Save</button><p></p></div></div><div class="control-group"><label class="control-label">Change Password:</label><div class="controls input-large"><input id="oldpassword" type="password" style="margin-bottom: 9px;" placeholder="Current Password" class="input-large"/><input id="newpassword" type="password" style="margin-bottom: 9px;" placeholder="New Password" class="input-large"/><input id="newpassword1" type="password" style="margin-bottom: 9px;" placeholder="Confirm New Password" class="input-large"/><button id="change-password-trigger" type="button" style="margin-left: 0;" class="btn input-large">Change!</button></div></div></div></div></div></div></div>
+      include templates/admin-account-template
