@@ -43,10 +43,10 @@ if (typeof process.env.PORT == 'undefined') {
 	//Heroku specific
 	//Create the MySQL connection
 	db = mysql.createConnection({
-		host     : process.env.CLEARDB_DATABASE_URL,
+		host     : process.env.CLEARDB_DATABASE_URL/*,
 		user     : process.env.CLEARDB_DATABASE_USER,
 		password : process.env.CLEARDB_DATABASE_PASSWORD,
-		database : process.env.CLEARDB_DATABASE_DB
+		database : process.env.CLEARDB_DATABASE_DB*/
 	});
 }
 
