@@ -25,8 +25,10 @@ if (process.env.REDISTOGO_URL) {
 	var redis = require("redis").createClient(rtg.port, rtg.hostname);
 
 	redis.auth(rtg.auth.split(":")[1]); 
+	console.log('Connecting to existing Redis client');
 } else {
 	var redis = require("redis").createClient();
+	console.log('Creating new Redis client');
 }
 
 if (typeof process.env.PORT == 'undefined') {
@@ -52,7 +54,7 @@ db.connect(function (err) {
 	if (err) {
 		Scheduleme.Logger.error('There was an error connecting to db: '+err);
 	} else {
-		Scheduleme.Logger.info('db connection open:');
+		Scheduleme.Logger.info('MySQL Connection open');
 	}
 });
 
@@ -66,7 +68,7 @@ function handleDisconnect(db) {
 			throw err;
 		}
 
-		Scheduleme.Logger.warn('Re-connecting lost connection: ' + err.stack);
+		Scheduleme.Logger.warn('Re-connecting lost MySQL connection: ' + err.stack);
 
 		db = mysql.createConnection(db.config);
 		handleDisconnect(db);
@@ -74,7 +76,7 @@ function handleDisconnect(db) {
 			if (err) {
 				Scheduleme.Logger.error('There was an error connecting to db: '+err);
 			} else {
-				Scheduleme.Logger.info('db connection open:');
+				Scheduleme.Logger.info('MySQL Connection open');
 			}
 		});
 	});
