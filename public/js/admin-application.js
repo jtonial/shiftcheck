@@ -329,6 +329,8 @@ $(function() {
 		var that = this;
 
 		this.uploadFile = function(obj) {
+			// I should put something here to check for duplicates (same date in same session) 
+			 // Server-side should prevent multiple schedules on same day, however checking here will inprove UX
 			console.log('trying to cors...');
 			//Switch this to jQuery
 			var file = document.getElementById('file').files[0];
@@ -367,9 +369,8 @@ $(function() {
 			}
 		},
 		this.uploadComplete = function(evt) {
-			console.log(evt);
 
-			//This is currently the XMLHTTPRequest... it should be the object
+			alert ('Upload Complete!');
 			console.log('Upload complete! Id: ' + that.id );
 
 			//I'm not sure how I can get the id of the new upload. I was thinking:
@@ -380,6 +381,7 @@ $(function() {
 				type 	  : 'POST',
 				data 	  : 'x='+that.id,
 				success   : function (res) {
+					//Fetch the new schedule and add it
 					console.log('Upload verified! Id: '+that.id);
 				},
 				error 	  : function (res) {
