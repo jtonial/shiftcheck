@@ -15,7 +15,8 @@
     "redis": "*",
     "url":"*",
     "connect-redis":"*",
-    "mysql":"*"
+    "mysql":"*",
+    "mysql-simple":"*"
   },
   "engines": {
     "node": "0.8.x",
