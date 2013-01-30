@@ -6,10 +6,10 @@ var express = require('express')
 	, crypto = require('crypto')
 	, RedisStore = require('connect-redis')(express)
 	, authenticate = require('./middleware/authenticate')
-	, mysql = require('mysql')
 	;
 
 var Scheduleme = require('./helpers/global');
+var db = require('./db/dbconnection');
 
 var key = fs.readFileSync(Scheduleme.Config.ssl_key);
 var cert = fs.readFileSync(Scheduleme.Config.ssl_cert);
@@ -31,58 +31,6 @@ if (process.env.REDISTOGO_URL) {
 	console.log('Creating new Redis client');
 }
 
-if (typeof process.env.PORT == 'undefined') {
-	//Create the MySQL connection
-	db = mysql.createConnection({
-		host     : process.env.CLEARDB_DATABASE_URL || 'localhost',
-		user     : process.env.CLEARDB_DATABASE_USER || 'root',
-		password : process.env.CLEARDB_DATABASE_PASSWORD || 'password',
-		database : process.env.CLEARDB_DATABASE_DB || 'scheduleme'
-	});
-} else {
-	//Heroku specific
-	//Create the MySQL connection
-	db = mysql.createConnection(/*{
-		host     : process.env.CLEARDB_DATABASE_URL,
-		user     : process.env.CLEARDB_DATABASE_USER,
-		password : process.env.CLEARDB_DATABASE_PASSWORD,
-		database : process.env.CLEARDB_DATABASE_DB
-	}*/process.env.CLEARDB_DATABASE_FULLURL);
-}
-
-db.connect(function (err) {
-	if (err) {
-		Scheduleme.Logger.error('There was an error connecting to db: '+err);
-	} else {
-		Scheduleme.Logger.info('MySQL Connection open');
-	}
-});
-
-function handleDisconnect(db) {
-	db.on('error', function(err) {
-		if (!err.fatal) {
-			return;
-		}
-
-		if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
-			throw err;
-		}
-
-		Scheduleme.Logger.warn('Re-connecting lost MySQL connection: ' + err.stack);
-
-		db = mysql.createConnection(db.config);
-		handleDisconnect(db);
-		db.connect(function (err) {
-			if (err) {
-				Scheduleme.Logger.error('There was an error connecting to db: '+err);
-			} else {
-				Scheduleme.Logger.info('MySQL Connection open');
-			}
-		});
-	});
-}
-//Add disconnect handlers
-handleDisconnect(db);
 
 app.configure(function(){
 	app.set('port', process.env.PORT || Scheduleme.Config.port );
@@ -110,6 +58,12 @@ app.configure(function(){
 		//Initialize shortcuts for checking employee/employer
 		employee = (typeof req.session.employee_id != 'undefined');
 		employer = (typeof req.session.employer_id != 'undefined');
+
+		next();
+	});
+	app.use(function (req, res, next) {
+
+
 
 		next();
 	});

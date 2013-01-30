@@ -1,4 +1,5 @@
 var Scheduleme = require('../helpers/global');
+var db = require('../db/dbconnection');
 
 var Employee = {
 

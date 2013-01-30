@@ -1,6 +1,7 @@
 console.log('Loading tracker helpers...');
 
 var Scheduleme = require('../helpers/global');
+var db = require('../db/dbconnection');
 
 exports.trackRequest = function (req) {
 	if (Scheduleme.Config.debug) Scheduleme.Logger.info('Tracking Request');

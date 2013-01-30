@@ -1,4 +1,5 @@
 var Scheduleme = require('../helpers/global');
+var db = require('../db/dbconnection');
 
 var Schedule = {
 
@@ -90,7 +91,7 @@ exports.getByEmployer = function (obj, cb) {
 
 	response.schedules = [];
 
-	db.query(Scheduleme.Queries.getSchedulesByEmployer, [id])
+	/*db.query(Scheduleme.Queries.getSchedulesByEmployer, [id])
 		.on('error', function (err) {
 			//Handle error, and 'end' event will be emitted after this.
 			response.statusCode = 500;
@@ -105,7 +106,20 @@ exports.getByEmployer = function (obj, cb) {
 		})
 		.on('end', function () {
 			cb(response);
-		})
+		})*/
+	db.query(Scheduleme.Queries.getSchedulesByEmployer, [id], function (err, rows) {
+		if (err) {
+			response.statusCode = 500;
+			response.message = err.code;
+			response.schedules = [];
+			Scheduleme.Logger.error(err.code);
+		} else {
+			rows.forEach(function (row) {
+				response.schedules.push(row);
+			})
+		}
+		cb(response);
+	});
 }
 
 exports.getByEmployerDate = function (obj, cb) {
