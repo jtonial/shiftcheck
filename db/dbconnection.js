@@ -15,7 +15,6 @@ if (typeof process.env.PORT == 'undefined') {
 	//	password : process.env.CLEARDB_DATABASE_PASSWORD || 'password',
 	//	database : process.env.CLEARDB_DATABASE_DB || 'scheduleme'
 	//}
-	'mysql://b64e2b7de3765a:2d98cd53@us-cdbr-east-03.cleardb.com/heroku_e108115fff2be36?reconnect=true');
 } else {
 	//Heroku specific
 	//Create the MySQL connection
@@ -71,7 +70,12 @@ handleDisconnect(db);
 	// suffice untill node-mysql implements its own error handling/connectino pooling
 var database = require('mysql-simple');
 // Port number is optional
-database.init(process.env.CLEARDB_DATABASE_USER, process.env.CLEARDB_DATABASE_PASSWORD, process.env.CLEARDB_DATABASE_DB, process.env.CLEARDB_DATABASE_URL, 3306);
+
+if (typeof process.env.CLEARDB_DATABASE_USER != 'undefined'){
+	database.init(process.env.CLEARDB_DATABASE_USER, process.env.CLEARDB_DATABASE_PASSWORD, process.env.CLEARDB_DATABASE_DB, process.env.CLEARDB_DATABASE_URL, 3306);
+} else {
+	database.init('root', 'password', 'scheduleme', 'localhost', 3306);
+}
 
 /*
   host:     'us-cdbr-east-03.cleardb.com',

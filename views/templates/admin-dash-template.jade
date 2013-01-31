@@ -46,10 +46,10 @@
               option(value='week') Week
               option(value='twoweek') 2 Weeks
               option(value='month') Month
-        hr
         .control-group
-          //- input#upload_submit.btn.btn-success.btn-block(type='submit', name='submit2')
+          .controls
+            img#ajax-loader.hidden(src="/img/ajax-loader.gif")
     .modal-footer
       button.btn(data-dismiss='modal') Cancel
-      button.btn.btn-success#upload_submit(type='submit', name='submit2') Upload  
+      button.btn.btn-success#upload_submit(name='submit2') Upload  
 

@@ -107,7 +107,9 @@ exports.getByEmployer = function (obj, cb) {
 		.on('end', function () {
 			cb(response);
 		})*/
-	db.query(Scheduleme.Queries.getSchedulesByEmployer, [id], function (err, rows) {
+	//var d = new Date();
+	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id], function (err, rows) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err.code;

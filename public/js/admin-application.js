@@ -226,21 +226,23 @@ $(function() {
 				var nd = Scheduleme.helpers.addDays(d, 7);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - <br/>'+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 			} else if (schedule.get('type') == 'twoweek') {
 				var nd = Scheduleme.helpers.addDays(d, 14);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - <br/>'+ndatestring+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
 			} else { //Defaults to daily schedule
-				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+				this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 				var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
 			}
 
 			this.$('.tab-content').append(view.render());
 			//this.$('.tab-content').append('<div class="tab-pane" id="'+datenum+'"></div>');
+
+			//Rerender tabs
 			
 		},
 		//Used after the view has been destroyed then created again to add back schedule views
@@ -263,14 +265,14 @@ $(function() {
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'</a></li>');
 				} else if (schedule.get('type') == 'week') {
 					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 					delete nd;
 				} else if (schedule.get('type') == 'twoweek') {
 					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[(nd.getDate()+1)%10]+'</sup></a></li>');
+					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 					delete nd;
 				} else { //Defaults to daily schedule
-					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
+					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 				}
 				delete d; //Remove the reference to D; it can not be garbage collected
 			});
@@ -301,6 +303,14 @@ $(function() {
 					success: function (response) {
 						console.log('adding schedule date: '+dstring);
 						Scheduleme.Schedules.add(response.data);
+
+						Scheduleme.CurrentView.reRenderTabs();
+
+						//I should actually click the new one... i'll have to figure out how to do that
+						  // If I can click the one with the id of the date (dstring)
+						  // Unfortunately the dstring always has MM month, whereas the id will not. If I remove the 0s from month/day it should work
+						$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+
 					}, error: function (xhr) {
 						console.log('DENIED!!');
 					}, complete: function () {
@@ -316,17 +326,28 @@ $(function() {
 		createUploadObject: function ( event ) {
 
 			event.preventDefault();
-
+			$('.modal-footer button').attr('disabled', true);
+			$('#ajax-loader').removeClass('hidden');
 			//This works (delegating the task to the helper object)
-			window.obj123 = new uploadObject();
-			obj123.requestCredentials();
+			obj = new uploadObject();
+			obj.setCallback(function () {
+				$('.modal-footer button').attr('disabled', false);
+				$('#ajax-loader').addClass('hidden');
+			});
+			obj.requestCredentials();
 		}
 	});
 
+	//NOTE: This is wrapped in a function (used as an object) to enabled multiple uploads
 	function uploadObject () {
 
 		//This is so that I can access the object from within the XMLHTTPRequest event functions
 		var that = this;
+
+		this.setCallback = function (cb) {
+			that.cb = cb;
+			console.log('cb set as: '+cb);
+		},
 
 		this.uploadFile = function(obj) {
 			// I should put something here to check for duplicates (same date in same session) 
@@ -370,12 +391,8 @@ $(function() {
 		},
 		this.uploadComplete = function(evt) {
 
-			alert ('Upload Complete!');
 			console.log('Upload complete! Id: ' + that.id );
 
-			//I'm not sure how I can get the id of the new upload. I was thinking:
-				// Save it as an aspect of the view, but then if another upload is started at the same time the key would get overwritten
-				// Maybe I can send it as a header, which should (maybe?.. I think) be echoed back by S3. would the header be passed to the callback though...
 			$.ajax({
 				url 	  : '/verifyUpload',
 				type 	  : 'POST',
@@ -386,32 +403,23 @@ $(function() {
 				},
 				error 	  : function (res) {
 					console.log('Upload could not be verified. Id: '+that.id);
+				},
+				complete  : function (res) {
+					that.cb();
 				}
 			});
 		},
 		this.uploadFailed = function(evt) {
 			alert("There was an error attempting to upload the file." + evt);
+			that.cb();
 		},
 		this.uploadCanceled = function (evt) {
 			alert("The upload has been canceled by the user or the browser dropped the connection.");
+			that.cb();
 		},
 
-		//Dealing with uploading schedules
-		this.processResponse = function ( res ) {
+		this.requestCredentials = function () {
 
-			$("#fld_redirect").val(res.s3Redirect);
-			$("#fld_AWSAccessKeyId").val(res.s3Key);
-			$("#fld_Policy").val(res.s3PolicyBase64);
-			$("#fld_Signature").val(res.s3Signature);
-			$("#fld_contenttype").val('application/pdf');
-			$("#fld_key").val(res.key);
-			$("#fld_acl").val(res.acl);
-
-			//$('#s3-upload-form').submit();
-		},
-
-		this.requestCredentials = function (event) {
-			//event.preventDefault();
 			var date = new Date($('#upload-schedule-date').val());
 			console.log('Date: '+date.toISOString());
 			var data = 'date='+$('#upload-schedule-date').val()+'&type='+$('#upload-schedule-type').val();
