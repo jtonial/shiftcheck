@@ -291,8 +291,13 @@ $(function() {
 
 			this.addAllSchedules();*/
 		},
-		loadByDate: function () {
+		loadByDate: function (date) {
 			var dstring = $('#sched-date').val();
+
+			if (dstring == '') { //date is only used when a new schedule has just been uploaded
+				dstring = date;
+			}
+
 			if (typeof dstring != 'undefined' && dstring != '') {
 				console.log('loading by date');
 				console.log('Date: '+dstring);
@@ -400,6 +405,7 @@ $(function() {
 				success   : function (res) {
 					//Fetch the new schedule and add it
 					console.log('Upload verified! Id: '+that.id);
+					Scheduleme.SchedulesView.loadByDate(that.date);
 				},
 				error 	  : function (res) {
 					console.log('Upload could not be verified. Id: '+that.id);
@@ -426,6 +432,8 @@ $(function() {
 			console.log('Data: '+data);
 
 			var that = this;
+			that.date = $('#upload-schedule-date').val();
+
 			$.ajax({
 				url: "/upload",
 				type: 'POST',
