@@ -15,8 +15,9 @@ module.exports = queries = {
 
 	'verifyUpload' 				: 'UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?',
 
-	'getSchedulesByEmployer'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
-	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false',
+	//I'll have to figure out how to return id so that the same schedule isnt added to collection multiple times
+	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
+	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false',
 
 	'getScheduleByEmployerDate'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1',
 
