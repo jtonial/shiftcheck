@@ -19,7 +19,7 @@ module.exports = queries = {
 	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
 	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false',
 
-	'getScheduleByEmployerDate'	: 'SELECT schedule_id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1',
+	'getScheduleByEmployerDate'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1',
 
 
 	'trackRequest' 				: 'INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)',
