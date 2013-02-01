@@ -12,7 +12,7 @@ INSERT INTO employees (`employee_id`, `email`, `username`, `password`, `first_na
 			(5, 'holly@nrmitchi.ca', 'holly', '', 'Holly', 'Smithson', 2, NOW(), NOW());
 
 INSERT INTO schedules (`schedule_id`, `employer_id`, `date`, `type`, `creation_time`, `image_loc`)
-	VALUES	(1, 1, '2013-01-20', 'day', NOW(), '12BarzTickets.pdf'),
-			(2, 1, '2013-01-21', 'day', NOW(), '12BarzTickets.pdf'),
-			(3, 1, '2013-01-22', 'day', NOW(), '12BarzTickets.pdf'),
-			(4, 1, '2013-01-23', 'week', NOW(), '12BarzTickets.pdf');
+	VALUES	(1, 1, '2013-01-31', 'day', NOW(), '12BarzTickets.pdf'),
+			(2, 1, '2013-02-4', 'day', NOW(), '12BarzTickets.pdf'),
+			(3, 1, '2013-02-5', 'day', NOW(), '12BarzTickets.pdf'),
+			(4, 1, '2013-02-6', 'week', NOW(), '12BarzTickets.pdf');
