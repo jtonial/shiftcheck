@@ -21,6 +21,7 @@ html(lang='en')
     script(src='/js/backbone-pushstate-router.js')
     script(src='/js/admin-application.js')
     script(src='/js/ga.js')
+    script(src='/js/addemployee.js')
 
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
@@ -36,7 +37,8 @@ html(lang='en')
           a.brand(href='#') #{site_name_lower}
           .nav-collapse
             ul.nav
-
+              li
+                a#add-employee-modal-trigger(href='#') Add Employee
             ul.nav.pull-right
               li.dropdown
                 a.dropdown-toggle(href='#', data-toggle='dropdown')
@@ -49,34 +51,36 @@ html(lang='en')
                   li
                     a(href='logout') Logout
     .container#content
-      .page.account
-        .row-fluid
-          .tabbable.tabs-left
-            ul.nav.nav-tabs
-              li.nav-header Options
-              li.active
-                a(href='#accountoptions', data-toggle='tab') Account Options
-            .tab-content
-              #accountoptions.tab-pane.active
-                h1(style='margin-bottom: 15px;') Account Options
-                .form-horizontal
-                  .control-group
-                    label.control-label Email: 
-                    .controls
-                      input#email.input-large(type='text', disabled='disabled')
-                      button#edit-email-trigger.btn Edit
-                      button#save-email-trigger.btn.btn-primary(style='display: none;') Save
-                      p
-                  .control-group
-                    label.control-label Change Password:
-                    .controls.input-large
-                      input#oldpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='Current Password')
-                      input#newpassword.input-large(type='password', style='margin-bottom: 9px;', placeholder='New Password')
-                      input#newpassword1.input-large(type='password', style='margin-bottom: 9px;', placeholder='Confirm New Password')
-                      button#change-password-trigger.btn.input-large(type='button', style='margin-left: 0;') Change!
 
-      .modal-footer
-        button.btn(data-dismiss='modal') Cancel
+    #add-employee-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
+      form#add-employee-form(style="margin:0")
+        .modal-header
+          h3 Add Employee
+        .modal-body
+          .form-horizontal
+            .control-group
+              label.control-label First Name
+              .controls
+                input#first_name(type='text', name='first_name', placeholder='First Name')
+            .control-group
+              label.control-label Last Name
+              .controls
+                input#last_name(type='text', name='last_name', placeholder='Last Name')
+            .control-group
+              label.control-label Email
+              .controls
+                input#email(type='text', name='email', placeholder='Email')
+            .control-group
+              label.control-label Username
+              .controls
+                input#username(type='text', name='username', placeholder='Username')
+            .control-group
+              label.control-label Password
+              .controls
+                input#password(type='password', name='password', placeholder='Name')
+        .modal-footer
+          button.btn(data-dismiss='modal') Cancel
+          button.btn.btn-primary(type='submit') Add
 
     // Placed at the end of the document so the pages load faster
     script(src='./js/bootstrap.js')
@@ -88,6 +92,9 @@ html(lang='en')
 
         $('.employee-typeahead').typeahead({source: data});
 
+        $('#add-employee-modal-trigger').click(function () {
+          $('#add-employee-modal').modal('show');
+        })
       });
 
     script#employee-template(type='text/x-handlebars-template')

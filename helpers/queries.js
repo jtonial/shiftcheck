@@ -15,7 +15,6 @@ module.exports = queries = {
 
 	'verifyUpload' 				: 'UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?',
 
-	//I'll have to figure out how to return id so that the same schedule isnt added to collection multiple times
 	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
 	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false',
 
@@ -23,6 +22,9 @@ module.exports = queries = {
 
 
 	'trackRequest' 				: 'INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)',
-	'trackLogin' 				: 'INSERT INTO track_logins (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)'
+	'trackLogin' 				: 'INSERT INTO track_logins (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)',
 
+
+	'insertEmployer'			: 'INSERT INTO employers (name, email, username, password, contact_email, contact_phone, contact_address, reg_time) VALUES (?,?,?,?,?,?,?,NOW())',
+	'insertEmployee'			: 'INSERT INTO employees (email, username, password, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,NOW())'
 }

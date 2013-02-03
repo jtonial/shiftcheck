@@ -19,7 +19,7 @@ CREATE TABLE employers (
 	contact_phone varchar(20) NOT NULL,
 	contact_address varchar(20) NOT NULL,
 
-	img varchar(50) NOT NULL,
+	img varchar(50),
 
 	last_login DATETIME NOT NULL,
 	login_count INT NOT NULL DEFAULT 0,
@@ -71,6 +71,7 @@ CREATE TABLE schedules (
 	employer_id INT UNSIGNED NOT NULL,
 
 	date DATE NOT NULL,
+	# timezone INT NOT NULL,
 	type ENUM('day','week','twoweek','month') NOT NULL,
 	creation_time DATETIME NOT NULL,
 	image_loc varchar(45) NOT NULL,

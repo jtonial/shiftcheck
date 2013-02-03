@@ -25,13 +25,38 @@ exports.bootstrap = function(req, res){
 exports.processLogin = function (req, res) {
 	Scheduleme.Models.Employer.login(req, res);
 };
+exports.processSignup = function (req, res) {
+	//This data has to be validated
+	var obj = {
+		name 				: req.body.name,
+		email 				: req.body.email,
+		username 			: req.body.username,
+		password 			: Scheduleme.Helpers.Helpers.calcHash(req.body.password),
+		contact_email		: req.body.contact.email,
+		contact_phone		: req.body.contact.phone,
+		contact_address 	: req.body.contact.address
+	}
+
+	Scheduleme.Models.Employer.create(obj, function (err, result) {
+		var response = {};
+		if (err) {
+			response.statusCode = 500;
+			response.message = err.code;
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		} else {
+			//log the user in; I could probably jsut set session stuff here
+				//but doing a real log in will keep it consisten if stuff is changed
+			Scheduleme.Models.Employer.login(req, res)
+		}
+	});
+};
 exports.changePassword = function (req, res) {
 
 	if (Scheduleme.Helpers.helpers.validatePassword(req.body.newpassword)) {
 		var input = {
 			id 			: req.session.employee_id,
-			oldpassword : Scheduleme.Helpers.helpers.calcHash(req.body.oldpassword),
-			newpassword : Scheduleme.Helpers.helpers.calcHash(req.body.newpassword),
+			oldpassword : Scheduleme.Helpers.Helpers.calcHash(req.body.oldpassword),
+			newpassword : Scheduleme.Helpers.Helpers.calcHash(req.body.newpassword),
 		};
 		Scheduleme.Models.Employee.changePassword(input, function (err) {
 			response = {};
@@ -49,6 +74,34 @@ exports.changePassword = function (req, res) {
 		}
 		Scheduleme.Helpers.Render.code(req.xhr, res, response);
 	}
+};
+exports.addEmployee = function (req, res) {
+	console.log(req.body);
+	var obj = {
+		email 		: req.body.email,
+		username 	: req.body.username,
+		password 	: Scheduleme.Helpers.Helpers.calcHash(req.body.password),
+		first_name	: req.body.first_name,
+		last_name 	: req.body.last_name,
+		employer_id : req.session.employer_id
+	};
+	Scheduleme.Models.Employee.create(obj, function (err, result) {
+		var response = {};
+		if (err) {
+			response.statusCode = 500;
+			response.message = err.code;
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		} else {
+			// I should probably return the id of the new employee so it can be fetched later
+				// or return the full employee and the client can deal with it
+
+			//for now...
+			response.statusCode = 200;
+			response.newEmployeeId = result.insertId;
+
+			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+		}
+	});
 };
 //This will load all employees for the given employer
 /*exports.load = function (req, res) {

@@ -26,6 +26,9 @@ $(function() {
 	Scheduleme.helpers.UTCify = function (date) {
 		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
 	};
+	Scheduleme.helpers.fromUTC = function (date) {
+		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+	};
 	Scheduleme.helpers.addDays = function(date, adding) {
 		var nd = new Date();
 		nd.setDate(date.getDate() + adding);
@@ -258,9 +261,9 @@ $(function() {
 			$('.schedule-tab').remove();
 			_.each(this.collection.models, function(schedule) {
 				var d = new Date(schedule.get('datenum'));
-				console.log('Day1: '+d);
-				d = Scheduleme.helpers.UTCify(d);
-				console.log('Day2: '+d);
+				//console.log('Day1: '+d);
+				d = Scheduleme.helpers.fromUTC(d);
+				//console.log('Day2: '+d);
 				if (schedule.get('type') == 'month') {
 					this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'</a></li>');
 				} else if (schedule.get('type') == 'week') {
@@ -427,8 +430,9 @@ $(function() {
 		this.requestCredentials = function () {
 
 			var date = new Date($('#upload-schedule-date').val());
+			date = Scheduleme.helpers.UTCify(date);
 			console.log('Date: '+date.toISOString());
-			var data = 'date='+$('#upload-schedule-date').val()+'&type='+$('#upload-schedule-type').val();
+			var data = 'date='+date+'&type='+$('#upload-schedule-type').val();
 			console.log('Data: '+data);
 
 			var that = this;

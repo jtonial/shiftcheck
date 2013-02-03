@@ -10,7 +10,7 @@ exports.renderAdminloginPage = function (req, res) {
 	res.render('manager-login', { title: 'Schedule.me' });
 };
 
-exports.signup = function (req, res) {
+exports.renderSignup = function (req, res) {
 	res.render('signup', { title: 'Schedule.me' });
 };
 

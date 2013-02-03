@@ -63,8 +63,6 @@ app.configure(function(){
 	});
 	app.use(function (req, res, next) {
 
-
-
 		next();
 	});
 	app.use(function (req, res, next) {
@@ -112,15 +110,19 @@ app.configure(function(){
 	});
 
 	app.get('/logout', Scheduleme.Helpers.Helpers.logout);
-	/*
+
 	app.get('/signup', function (req, res) {
 		if (!employee && !employer) {
-			render.signup(req, res);
+			Scheduleme.Helpers.Render.renderSignup(req, res);
 		} else {
 			res.redirect('/');
 		}
 	});
-	*/
+	app.post('/signup', function (req, res) {
+		Scheduleme.Controllers.Employers.processSignup(req, res);
+	});
+
+	// Change stuff about curent account
 	app.post('/me/changePassword', function (req,res) {
 		if (employee) {
 			Scheduleme.Controllers.Employees.changePassword(req, res);
@@ -130,7 +132,7 @@ app.configure(function(){
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
 	});
-	app.post('/me/update', function(req, res) {
+	app.post('/me/update', function (req, res) {
 		if (employee) {
 			Scheduleme.Controllers.Employees.updateContact(req, res);
 		} else if (employer) {
@@ -139,7 +141,16 @@ app.configure(function(){
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
 	});
+	app.post('/me/employee', function (req, res) {
+		if (employer) {
+			// Not sure if this method should be put with employers or employees controllers
+			Scheduleme.Controllers.Employers.addEmployee(req, res);
+		} else {
+			Scheduleme.Helpers.Render.code403(req, res);
+		}
+	})
 
+	// Uploading Schedules
 	app.post('/upload', function (req, res) {
 		if (employer) {
 			Scheduleme.Controllers.Schedules.clientUpload(req, res);

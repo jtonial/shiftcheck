@@ -88,6 +88,17 @@ exports.new = function (object) {
 	return Object.create(Employee);
 }
 
+exports.create = function (obj, cb) {
+	name 		= obj.name;
+	email 		= obj.email;
+	username 	= obj.username;
+	pass 		= obj.password;
+	c_email 	= obj.contact_email;
+	c_phone 	= obj.contact_phone;
+	c_add 		= obj.contact_address;
+
+	db.query(Scheduleme.Queries.insertEmployer, [name, email, username, pass, c_email, c_phone, c_add], cb)
+};
 //Export static methods
 exports.fetch = function (obj, cb, cb2) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
