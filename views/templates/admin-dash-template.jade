@@ -13,7 +13,7 @@
         li
           input#sched-date.datepicker(type='text', style='width: 90%;')
           span.help-block Select a date to view past schedules
-    .tab-content
+    #schedule-content.tab-content
 #upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
   form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
     .modal-header

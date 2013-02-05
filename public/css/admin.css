@@ -84,3 +84,22 @@
 	display:block;
 	visibility:visible;
 }
+body {
+	background-color: #33CCFF;
+}
+#dates {
+	margin-right: 0;
+}
+#dates a {
+	color: white;
+}
+#dates li:hover a {
+	color:#666;
+}
+#dates li.active a {
+	color:black;
+}
+#schedule-content {
+	padding: 5px;
+	background: white;
+}

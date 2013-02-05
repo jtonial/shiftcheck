@@ -26,7 +26,9 @@ exports.processLogin = function (req, res) {
 	Scheduleme.Models.Employer.login(req, res);
 };
 exports.processSignup = function (req, res) {
-	//This data has to be validated
+	
+	// Validate body
+
 	var obj = {
 		name 				: req.body.name,
 		email 				: req.body.email,
@@ -77,6 +79,9 @@ exports.changePassword = function (req, res) {
 };
 exports.addEmployee = function (req, res) {
 	console.log(req.body);
+
+	// Validate body
+
 	var obj = {
 		email 		: req.body.email,
 		username 	: req.body.username,

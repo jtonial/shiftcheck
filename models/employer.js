@@ -60,19 +60,19 @@ var Employer = {
 								console.log('ERROR:: Updating employer login: '+err);
 							}
 						})
+						
+						var trackingInput = {
+							type 		: 'employer',
+							id 			: row[0].employer_id,
+							ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
+							statusCode	: response.statusCode
+						};
+						Scheduleme.Tracking.trackLogin(trackingInput);
 
 					} else {
 						response.statusCode = 400;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 					}
-
-					var trackingInput = {
-						type 		: 'employer',
-						id 			: row[0].employer_id,
-						ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
-						statusCode	: response.statusCode
-					};
-					Scheduleme.Tracking.trackLogin(trackingInput);
 				}
 			});
 		} else {

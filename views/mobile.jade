@@ -1,0 +1,38 @@
+!!! 5
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title #{site_name} | Admin
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='')
+    meta(name='author', content='nrmitchi')
+    // Le styles
+    link(href='/css/bootstrap.css', rel='stylesheet')
+    link(href='/css/bootstrap-responsive.css', rel='stylesheet')
+    link(href='/css/mobile.css', rel='stylesheet')
+
+    script(src='/js/jquery.js')
+    script(src='/js/handlebars-1.0.0.beta.6.js')
+    script(src='/js/jquery-ui-1.8.21.custom.min.js')
+    script(src='/js/underscore.js')
+    script(src='/js/backbone.js')
+    script(src='/js/backbone-pushstate-router.js')
+    script(src='/js/mobile-application.js')
+    script(src='/js/login.js')
+
+  body
+    .container#content
+
+    // Placed at the end of the document so the pages load faster
+    script(src='./js/bootstrap.js')
+
+    script(id='approval-template', type='text/template')
+
+    script(id='login-template', type='text/x-handlebars-template')
+      include templates/mobile-login-template
+    script(id='list-page-template', type='text/x-handlebars-template')
+      include templates/mobile-list-page-template
+    script(id='schedule-template', type='text/x-handlebars-template')
+      include templates/schedule-template
+    script(id='account-template', type='text/x-handlebars-template')
+      include templates/admin-account-template

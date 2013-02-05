@@ -177,6 +177,10 @@ app.configure(function(){
 	
 	app.get('/schedules/:date', Scheduleme.Controllers.Schedules.loadDate);
 
+	app.get('/mobile', function (req, res) {
+		res.render('mobile', { title: 'Schedule.me' });
+	});
+
 });
 
 app.configure('development', function() {
