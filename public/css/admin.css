@@ -87,7 +87,7 @@
 body {
 	background-color: rgba(51,204,255,0.15);
 }
-#dates {
+#dates, #account-options {
 	margin-right: 0;
 }
 #dates li:hover a {
@@ -96,7 +96,7 @@ body {
 #dates li.active a {
 	color:black;
 }
-#schedule-content {
+#schedule-content, #account-content {
 	padding: 5px;
 	background: white;
 }
