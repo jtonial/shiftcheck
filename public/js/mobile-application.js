@@ -84,6 +84,7 @@ $(function() {
 		});
 	};
 	Scheduleme.helpers.handleLogout = function () {
+		//Destory session;
 		//Destroy data;
 		Scheduleme.helpers.switchView(Scheduleme.LoginView);
 	};
@@ -125,7 +126,7 @@ $(function() {
 	});
 
 	Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
-		el: $('#content'),
+		el: $('body'),
 
 		template: Handlebars.compile($('#list-page-template').html()),
 
@@ -144,10 +145,10 @@ $(function() {
 		render: function () {
 			//The JSON passed in does nothing right now, but may in the future
 			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+			this.addAllSchedules();
 			return $(this.el);
 		},
 		addOneSchedule: function (schedule) {
-			console.log('adding schedule');
 			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
@@ -162,7 +163,6 @@ $(function() {
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
 
-			console.log('Schedule type: '+schedule.get('type'));
 			if (schedule.get('type') == 'month') {
 				datestring = Months[d.getMonth()];
 				schedule.set('datestring', datestring);
@@ -216,13 +216,12 @@ $(function() {
 		},
 		viewSchedule: function (e) {
 			//console.log(e.currentTarget);
-			console.log('should be viewing a schedule now - id: '+$(e.currentTarget).attr('data-id'));
 			Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
 		}
 	});
 	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
-		el: $('#content'),
+		el: $('body'),
 
 		template: Handlebars.compile($('#schedule-template').html()),
 
@@ -234,7 +233,7 @@ $(function() {
 	})
 
 	Scheduleme.classes.views.AccountView = Backbone.View.extend({
-		el: $('#content'),
+		el: $('body'),
 
 		//tagName: 'div',
 		//className: 'page account',
@@ -334,7 +333,7 @@ $(function() {
 	});
 
 	Scheduleme.classes.views.LoginView = Backbone.View.extend({
-		el: $('#content'),
+		el: $('body'),
 
 		template: Handlebars.compile($('#login-template').html()),
 
@@ -364,15 +363,32 @@ $(function() {
 	});
 	//Used for global events
 	Scheduleme.classes.views.AppView = Backbone.View.extend({
-		el: $('#body'),
+		el: $('body'),
 
 		template: Handlebars.compile($('#app-template').html()),
+
+		events: {
+			'click .back-to-list' 		: 'back',
+			'click .account-trigger' 	: 'openAccountView',
+			'click .logout-trigger' 	: 'logout'
+		},
+		back: function () {
+			Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+		},
+		openAccountView: function () {
+			console.log('will open AccountView here');
+		},
+		logout: function () {
+			Scheduleme.helpers.handleLogout();
+		}
 	});
 
 //------------------PAYLOAD----------------------------
 
 	Scheduleme.Init = function () {
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+
+		Scheduleme.AppView = new Scheduleme.classes.views.AppView();
 
 		//Router takes care of this
 		Scheduleme.ScheduleListView	= new Scheduleme.classes.views.ScheduleListView({collection: Scheduleme.Schedules});

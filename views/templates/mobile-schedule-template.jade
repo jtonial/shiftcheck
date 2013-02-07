@@ -1,3 +1,21 @@
-//- The bucket will have to be changed to schedule-me (or whatever I call it)
-h1 {{outputDate}}
-iframe(src='http://docs.google.com/gview?url=https://s3.amazonaws.com/schedule-me/{{url}}&embedded=true', style='width: 100%; min-width: 200px; height: 700px;', frameborder='0')
+.navbar.navbar-fixed-top
+	.navbar-inner
+		.container(style="text-align: center")
+			ul.nav.pull-left
+				li
+					a.back-to-list < Back
+			span {{outputDate}}
+			ul.nav.pull-right
+				li.dropdown
+					a.dropdown-toggle(href='#', data-toggle='dropdown')
+						i.icon-cog
+						b.caret
+					ul.dropdown-menu
+						li
+							a.account-trigger Options
+						li.divider
+						li
+							a.logout-trigger Logout
+.container
+	.row
+		iframe(src='http://docs.google.com/gview?url=https://s3.amazonaws.com/schedule-me/{{url}}&embedded=true', style='width: 100%; min-width: 200px; height: 700px;', frameborder='0')

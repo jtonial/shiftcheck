@@ -85,7 +85,7 @@
 	visibility:visible;
 }
 body {
-	background-color: #33CCFF;
+	background-color: rgba(51,204,255,0.5);
 }
 #dates {
 	margin-right: 0;
