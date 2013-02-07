@@ -1,18 +1,20 @@
 .navbar.navbar-fixed-top
 	.navbar-inner
 		.container(style="text-align: center")
-			span Schedules
-			ul.nav.pull-right
-				li.dropdown
-					a.dropdown-toggle(href='#', data-toggle='dropdown')
-						i.icon-cog
-						b.caret
-					ul.dropdown-menu
-						li
-							a.account-trigger Options
-						li.divider
-						li
-							a.logout-trigger Logout
+			#nav-left-space.pull-left
+			span.header-text Schedules
+			#nav-right-space.pull-right
+				ul.nav.pull-right
+					li.dropdown
+						a.dropdown-toggle(href='#', data-toggle='dropdown')
+							i.icon-cog
+							b.caret
+						ul.dropdown-menu
+							li
+								a.account-trigger Options
+							li.divider
+							li
+								a.logout-trigger Logout
 .container
 	.row
 		ul#dates.span12
