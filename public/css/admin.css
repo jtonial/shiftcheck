@@ -85,13 +85,10 @@
 	visibility:visible;
 }
 body {
-	background-color: rgba(51,204,255,0.5);
+	background-color: rgba(51,204,255,0.15);
 }
 #dates {
 	margin-right: 0;
-}
-#dates a {
-	color: white;
 }
 #dates li:hover a {
 	color:#666;
