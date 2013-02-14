@@ -16,3 +16,32 @@ INSERT INTO schedules (`schedule_id`, `employer_id`, `date`, `type`, `creation_t
 			(2, 1, '2013-02-4', 'day', NOW(), '12BarzTickets.pdf'),
 			(3, 1, '2013-02-5', 'day', NOW(), '12BarzTickets.pdf'),
 			(4, 1, '2013-02-6', 'week', NOW(), '12BarzTickets.pdf');
+
+INSERT INTO positions (`position_id`, `employer_id`, `position`)
+	VALUES 	(1, 1, 'WN'),
+			(2, 1, 'DT'),
+			(3, 1, 'BK'),
+			(4, 1, 'MGR'),
+			(5, 1, 'MB'),
+			(6, 1, 'MT'),
+			(7, 2, 'FRONT'),
+			(8, 2, 'KITCHEN'),
+			(9, 2, 'DTHRU'),
+			(10, 2, 'MGR');
+
+INSERT INTO employee_positions (`ep_id`, `employee_id`, `position_id`)
+	VALUES 	(1, 1, 1),
+			(2, 1, 2),
+			(3, 1, 3),
+			(4, 2, 4),
+			(5, 2, 5),
+			(6, 3, 5),
+			(7, 3, 6);
+#How can I set default roles for employees of a specific employee? Perhaps flag roles as default?
+
+INSERT INTO shifts (`shift_id`, `schedule_id`, `start`, `end`, `position_id`, `employee_id`)
+	VALUES	(1,1,'2013-01-31 07:00','2013-01-31 15:00', 4, 2),
+			(2,1,'2013-01-31 08:30','2013-01-31 11:30', 1, 1),
+			(3,1,'2013-01-31 12:00','2013-01-31 17:00', 3, 5),
+			(3,1,'2013-01-31 15:00','2013-01-31 23:00', 4, 1),
+			(3,1,'2013-01-31 18:00','2013-01-31 22:00', 2, 2);

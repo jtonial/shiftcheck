@@ -87,6 +87,7 @@ CREATE TABLE shifts (
 	shift_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	schedule_id INT UNSIGNED NOT NULL,
 
+	# These can probably be switch to TIME only
 	start DATETIME NOT NULL,
 	end DATETIME NOT NULL,
 
