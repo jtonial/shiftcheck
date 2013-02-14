@@ -17,3 +17,9 @@
 .row {
 	margin-left:0;
 }
+
+#content {
+	padding:8px;
+	position:absolute;
+	top:40px;
+}
