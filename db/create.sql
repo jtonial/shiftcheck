@@ -79,7 +79,7 @@ CREATE TABLE schedules (
 	image_loc varchar(45) NOT NULL,
 	awaitingupload BOOLEAN NOT NULL DEFAULT true,
 
-	CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id) ON DELETE CASCADE,
+	CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id) ON DELETE CASCADE
 
 ) ENGINE=innodb;
 
