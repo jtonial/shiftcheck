@@ -19,7 +19,13 @@
 }
 
 #content {
-	padding:8px;
+	/*padding:8px;
 	position:absolute;
-	top:40px;
+	top:40px;*/
+}
+
+@media (min-width: 980px) {
+	#content {
+		margin-top:60px;
+	}
 }

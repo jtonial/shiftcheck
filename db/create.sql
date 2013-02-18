@@ -63,8 +63,8 @@ CREATE TABLE employee_positions (
 	employee_id INT UNSIGNED NOT NULL,
 	position_id INT UNSIGNED NOT NULL,
 
-	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
-	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id)
+	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
+	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id) ON DELETE CASCADE
 
 ) ENGINE=innodb;
 
@@ -79,7 +79,7 @@ CREATE TABLE schedules (
 	image_loc varchar(45) NOT NULL,
 	awaitingupload BOOLEAN NOT NULL DEFAULT true,
 
-	CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
+	CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id) ON DELETE CASCADE,
 
 ) ENGINE=innodb;
 
@@ -91,12 +91,12 @@ CREATE TABLE shifts (
 	start DATETIME NOT NULL,
 	end DATETIME NOT NULL,
 
-	position_id INT UNSIGNED NOT NULL,
-	employee_id INT UNSIGNED NOT NULL,
+	position_id INT UNSIGNED,
+	employee_id INT UNSIGNED,
 
-	CONSTRAINT FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
-	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id),
-	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+	CONSTRAINT FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id), # ON DELETE CASCADE,
+	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id), # ON DELETE SET NULL,
+	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id)  # ON DELETE SET NULL
 
 ) ENGINE=innodb;
 
