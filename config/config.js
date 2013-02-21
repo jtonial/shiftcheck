@@ -14,7 +14,6 @@ config = {
 }
 
 //Note that process.env.shiftcheck_mode will be either 'development' or 'production' and will match the db suffix
-
 mysql_config = {
 	local 	: {
 		"user" 	 	: 'root',
@@ -33,7 +32,7 @@ mysql_config = {
 	rds 	: {
 		"user" 		: process.env.RDS_USER,
 		"password" 	: process.env.RDS_PASSWORD,
-		"db" 		: 'shiftcheck-'+process.env.shiftcheck_mode, //process.env.RDS_DB,
+		"db" 		: 'shiftcheck_'+process.env.shiftcheck_mode, //process.env.RDS_DB,
 		"host" 		: process.env.RDS_HOST,
 		"port" 		: 3306
 	}
