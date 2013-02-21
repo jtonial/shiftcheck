@@ -18,6 +18,11 @@
 
 		CurrentView: {},
 		Router: {},
+
+		meta: {
+			mobile: false,
+			d3: true
+		}
 	};
 
 	Scheduleme.helpers.addMinutes = function(date, adding) {

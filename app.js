@@ -11,13 +11,6 @@ var express = require('express')
 var Scheduleme = require('./helpers/global');
 var db = require('./db/dbconnection');
 
-var key = fs.readFileSync(Scheduleme.Config.ssl_key);
-var cert = fs.readFileSync(Scheduleme.Config.ssl_cert);
-var https_options = {
-	key: key,
-	cert: cert
-};
-
 //MySQL
 var app = express();
 if (process.env.REDISTOGO_URL) {
@@ -166,6 +159,14 @@ app.configure(function(){
 			Scheduleme.Helpers.Render.code403(req, res);
 		}
 	});
+
+	app.post('/uploadshifts', function (req, res) {
+		if (employer) {
+			Scheduleme.Controllers.Schedules.upload(req, res);
+		} else {
+			Scheduleme.Helpers.Render.code403(req, res);
+		}
+	})
 
 	app.post('/verifyUpload', function (req, res) {
 		console.log('POST - verifyUpload');

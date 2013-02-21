@@ -15,6 +15,11 @@ $(function() {
 
 		AppView: {},
 		Router: {},
+
+		meta: {
+			mobile: false,
+			d3: true
+		}
 	};
 
 	/*Scheduleme.classes.models.Shift = Backbone.Model.extend({

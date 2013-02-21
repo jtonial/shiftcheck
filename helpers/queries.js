@@ -26,5 +26,9 @@ module.exports = queries = {
 
 
 	'insertEmployer'			: 'INSERT INTO employers (name, email, username, password, contact_email, contact_phone, contact_address, reg_time) VALUES (?,?,?,?,?,?,?,NOW())',
-	'insertEmployee'			: 'INSERT INTO employees (email, username, password, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,NOW())'
+	'insertEmployee'			: 'INSERT INTO employees (email, username, password, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,NOW())',
+
+
+	'insertShift'				: 'INSERT INTO shifts (schedule_id, start, end, position, employee, creation_time) VALUES (?,?,?,?,?,NOW())',
+	'getShiftsBySchedule'		: 'SELECT * FROM shifts WHERE schedule_id = ?'
 }

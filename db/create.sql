@@ -91,12 +91,16 @@ CREATE TABLE shifts (
 	start DATETIME NOT NULL,
 	end DATETIME NOT NULL,
 
-	position_id INT UNSIGNED,
-	employee_id INT UNSIGNED,
+	position varchar(10) NOT NULL,
+	employee varchar(15) NOT NULL,
 
-	CONSTRAINT FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id), # ON DELETE CASCADE,
-	CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id), # ON DELETE SET NULL,
-	CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id)  # ON DELETE SET NULL
+	creation_time DATETIME NOT NULL,
+	# position_id INT UNSIGNED,
+	# employee_id INT UNSIGNED,
+
+	CONSTRAINT FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id)#, # ON DELETE CASCADE,
+	# CONSTRAINT FOREIGN KEY (position_id) REFERENCES positions(position_id), # ON DELETE SET NULL,
+	# CONSTRAINT FOREIGN KEY (employee_id) REFERENCES employees(employee_id)  # ON DELETE SET NULL
 
 ) ENGINE=innodb;
 

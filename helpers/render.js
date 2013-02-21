@@ -64,7 +64,7 @@ exports.code = function (xhr, res, obj) {
 				res.end(JSON.stringify(obj));
 				break;
 			case 401:
-				res.render('403', { title: 'Schedule.me' });
+				res.render('401', { title: 'Schedule.me' });
 				break;
 			case 403:
 				res.render('403', { title: 'Schedule.me' });

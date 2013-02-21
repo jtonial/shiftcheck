@@ -1,28 +1,29 @@
-$(function() {
-
-	window.Scheduleme = {//new Object();
-		classes: {
-			models: {},
-			collections: {},
-			views: {
-				ScheduleView: {},
-			},
+window.Scheduleme = {//new Object();
+	classes: {
+		models: {},
+		collections: {},
+		views: {
+			ScheduleView: {},
 		},
-		helpers: {},
+	},
+	helpers: {},
 
-		data: {},
+	data: {},
 
-		Schedules: {},
+	Schedules: {},
 
-		Init: function () {},
+	Init: function () {},
 
-		CurrentView: {},
-		Router: {},
+	CurrentView: {},
+	Router: {},
 
-		meta: {
-			mobile: true
-		}
-	};
+	meta: {
+		mobile: true,
+		d3: true
+	}
+};
+
+$(function() {
 
 	Scheduleme.helpers.addMinutes = function(date, adding) {
 		return new Date(date.getTime() + minutes*60000);
@@ -47,7 +48,7 @@ $(function() {
 		Scheduleme.CurrentView.render();
 	};
 	Scheduleme.helpers.viewSchedule = function (id) {
-		var view = new Scheduleme.classes.views.ScheduleView({model: Scheduleme.Schedules.get(id)});
+		var view = Scheduleme.meta.d3 ? new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)}) : new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
 		//Note this needs a back button
 		Scheduleme.helpers.switchView(view);
 	};
@@ -223,7 +224,7 @@ $(function() {
 			Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
 		}
 	});
-	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
+	Scheduleme.classes.views.ScheduleView.gview = Backbone.View.extend({
 
 		el: $('body'),
 

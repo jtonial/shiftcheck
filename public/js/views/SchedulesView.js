@@ -45,7 +45,6 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 	},
 	//Adds one schedule to the Schedules page.
 	addOneSchedule: function (schedule) {
-		console.log('adding schedule');
 		var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 		var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 		var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
@@ -63,7 +62,6 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		//Hack to test D3 schedules
 		//schedule.set('type', 'shifted');
 
-		console.log('Schedule type: '+schedule.get('type'));
 		if (schedule.get('type') == 'month') {
 			datestring = Months[d.getMonth()];
 			schedule.set('datestring', datestring);
@@ -81,7 +79,7 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 			schedule.set('ndatestring', ndatestring);
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
-		} else if (schedule.get('type') == 'shifted') {
+		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
 		} else { //Defaults to daily schedule
@@ -90,6 +88,10 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		}
 
 		this.$('.tab-content').append(view.render());
+
+		if ( schedule.get('type') == 'shifted' && Scheduleme.meta.d3 ) {
+			view.postRender();
+		}
 
 		//Rerender tabs
 		

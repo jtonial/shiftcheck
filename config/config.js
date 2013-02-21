@@ -10,8 +10,5 @@ module.exports = config = {
 	"mongo_port" : 27017,
 	"mongo_db" : "schedule",
 
-	"ssl_key" : "./config/ssl/key.pem",
-	"ssl_cert" : "./config/ssl/cert.pem",
-
 	"debug": true
 }

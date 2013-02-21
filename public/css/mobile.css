@@ -22,9 +22,7 @@
 }
 
 #content {
-	/*padding:8px;
-	position:absolute;
-	top:40px;*/
+	padding:8px;
 }
 @media (min-width: 980px) {
 	#content {
