@@ -1,5 +1,5 @@
 var Scheduleme = require('../helpers/global');
-var db = Scheduleme.db;
+var db = require('../db/dbconnection');
 
 var Employer = {
 
@@ -18,7 +18,6 @@ var Employer = {
 	},
 
 	login : function (req, res) {
-		console.log('in Model.Employer.login');
 		var email = req.body.email;
 		if (typeof email != 'undefined' && email != '' && typeof req.body.password != 'undefined') {
 			var password = Scheduleme.Helpers.Helpers.calcHash(req.body.password);

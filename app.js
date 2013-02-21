@@ -10,6 +10,7 @@ var express = require('express')
 
 var Scheduleme = require('./helpers/global');
 var db = Scheduleme.db;
+//console.log(Scheduleme);
 
 //MySQL
 var app = express();
