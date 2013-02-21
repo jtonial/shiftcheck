@@ -4,7 +4,6 @@ var Scheduleme = require('../helpers/global');
 
 //I'm not sure why Config doesn't seem to be set at this point but this hack works.
 Scheduleme.Config = require('../config/config');
-console.log(Scheduleme);
 
 var database = require('mysql-simple');
 // Port number is optional

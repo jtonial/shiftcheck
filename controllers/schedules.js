@@ -160,13 +160,12 @@ exports.verifyUpload = function (req, res) {
 			console.log('update complete of schedule: '+id);
 			if (err) {
 				console.log('Error updating awaiting upload status: '+err);
-				Scheduleme.Helpers.Render.uploadVerifiedFailed(req, res);
+				Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 500 } );
 			} else {
 				if (result.affectedRows) {
 					//Scheduleme.Helpers.Render.uploadVerified(req, res);
 				} else {
 					//Nothing changed... for now just do the same
-					Scheduleme.Helpers.Render.uploadVerified(req, res);
 				}
 				Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 200 } );
 			}
