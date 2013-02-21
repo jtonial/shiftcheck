@@ -2,13 +2,14 @@ console.log('including db connection...');
 
 var Scheduleme = require('../helpers/global');
 
+//I'm not sure why Config doesn't seem to be set at this point but this hack works.
+Scheduleme.Config = require('../config/config');
+console.log(Scheduleme);
+
 var database = require('mysql-simple');
 // Port number is optional
 
-if (typeof process.env.CLEARDB_DATABASE_USER != 'undefined'){
-	database.init(process.env.CLEARDB_DATABASE_USER, process.env.CLEARDB_DATABASE_PASSWORD, process.env.CLEARDB_DATABASE_DB, process.env.CLEARDB_DATABASE_HOST, 3306);
-} else {
-	database.init('root', 'password', 'scheduleme', 'localhost', 3306);
-}
+//Doing this all with configs makes it very easy for me to switch environments (Making Config dynamic based on mode (dev vs prod), etc)
+database.init(Scheduleme.Config.mysql_user, Scheduleme.Config.mysql_password, Scheduleme.Config.mysql_db, Scheduleme.Config.mysql_host, Scheduleme.Config.mysql_port);
 
 module.exports = database;

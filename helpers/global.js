@@ -21,3 +21,4 @@ exports.Cache		= require('../helpers/cache');
 //By exporting the Logger here I can modify the transports no problem
 exports.Logger		= require('../helpers/logger');
 exports.Queries		= require('../helpers/queries');
+exports.db 			= require('../db/dbconnection');

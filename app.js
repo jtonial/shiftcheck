@@ -9,7 +9,7 @@ var express = require('express')
 	;
 
 var Scheduleme = require('./helpers/global');
-var db = require('./db/dbconnection');
+var db = Scheduleme.db;
 
 //MySQL
 var app = express();
@@ -169,7 +169,6 @@ app.configure(function(){
 	})
 
 	app.post('/verifyUpload', function (req, res) {
-		console.log('POST - verifyUpload');
 		Scheduleme.Controllers.Schedules.verifyUpload(req,res);
 	});
 
