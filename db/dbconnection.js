@@ -10,6 +10,6 @@ var database = require('mysql-simple');
 // Port number is optional
 
 //Doing this all with configs makes it very easy for me to switch environments (Making Config dynamic based on mode (dev vs prod), etc)
-database.init(Scheduleme.Config.mysql_user, Scheduleme.Config.mysql_password, Scheduleme.Config.mysql_db, Scheduleme.Config.mysql_host, Scheduleme.Config.mysql_port);
+database.init(Scheduleme.Config.mysql.user, Scheduleme.Config.mysql.password, Scheduleme.Config.mysql.db, Scheduleme.Config.mysql.host, Scheduleme.Config.mysql.port);
 
 module.exports = database;
