@@ -25,7 +25,6 @@ if (process.env.REDISTOGO_URL) {
 	console.log('Creating new Redis client');
 }
 
-
 app.configure(function(){
 	app.set('port', process.env.PORT || Scheduleme.Config.port );
 	app.set('ssl_port', process.env.PORT || Scheduleme.Config.ssl_port );
@@ -187,8 +186,16 @@ app.configure(function(){
 	app.get('/schedules/:date', Scheduleme.Controllers.Schedules.loadDate);
 
 	app.get('/mobile', function (req, res) {
-		res.render('mobile', { title: 'Schedule.me' });
+		res.render('mobile', { });
 	});
+
+	app.get('/employees', function (req, res) {
+		if (employer) {
+			Scheduleme.Controllers.Employers.getEmployees(req, res);
+		} else {
+			Scheduleme.Helpers.Render.code403(req, res);
+		}
+	})
 
 });
 

@@ -124,7 +124,11 @@ exports.getByEmployer = function (obj, cb) {
 	id 			= obj.id;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
-	response.schedules = [];
+	if (typeof response.data == 'undefined') {
+		response.data = {};
+	}
+
+	response.data.schedules = [];
 
 	_this = Schedule;
 
@@ -148,7 +152,7 @@ exports.getByEmployer = function (obj, cb) {
 					if (row.shifts.length) {
 						row.type = "shifted";
 					}
-					response.schedules.push(row);
+					response.data.schedules.push(row);
 
 					totalRows--;
 					if (totalRows == 0) {

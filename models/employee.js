@@ -136,7 +136,39 @@ exports.fetch = function (obj, cb, cb2) {
 		}
 	});
 }
+exports.getByEmployer = function (obj, cb) {
+	//Note: this is queries['selectEmployer']; I need to globalize this
 
+	if (typeof obj.employer == 'undefined') {
+		Scheduleme.Logger.info('No employer passed');
+		//Exit here or something
+	}
+	if (typeof obj.id == 'undefined') {
+		Scheduleme.Logger.info('No id; Model.Employer.fetch');
+	}
+
+	employer 	= obj.employer;
+	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+
+	db.query(Scheduleme.Queries.selectEmployees, [employer], function (err, rows) {
+		if (err) {
+			response.statusCode = 500;
+			response.message = err.code;
+			Scheduleme.Logger.error(err.code);
+			cb(err, response);
+		} else {
+			response.statusCode = 200;
+			response.data = {};
+			response.data.employees = [];
+
+			rows.forEach (function (row) {
+				response.data.employees.push(row);
+			})
+
+			cb(err, response);
+		}
+	});
+}
 /*
 	input = {
 		id 			=> Employee id

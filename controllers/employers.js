@@ -109,28 +109,17 @@ exports.addEmployee = function (req, res) {
 	});
 };
 //This will load all employees for the given employer
-/*exports.load = function (req, res) {
-	console.log('Load Employers');
-	models.Employer.find( {}, { _id:1, name:1}, function (err, docs) {
-		if (!err) {
-			if (docs) {
-				var response = {};
-				response.data = [];
-				docs.forEach(function (x) {
-					console.log();
-					response.data.push(x);
-				});
-				res.statusCode = 200;
-				res.write(JSON.stringify(response));
-			} else {
-				res.statusCode = 404;
-			}
-		} else {
-			console.log('Error fetching Projectss: '+err);
-			res.statusCode = 500;
-		}
-		res.end();
-	});
+exports.getEmployees = function (req, res) {
+	console.log('Load Employees');
+
+	//Passed in case I add search functionality in the API later (instead of just client side)
+	var obj = {
+		employer : req.session.employer_id
+	}
+
+	Scheduleme.Models.Employee.getByEmployer (obj, function (err, response) {
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	})
 };
 exports.create = function(req, res){
 	//TODO: Validation; same as client side

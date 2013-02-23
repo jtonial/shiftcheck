@@ -222,7 +222,7 @@
 			url: '/bootstrap',
 			success: function (res) {
 				//Removing loading div
-				$.each(res.schedules, function () {
+				$.each(res.data.schedules, function () {
 					Scheduleme.Schedules.add(this);
 				});
 				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)

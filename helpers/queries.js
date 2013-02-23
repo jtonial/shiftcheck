@@ -3,6 +3,7 @@ console.log('Loading queries...');
 module.exports = queries = {
 
 	'selectEmployee' 			: 'SELECT * FROM employees WHERE employee_id=? LIMIT 1',
+	'selectEmployees'			: 'SELECT * FROM employees WHERE employer_id=?',
 	'selectSchedules' 			: 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false',
 
 	'selectEmployer' 			: 'SELECT * FROM employers WHERE employer_id=? LIMIT 1',

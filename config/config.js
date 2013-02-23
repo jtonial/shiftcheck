@@ -35,7 +35,7 @@ mysql_config = {
 	rds 	: {
 		"user" 		: process.env.RDS_USER,
 		"password" 	: process.env.RDS_PASSWORD,
-		"db" 		: 'shiftcheck_'+process.env.shiftcheck_mode, //process.env.RDS_DB,
+		"db" 		: 'shiftcheck_'+process.env.shiftcheck_mode,
 		"host" 		: process.env.RDS_HOST,
 		"port" 		: 3306
 	}
