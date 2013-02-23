@@ -123,6 +123,8 @@ exports.getByEmployer = function (obj, cb) {
 
 	response.schedules = [];
 
+	_this = Schedule;
+
 	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id], function (err, rows) {
 		if (err) {
@@ -136,6 +138,8 @@ exports.getByEmployer = function (obj, cb) {
 				db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
 					row.shifts = [];
 					shiftRows.forEach(function (shiftRow) {
+						shiftRow.start = (_this.UTCify(new Date(shiftRow.start))).toISOString();
+						shiftRow.end = (_this.UTCify(new Date(shiftRow.end))).toISOString();
 						row.shifts.push(shiftRow);
 					})
 					if (row.shifts.length) {
