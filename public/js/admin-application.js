@@ -32,7 +32,7 @@
 		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
 	};
 	Scheduleme.helpers.fromUTC = function (date) {
-		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
 	};
 	Scheduleme.helpers.addDays = function(date, adding) {
 		var nd = new Date();
