@@ -17,6 +17,9 @@ var Schedule = {
 	UTCify: function (date) {
 		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
 	},
+	unUTCify: function (date) {
+		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
+	},
 	generateUpdateQuery: function () {
 		var sets = [];
 		var vals = [];
@@ -138,8 +141,8 @@ exports.getByEmployer = function (obj, cb) {
 				db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
 					row.shifts = [];
 					shiftRows.forEach(function (shiftRow) {
-						shiftRow.start = (_this.UTCify(new Date(shiftRow.start))).toISOString();
-						shiftRow.end = (_this.UTCify(new Date(shiftRow.end))).toISOString();
+						shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
+						shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
 						row.shifts.push(shiftRow);
 					})
 					if (row.shifts.length) {
@@ -169,6 +172,8 @@ exports.getByEmployerDate = function (obj, cb) {
 			db.query(Scheduleme.Queries.getShiftsBySchedule, [row[0].id], function (err, shiftRows) {
 				row[0].shifts = [];
 				shiftRows.forEach(function (shiftRow) {
+					shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
+					shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
 					row[0].shifts.push(shiftRow);
 				})
 
