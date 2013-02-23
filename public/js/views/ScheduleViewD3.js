@@ -128,8 +128,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 		dataset.forEach(function (shift) {
 			//shift.start = (Scheduleme.helpers.UTCify(new Date(shift.start))).toISOString();
 			//shift.end = (Scheduleme.helpers.UTCify(new Date(shift.end))).toISOString();
-			shift.start = new Date(shift.start)).toISOString();
-			shift.end = new Date(shift.end)).toISOString();
+			shift.start = new Date(shift.start).toISOString();
+			shift.end = new Date(shift.end).toISOString();
 			//Adjust to whatever timezone the schedule is in
 		})
 
