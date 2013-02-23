@@ -14,6 +14,9 @@ var Schedule = {
 	validate: function () {
 
 	},
+	UTCify: function (date) {
+		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+	},
 	generateUpdateQuery: function () {
 		var sets = [];
 		var vals = [];
@@ -39,6 +42,8 @@ var Schedule = {
 	save : function (cb) {
 		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Schedule');
 
+		_this = this;
+
 		if (typeof this.id == 'undefined') { //Create
 			_this = this;
 			var obj = this.generateInsertQuery();
@@ -50,7 +55,7 @@ var Schedule = {
 					//not method forEach of undefined
 					var counter = _this.data.shifts.length;
 					_this.data.shifts.forEach( function (shift) {
-						db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+						db.query(Scheduleme.Queries.insertShift, [result.insertId, (_this.UTCify(new Date(shift.start))).toISOString(), (_this.UTCify(new Date(shift.end))).toISOString(), shift.position, shift.employee], function (err) {
 							if (err) console.log('Error: '+err);
 							counter--;
 							if (counter == 0) {
