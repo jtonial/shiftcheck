@@ -8,7 +8,6 @@ exports.Controllers = {
 		Employees : require('../controllers/employees'),
 		Employers : require('../controllers/employers'),
 		Schedules : require('../controllers/schedules'),
-		Grabs : require('../controllers/grabs')
 	};
 exports.Models 		= {
 		Employee : require('../models/employee'),

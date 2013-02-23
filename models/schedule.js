@@ -48,12 +48,18 @@ var Schedule = {
 			db.query(obj.queryString, obj.values, function (err, result) {
 				if (!err) {
 					//not method forEach of undefined
+					var counter = _this.data.shifts.length;
 					_this.data.shifts.forEach( function (shift) {
-						db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function () {});
+						db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+							if (err) console.log('Error: '+err);
+							counter--;
+							if (counter == 0) {
+								cb(err, result);
+							}
+						});
 					})
 					//I will just make the callback here. If the shift insertion fails it wont catch it however, so I should fix this with an async library after
 						//However if the schedule inserted, it is safe the assume the shifts will be fine
-					cb(err, result);
 				} else {
 					cb(err, result);
 				}

@@ -16,7 +16,6 @@
     "url":"*",
     "connect-redis":"*",
     "mysql":"*",
-    "mysql-simple":"*",
     "async":"*"
   },
   "engines": {

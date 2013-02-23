@@ -173,7 +173,7 @@ exports.verifyUpload = function (req, res) {
 	} else {
 		//Do nothing, no parameter supplied
 		console.log('No id provided');
-		Scheduleme.Helpers.Render.uploadVerifiedBadReq(req, res);
+		Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 400 } );
 	}
 };
 //This seems to work for uploading a pdf and adding a schedule to a database

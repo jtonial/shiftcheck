@@ -27,18 +27,6 @@ exports.index = function(req, res){
 
 };
 
-exports.uploadVerified = function (req, res) {
-	res.statusCode = 200;
-	res.render('uploadVerified', { title: 'Schedule.me' });
-};
-exports.uploadVerifiedBadReq = function (req, res) {
-	res.statusCode = 400;
-	res.render('uploadVerifiedBadReq', { title: 'Schedule.me' });
-};
-exports.uploadVerifiedFailed = function (req, res) {
-	res.statusCode = 500;
-	res.render('uploadVerifiedFailed', { title: 'Schedule.me' });
-};
 //Codes
 exports.code = function (xhr, res, obj) {
 	// I should put certain attributes into their own objects here (meta?)

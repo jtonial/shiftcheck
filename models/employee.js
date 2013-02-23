@@ -42,13 +42,12 @@ var Employee = {
 				} else {
 					if (row[0]) {
 
-						req.session.loggedin = true;
 						req.session.employee_id = row[0].employee_id;
-						req.session.email = row[0].email;
-						req.session.username = row[0].username;
-						req.session.first_name = row[0].first_name;
-						req.session.last_name = row[0].last_name;
-						req.session.employer = row[0].employer_id;
+						req.session.email 		= row[0].email;
+						req.session.username 	= row[0].username;
+						req.session.first_name 	= row[0].first_name;
+						req.session.last_name 	= row[0].last_name;
+						req.session.employer 	= row[0].employer_id;
 
 						response.statusCode = 200;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);

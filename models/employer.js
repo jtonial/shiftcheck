@@ -46,10 +46,9 @@ var Employer = {
 				} else {
 					if (row[0]) {
 
-						req.session.loggedin = true;
 						req.session.employer_id = row[0].employer_id;
-						req.session.email = row[0].email;
-						req.session.username = row[0].username;
+						req.session.email 		= row[0].email;
+						req.session.username 	= row[0].username;
 
 						response.statusCode = 200;
 						Scheduleme.Helpers.Render.code(req.xhr, res, response);

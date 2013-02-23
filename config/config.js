@@ -6,14 +6,17 @@ config = {
 	"port" : 3100,
 	"ssl_port" : 3101,
 
-	"mongo_host" : "localhost",
-	"mongo_port" : 27017,
-	"mongo_db" : "schedule",
-
 	"debug": true
 }
 
 //Note that process.env.shiftcheck_mode will be either 'development' or 'production' and will match the db suffix
+mongo_config = {
+	local 	: {
+		"host" 		: "localhost",
+		"port" 		: 27017,
+		"db" 		: "schedule"
+	}
+}
 mysql_config = {
 	local 	: {
 		"user" 	 	: 'root',
