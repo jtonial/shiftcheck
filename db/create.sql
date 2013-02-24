@@ -76,7 +76,7 @@ CREATE TABLE schedules (
 	employer_id INT UNSIGNED NOT NULL,
 
 	date DATE NOT NULL,
-	# timezone INT NOT NULL,
+	timezone INT NOT NULL DEFAULT 0, #Minute difference from UTC
 	type ENUM('day','week','twoweek','month') NOT NULL,
 	creation_time DATETIME NOT NULL,
 	image_loc varchar(45) NOT NULL,

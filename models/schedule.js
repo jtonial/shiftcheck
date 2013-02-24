@@ -36,8 +36,8 @@ var Schedule = {
 	},
 	generateInsertQuery: function () {
 		var returnObject = {
-			queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc) VALUES (?,?,?,NOW(),?)',
-			values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc]
+			queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone) VALUES (?,?,?,NOW(),?,?)',
+			values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone]
 		}
 
 		return returnObject;
@@ -107,6 +107,11 @@ exports.new = function (obj) {
 	}
 	if (typeof obj.shifts != 'undefined') {
 		tmp.data.shifts = obj.shifts;
+	}
+	if (typeof obj.timezone != 'undefined') {
+		tmp.data.timezone = obj.timezone;
+	} else {
+		tmp.data.timezone = 0;
 	}
 
 	return tmp;

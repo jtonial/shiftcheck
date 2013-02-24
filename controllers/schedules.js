@@ -216,6 +216,7 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 				type: type,
 				creation_time: Date(),
 				image_loc: '',
+				timezone: req.body.timezone,
 				shifts: req.body.shifts
 			});
 
