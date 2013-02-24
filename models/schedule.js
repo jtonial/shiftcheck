@@ -58,7 +58,7 @@ var Schedule = {
 					//not method forEach of undefined
 					var counter = _this.data.shifts.length;
 					_this.data.shifts.forEach( function (shift) {
-						db.query(Scheduleme.Queries.insertShift, [result.insertId, (_this.UTCify(new Date(shift.start))).toISOString(), (_this.UTCify(new Date(shift.end))).toISOString(), shift.position, shift.employee], function (err) {
+						db.query(Scheduleme.Queries.insertShift, [result.insertId,(new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
 							if (err) console.log('Error: '+err);
 							counter--;
 							if (counter == 0) {
@@ -154,8 +154,8 @@ exports.getByEmployer = function (obj, cb) {
 					} else {
 						row.shifts = [];
 						shiftRows.forEach(function (shiftRow) {
-							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
-							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
+							shiftRow.start = (new Date(shiftRow.start)).toISOString();
+							shiftRow.end = (new Date(shiftRow.end)).toISOString();
 							row.shifts.push(shiftRow);
 						})
 						if (row.shifts.length) {
