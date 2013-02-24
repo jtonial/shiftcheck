@@ -3,17 +3,19 @@ var Scheduleme = require('../helpers/global');
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employer_id != 'undefined') {//If an employer is signed in
 
-		var input = {
-			id 			: req.session.employer_id,
-			response	: {}
-		}
-
-		Scheduleme.Models.Employer.fetch(input, 
-			Scheduleme.Models.Schedule.getByEmployer,
-				function (obj) {
-					Scheduleme.Helpers.Render.code(req.xhr, res, obj)
-				});
-
+		//Simply wrapped the old Bootstrap with getByEmployer, to include the employees in bootstrap response.
+			//This has been commmented out for now as employees aren't really needed on bootstrap right now
+		Scheduleme.Models.Employee.getByEmployer ({employer : req.session.employer_id}, function (err, response) {
+			var input = {
+				id 			: req.session.employer_id,
+				response	: response
+			}
+			Scheduleme.Models.Employer.fetch(input, 
+				Scheduleme.Models.Schedule.getByEmployer,
+					function (obj) {
+						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+					});
+		});
 	} else {
 		response = {
 			statusCode: 403
@@ -121,6 +123,29 @@ exports.getEmployees = function (req, res) {
 		Scheduleme.Helpers.Render.code(req.xhr, res, response);
 	})
 };
+exports.addPosition = function (req, res) {
+	var obj = {
+		position 	: req.body.position,
+		full_name	: req.body.full_name,
+		description : req.body.description,
+		employer 	: req.session.employer_id
+	}
+
+	Scheduleme.Models.Employer.addPosition(obj, function (err, response) {
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	})
+};
+exports.getPositions = function (req, res) {
+	//Passed in case I add search functionality in the API later (instead of just client side)
+	var obj = {
+		employer : req.session.employer_id
+	}
+
+	Scheduleme.Models.Employer.getPositions (obj, function (err, response) {
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	})
+};
+
 exports.create = function(req, res){
 	//TODO: Validation; same as client side
 	

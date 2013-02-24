@@ -98,6 +98,7 @@ exports.create = function (obj, cb) {
 	db.query(Scheduleme.Queries.insertEmployer, [name, email, username, pass, c_email, c_phone, c_add], cb)
 };
 //Export static methods
+//I should not do two callbacks here... I should leave this up to the controller to handle
 exports.fetch = function (obj, cb, cb2) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
@@ -120,7 +121,11 @@ exports.fetch = function (obj, cb, cb2) {
 			if (row[0]) {
 				response.statusCode = 200;
 
-				response.data = row[0];
+				//This is done to preserve response.data that was injected
+				for (key in row[0]) {
+					response.data[key] = row[0][key];
+				}
+				//response.data = row[0];
 
 				obj.response = response;
 
@@ -132,7 +137,69 @@ exports.fetch = function (obj, cb, cb2) {
 		}
 	});
 }
+exports.getPositions= function (obj, cb) {
+	//Note: this is queries['selectEmployer']; I need to globalize this
 
+	if (typeof obj.employer == 'undefined') {
+		Scheduleme.Logger.info('No employer passed; Model.Employer.getPosition');
+		//Exit here or something
+	}
+
+	employer 	= obj.employer;
+	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+
+	db.query(Scheduleme.Queries.selectPositions, [employer], function (err, rows) {
+		if (err) {
+			response.statusCode = 500;
+			response.message = err.code;
+			Scheduleme.Logger.error(err.code);
+			cb(err, response);
+		} else {
+			response.statusCode = 200;
+			response.data = {};
+			response.data.positions = [];
+
+			rows.forEach (function (row) {
+				response.data.positions.push(row);
+			})
+
+			cb(err, response);
+		}
+	});
+}
+exports.addPosition= function (obj, cb) {
+	//Note: this is queries['selectEmployer']; I need to globalize this
+
+	if (typeof obj.employer == 'undefined') {
+		Scheduleme.Logger.info('No employer passed; Model.Employer.addPosition');
+		//Exit here or something
+	}
+	if (typeof obj.position == 'undefined') {
+		Scheduleme.Logger.info('No position passed; Model.Employer.addPosition');
+		//Exit here or something
+	}
+
+	employer 	= obj.employer;
+	position 	= obj.position;
+	full_name 	= obj.full_name;
+	description = obj.description;
+
+	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+
+	db.query(Scheduleme.Queries.insertPosition, [employer, position, full_name, description], function (err, result) {
+		if (err) {
+			response.statusCode = 500;
+			response.message = err;
+			Scheduleme.Logger.error(err);
+			cb(err, response);
+		} else {
+			response.statusCode = 201;
+			response.position_id = result.insertId;
+
+			cb(err, response);
+		}
+	});
+}
 /*
 	input = {
 		id 			=> Employer id

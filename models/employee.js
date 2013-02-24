@@ -143,9 +143,6 @@ exports.getByEmployer = function (obj, cb) {
 		Scheduleme.Logger.info('No employer passed');
 		//Exit here or something
 	}
-	if (typeof obj.id == 'undefined') {
-		Scheduleme.Logger.info('No id; Model.Employer.fetch');
-	}
 
 	employer 	= obj.employer;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};

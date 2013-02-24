@@ -3,7 +3,7 @@ console.log('Loading queries...');
 module.exports = queries = {
 
 	'selectEmployee' 			: 'SELECT * FROM employees WHERE employee_id=? LIMIT 1',
-	'selectEmployees'			: 'SELECT * FROM employees WHERE employer_id=?',
+	'selectEmployees'			: 'SELECT employee_id, first_name, last_name, username, email FROM employees WHERE employer_id=?',
 	'selectSchedules' 			: 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false',
 
 	'selectEmployer' 			: 'SELECT * FROM employers WHERE employer_id=? LIMIT 1',
@@ -30,6 +30,9 @@ module.exports = queries = {
 	'insertEmployee'			: 'INSERT INTO employees (email, username, password, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,NOW())',
 
 
-	'insertShift'				: 'INSERT INTO shifts (schedule_id, start, end, position, employee, creation_time) VALUES (?,?,?,?,?,NOW())',
-	'getShiftsBySchedule'		: 'SELECT * FROM shifts WHERE schedule_id = ?'
+	'insertShift'				: 'INSERT INTO shifts (schedule_id, start, end, position_id, employee_id, creation_time) VALUES (?,?,?,?,?,NOW())',
+	'getShiftsBySchedule'		: 'SELECT s.shift_id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
+
+	'insertPosition'			: 'INSERT INTO positions (employer_id, position, full_name, description) VALUES (?,?,?,?)',
+	'selectPositions'			: 'SELECT position_id, position, full_name, description FROM positions WHERE employer_id=?'
 }

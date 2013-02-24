@@ -1,3 +1,19 @@
+$.ajax({
+	url: '/positions',
+	type: 'GET',
+	success: function (res) {
+		Scheduleme.data.positions = res.data.positions;
+	}
+})
+//This may already be fetched by the bootstrap but im not sure and it doesnt really matter rightnow
+$.ajax({
+	url: '/employees',
+	type: 'GET',
+	success: function (res) {
+		Scheduleme.data.employees = res.data.employees;
+	}
+})
+
 window.generateShifts = function (num, positions, names) {
 	var shifts = []
 
@@ -40,6 +56,50 @@ window.generateShifts = function (num, positions, names) {
 		shifts.push(o);
 	}
 	return shifts;
+};
+window.onlyPositions = function (obj) {
+	var tmp = [];
+	obj.forEach( function (pos) {
+		tmp.push(pos.position);
+	})
+	return tmp;
+};
+window.onlyNames = function (obj) {
+	var tmp = [];
+	obj.forEach( function (emp) {
+		tmp.push(emp.first_name+' '+emp.last_name);
+	})
+	return tmp;
+};
+window.posToReference = function (obj, pos) {
+	var id = undefined;
+	obj.forEach( function (obj_pos) {
+		if (pos.trim() == obj_pos.position.trim()) {
+			id = obj_pos.position_id;
+		}
+	});
+	return id;
+
+};
+window.nameToReference = function (obj,name) {
+	var id = undefined;
+	obj.forEach( function (emp) {
+		if (name.trim() == (emp.first_name+' '+emp.last_name).trim()) {
+			id = emp.employee_id;
+		}
+	});
+	return id;
+};
+window.shiftsByReference = function (num) {
+	var shifts = window.generateShifts(num, onlyPositions(Scheduleme.data.positions), onlyNames(Scheduleme.data.employees));
+
+	shifts.forEach( function (shift) {
+		shift.position = posToReference(Scheduleme.data.positions, shift.position);
+		shift.employee = nameToReference(Scheduleme.data.employees, shift.employee);
+	})
+
+	return shifts;
+
 };
 
 Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
@@ -371,7 +431,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 			.append("text").attr("class", "employeeName")
 			.text(function(d) {
 				_this.indexes.shiftText[d.shift_id].employeeName = this;
-				return d.employee;
+				return d.employee_name;
 			})
 			.attr("text-anchor", "start")
 			.attr("y", function(d, i) {

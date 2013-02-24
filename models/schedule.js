@@ -143,20 +143,25 @@ exports.getByEmployer = function (obj, cb) {
 			var totalRows = rows.length;
 			rows.forEach(function (row) {
 				db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
-					row.shifts = [];
-					shiftRows.forEach(function (shiftRow) {
-						shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
-						shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
-						row.shifts.push(shiftRow);
-					})
-					if (row.shifts.length) {
-						row.type = "shifted";
-					}
-					response.data.schedules.push(row);
+					if (err) {
+						console.log(err);
+						cb({statusCode:500, message:err});
+					} else {
+						row.shifts = [];
+						shiftRows.forEach(function (shiftRow) {
+							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
+							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
+							row.shifts.push(shiftRow);
+						})
+						if (row.shifts.length) {
+							row.type = "shifted";
+						}
+						response.data.schedules.push(row);
 
-					totalRows--;
-					if (totalRows == 0) {
-						cb(response);
+						totalRows--;
+						if (totalRows == 0) {
+							cb(response);
+						}
 					}
 				})
 			})
