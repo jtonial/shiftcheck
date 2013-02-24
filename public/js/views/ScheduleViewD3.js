@@ -47,8 +47,8 @@ window.generateShifts = function (num, positions, names) {
 
 		var o = {
 			id			: i,
-			start		: start.toString(),
-			end			: end.toString(),
+			start		: start.toUTCString(),
+			end			: end.toUTCString(),
 			position	: position,
 			employee	: name
 		}

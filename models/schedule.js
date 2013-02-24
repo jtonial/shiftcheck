@@ -60,16 +60,17 @@ var Schedule = {
 					//not method forEach of undefined
 					var counter = _this.data.shifts.length;
 					_this.data.shifts.forEach( function (shift) {
-						db.query(Scheduleme.Queries.insertShift, [result.insertId, (_this.UTCify(new Date(shift.start))).toISOString(), (_this.UTCify(new Date(shift.end))).toISOString(), shift.position, shift.employee], function (err) {
-							if (err) console.log('Error: '+err);
+						db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+							if (err) {
+								Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
+								console.log('Error: '+err);
+							}
 							counter--;
 							if (counter == 0) {
 								cb(err, result);
 							}
 						});
 					})
-					//I will just make the callback here. If the shift insertion fails it wont catch it however, so I should fix this with an async library after
-						//However if the schedule inserted, it is safe the assume the shifts will be fine
 				} else {
 					cb(err, result);
 				}
@@ -156,8 +157,8 @@ exports.getByEmployer = function (obj, cb) {
 					} else {
 						row.shifts = [];
 						shiftRows.forEach(function (shiftRow) {
-							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
-							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
+							shiftRow.start = (new Date(shiftRow.start)).toISOString();
+							shiftRow.end = (new Date(shiftRow.end)).toISOString();
 							row.shifts.push(shiftRow);
 						})
 						if (row.shifts.length) {
