@@ -154,10 +154,16 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 
 		// Sort schedules
 		function compare(a,b) {
+			//var as = new Date(a.start);
+			//var bs = new Date(b.start);
 			if (a.start < b.start)
 				return -1;
 			if (a.start > b.start)
 				return 1;
+
+			//var ae = new Date(a.end);
+			//var be = new Date(b.end);
+
 			if (a.end < b.end)
 				return -1;
 			if (a.end > b.end)
@@ -184,19 +190,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 
 		//dataset.sort(compare);
 
-		//Adjust each shift based on browser timezone offset
-		dataset.forEach(function (shift) {
-			shift.start = (Scheduleme.helpers.fromUTC(new Date(shift.start))).toISOString();
-			shift.end = (Scheduleme.helpers.fromUTC(new Date(shift.end))).toISOString();
-			//shift.start = new Date(shift.start).toISOString();
-			//shift.end = new Date(shift.end).toISOString();
-			//Adjust to whatever timezone the schedule is in
-		})
-
 		dataset.forEach(function (shift) {
 			_this.indexes.shiftMeta[shift.shift_id] = {}
 				
-				var s = new Date(shift.start);				
+				var s = new Date(shift.start);
 				var sMin = s.getHours()*60+s.getMinutes();
 
 			_this.indexes.shiftMeta[shift.shift_id].sMin = sMin;

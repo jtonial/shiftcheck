@@ -157,8 +157,9 @@ exports.getByEmployer = function (obj, cb) {
 					} else {
 						row.shifts = [];
 						shiftRows.forEach(function (shiftRow) {
-							shiftRow.start = (new Date(shiftRow.start)).toUTCString();
-							shiftRow.end = (new Date(shiftRow.end)).toUTCString();
+							console.log('Shift State: '+shiftRow.start+'; End: '+shiftRow.end);
+							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
+							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
 							row.shifts.push(shiftRow);
 						})
 						if (row.shifts.length) {
