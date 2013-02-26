@@ -1,4 +1,32 @@
 .row
+  .row
+    #edit-area.offset3(style="display:none;")
+      legend Edit Shift
+        .row
+          .span9.well
+            .row
+              .span4
+                .form-horizontal
+                  .control-group
+                    label.control-label Label
+                    .controls
+                      select
+                        option(value="") Empty
+                  .control-group
+                    label.control-label Label
+                    .controls
+                      select
+                        option(value="") Empty
+              .span4
+                .form-horizontal
+                  .control-group
+                    label.control-label Label
+                    .controls
+                      input(type="text")
+                  .control-group
+                    label.control-label Label
+                    .controls
+                      input(type="text")
   .tabbable.tabs-left
     ul#dates.nav.nav-tabs.span3
       li.nav-header Current Schedules
@@ -14,6 +42,7 @@
           input#sched-date.datepicker(type='text', style='width: 90%;')
           span.help-block Select a date to view past schedules
     #schedule-content.tab-content
+
 #upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
   form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
     .modal-header

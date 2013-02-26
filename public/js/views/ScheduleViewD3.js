@@ -14,6 +14,93 @@ $.ajax({
 	}
 })
 
+Scheduleme.events = typeof Scheduleme.events != 'undefined' ? Scheduleme.events : {};
+
+Scheduleme.events.editShift = function (id, mouseX, mouseY) {
+	var e = new CustomEvent(
+		"editShift",
+		{
+			detail: {
+				id: id,
+				x: mouseX,
+				y: mouseY
+			},
+			bubbles: true,
+			cancelable: true
+		}
+	);
+	return e;
+}
+
+//Index of shifts (should only be references I believe)
+document.addEventListener("editShift", function (e) {
+	console.log('Listening to editShift event w/ id: '+e.detail.id);
+	var id = e.detail.id;
+	var mouseX = e.detail.x;
+	var mouseY = e.detail.y;
+	//Get shift information
+	var shift = null;
+	//If all the shifts can be saved as references (even after modification) I should make a shift index the first time a shift is being editted.
+	if (typeof Scheduleme.Shifts == 'undefined') {
+		console.log('Creating shifts index');
+		Scheduleme.Shifts = {};
+
+		Scheduleme.Schedules.forEach( function (schedule) {
+			//_.find(schedule.get('shifts'), function (schedShift) {
+			//	return schedShift == id;
+			//})
+			schedule.get('shifts').forEach( function (schedShift) {
+				console.log('Shift: '+schedShift.shift_id);
+				/*if (schedShift.shift_id == id) {
+					console.log('assigning');
+					shift == schedShift;
+				}*/
+				Scheduleme.Shifts[schedShift.shift_id] = schedShift;
+			});
+		});
+	}
+
+	shift = Scheduleme.Shifts[id];
+
+	$('#edit-area').html($('#edit-shift-template').html()).show();
+
+	$('#shift-id-display').html(shift.shift_id);
+	$('#employee-edit').val(shift.employee_name);
+	$('#position-edit').val(shift.position);
+	$('#start-time-edit').val(shift.start);
+	$('#end-time-edit').val(shift.end);
+
+	console.log(JSON.stringify(shift));
+	console.log('X: '+mouseX);
+	console.log('Y: '+mouseY);
+
+	var rightDiff = $(window).width - mouseX;
+	var topDiff = mouseY - 40;
+
+	var position = 'right';
+	$('#edit-shift-popover').addClass(position);
+
+	if (position == 'right' || position == 'left') {
+		$('#edit-shift-popover').css('top', (mouseY - $('#edit-shift-popover').height()/2 + $(document).scrollTop() )+'px');
+	} else if (position == 'top') {
+		$('#edit-shift-popover').css('top', (mouseY - $('#edit-shift-popover').height() + $(document).scrollTop() )+'px');
+	} else if (position == 'bottom') {
+		$('#edit-shift-popover').css('top', (mouseY + $(document).scrollTop() ) + 'px');
+	}
+
+	//Will have to adjust for horizontally scrolled pages
+	if (position == 'top' || position == 'bottom') {
+		$('#edit-shift-popover').css('left', (mouseX - $('#edit-shift-popover').width()/2)+'px');
+	} else if (position == 'left') {
+		$('#edit-shift-popover').css('left', (mouseX - $('#edit-shift-popover').width())+'px');
+	} else if (position == 'right') {
+		$('#edit-shift-popover').css('left', mouseX + 'px');
+	}
+
+	//Based on x and y, determine if popover needs to be right, left, top, bottom. Default is right
+
+}, false);
+
 window.generateShifts = function (num, positions, names) {
 	var shifts = []
 
@@ -171,14 +258,26 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 			return 0;
 		}
 
-		//Seperate by shift, then sort
-		var tmp = {};
-		dataset.forEach( function (d) {
-			if (typeof tmp[d.position] == 'undefined') {
-				tmp[d.position] = [];
+		//Sort the positions. Right now it effectively does nothing, but I will implement ordering of positions in schedules and then this will order by that.
+		Scheduleme.data.positions.sort(function (a, b) {
+			if (a.position_id < b.position_id) {
+				return -1;
+			} else {
+				return 1;
 			}
-			tmp[d.position].push(d);
-		})
+		});
+
+		//Seperate by shift, then sort. This is not efficient, and should probably be redone.
+		var tmp = {};
+		Scheduleme.data.positions.forEach( function (pos) {
+			var position = pos.position;
+			tmp[position] = [];
+			dataset.forEach( function (d) {
+				if (d.position == position) {
+					tmp[position].push(d);
+				}
+			});
+		});
 
 		for (var key in tmp) {
 			tmp[key].sort(compare);
@@ -414,6 +513,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 				//d3.select(this).attr("fill", d3.select(this).property('transColor'));
 			})
 			.on('click', function (d) {
+				document.dispatchEvent(Scheduleme.events.editShift(d.shift_id, d3.event.x, d3.event.y));
 				if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.shift_id);
 			});
 
@@ -510,17 +610,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 			_this.indexes.crossMapping[x]=a;
 			_this.indexes.crossMappingId[x]=b;
 		})
-
-		$('svg .shift').popover({ 
-			title: function() {
-				var d = this.__data__;
-				console.log('popover-ing: '+d.shift_id);
-				return "" + d.shift_id; 
-			},
-			content: 'adsfadsfdsfa',
-			html: true,
-			placement: "right"
-		});
 	},
 
 	generateShifts: window.generateShifts,
@@ -556,7 +645,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 				d3.select(_this.indexes.shiftText[id].position)
 					.attr("fill", _this.config.textColor)
 					.attr("font-weight", "bold");
-
 				d3.select(_this.indexes.horizontalAreaMapping[y])
 					.attr("fill","rgba(180,180,180,0.5)");
 
