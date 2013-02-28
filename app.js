@@ -72,6 +72,7 @@ app.configure(function(){
 
 		next();
 	});
+	//app.use(express.csrf()); //Generate Cross Site Request Forgery keys
 	app.use(app.router);
 	app.use(function (req, res) {
 		Scheduleme.Helpers.Render.code404(req, res);
@@ -213,6 +214,13 @@ app.configure(function(){
 	app.put('/positions/:id', function (req, res) {
 		if (employer) {
 			Scheduleme.Controllers.Employers.updatePosition(req, res);
+		} else {
+			Scheduleme.Helpers.Render.code403(req, res);
+		}
+	})
+	app.put('/shift/:id', function (req, res) {
+		if (employer) {
+			Scheduleme.Controllers.Schedules.updateShift(req, res);
 		} else {
 			Scheduleme.Helpers.Render.code403(req, res);
 		}

@@ -4,7 +4,7 @@ module.exports = queries = {
 
 	'selectEmployee' 			: 'SELECT * FROM employees WHERE employee_id=? LIMIT 1',
 	'selectEmployees'			: 'SELECT employee_id, first_name, last_name, username, email FROM employees WHERE employer_id=?',
-	'selectSchedules' 			: 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false',
+	'selectSchedules' 			: 'SELECT * FROM schedules WHERE employer_id=? AND awaitingupload = false AND published = true',
 
 	'selectEmployer' 			: 'SELECT * FROM employers WHERE employer_id=? LIMIT 1',
 
@@ -14,12 +14,13 @@ module.exports = queries = {
 	'updateEmployeeLogin'		: 'UPDATE employees SET login_count=login_count+1, last_login=NOW() WHERE employee_id=?',
 	'updateEmployerLogin' 		: 'UPDATE employers SET login_count=login_count+1, last_login=NOW() WHERE employer_id=?',
 
-	'verifyUpload' 				: 'UPDATE schedules SET awaitingupload=0 WHERE schedule_id=?',
+	'verifyUpload' 				: 'UPDATE schedules SET awaitingupload=0, published=1 WHERE schedule_id=?',
+	'publishSchedule' 			: 'UPDATE schedules SET published=1 WHERE schedule_id=?',
 
-	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false',
-	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false',
+	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false AND published = true',
+	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false AND published = true',
 
-	'getScheduleByEmployerDate'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false LIMIT 1',
+	'getScheduleByEmployerDate'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false AND published = true LIMIT 1',
 
 
 	'trackRequest' 				: 'INSERT INTO track_requests (user_type, id, method, url, time, ip) VALUES (?,?,?,?,?,?)',
@@ -31,6 +32,7 @@ module.exports = queries = {
 
 
 	'insertShift'				: 'INSERT INTO shifts (schedule_id, start, end, position_id, employee_id, creation_time) VALUES (?,?,?,?,?,NOW())',
+	'updateShift'				: 'UPDATE shifts SET employee_id=?, start_time=?, end_time=? WHERE shift_id=?',
 	'getShiftsBySchedule'		: 'SELECT s.shift_id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
 
 	'insertPosition'			: 'INSERT INTO positions (employer_id, position, full_name, description) VALUES (?,?,?,?)',

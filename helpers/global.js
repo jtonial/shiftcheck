@@ -21,3 +21,4 @@ exports.Cache		= require('../helpers/cache');
 exports.Logger		= require('../helpers/logger');
 exports.Queries		= require('../helpers/queries');
 exports.db 			= require('../db/dbconnection');
+exports.Permissions = require('../helpers/permissions');

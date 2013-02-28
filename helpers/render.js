@@ -38,10 +38,10 @@ exports.code = function (xhr, res, obj) {
 		
 	res.statusCode = obj.statusCode;
 
-	if (xhr) {
+	//if (xhr) {
 		res.header('Content-Type', 'application/json');
 		res.end(JSON.stringify(obj));
-	} else {
+	/*} else {
 		switch (obj.statusCode) {
 			case 200: // Okay
 				res.header('Content-Type', 'application/json');
@@ -64,7 +64,7 @@ exports.code = function (xhr, res, obj) {
 				res.render('500', { title: 'Schedule.me' });
 				break;
 		}
-	}
+	}*/
 };
 exports.code401 = function (req, res) {
 	res.statusCode = 401;

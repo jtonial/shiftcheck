@@ -243,3 +243,27 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 		Scheduleme.Helpers.Render.code403(req, res);
 	}
 };
+
+exports.updateShift = function (req, res) {
+
+	var permissionObject = {
+		entity: 'shift',
+		session: req.session,
+		action: 'update'
+	}
+	if ( Scheduleme.Permissions ( permissionObject ) ) {
+		console.log('well my dummy method says i have permission... yay');
+	} else {
+	}
+	Scheduleme.Helpers.Render.code(req.xhr, res, {statusCode: 450, message: 'Not implemented'});
+
+	/*var obj = {
+		shift_id    = req.params.id,
+		employee_id = req.body.employee_id,
+		start_time  = req.body.start_time,
+		end_time	= req.body.end_time
+	}
+	Scheduleme.Models.Schedule.updateShift (obj, function () {
+
+	}*/
+}

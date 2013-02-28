@@ -17,6 +17,7 @@ $(function() {
 		Router: {},
 
 		meta: {
+			state: 'admin',
 			mobile: false,
 			d3: true
 		}

@@ -13,13 +13,16 @@
     "bouncy": "*",
     "winston": "*",
     "redis": "*",
-    "url":"*",
-    "connect-redis":"*",
-    "mysql":"*",
-    "async":"*"
+    "url": "*",
+    "connect-redis": "*",
+    "mysql": "*"
   },
   "engines": {
     "node": "0.8.x",
     "npm": "1.1.x"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "assert": "~0.4.9"
   }
 }
