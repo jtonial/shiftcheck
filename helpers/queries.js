@@ -18,7 +18,7 @@ module.exports = queries = {
 	'publishSchedule' 			: 'UPDATE schedules SET published=1 WHERE schedule_id=?',
 
 	'getSchedulesByEmployer'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND awaitingupload = false AND published = true',
-	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=CURDATE() AND awaitingupload = false AND published = true',
+	'getSchedulesByEmployerFuture'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date>=? AND awaitingupload = false AND published = true',
 
 	'getScheduleByEmployerDate'	: 'SELECT schedule_id as id, date, type, image_loc AS url FROM schedules WHERE employer_id=? AND date=? AND awaitingupload = false AND published = true LIMIT 1',
 

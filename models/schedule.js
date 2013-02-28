@@ -141,7 +141,7 @@ exports.getByEmployer = function (obj, cb) {
 	_this = Schedule;
 
 	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id], function (err, rows) {
+	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id, (new Date()).toISOString()], function (err, rows) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err.code;
@@ -157,7 +157,6 @@ exports.getByEmployer = function (obj, cb) {
 					} else {
 						row.shifts = [];
 						shiftRows.forEach(function (shiftRow) {
-							console.log('Shift State: '+shiftRow.start+'; End: '+shiftRow.end);
 							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
 							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
 							row.shifts.push(shiftRow);

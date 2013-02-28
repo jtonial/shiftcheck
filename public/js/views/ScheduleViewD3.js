@@ -385,7 +385,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 
 			})
 			.on('click', function (d) {
-				$('#edit-shift-popover').hide();
+				_this.$('#edit-area').hide();
 				if (_this.config.hideUnmatchingOnClick) hideUnmatching(-1);
 			});
 
@@ -564,12 +564,12 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 		})
 	},
 	editShiftHandler: function (e) {
-		console.log(e);
+		_this = this;
 
 		e.detail = {};
 
 		var id = e.currentTarget.getAttribute('id');
-		console.log('id: '+id);
+
 		var mouseX = e.clientX;
 		var mouseY = e.clientY;
 
@@ -610,7 +610,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 		this.$('#start-time-edit').val(shift.start);
 		this.$('#end-time-edit').val(shift.end);
 
-		console.log('here');
 		var rightDiff = $(window).width() - mouseX;
 		var topDiff   = mouseY + $(document).scrollTop() - 40;
 		var leftDiff  = mouseX;
@@ -663,8 +662,23 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 		//Based on x and y, determine if popover needs to be right, left, top, bottom. Default is right
 
 	},
-	saveModifiedShift: function () {
+	saveModifiedShift: function (e) {
+		e.preventDefault();
+		_this = this;
 		console.log('detected yeah.');
+		$.ajax({
+			url: '/shift/',
+			type: 'PUT',
+			data: $('#edit-shift-popover-form').serialize(),
+			success: function (res) {
+				console.log('success');
+				_this.$('#edit-area').hide();
+			}, 
+			error: function (jqXHR) {
+				console.log('error');
+				_this.$('#edit-area').hide();
+			}
+		})
 	},
 	overlapping: function (a1, a2, b1, b2) {
 
