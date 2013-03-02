@@ -41,6 +41,8 @@ mysql_config = {
 	}
 }
 
+// TODO: Add Redis connection details
+
 //This can be dynamically set (in reality would be dev vs production vs etc)
 if (process.env.RDS_USER) {
 	config.mysql = mysql_config.rds;

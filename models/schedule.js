@@ -4,8 +4,6 @@ var db = require('../db/dbconnection');
 var mysql = require('mysql');
 var connection = mysql.createConnection({});
 
-var async = require('async');
-
 //Note: Dates are UTCified going into db, and unUTFified when fetching for schedules created from local and served to staging/prod
 
 var Schedule = {
