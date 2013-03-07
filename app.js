@@ -226,6 +226,10 @@ app.configure(function(){
 		}
 	})
 
+	app.get('/testPaste', function (req, res) {
+		res.render('testPaste', { title: 'Schedule.me' });
+	})
+
 });
 
 app.configure('development', function() {

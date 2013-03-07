@@ -9,9 +9,9 @@ var Scheduleme = require('../helpers/global');
 var crypto = require('crypto')
 	;
 	
-exports.calcHash = function (val) {
-	var shasum = crypto.createHash('sha1')
-		, salt = 'schedule12101991';
+exports.calcHash = function (val, suppliedSalt) {
+	var shasum = crypto.createHash('sha1');
+	var salt = typeof suppliedSalt != 'undefined' ? suppliedSalt : 'schedule12101991';
 
 	return shasum.update(val+salt).digest('hex');
 };

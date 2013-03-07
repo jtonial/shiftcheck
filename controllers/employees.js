@@ -12,7 +12,12 @@ exports.bootstrap = function(req, res){
 		Scheduleme.Models.Employee.fetch(input, 
 			Scheduleme.Models.Schedule.getByEmployer,
 				function (obj) {
-					Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+					if (typeof obj.error != 'undefined') {
+						obj.statusCode = 500;
+						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+					} else {
+						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+					}
 				});
 
 	} else {

@@ -127,6 +127,7 @@ exports.verifyUpload = function (id, cb) {
 	});
 }
 exports.getByEmployer = function (obj, cb) {
+
 	id 			= obj.id;
 	response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
@@ -145,32 +146,39 @@ exports.getByEmployer = function (obj, cb) {
 			response.message = err.code;
 			response.schedules = [];
 			Scheduleme.Logger.error(err.code);
+			cb({'error': err});
 		} else {
 			var totalRows = rows.length;
-			rows.forEach(function (row) {
-				db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
-					if (err) {
-						console.log(err);
-						cb({statusCode:500, message:err});
-					} else {
-						row.shifts = [];
-						shiftRows.forEach(function (shiftRow) {
-							shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
-							shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
-							row.shifts.push(shiftRow);
-						})
-						if (row.shifts.length) {
-							row.type = "shifted";
-						}
-						response.data.schedules.push(row);
+			if (totalRows) {
+				rows.forEach(function (row) {
+					db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
+						if (err) {
+							console.log(err);
+							cb({statusCode:500, message:err});
+						} else {
+							row.shifts = [];
+							shiftRows.forEach(function (shiftRow) {
+								shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
+								shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
+								row.shifts.push(shiftRow);
+							})
+							if (row.shifts.length) {
+								row.type = "shifted";
+							}
+							response.data.schedules.push(row);
 
-						totalRows--;
-						if (totalRows == 0) {
-							cb(response);
+							totalRows--;
+							if (totalRows == 0) {
+								cb(response);
+							}
 						}
-					}
+					})
 				})
-			})
+			} else {
+				response.statusCode = 500;
+				response.schedules = [];
+				cb(response);
+			}
 		}
 	});
 }

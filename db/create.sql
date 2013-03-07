@@ -23,6 +23,8 @@ CREATE TABLE employers (
 
 	img varchar(50),
 
+	salt varchar(40) NOT NULL,
+
 	last_login DATETIME NOT NULL,
 	login_count INT NOT NULL DEFAULT 0,
 	reg_time DATETIME NOT NULL,
@@ -42,6 +44,8 @@ CREATE TABLE employees (
 	last_login DATETIME NOT NULL,
 	login_count INT NOT NULL,
 	reg_time DATETIME NOT NULL,
+
+	salt varchar(40) NOT NULL,
 
 	CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
 

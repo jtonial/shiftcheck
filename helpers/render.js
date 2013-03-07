@@ -35,7 +35,7 @@ exports.code = function (xhr, res, obj) {
 		// startTime
 		// endTime
 		// duration
-		
+
 	res.statusCode = obj.statusCode;
 
 	//if (xhr) {
