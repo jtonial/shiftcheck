@@ -144,7 +144,7 @@ exports.getByEmployer = function (obj, cb) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err.code;
-			response.schedules = [];
+			response.data.schedules = [];
 			Scheduleme.Logger.error(err.code);
 			cb({'error': err});
 		} else {
@@ -175,8 +175,7 @@ exports.getByEmployer = function (obj, cb) {
 					})
 				})
 			} else {
-				response.statusCode = 500;
-				response.schedules = [];
+				response.data.schedules = [];
 				cb(response);
 			}
 		}
