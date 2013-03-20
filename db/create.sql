@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS scheduleme;
+CREATE DATABASE IF NOT EXISTS shiftcheck;
 
-use scheduleme;
+use shiftcheck;
 
 DROP TABLE IF EXISTS requests;
 DROP TABLE IF EXISTS shift_history;

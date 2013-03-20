@@ -47,7 +47,7 @@ $(function() {
 		Scheduleme.CurrentView.delegateEvents();
 		Scheduleme.CurrentView.render();
 	};
-	Scheduleme.helpers.viewSchedule = function (id) {
+	/*Scheduleme.helpers.viewSchedule = function (id) {
 		console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
 		if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
 			var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
@@ -59,8 +59,7 @@ $(function() {
 		}
 		//Note this needs a back button
 		Scheduleme.helpers.switchView(view);
-
-	};
+	};*/
 	Scheduleme.helpers.fetchBootstrap = function () {
 		$.ajax({
 			url: '/bootstrap',
@@ -144,19 +143,19 @@ $(function() {
 			if (schedule.get('type') == 'month') {
 				datestring = Months[d.getMonth()];
 				schedule.set('datestring', datestring);
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+datestring+'</a></li>');
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'</li>');
 			} else if (schedule.get('type') == 'week') {
 				var nd = Scheduleme.helpers.addDays(d, 7);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
 			} else if (schedule.get('type') == 'twoweek') {
 				var nd = Scheduleme.helpers.addDays(d, 14);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
 			} else { //Defaults to daily schedule
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
 			}
 			
 		},
@@ -177,24 +176,25 @@ $(function() {
 				d = Scheduleme.helpers.fromUTC(d);
 				//console.log('Day2: '+d);
 				if (schedule.get('type') == 'month') {
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+schedule.get('datestring')+'</a></li>');
+					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'</li>');
 				} else if (schedule.get('type') == 'week') {
 					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
 					delete nd;
 				} else if (schedule.get('type') == 'twoweek') {
 					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
 					delete nd;
 				} else { //Defaults to daily schedule
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'"><a href="#">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
 				}
 				delete d; //Remove the reference to D; it can not be garbage collected
 			});
 		},
 		viewSchedule: function (e) {
 			//console.log(e.currentTarget);
-			Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
+			//Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
+			Scheduleme.Router.navigate("viewSchedule/"+$(e.currentTarget).attr('data-id'), {trigger: true});
 		}
 	});
 	Scheduleme.classes.views.ScheduleView.gview = Backbone.View.extend({
@@ -352,10 +352,10 @@ $(function() {
 			'click .logout-trigger' 	: 'logout'
 		},
 		back: function () {
-			Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+			Scheduleme.Router.navigate("/", {trigger: true});
 		},
 		openAccountView: function () {
-			console.log('will open AccountView here');
+			Scheduleme.Router.navigate("/account", {trigger: true});
 		},
 		logout: function () {
 			Scheduleme.helpers.handleLogout();
@@ -378,6 +378,9 @@ $(function() {
 			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
 		});
 		//Add global $.ajaxError handlers
+	
+		Scheduleme.Router = new AppRouter;
+		Backbone.history.start();
 
 		Handlebars.registerHelper('outputDate', function() {
 			var t = new Date();
