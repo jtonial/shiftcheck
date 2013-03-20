@@ -1,0 +1,27 @@
+extends layout
+
+block content
+	textarea#test_paste
+
+	script
+		$('#test_paste').bind('paste', function (e) {
+			var _this = this;
+			setTimeout( function () {
+				console.log('here');
+				var st = $(_this).val();
+				var Rows = st.split("\n");
+				var numrows = Rows.length; 
+
+				console.log(Rows);
+				console.log('rows: '+numrows);
+
+				var obj = [];
+
+				Rows.forEach( function (row) {
+					var Arr = row.split("\t");
+					obj.push(Arr);
+				})
+
+				console.log(obj);
+			}, 0 )
+		})

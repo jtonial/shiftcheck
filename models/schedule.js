@@ -6,6 +6,91 @@ var connection = mysql.createConnection({});
 
 //Note: Dates are UTCified going into db, and unUTFified when fetching for schedules created from local and served to staging/prod
 
+// This will parse a delimited string into an array of
+// arrays. The default delimiter is the comma, but this
+// can be overriden in the second argument.
+function CSVToArray( strData, strDelimiter ){
+	// Check to see if the delimiter is defined. If not,
+	// then default to comma.
+	strDelimiter = (strDelimiter || ",");
+
+	// Create a regular expression to parse the CSV values.
+	var objPattern = new RegExp(
+		(
+			// Delimiters.
+			"(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+			// Quoted fields.
+			"(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+			// Standard fields.
+			"([^\"\\" + strDelimiter + "\\r\\n]*))"
+		),
+		"gi"
+		);
+
+
+	// Create an array to hold our data. Give the array
+	// a default empty first row.
+	var arrData = [[]];
+
+	// Create an array to hold our individual pattern
+	// matching groups.
+	var arrMatches = null;
+
+
+	// Keep looping over the regular expression matches
+	// until we can no longer find a match.
+	while (arrMatches = objPattern.exec( strData )){
+
+		// Get the delimiter that was found.
+		var strMatchedDelimiter = arrMatches[ 1 ];
+
+		// Check to see if the given delimiter has a length
+		// (is not the start of string) and if it matches
+		// field delimiter. If id does not, then we know
+		// that this delimiter is a row delimiter.
+		if (
+			strMatchedDelimiter.length &&
+			(strMatchedDelimiter != strDelimiter)
+			){
+
+			// Since we have reached a new row of data,
+			// add an empty row to our data array.
+			arrData.push( [] );
+
+		}
+
+
+		// Now that we have our delimiter out of the way,
+		// let's check to see which kind of value we
+		// captured (quoted or unquoted).
+		if (arrMatches[ 2 ]){
+
+			// We found a quoted value. When we capture
+			// this value, unescape any double quotes.
+			var strMatchedValue = arrMatches[ 2 ].replace(
+				new RegExp( "\"\"", "g" ),
+				"\""
+				);
+
+		} else {
+
+			// We found a non-quoted value.
+			var strMatchedValue = arrMatches[ 3 ];
+
+		}
+
+
+		// Now that we have our value string, let's add
+		// it to the data array.
+		arrData[ arrData.length - 1 ].push( strMatchedValue );
+	}
+
+	// Return the parsed data.
+	return( arrData );
+}
+
 var Schedule = {
 
 	data: {
@@ -57,18 +142,22 @@ var Schedule = {
 				if (!err) {
 					//not method forEach of undefined
 					var counter = _this.data.shifts.length;
-					_this.data.shifts.forEach( function (shift) {
-						db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
-							if (err) {
-								Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
-								console.log('Error: '+err);
-							}
-							counter--;
-							if (counter == 0) {
-								cb(err, result);
-							}
-						});
-					})
+					if (counter) {
+						_this.data.shifts.forEach( function (shift) {
+							db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+								if (err) {
+									Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
+									console.log('Error: '+err);
+								}
+								counter--;
+								if (counter == 0) {
+									cb(err, result);
+								}
+							});
+						})
+					} else {
+						cb(err, result);
+					}
 				} else {
 					cb(err, result);
 				}
@@ -164,7 +253,13 @@ exports.getByEmployer = function (obj, cb) {
 							})
 							if (row.shifts.length) {
 								row.type = "shifted";
+							} else if (row.csv) {
+								row.type = "table";
+								console.log(row.csv);
+								row.csv = JSON.parse(row.csv);
+								console.log(row.csv);
 							}
+
 							response.data.schedules.push(row);
 
 							totalRows--;
@@ -201,7 +296,11 @@ exports.getByEmployerDate = function (obj, cb) {
 
 				if (row[0].shifts.length) {
 					row[0].type = "shifted";
+				} else if (row[0].csv) {
+					row[0].type = "table";
+					row[0].csv = JSON.parse(row[0].csv);
 				}
+
 				var obj = {
 					err 		: err,
 					row 		: row[0],

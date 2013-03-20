@@ -1,3 +1,14 @@
+Handlebars.registerHelper('outputDate', function() {
+	var t = new Date();
+	var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
+	var output = '';
+	if (this.datenum == today) {
+		return 'Today';
+	} else {
+		return this.datestring;
+	}
+});
+
 Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 	//This renders directly into the el element; no need to append
 		//Replaces everything in it; and no need to postRender()
@@ -82,6 +93,9 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
+		} else if (schedule.get('type') == 'table') {
+			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+			var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
 		} else { //Defaults to daily schedule
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});

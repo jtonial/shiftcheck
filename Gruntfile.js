@@ -1,31 +1,76 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
   grunt.initConfig({
-    "phonegap-build": {
+    pkg: grunt.file.readJSON('package.json'),
+    concat: {
       options: {
-        archive: "app.zip",
-        "appId": "1234",
-        "user": {
-          "email": "your.email@example.org",
-          "password": "yourPassw0rd"
+        separator: ';'
+      },
+      dist: {
+        src: ['src/**/*.js'],
+        dest: 'dist/<%= pkg.name %>.js'
+      }
+    },
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+      },
+      dist: {
+        files: {
+          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
-    zip: {
-      app: {
-        file: {
-          src: ["index.html", "js/**/*.js", "css/**/*.js", "icon.png", "images/background.jpg"],
-          dest: "app.zip"
+    qunit: {
+      files: ['test/**/*.html']
+    },
+    jshint: {
+      files: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      options: {
+        // options here to override JSHint defaults
+        globals: {
+          jQuery: true,
+          console: true,
+          module: true,
+          document: true
         }
-     }     
+      }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint', 'qunit']
+    },
+    zip: {
+      your_target: {
+        src: [
+          'public/css/*.css',
+          'public/img/*',
+          'public/js/*',
+          'views/dash.html'
+        ],
+        dest: 'build/phonegap/package.zip',
+
+        /* optional */
+        options: {
+          base: 'public/',
+          subdir: '/',
+          zlib: {
+            level: 1
+          }
+        }
+      }
     }
   });
 
-  // Load tasks.
-  grunt.loadNpmTasks('grunt-zipstream');
-  grunt.loadNpmTasks('grunt-phonegap-build');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  // Default task.
-  // grunt.registerTask('default', 'zip phonegap-build');
+  grunt.loadNpmTasks('grunt-zipstream');
+
+  grunt.registerTask('hint', ['jshint']);
+
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+
 };

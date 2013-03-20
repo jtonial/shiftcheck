@@ -108,6 +108,8 @@ html(lang='en')
 
     script(id='schedule-template', type='text/x-handlebars-template')
       include templates/schedule-template
+    script(id='schedule-template-table', type='text/x-handlebars-template')
+      include templates/schedule-template-table
     script(id='schedules-template', type='text/x-handlebars-template')
       include templates/admin-dash-template
     script(id='account-template', type='text/x-handlebars-template')
@@ -132,5 +134,6 @@ html(lang='en')
     script(src='/js/views/ScheduleViewMonthly.js')
 
     script(src='/js/views/ScheduleViewD3.js')
+    script(src='/js/views/ScheduleViewTable.js')
 
     script(src='/js/views/SchedulesView.js')

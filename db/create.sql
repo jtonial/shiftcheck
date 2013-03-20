@@ -84,6 +84,7 @@ CREATE TABLE schedules (
 	type ENUM('day','week','twoweek','month') NOT NULL,
 	creation_time DATETIME NOT NULL,
 	image_loc varchar(45) NOT NULL,
+	csv text,
 	awaitingupload BOOLEAN NOT NULL DEFAULT true,
 
 	published BOOLEAN NOT NULL DEFAULT false,
