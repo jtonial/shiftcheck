@@ -245,16 +245,6 @@ $(function() {
 	Scheduleme.Router = new AppRouter;
 	Backbone.history.start();
 
-	Handlebars.registerHelper('outputDate', function() {
-		var t = new Date();
-		var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
-		var output = '';
-		if (this.datenum == today) {
-			return 'Today';
-		} else {
-			return this.datestring;
-		}
-	});
 	Handlebars.registerHelper('isPDF', function (s) {
 		var reg_pdf = /^.+\.pdf$/;
 		return reg_pdf.test(s);

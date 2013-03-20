@@ -40,7 +40,15 @@ html(lang='en')
     script(src='/js/underscore.js')
     script(src='/js/backbone.js')
     script(src='/js/backbone-pushstate-router.js')
+
     script(src='/js/mobile-application.js')
+    
+    script(src='/js/models/ScheduleModel.js')
+    script(src='/js/models/ShiftModel.js')
+
+    script(src='/js/collections/ScheduleCollection.js')
+    script(src='/js/collections/ShiftCollection.js')
+
     script(src='/js/login.js')
     script(src='/js/d3.v3.min.js')
 
@@ -53,6 +61,8 @@ html(lang='en')
 
     script(id='login-template', type='text/x-handlebars-template')
       include templates/mobile-login-template
+    script(id='schedule-template-table', type='text/x-handlebars-template')
+      include templates/schedule-template-table
     script(id='list-page-template', type='text/x-handlebars-template')
       include templates/mobile-list-page-template
     script(id='schedule-template', type='text/x-handlebars-template')
@@ -60,5 +70,7 @@ html(lang='en')
     script(id='account-template', type='text/x-handlebars-template')
       include templates/admin-account-template
 
+
     script(src='/js/views/ScheduleViewD3.js')
+    script(src='/js/views/ScheduleViewTable.js')
 

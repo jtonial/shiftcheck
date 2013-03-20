@@ -135,7 +135,9 @@ CREATE TABLE shift_history (
 	shift_id INT UNSIGNED NOT NULL,
 
 	from_employee INT UNSIGNED NOT NULL,
-	to_employee INT UNSIGNED NOT NULL
+	to_employee INT UNSIGNED NOT NULL,
+
+	CONSTRAINT FOREIGN KEY (shift_id) REFERENCES shifts(shift_id) ON DELETE CASCADE
 
 ) ENGINE=innodb;
 

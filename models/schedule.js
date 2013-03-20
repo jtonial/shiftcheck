@@ -254,10 +254,7 @@ exports.getByEmployer = function (obj, cb) {
 							if (row.shifts.length) {
 								row.type = "shifted";
 							} else if (row.csv) {
-								row.type = "table";
-								console.log(row.csv);
 								row.csv = JSON.parse(row.csv);
-								console.log(row.csv);
 							}
 
 							response.data.schedules.push(row);

@@ -48,9 +48,18 @@ $(function() {
 		Scheduleme.CurrentView.render();
 	};
 	Scheduleme.helpers.viewSchedule = function (id) {
-		var view = Scheduleme.meta.d3 ? new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)}) : new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
+		console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
+		if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
+			var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
+		} else if (typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined') {
+			console.log('here');
+			var view = new Scheduleme.classes.views.ScheduleView.table({model: Scheduleme.Schedules.get(id)});
+		} else {
+			var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
+		}
 		//Note this needs a back button
 		Scheduleme.helpers.switchView(view);
+
 	};
 	Scheduleme.helpers.fetchBootstrap = function () {
 		$.ajax({
@@ -93,42 +102,6 @@ $(function() {
 		//Destroy data;
 		Scheduleme.helpers.switchView(Scheduleme.LoginView);
 	};
-
-
-
-	Scheduleme.classes.models.Shift = Backbone.Model.extend({
-
-		initialize: function () {	
-			console.log('adding shift: '+this.toJSON());
-		}
-	});
-	Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
-
-		parse: function (data) {
-			return data.data;
-		}
-	});
-
-	Scheduleme.classes.models.Schedule = Backbone.Model.extend({
-		//url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
-		model: Scheduleme.classes.models.Shift,
-
-		initialize: function () {
-		}
-
-	});
-
-	Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
-		url: 'api/schedules',
-		model: Scheduleme.classes.models.Schedule,
-
-		parse: function (data) {
-			return data.data;
-		},
-		comparator: function (schedule) {
-			return Date.parse(schedule.get('date'));
-		}
-	});
 
 	Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 		el: $('body'),
