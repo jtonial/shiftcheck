@@ -80,11 +80,13 @@ $(function() {
 
 				//Add data into global object
 				Scheduleme.data.email = res.data.email;
-				if (Scheduleme.CurrentView.viewType !='undefined') {
-					$('#email').val(Scheduleme.data.email);
-				}
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
+
+
+				Scheduleme.Router = new AppRouter;
+				Backbone.history.start();
+
 			}, error: function (xhr, status, text) {
 				//Remove loading div
 				if (xhr.status == '403') {
@@ -379,8 +381,8 @@ $(function() {
 		});
 		//Add global $.ajaxError handlers
 	
-		Scheduleme.Router = new AppRouter;
-		Backbone.history.start();
+		//Note that the router is started in fetchBotstrap()
+		Scheduleme.helpers.fetchBootstrap();
 
 		Handlebars.registerHelper('outputDate', function() {
 			var t = new Date();
@@ -393,7 +395,6 @@ $(function() {
 			}
 		});
 
-		Scheduleme.helpers.fetchBootstrap();
 	};
 
 	$(document).ready(function () {

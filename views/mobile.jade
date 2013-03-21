@@ -57,6 +57,8 @@ html(lang='en')
 
   body
 
+    #content-wrapper
+      #content
     // Placed at the end of the document so the pages load faster
     script(src='./js/bootstrap.js')
 
@@ -65,7 +67,7 @@ html(lang='en')
     script(id='login-template', type='text/x-handlebars-template')
       include templates/mobile-login-template
     script(id='schedule-template-table', type='text/x-handlebars-template')
-      include templates/schedule-template-table
+      include templates/mobile-schedule-template-table
     script(id='list-page-template', type='text/x-handlebars-template')
       include templates/mobile-list-page-template
     script(id='schedule-template', type='text/x-handlebars-template')

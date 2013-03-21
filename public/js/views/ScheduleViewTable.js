@@ -7,7 +7,7 @@ Scheduleme.classes.views.ScheduleView.table = Backbone.View.extend({
 	//Create the frame
 	initialize: function () {
 		if (Scheduleme.meta.mobile) {
-			this.el = $('#content');
+			this.el = $('body');
 		}
 	},
 
