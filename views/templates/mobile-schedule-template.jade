@@ -1,18 +1,17 @@
 .navbar.navbar-fixed-top
 	.navbar-inner
 		.container-fluid(style="text-align: center")
-			#nav-left-space.pull-left
+			#mobile-nav-left-space
 				ul.nav
 					li
-						a.back-to-list
+						span.back-to-list
 							i.icon-reply.icon-2x
 			span.header-text {{outputDate}}
-			#nav-right-space.pull-right
-				ul.nav.pull-right
+			#mobile-nav-right-space
+				ul.nav
 					li.dropdown
-						a.dropdown-toggle(href='#', data-toggle='dropdown')
-							i.icon-cog
-							b.caret
+						span.dropdown-toggle(href='#', data-toggle='dropdown')
+							i.icon-cog.icon-2x
 						ul.dropdown-menu
 							li
 								a.account-trigger Options

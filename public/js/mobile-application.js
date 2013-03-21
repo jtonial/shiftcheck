@@ -39,13 +39,17 @@ $(function() {
 		nd.setDate(date.getDate() + adding);
 		return nd;
 	};
-	Scheduleme.helpers.switchView = function (view) {
+	Scheduleme.helpers.switchView = function (view, postRender) {
 		if (typeof Scheduleme.CurrentView.viewType !='undefined') {
 			Scheduleme.CurrentView.undelegateEvents();
 		}
 		Scheduleme.CurrentView = view;
 		Scheduleme.CurrentView.delegateEvents();
 		Scheduleme.CurrentView.render();
+
+		if (postRender) {
+			Scheduleme.CurrentView.postRender();
+		}
 	};
 	/*Scheduleme.helpers.viewSchedule = function (id) {
 		console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
@@ -82,8 +86,7 @@ $(function() {
 				Scheduleme.data.email = res.data.email;
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
-
-
+				
 				Scheduleme.Router = new AppRouter;
 				Backbone.history.start();
 

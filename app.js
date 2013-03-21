@@ -198,11 +198,11 @@ app.configure(function(){
 		}
 	})
 	app.get('/positions', function (req, res) {
-		if (employer) {
+		//if (employer) {
 			Scheduleme.Controllers.Employers.getPositions(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
+		//} else {
+		//	Scheduleme.Helpers.Render.code403(req, res);
+		//}
 	})
 	app.post('/positions', function (req, res) {
 		if (employer) {

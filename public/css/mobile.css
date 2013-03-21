@@ -30,3 +30,13 @@
 		margin-top:40px;
 	}
 }
+#mobile-nav-left-space {
+	position:absolute;
+	top:7px;
+	left:10px;
+}
+#mobile-nav-right-space {
+	position:absolute;
+	top:7px;
+	right:0px;
+}
