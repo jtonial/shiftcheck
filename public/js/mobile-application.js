@@ -86,7 +86,7 @@ $(function() {
 				Scheduleme.data.email = res.data.email;
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
-				
+
 				Scheduleme.Router = new AppRouter;
 				Backbone.history.start();
 
@@ -103,8 +103,20 @@ $(function() {
 	};
 	Scheduleme.helpers.handleLogout = function () {
 		//Destory session;
-		//Destroy data;
-		Scheduleme.helpers.switchView(Scheduleme.LoginView);
+		$.ajax({
+			url: '/logout',
+			type: 'POST',
+			error: function () {
+				console.log('wtf cannot log out');
+			},
+			success: function () {
+				
+			},
+			complete: function () {
+				Scheduleme.helpers.switchView(Scheduleme.LoginView);
+				//Destroy data;
+			}
+		})
 	};
 
 	Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
