@@ -28,14 +28,16 @@ window.AppRouter = Backbone.Router.extend({
 		console.log('accountView')
 	},
 	viewSchedule: function(id) {
+		var postrender = false;
 		if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
 			var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
+			postrender = true;
 		} else if (typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined') {
 			var view = new Scheduleme.classes.views.ScheduleView.table({model: Scheduleme.Schedules.get(id)});
 		} else {
 			var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
 		}
 		//Note this needs a back button
-		Scheduleme.helpers.switchView(view, true);
+		Scheduleme.helpers.switchView(view, postrender);
 	}
 });

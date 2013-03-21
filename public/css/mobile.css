@@ -28,12 +28,14 @@
 
 #mobile-nav-left-space {
 	position:absolute;
-	top:8px;
+	top:0px;
+	margin-top:8px;
 	left:10px;
 }
 #mobile-nav-right-space {
 	position:absolute;
-	top:7px;
+	top:0px;
+	margin-top:7px;
 	right:10px;
 }
 
@@ -45,9 +47,9 @@
 }
 @media (max-width: 980px) {
 	#mobile-nav-left-space {
-		top:13px;
+		margin-top:13px;
 	}
 	#mobile-nav-right-space {
-		top:12px;
+		margin-top:12px;
 	}
 }
