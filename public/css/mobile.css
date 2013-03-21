@@ -25,18 +25,29 @@
 #content-wrapper {
 	padding:8px;
 }
-@media (min-width: 980px) {
-	#content-wrapper {
-		margin-top:40px;
-	}
-}
+
 #mobile-nav-left-space {
 	position:absolute;
-	top:7px;
+	top:8px;
 	left:10px;
 }
 #mobile-nav-right-space {
 	position:absolute;
 	top:7px;
 	right:10px;
+}
+
+
+@media (min-width: 980px) {
+	#content-wrapper {
+		margin-top:40px;
+	}
+}
+@media (max-width: 980px) {
+	#mobile-nav-left-space {
+		top:13px;
+	}
+	#mobile-nav-right-space {
+		top:12px;
+	}
 }
