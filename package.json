@@ -11,6 +11,7 @@
     "jade": "*",
     "less-middleware": "*",
     "bouncy": "*",
+    "underscore": "*",
     "winston": "*",
     "redis": "*",
     "url": "*",

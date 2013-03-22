@@ -51,6 +51,16 @@ $(function() {
 			Scheduleme.CurrentView.postRender();
 		}
 	};
+	Scheduleme.helpers.titleDate = function(datenum, datestring) {
+		var t = new Date();
+		var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
+		var output = '';
+		if (datenum == today) {
+			return 'Today';
+		} else {
+			return datestring;
+		}
+	}
 	/*Scheduleme.helpers.viewSchedule = function (id) {
 		console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
 		if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
@@ -105,7 +115,7 @@ $(function() {
 		//Destory session;
 		$.ajax({
 			url: '/logout',
-			type: 'POST',
+			type: 'GET',
 			error: function () {
 				console.log('wtf cannot log out');
 			},
@@ -399,16 +409,7 @@ $(function() {
 		//Note that the router is started in fetchBotstrap()
 		Scheduleme.helpers.fetchBootstrap();
 
-		Handlebars.registerHelper('outputDate', function() {
-			var t = new Date();
-			var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
-			var output = '';
-			if (this.datenum == today) {
-				return 'Today';
-			} else {
-				return this.datestring;
-			}
-		});
+		Handlebars.registerHelper('outputDate', Scheduleme.helpers.titleDate);
 
 	};
 

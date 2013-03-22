@@ -1,33 +1,10 @@
-.navbar.navbar-fixed-top
-	.navbar-inner
-		.container-fluid(style="text-align: center")
-			#mobile-nav-left-space
-				ul.nav
-					li
-						span.back-to-list
-							i.icon-reply.icon-2x
-			span.header-text {{outputDate}}
-			#mobile-nav-right-space
-				ul.nav.pull-right
-					li.dropdown
-						span.dropdown-toggle(href='#', data-toggle='dropdown')
-							i.icon-cog.icon-2x
-						ul.dropdown-menu
-							li
-								a.account-trigger Options
-							li.divider
-							li
-								a.logout-trigger Logout
-.container-fluid
-	#content-wrapper
-		#content
-			h3 {{outputDate}}
-			table.table.table-condensed.table-striped.table-bordered.table-hover
-				//- I still need to make the first row the head somehow
-				tbody
-					| {{#each csv}}
-					tr
-						| {{#each this}}
-						td {{this}}
-						| {{/each}}
-					| {{/each}}
+h3 {{outputDate}}
+table.table.table-condensed.table-striped.table-bordered.table-hover
+	//- I still need to make the first row the head somehow
+	tbody
+		| {{#each csv}}
+		tr
+			| {{#each this}}
+			td {{this}}
+			| {{/each}}
+		| {{/each}}

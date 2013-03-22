@@ -166,7 +166,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 	//Create the frame
 	initialize: function () {
 		if (Scheduleme.meta.mobile) {
-			this.el = document.body;
+			this.el = $('#content');
 		}
 	},
 

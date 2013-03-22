@@ -1,5 +1,7 @@
 var Scheduleme = require('../helpers/global');
 
+var _ = require('underscore');
+
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employee_id != 'undefined') {//If an employer is signed in
 

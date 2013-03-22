@@ -1,6 +1,8 @@
 var Scheduleme = require('../helpers/global');
 var db = require('../db/dbconnection');
 
+var _ = require('underscore');
+
 var Employer = {
 
 	data: {

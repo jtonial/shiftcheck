@@ -16,16 +16,6 @@ html(lang='en')
         padding-left:0;
         padding-right:0;
       }
-      #nav-left-space {
-        height:40px;
-        width:80px;
-        margin-left:5px;
-      }
-      #nav-right-space {
-        height:40px;
-        width:80px;
-        margin-right:5px;
-      }
       .navbar-fixed-top {
         margin-left:0;
         margin-right:0;
@@ -64,6 +54,8 @@ html(lang='en')
 
     script(id='approval-template', type='text/template')
 
+    script(id='app-template', type='text/x-handlebars-template')
+      include templates/mobile-app-template
     script(id='login-template', type='text/x-handlebars-template')
       include templates/mobile-login-template
     script(id='schedule-template-table', type='text/x-handlebars-template')

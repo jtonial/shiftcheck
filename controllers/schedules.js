@@ -1,6 +1,7 @@
 var Scheduleme = require('../helpers/global');
 
 var crypto = require('crypto')
+	, _ = require('underscore')
 	;
 
 exports.loadDate = function(req, res){

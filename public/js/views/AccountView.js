@@ -8,7 +8,6 @@ Scheduleme.classes.views.AccountView = Backbone.View.extend({
 
 	initialize: function () {
 		this.viewType = 'account';
-		console.log('Initializing AccountView');
 	},
 
 	events: {

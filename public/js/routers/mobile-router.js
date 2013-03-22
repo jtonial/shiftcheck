@@ -22,7 +22,9 @@ window.AppRouter = Backbone.Router.extend({
 	},
 
 	listView: function() {
+		console.log('listView');
 		Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+		$('#mobile-nav-left-space').hide();
 	},
 	account: function () {
 		console.log('accountView')
@@ -38,6 +40,10 @@ window.AppRouter = Backbone.Router.extend({
 			var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
 		}
 		//Note this needs a back button
+		$('.header-text').html(Scheduleme.helpers.titleDate(
+			Scheduleme.Schedules.get(id).get('datenum'),
+			Scheduleme.Schedules.get(id).get('datestring')));
+		$('#mobile-nav-left-space').show();
 		Scheduleme.helpers.switchView(view, postrender);
 	}
 });
