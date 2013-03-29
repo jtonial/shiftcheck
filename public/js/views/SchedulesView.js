@@ -362,6 +362,7 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 					request.setRequestHeader("Content-Type", 'application/json');
 				}, success: function () {
 					console.log('received success');
+					$('#file-text').val('');
 					Scheduleme.SchedulesView.loadByDate(dateToFetch);
 				}, error: function () {
 					console.log('received error');
@@ -381,40 +382,43 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		_.defer(function () {
 
 			var st = $(_this).val();
-			var Rows = st.split("\n");
-			var numrows = Rows.length; 
 
-			console.log(Rows);
-			console.log('rows: '+numrows);
+			if (st != '') {
+				var Rows = st.split("\n");
+				var numrows = Rows.length; 
 
-			var obj = [];
+				console.log(Rows);
+				console.log('rows: '+numrows);
 
-			var type = 'spreadsheet'; // Or pasted
-			var delimiter = (type == 'spreadsheet') ? '\t' : ',';
+				var obj = [];
 
-			Rows.forEach( function (row) {
-				var Arr = row.split(delimiter);
-				obj.push(Arr);
-			})
+				var type = 'spreadsheet'; // Or pasted
+				var delimiter = (type == 'spreadsheet') ? '\t' : ',';
 
-			// Verify that it is valid (ie, N x N)
-			var length = null;
-			var valid = true;
-			obj.forEach (function (subArray) {
-				console.log('length: '+length);
-				if (length == null) {
-					length = subArray.length;
-				} else if ( subArray.length != length ) {
-					valid = false;
+				Rows.forEach( function (row) {
+					var Arr = row.split(delimiter);
+					obj.push(Arr);
+				})
+
+				// Verify that it is valid (ie, N x N)
+				var length = null;
+				var valid = true;
+				obj.forEach (function (subArray) {
+					console.log('length: '+length);
+					if (length == null) {
+						length = subArray.length;
+					} else if ( subArray.length != length ) {
+						valid = false;
+					}
+				});
+
+				if (valid) {
+					console.log(obj);
+					$(_this).val(JSON.stringify(obj));
+				} else {
+					$(_this).val('');
+					_.defer(alert('The pasted data is not valid. The cells copied must be a rectangle, and merged cells are not supported at this time'));
 				}
-			});
-
-			if (valid) {
-				console.log(obj);
-				$(_this).val(JSON.stringify(obj));
-			} else {
-				$(_this).val('');
-				_.defer(alert('The pasted data is not valid. The cells copied must be a rectangle, and merged cells are not supported at this time'));
 			}
 		})
 	}
