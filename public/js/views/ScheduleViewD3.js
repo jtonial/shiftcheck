@@ -827,7 +827,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 			_this.resizeGraph(Math.min($(window).width(), $(_this.el).parent().width()));
 		});
 
-		console.log($(this.el));
 		$(this.el).on("modifiedShifts", function (e) {
 			console.log('Caught modifedShift event');
 		});

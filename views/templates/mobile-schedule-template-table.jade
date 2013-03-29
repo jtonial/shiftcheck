@@ -2,7 +2,7 @@ h3 {{outputDate}}
 table.table.table-condensed.table-striped.table-bordered.table-hover
 	//- I still need to make the first row the head somehow
 	tbody
-		| {{#each csv}}
+		| {{#each json}}
 		tr
 			| {{#each this}}
 			td {{this}}

@@ -120,9 +120,16 @@ var Schedule = {
 		return returnObject;
 	},
 	generateInsertQuery: function () {
-		var returnObject = {
-			queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone) VALUES (?,?,?,NOW(),?,?)',
-			values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone]
+		if (this.data.image_loc != '') {
+			var returnObject = {
+				queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json) VALUES (?,?,?,NOW(),?,?,?)',
+				values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
+			}
+		} else {
+			var returnObject = {
+				queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json, awaitingupload, published) VALUES (?,?,?,NOW(),?,?,?,0,1)',
+				values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
+			}
 		}
 
 		return returnObject;
@@ -134,6 +141,7 @@ var Schedule = {
 
 		if (typeof this.id == 'undefined') { //Create
 			_this = this;
+
 			var obj = this.generateInsertQuery();
 
 			if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
@@ -203,6 +211,9 @@ exports.new = function (obj) {
 	} else {
 		tmp.data.timezone = 0;
 	}
+	if (typeof obj.json != 'undefined') {
+		tmp.data.json = obj.json;
+	}
 
 	return tmp;
 }
@@ -253,8 +264,8 @@ exports.getByEmployer = function (obj, cb) {
 							})
 							if (row.shifts.length) {
 								row.type = "shifted";
-							} else if (row.csv) {
-								row.csv = JSON.parse(row.csv);
+							} else if (row.json) {
+								row.json = JSON.parse(row.json);
 							}
 
 							response.data.schedules.push(row);
@@ -293,9 +304,9 @@ exports.getByEmployerDate = function (obj, cb) {
 
 				if (row[0].shifts.length) {
 					row[0].type = "shifted";
-				} else if (row[0].csv) {
+				} else if (row[0].json) {
 					row[0].type = "table";
-					row[0].csv = JSON.parse(row[0].csv);
+					row[0].json = JSON.parse(row[0].json);
 				}
 
 				var obj = {

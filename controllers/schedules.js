@@ -132,6 +132,7 @@ exports.clientUpload = function(req, res) {
 		type: type,
 		creation_time: Date(),
 		image_loc: file_name,
+		timezone: req.body.timezone,
 		shifts: []//shifts
 	});
 
@@ -180,6 +181,8 @@ exports.verifyUpload = function (req, res) {
 //This seems to work for uploading a pdf and adding a schedule to a database
 exports.upload = function(req,res){ //Used to process a file containing a schedule
 	console.log('in upload');
+	console.log(req.body.json);
+	console.log(typeof req.body.json);
 	if (typeof req.session.employer_id != 'undefined') {
 		//Determine the type of file
 		//Parse the file based on the given type
@@ -189,7 +192,7 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 			// TODO: validate the upload file
 
 		
-		if (typeof req.body.shifts != 'undefined') {
+		if (typeof req.body.shifts != 'undefined' || typeof req.body.json != 'undefined') {
 
 			console.log('Uploading new schedule: Day: '+req.body.date+' Type: '+req.body.type);
 
@@ -218,7 +221,8 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 				creation_time: Date(),
 				image_loc: '',
 				timezone: req.body.timezone,
-				shifts: req.body.shifts
+				shifts: req.body.shifts || [],
+				json: req.body.json
 			});
 
 			schedule.save(function (err, result) {
@@ -235,13 +239,11 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
 			res.statusCode = 400;
 			res.end('No schedule provided');
 		}
-	/*} else {
+	} else {
 		response = {
-			statusCode = 403
+			statusCode: 403
 		}
 		Scheduleme.Helpers.Render.code( req.xhr, res, response);
-	*/} else {
-		Scheduleme.Helpers.Render.code403(req, res);
 	}
 };
 

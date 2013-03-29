@@ -153,9 +153,16 @@ app.configure(function(){
 	})
 
 	// Uploading Schedules
-	app.post('/upload', function (req, res) {
+	app.post('/client-upload', function (req, res) {
 		if (employer) {
 			Scheduleme.Controllers.Schedules.clientUpload(req, res);
+		} else {
+			Scheduleme.Helpers.Render.code403(req, res);
+		}
+	});
+	app.post('/upload', function (req, res) {
+		if (employer) {
+			Scheduleme.Controllers.Schedules.upload(req, res);
 		} else {
 			Scheduleme.Helpers.Render.code403(req, res);
 		}

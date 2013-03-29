@@ -53,35 +53,7 @@ html(lang='en')
                     a(href='logout') Logout
     .container#content
 
-    #add-employee-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
-      form#add-employee-form(style="margin:0")
-        .modal-header
-          h3 Add Employee
-        .modal-body
-          .form-horizontal
-            .control-group
-              label.control-label First Name
-              .controls
-                input#first_name(type='text', name='first_name', placeholder='First Name')
-            .control-group
-              label.control-label Last Name
-              .controls
-                input#last_name(type='text', name='last_name', placeholder='Last Name')
-            .control-group
-              label.control-label Email
-              .controls
-                input#email(type='text', name='email', placeholder='Email')
-            .control-group
-              label.control-label Username
-              .controls
-                input#username(type='text', name='username', placeholder='Username')
-            .control-group
-              label.control-label Password
-              .controls
-                input#password(type='password', name='password', placeholder='Password')
-        .modal-footer
-          button.btn(data-dismiss='modal') Cancel
-          button.btn.btn-primary(type='submit') Add
+    include includes/add-employee-modal
 
     // Placed at the end of the document so the pages load faster
     script(src='./js/bootstrap.js')
@@ -137,3 +109,5 @@ html(lang='en')
     script(src='/js/views/ScheduleViewTable.js')
 
     script(src='/js/views/SchedulesView.js')
+
+    //- script(src='/js/views/UploadScheduleModalView.js')

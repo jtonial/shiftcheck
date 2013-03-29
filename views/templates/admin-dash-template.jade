@@ -15,35 +15,5 @@
           span.help-block Select a date to view past schedules
     #schedule-content.tab-content
 
-#upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
-  form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
-    .modal-header
-      h3 Upload Schedule
-    .modal-body
-      
-      .form-horizontal
-        .control-group
-          label.control-label(for='file') Schedule
-          .controls
-            input#file(type='file', name='file', placeholder='file')
-        hr
-        .control-group
-          label.control-label(for='date') Date
-          .controls
-            input#upload-schedule-date.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
-            span.help-block For multi-day schedules, select the first day
-        .control-group
-          label.control-label(for='type') Length
-          .controls
-            select#upload-schedule-type.upload-schedule-info(name='type')
-              option(value='day') 1 Day
-              option(value='week') Week
-              option(value='twoweek') 2 Weeks
-              option(value='month') Month
-        .control-group
-          .controls
-            img#ajax-loader.hidden(src="/img/ajax-loader.gif")
-    .modal-footer
-      button.btn(data-dismiss='modal') Cancel
-      button.btn.btn-success#upload_submit(name='submit2') Upload  
+include ../includes/upload-schedule-modal
 
