@@ -224,7 +224,7 @@
 			success: function (res) {
 				//Removing loading div
 				if (!res.data.schedules.length) {
-					$('#schedule-content').html('You current have no receipts in the system');
+					$('#schedule-content').html('You current have no schedules in the system');
 				}
 				$.each(res.data.schedules, function () {
 					Scheduleme.Schedules.add(this);
