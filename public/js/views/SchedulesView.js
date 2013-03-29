@@ -93,7 +93,7 @@ Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
 		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
-		} else if (typeof schedule.get('csv') != 'undefined') {
+		} else if (typeof schedule.get('csv') != 'undefined' && schedule.get('csv') == null ) {
 			this.$('#dates.nav-tabs #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
 		} else { //Defaults to daily schedule
