@@ -34,6 +34,7 @@
 }
 #sidebar #sidebar-content #add_schedule {
   padding: 8px;
+  padding-right: 10px;
 }
 #sidebar #sidebar-content #add_schedule:hover {
   color: whitesmoke;
@@ -69,6 +70,9 @@
 #main-app #content-header #header-icons {
   margin-right: 25px;
   line-height: 60px;
+}
+#main-app #content-header #header-icons #logout-trigger {
+  cursor: pointer;
 }
 #main-app #content-content {
   padding: 20px;

@@ -20,7 +20,7 @@ exports.index = function(req, res){
 	if (typeof req.session.employee_id != 'undefined') {
 		res.render('dash', { title: 'Schedule.me' });
 	} else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
-		res.render('admin', { title: 'Schedule.me' });
+		res.render('newdash', { title: 'Schedule.me' });
 	} else {
 		res.render('welcome', { title: 'Schedule.me' });
 	}

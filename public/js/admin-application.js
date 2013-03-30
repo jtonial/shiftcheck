@@ -107,6 +107,12 @@
 				//alert('We seem to be having some technical difficulties');
 			}
 		});
+
+	//This is here because I currently do not have a global view. If I do, it will be there
+	$('#logout-trigger').click( function () {
+		window.location.href = '/logout';
+	})
+
 	};
 
 	$(document).ready(function () {
