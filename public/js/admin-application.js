@@ -78,12 +78,14 @@
 		schedules: function () {
 			/*$('.link, .page').removeClass('active');
 			$('.schedules').addClass('active');*/
-			console.log('Opening SchedulesView')
-			this.switchView(Scheduleme.SchedulesView);
+			console.log('not doing anything right now');
+			//console.log('Opening SchedulesView')
+			//this.switchView(Scheduleme.SchedulesView);
 		},
 		account: function () {
-			console.log('Opening AccountView');
-			this.switchView(Scheduleme.AccountView);
+			//console.log('Opening AccountView');
+			console.log('not doing anything right now');
+			//this.switchView(Scheduleme.AccountView);
 		}
 	});
 //------------------PAYLOAD----------------------------
@@ -92,8 +94,10 @@
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
 		//Router takes care of this
-		Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
+		//Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
 		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
+
+		Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
 		Scheduleme.Router = new AppRouter;
 		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be

@@ -1,7 +1,104 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@sidebar-width: 240px;
+@header-height: 60px;
+@footer-height: 30px;
+
+@background-color: #e5e9ec;
+@sidebar-background-color: #22262e;
+
+#sidebar {
+	width: @sidebar-width;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+
+	background-color: #22262e;
+
+	//color: whitesmoke !important;
+
+	a {
+		color: whitesmoke;
+	}
+	#sidebar-header {
+		//background-color: ;
+		position: absolute;
+		width:100%;
+
+		box-sizing:border-box;
+		padding:15px;
+		padding-top:10px;
+		padding-bottom:10px;
+
+		#logo {
+			color: whitesmoke;
+
+			font-size: 22px;
+			line-height: @header-height - 20;
+
+			text-shadow: whitesmoke 0 0 1px;
+		}
+	}
+	#sidebar-content {
+		position: absolute;
+		
+		width:100%;
+
+		top: @header-height;
+		bottom: @footer-height;
+
+		background-color: rgba(0,0,0,0.2);
+
+		#add_schedule {
+			padding: 8px;
+			&:hover {
+				color: whitesmoke;
+			}
+		}
+	}
+	#sidebar-footer {
+		position: absolute;
+		
+		width:100%;
+
+		height: @footer-height;
+		bottom:0;
+	}
 }
-a {
-  color: #00B7FF;
+#main-app {
+	position:absolute;
+	top:0;
+	bottom:0;
+	left: @sidebar-width;
+	right:0;
+
+	background-color: #e5e9ec;
+
+	#content-header {
+		background-color: #fff;
+
+		#header-icons {
+			margin-right:25px;
+
+			line-height:@header-height;
+		}
+	}
+}
+
+.header {
+	height: @header-height;
+}
+
+//Bootstrap Overload
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: lighten(@sidebar-background-color, 5%);
+}
+
+.nav-list > .active > a,
+.nav-list > .active > a:hover,
+.nav-list > .active > a:focus {
+  color: @sidebar-background-color;
+  //text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+  background-color: @background-color;
 }

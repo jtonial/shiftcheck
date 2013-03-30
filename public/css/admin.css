@@ -70,10 +70,10 @@
 	text-align:left;
 } .schedule-header .snpan24:hover {
 	background-color:#777;
-} schedule-row .btn.hidden {
+} .schedule-row .btn.hidden {
 	display:none;
 	visibility:hidden;
-}	.schedule-row .btn {
+} .schedule-row .btn {
 	font-size:11px;
 	line-height:12px;
 	padding-top:0px;
@@ -99,4 +99,8 @@ body {
 #schedule-content, #account-content {
 	padding: 5px;
 	background: white;
+}
+
+.hidden {
+	visibility:hidden;
 }
