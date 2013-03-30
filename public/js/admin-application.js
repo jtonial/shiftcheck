@@ -41,54 +41,8 @@
 		return nd;
 	};
 
-	//-------------------------------ROUTER------------------------------------
-	window.AppRouter = Backbone.Router.extend({
-		//Note: I'm currently using tabs; another approach would be to make each tab
-			//it's own view, and delete/render tabs instead of hiding/showing
-			//Seperate views is probably a better approach for scalability;
-			// being able to undelegate events when they're not needed
-		init:0,
-	
-		initialize: function() {
-			return this.bind('all', this._trackPageview);
-		},
-		_trackPageview: function() {
-			var url;
-			url = Backbone.history.getFragment();
-			//alert('tracking...: '+url);
-		//	if (this.currentMain != url ) {
-				return _gaq.push(['_trackPageview',"/employer/" + url]);
-		//	}
-		},
-		routes: {
-			'account':'account',
 
-			'':'schedules'
-		},
-
-		switchView: function (view) {
-			if (typeof Scheduleme.CurrentView.viewType !='undefined') {
-				Scheduleme.CurrentView.undelegateEvents();
-			}
-			Scheduleme.CurrentView = view;
-			Scheduleme.CurrentView.delegateEvents();
-			Scheduleme.CurrentView.render();
-		},
-
-		schedules: function () {
-			/*$('.link, .page').removeClass('active');
-			$('.schedules').addClass('active');*/
-			console.log('not doing anything right now');
-			//console.log('Opening SchedulesView')
-			//this.switchView(Scheduleme.SchedulesView);
-		},
-		account: function () {
-			//console.log('Opening AccountView');
-			console.log('not doing anything right now');
-			//this.switchView(Scheduleme.AccountView);
-		}
-	});
-//------------------PAYLOAD----------------------------
+	//------------------PAYLOAD----------------------------
 
 	Scheduleme.Init = function () {
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
@@ -103,8 +57,8 @@
 		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be
 			//able to handle it.
 		Backbone.history.start({
-			//pushState: true,
-			//root: '/'
+			pushState: true,
+			root: '/newdash/'
 		});
 		//configPushState();
 
@@ -118,18 +72,25 @@
 			url: '/bootstrap',
 			success: function (res) {
 				//Removing loading div
-				if (!res.data.schedules.length) {
-					$('#schedule-content').html('You current have no schedules in the system');
-				}
+
 				$.each(res.data.schedules, function () {
 					Scheduleme.Schedules.add(this);
 				});
-				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
-				//Other option is to reRenderTabs() at the end of addOneSchedule
-				if (Scheduleme.CurrentView.viewType == 'schedules') {
-					Scheduleme.CurrentView.reRenderTabs();
-					$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+
+
+				$('#schedule-pane').removeClass('loading');
+
+				if (!res.data.schedules.length) {
+					$('#schedule-pane').addClass('no-schedules');
+				} else {
+					$('#schedule-pane').addClass('select-schedule');
 				}
+
+				
+				// Instead of the prompt to select a schedule, I could auto select the first one
+
+				//	Scheduleme.CurrentView.reRenderTabs();
+				//	$('#dates.nav.nav-tabs li:nth-child(2) a').click();
 
 				//Add data into global object
 				Scheduleme.data.email = res.data.email;
@@ -140,8 +101,10 @@
 				Scheduleme.data.username = res.data.username;
 			}, error: function () {
 				//Remove loading div
+				$('#schedule-pane').removeClass('loading').addClass('loading-error');
+
 				console.log('An error occured');
-				alert('We seem to be having some technical difficulties');
+				//alert('We seem to be having some technical difficulties');
 			}
 		});
 	};

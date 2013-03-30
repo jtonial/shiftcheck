@@ -41,15 +41,29 @@ html(lang='en')
       #sidebar-footer
     #main-app
       #content-header.header.clearfix
+        h3#content-view-title.pull-left
         #header-icons.pull-right
           i.icon-signout.icon-2x
       #content-content
         .container-fluid#content
-
+          #schedule-pane.loading
+            #no-schedules.large-message-div
+              .icon-inbox.icon-4x
+              h5 No current schedules have been uploaded
+            #select-schedule.large-message-div
+              .icon-circle-arrow-left.icon-4x
+              h5 Select a schedule on the left to view it
+            #loading.large-message-div
+              .icon-refresh.icon-spin.icon-4x
+              h5 Loading...
+            #loading-error.large-message-div
+              .icon-remove.icon-4x
+              h5 An Error Occured! We apologize
     include includes/add-employee-modal
 
     // Placed at the end of the document so the pages load faster
-    script(src='./js/bootstrap.js')
+    script(src='/js/bootstrap.js')
+
     script
       $(document).ready(function() {
         //This should instead pluck the names of all employees
@@ -75,6 +89,8 @@ html(lang='en')
       include templates/schedule-template
     script(id='schedule-template-table', type='text/x-handlebars-template')
       include templates/schedule-template-table
+    script(id='schedule-template-d3', type='text/x-handlebars-template')
+      include templates/schedule-template-d3
     script(id='schedules-template', type='text/x-handlebars-template')
       include templates/admin-dash-template
     script(id='account-template', type='text/x-handlebars-template')
@@ -95,6 +111,10 @@ html(lang='en')
 
     script(src='/js/views/AccountView.js')
     script(src='/js/views/EmployeeView.js')
+
+    script(src='/js/views/ScheduleView.js')
+    script(src='/js/views/ScheduleBaseView.js')
+
     script(src='/js/views/ScheduleViewDaily.js')
     script(src='/js/views/ScheduleViewWeekly.js')
     script(src='/js/views/ScheduleViewBiweekly.js')
@@ -106,5 +126,7 @@ html(lang='en')
     script(src='/js/views/ScheduleViewTable.js')
 
     script(src='/js/views/SchedulesView.js')
+
+    script(src='/js/routers/employer-router.js')
 
     //- script(src='/js/views/UploadScheduleModalView.js')

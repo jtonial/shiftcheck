@@ -138,12 +138,10 @@ window.shiftsByReference = function (num) {
 
 };
 
-Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
+Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBaseView.extend({
 
-	template: Handlebars.compile($('#schedule-template').html()),
+	template: Handlebars.compile($('#schedule-template-d3').html()),
 	
-	className: 'tab-pane',
-
 	config: {
 		hideUnmatchingOnClick	: 0,
 		textColor				: '#000',
@@ -163,17 +161,12 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 		crossMapping 			: [],
 		crossMappingId 			: []
 	},
-	//Create the frame
-	initialize: function () {
-		if (Scheduleme.meta.mobile) {
-			this.el = $('#content');
-		}
-	},
 
 	events: {
 		"click rect.shift" : 'editShiftHandler',
 		"click #save-editted-shift" : "saveModifiedShift"
 	},
+
 	createD3: function (target, dataset) {
 
 		_this = this;
@@ -811,16 +804,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Backbone.View.extend({
 			})
 	},
 
-	//Add in views for each shift in the schedule
-	render: function () {
-		$(this.el).attr('id','d'+this.model.get('datenum'));
-		$(this.el).html(this.template(this.model.toJSON()));
-		this.$('.scheduleFrame').remove(); //Remove iFrame  //If this is used iFrame will be removed from template and wont be necessary
-
-		return $(this.el);
-	},
 	postRender: function () {
-		var contentTarget = document.getElementById('d'+this.model.get('datenum'));
+		var contentTarget = document.getElementById('d3Target');
 		this.createD3(contentTarget, this.model.get('shifts'));
 
 		$(window).resize(function () {

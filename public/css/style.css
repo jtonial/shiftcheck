@@ -29,11 +29,21 @@
   bottom: 30px;
   background-color: rgba(0, 0, 0, 0.2);
 }
+#sidebar #sidebar-content a {
+  cursor: pointer;
+}
 #sidebar #sidebar-content #add_schedule {
   padding: 8px;
 }
 #sidebar #sidebar-content #add_schedule:hover {
   color: whitesmoke;
+}
+#sidebar #sidebar-content #dates li > a {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+#sidebar #sidebar-content .help-block.small {
+  font-size: 12px;
 }
 #sidebar #sidebar-footer {
   position: absolute;
@@ -47,14 +57,51 @@
   bottom: 0;
   left: 240px;
   right: 0;
+  overflow-y: scroll;
   background-color: #e5e9ec;
 }
 #main-app #content-header {
   background-color: #fff;
 }
+#main-app #content-header #content-view-title {
+  margin-left: 25px;
+}
 #main-app #content-header #header-icons {
   margin-right: 25px;
   line-height: 60px;
+}
+#main-app #content-content {
+  padding: 20px;
+}
+#main-app #content-content #content {
+  padding: 0;
+}
+#main-app #content-content .large-message-div {
+  display: none;
+  visibility: hidden;
+  font-size: 40px;
+  color: #999;
+  padding: 50px;
+  width: 60%;
+  text-align: center;
+  background-color: #fff;
+  margin: 0 auto;
+}
+#main-app #schedule-pane.no-schedules #no-schedules {
+  display: block;
+  visibility: visible;
+}
+#main-app #schedule-pane.select-schedule #select-schedule {
+  display: block;
+  visibility: visible;
+}
+#main-app #schedule-pane.loading #loading {
+  display: block;
+  visibility: visible;
+}
+#main-app #schedule-pane.loading-error #loading-error {
+  display: block;
+  visibility: visible;
 }
 .header {
   height: 60px;

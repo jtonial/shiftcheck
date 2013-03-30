@@ -83,6 +83,9 @@ app.configure(function(){
 	app.get('/newdash', function (req, res) {
 		res.render('newdash', { title: 'Schedule.me' })
 	})
+	app.get('/newdash/*', function (req, res) {
+		res.render('newdash', { title: 'Schedule.me' })
+	})
 	app.get('/login', function (req, res) {
 		if (!employee && !employer) {
 			Scheduleme.Helpers.Render.renderLoginPage(req, res);

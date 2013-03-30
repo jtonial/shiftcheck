@@ -47,11 +47,23 @@
 
 		background-color: rgba(0,0,0,0.2);
 
+		a {
+			cursor: pointer;
+		}
 		#add_schedule {
 			padding: 8px;
 			&:hover {
 				color: whitesmoke;
 			}
+		}
+		#dates {
+			li > a {
+				border-top-left-radius: 8px;
+				border-bottom-left-radius: 8px;
+			}
+		}
+		.help-block.small {
+			font-size:12px;
 		}
 	}
 	#sidebar-footer {
@@ -70,15 +82,57 @@
 	left: @sidebar-width;
 	right:0;
 
+	overflow-y: scroll;
+
 	background-color: #e5e9ec;
 
 	#content-header {
 		background-color: #fff;
 
+		#content-view-title {
+			margin-left:25px;
+		}
 		#header-icons {
 			margin-right:25px;
 
 			line-height:@header-height;
+		}
+	}
+	#content-content {
+		padding:20px;
+
+		#content {
+			padding: 0;
+		}
+		.large-message-div {
+			display: none;
+			visibility: hidden;
+
+			font-size:40px;
+			color:#999;
+			padding:50px;
+			width:60%;
+			text-align:center;
+			background-color:#fff;
+			margin:0 auto;
+		}
+	}
+	#schedule-pane{
+		&.no-schedules #no-schedules {
+			display: block;
+			visibility: visible;
+		}
+		&.select-schedule #select-schedule {
+			display: block;
+			visibility: visible;
+		}
+		&.loading #loading {
+			display: block;
+			visibility: visible;
+		}
+		&.loading-error #loading-error {
+			display: block;
+			visibility: visible;
 		}
 	}
 }

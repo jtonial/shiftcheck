@@ -142,7 +142,28 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 		"click #upload_submit" : "createUploadObject",
 		"paste #file-text" : "pasted",
-		"change #file-text" : "pasted"
+		"change #file-text" : "pasted",
+
+		"click .schedule-link" : "navToSchedule"
+	},
+	/**
+	 *
+	 * A function used to navigate with the Router to the clicked schedule
+	 *
+	 */
+	navToSchedule: function (e) {
+
+		console.log($(e.target));
+
+		var id = $(e.target).attr('data-id');
+
+		//Reset click states on links
+		$('.schedule-tab').removeClass('active');
+		//Manually set the clicked to active
+		$(e.target).parent().addClass('active');
+
+		console.log('Navigating to schedule/'+id);
+		Scheduleme.Router.navigate('schedule/'+id, { trigger: true });
 	},
 	render: function () {
 		//The JSON passed in does nothing right now, but may in the future
@@ -184,6 +205,8 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 		datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
 		var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
+
+		// This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
 		schedule.set('datenum', datenum);
 		schedule.set('datestring', datestring);
 
@@ -193,28 +216,28 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 		if (schedule.get('type') == 'month') {
 			datestring = Months[d.getMonth()];
 			schedule.set('datestring', datestring);
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'</a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 		} else if (schedule.get('type') == 'week') {
 			var nd = Scheduleme.helpers.addDays(d, 7);
 			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 			schedule.set('ndatestring', ndatestring);
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 		} else if (schedule.get('type') == 'twoweek') {
 			var nd = Scheduleme.helpers.addDays(d, 14);
 			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 			schedule.set('ndatestring', ndatestring);
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
 		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
 		} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
 		} else { //Defaults to daily schedule
-			this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
 		}
 
@@ -246,17 +269,17 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 			d = Scheduleme.helpers.fromUTC(d);
 			//console.log('Day2: '+d);
 			if (schedule.get('type') == 'month') {
-				this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'</a></li>');
+				this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');
 			} else if (schedule.get('type') == 'week') {
 				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				delete nd;
 			} else if (schedule.get('type') == 'twoweek') {
 				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				delete nd;
 			} else { //Defaults to daily schedule
-				this.$('#dates #prependHere').before('<li class="schedule-tab"><a href="#d'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+				this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			}
 			delete d; //Remove the reference to D; it can not be garbage collected
 		});
