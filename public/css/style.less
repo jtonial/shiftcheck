@@ -3,6 +3,11 @@
 @footer-height: 30px;
 
 @background-color: #e5e9ec;
+
+// @background-color: overlay(#e5e9ec, #660066);
+
+// @background-color: mix(#e5e9ec, #660066, 50%);
+
 @sidebar-background-color: #22262e;
 
 #sidebar {
@@ -85,7 +90,7 @@
 
 	overflow-y: scroll;
 
-	background-color: #e5e9ec;
+	background-color: @background-color;
 
 	#content-header {
 		background-color: #fff;
