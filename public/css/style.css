@@ -66,13 +66,18 @@
 }
 #main-app #content-header #content-view-title {
   margin-left: 25px;
+  font-weight: normal;
 }
 #main-app #content-header #header-icons {
   margin-right: 25px;
   line-height: 60px;
 }
 #main-app #content-header #header-icons #logout-trigger {
+  color: #999;
   cursor: pointer;
+}
+#main-app #content-header #header-icons #logout-trigger:hover {
+  color: #222;
 }
 #main-app #content-content {
   padding: 20px;

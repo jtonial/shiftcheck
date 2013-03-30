@@ -60,7 +60,7 @@ function uploadObject () {
 			success   : function (res) {
 				//Fetch the new schedule and add it
 				console.log('Upload verified! Id: '+that.id);
-				Scheduleme.SchedulesView.loadByDate(that.date);
+				Scheduleme.ScheduleListView.loadByDate(that.date);
 			},
 			error 	  : function (res) {
 				console.log('Upload could not be verified. Id: '+that.id);
@@ -342,6 +342,8 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 	createUploadObject: function ( event ) {
 
+		var _this = this;
+
 		event.preventDefault();
 		//This works (delegating the task to the helper object)
 		if ($('#file').val()) {
@@ -354,6 +356,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 				$('.modal-footer button').attr('disabled', false);
 				$('#ajax-loader').addClass('hidden');
 				$('#file').val('');
+				$('#upload-schedule-date').val('');
 			});
 			obj.requestCredentials();
 		} else if ($('#file-text').val()) {
@@ -387,7 +390,8 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 				}, success: function () {
 					console.log('received success');
 					$('#file-text').val('');
-					Scheduleme.SchedulesView.loadByDate(dateToFetch);
+					$('#upload-schedule-date').val('');
+					_this.loadByDate(dateToFetch);
 				}, error: function () {
 					console.log('received error');
 				}, complete: function () {
