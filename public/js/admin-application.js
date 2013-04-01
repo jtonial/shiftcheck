@@ -36,7 +36,8 @@
 		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
 	};
 	Scheduleme.helpers.addDays = function(date, adding) {
-		var nd = new Date();
+		var nd = new Date(date);
+
 		nd.setDate(date.getDate() + adding);
 		return nd;
 	};
@@ -53,20 +54,17 @@
 
 		Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
-		Scheduleme.Router = new AppRouter;
-		//Note: I'm not using pushState right now because I dont want to have to deal with making the server-side be
-			//able to handle it.
-		Backbone.history.start({
-			pushState: true,
-			root: '/newdash/'
-		});
-		//configPushState();
-
 		//AJAX Setup
 		$.ajaxSetup({
 			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
 		});
 		//Add global $.ajaxError handlers
+
+		$('#toggle-sidebar-trigger').click( function () {
+			console.log('toggling sidebar state');
+			var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
+			$('#sidebar').removeClass('open closed').addClass(newState);
+		});
 
 		$.ajax({
 			url: '/bootstrap',
@@ -77,6 +75,7 @@
 					Scheduleme.Schedules.add(this);
 				});
 
+				Scheduleme.ScheduleListView.reRenderTabs();
 
 				$('#schedule-pane').removeClass('loading');
 
@@ -105,6 +104,14 @@
 
 				console.log('An error occured');
 				//alert('We seem to be having some technical difficulties');
+			}, complete: function () {
+				Scheduleme.Router = new AppRouter;
+
+				Backbone.history.start({
+					pushState: true,
+					root: '/'
+				});
+				//configPushState();
 			}
 		});
 

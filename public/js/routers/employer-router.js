@@ -38,7 +38,8 @@ window.AppRouter = Backbone.Router.extend({
 
 		if (model) {
 			// Set the title
-			$('#content-view-title').html(model.get('datestring'));
+			console.log(model.get('datestring'));
+			$('#content-view-title').html(model.get('titledatestring'));
 			// Create and render view
 			Scheduleme.CurrentView = new Scheduleme.classes.views.ScheduleView({ model: model });
 			console.log('Created Schedule view');

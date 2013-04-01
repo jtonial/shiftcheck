@@ -186,6 +186,11 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 			dateFormat: 'yy-mm-dd',
 			minDate: "+0D"
 		});
+		$('#test-hidden').datepicker({
+			showOtherMonths: true,
+			dateFormat: 'yy-mm-dd',
+			minDate: "+0D"
+		});
 
 		//this.addAllSchedules();
 		//Select first schedule
@@ -193,7 +198,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 	},
 	//Adds one schedule to the Schedules page.
 	addOneSchedule: function (schedule) {
-		console.log('add one schedule');
+		console.log('add one schedule '+schedule.get('type'));
 		var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 		var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 		var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
@@ -216,27 +221,45 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 		if (schedule.get('type') == 'month') {
 			datestring = Months[d.getMonth()];
 			schedule.set('datestring', datestring);
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 		} else if (schedule.get('type') == 'week') {
-			var nd = Scheduleme.helpers.addDays(d, 7);
+			var nd = Scheduleme.helpers.addDays(d, 6);
 			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 			schedule.set('ndatestring', ndatestring);
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 		} else if (schedule.get('type') == 'twoweek') {
-			var nd = Scheduleme.helpers.addDays(d, 14);
+			var nd = Scheduleme.helpers.addDays(d, 13);
 			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 			schedule.set('ndatestring', ndatestring);
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
 		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
 		} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
 		} else { //Defaults to daily schedule
+
+			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
 			this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
 		}
@@ -264,6 +287,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 		$('.schedule-tab').remove();
 		_.each(this.collection.models, function(schedule) {
+			console.log('type '+schedule.get('type'));
 			var d = new Date(schedule.get('datenum'));
 			//console.log('Day1: '+d);
 			d = Scheduleme.helpers.fromUTC(d);

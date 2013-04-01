@@ -1,37 +1,60 @@
 @sidebar-width: 240px;
+@sidebar-width-minimized: 40px;
+
 @header-height: 60px;
 @footer-height: 30px;
 
-@background-color: #e5e9ec;
+@body-background-color: white;
+
+@base-background-color: #e5e9ec;
+/*@dark-background-color: darken(@base-background-color, 30%);
+@background-color: fade(@dark-background-color, 30%);*/
+@background-color: @base-background-color;
+
+//@background-color: hsla(hue(@base-background-color),saturation(@base-background-color),lightness(@base-background-color), 1);//0.85);
 
 // @background-color: overlay(#e5e9ec, #660066);
 
 // @background-color: mix(#e5e9ec, #660066, 50%);
 
-@sidebar-background-color: #22262e;
+@base-sidebar-background-color: #22262e;
+/*@dark-sidebar-background-color: darken(@base-sidebar-background-color, 30%);
+@sidebar-background-color: fade(@dark-sidebar-background-color, 85%);*/
+@sidebar-background-color: @base-sidebar-background-color;
 
+//@sidebar-background-color: hsla(hue(@base-sidebar-background-color),saturation(@base-sidebar-background-color),lightness(@base-sidebar-background-color), 1);//0.85);
+
+
+//@background-mixed-color-s1: mix(@background-color, @body-background-color, 85%); //This is for the active list items
+//@background-mixed-color: hsla(hue(@background-mixed-color-s1),saturation(@background-mixed-color-s1),lightness(@background-mixed-color-s1), 1);
+@background-mixed-color: @base-background-color;
+body {
+	background-color:@body-background-color;
+}
 #sidebar {
 	width: @sidebar-width;
 	position: absolute;
 	top: 0;
 	bottom: 0;
 
-	background-color: #22262e;
+	overflow-x: hidden;
+
+	background-color: @sidebar-background-color;
 
 	//color: whitesmoke !important;
 
 	a {
 		color: whitesmoke;
 	}
+
 	#sidebar-header {
-		//background-color: ;
+
 		position: absolute;
 		width:100%;
 
 		box-sizing:border-box;
-		padding:15px;
-		padding-top:10px;
-		padding-bottom:10px;
+		padding:10px;
+		padding-left:15px;
 
 		#logo {
 			color: whitesmoke;
@@ -40,6 +63,10 @@
 			line-height: @header-height - 20;
 
 			text-shadow: whitesmoke 0 0 1px;
+		}
+		#toggle-sidebar-trigger {
+			display: none;
+			visibility: hidden;
 		}
 	}
 	#sidebar-content {
@@ -52,14 +79,20 @@
 
 		background-color: rgba(0,0,0,0.2);
 
+		overflow-y: scroll;
+
 		a {
 			cursor: pointer;
 		}
-		#add_schedule {
-			padding: 8px;
-			padding-right:10px;
-			&:hover {
-				color: whitesmoke;
+		#top-buttons {
+			padding-top:8px;
+			padding-right:7px;
+
+			#add_schedule, #fetch_schedule {
+				padding:3px;
+				&:hover {
+					color: whitesmoke;
+				}
 			}
 		}
 		#dates {
@@ -90,10 +123,8 @@
 
 	overflow-y: scroll;
 
-	background-color: @background-color;
-
 	#content-header {
-		background-color: #fff;
+		background-color: fade(#fff, 30%);
 
 		#content-view-title {
 			margin-left: 25px;
@@ -115,6 +146,8 @@
 	}
 	#content-content {
 		padding:20px;
+
+		background-color: @background-color;
 
 		#content {
 			padding: 0;
@@ -156,6 +189,68 @@
 	height: @header-height;
 }
 
+
+@media (max-width: 800px) {
+	#sidebar {
+		//This should be put as a mixin
+		transition: width 0.3s;
+		-webkit-transition: width 0.3s;
+		-moz-transition: width 0.3s;
+		-o-transition: width 0.3s;
+		-ms-transition: width 0.3s;
+
+		width: @sidebar-width-minimized;
+
+		z-index: 1;
+
+		#toggle-sidebar-trigger {
+			display:block !important;
+			visibility: visible !important;
+
+			transition: all 0.3s;
+			-webkit-transition: all 0.3s;
+			-moz-transition: all 0.3s;
+			-o-transition: all 0.3s;
+			-ms-transition: all 0.3s;
+
+			line-height: @header-height - 20px;
+			&:hover {
+				color: whitesmoke;
+			}
+		}
+		#sidebar-header {
+			//- width: @sidebar-width;
+		}
+		#sidebar-content {
+			width: @sidebar-width;
+		}
+		div {
+			overflow-x: hidden;
+		}
+
+		&:hover, &.open {
+			width:@sidebar-width;
+
+			#toggle-sidebar-trigger {
+				transform: rotate(180deg);
+				-webkit-transform: rotate(180deg);
+				-moz-transform: rotate(180deg);
+				-o-transform: rotate(180deg);
+				-ms-transform: rotate(180deg);
+			}
+		}
+
+		&.closed {
+			#logo {
+				display: none;
+				visibility: hidden;	
+			}
+		}
+	}
+	#main-app {
+		left: @sidebar-width-minimized;
+	}
+}
 //Bootstrap Overload
 
 .nav > li > a:hover,
@@ -169,5 +264,5 @@
 .nav-list > .active > a:focus {
   color: @sidebar-background-color;
   //text-shadow: 0 -1px 0 rgba(0,0,0,.2);
-  background-color: @background-color;
+  background-color: @background-mixed-color;
 }

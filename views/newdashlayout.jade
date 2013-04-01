@@ -34,9 +34,10 @@ html(lang='en')
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
 
   body
-    #sidebar
-      #sidebar-header.header
-        #logo ShiftCheck
+    #sidebar.closed
+      #sidebar-header.header.clearfix
+        #logo.pull-left ShiftCheck
+        i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
       #sidebar-content
       #sidebar-footer
     #main-app
@@ -87,6 +88,8 @@ html(lang='en')
 
     script(id='schedule-template', type='text/x-handlebars-template')
       include templates/schedule-template
+    script(id='schedule-template-spreadsheet', type='text/x-handlebars-template')
+      include templates/schedule-gdocSpreadsheet-template
     script(id='schedule-template-table', type='text/x-handlebars-template')
       include templates/schedule-template-table
     script(id='schedule-template-d3', type='text/x-handlebars-template')
@@ -115,15 +118,17 @@ html(lang='en')
     script(src='/js/views/ScheduleView.js')
     script(src='/js/views/ScheduleBaseView.js')
 
-    script(src='/js/views/ScheduleViewDaily.js')
-    script(src='/js/views/ScheduleViewWeekly.js')
-    script(src='/js/views/ScheduleViewBiweekly.js')
-    script(src='/js/views/ScheduleViewMonthly.js')
+    script(src='/js/views/ScheduleViewPDF.js')
+    //-script(src='/js/views/ScheduleViewDaily.js')
+    //-script(src='/js/views/ScheduleViewWeekly.js')
+    //-script(src='/js/views/ScheduleViewBiweekly.js')
+    //-script(src='/js/views/ScheduleViewMonthly.js')
 
     script(src='/js/views/ScheduleListView.js')
 
     script(src='/js/views/ScheduleViewD3.js')
     script(src='/js/views/ScheduleViewTable.js')
+    script(src='/js/views/ScheduleViewSpreadsheet.js')
 
     //- script(src='/js/views/SchedulesView.js')
 

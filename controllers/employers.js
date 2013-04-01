@@ -38,6 +38,8 @@ exports.processSignup = function (req, res) {
 	
 	// Validate body
 
+	// This uses the basic salt and doesn't save it to the DB. I need to fix this
+	  // Pass unhashed passed work to model, model makes salt and then hashes passsword
 	var obj = {
 		name 				: req.body.name,
 		email 				: req.body.email,

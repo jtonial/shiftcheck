@@ -1,8 +1,16 @@
+/*@dark-background-color: darken(@base-background-color, 30%);
+@background-color: fade(@dark-background-color, 30%);*/
+/*@dark-sidebar-background-color: darken(@base-sidebar-background-color, 30%);
+@sidebar-background-color: fade(@dark-sidebar-background-color, 85%);*/
+body {
+  background-color: #ffffff;
+}
 #sidebar {
   width: 240px;
   position: absolute;
   top: 0;
   bottom: 0;
+  overflow-x: hidden;
   background-color: #22262e;
 }
 #sidebar a {
@@ -12,9 +20,8 @@
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-  padding: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
+  padding-left: 15px;
 }
 #sidebar #sidebar-header #logo {
   color: whitesmoke;
@@ -22,21 +29,31 @@
   line-height: 40px;
   text-shadow: whitesmoke 0 0 1px;
 }
+#sidebar #sidebar-header #toggle-sidebar-trigger {
+  display: none;
+  visibility: hidden;
+}
 #sidebar #sidebar-content {
   position: absolute;
   width: 100%;
   top: 60px;
   bottom: 30px;
   background-color: rgba(0, 0, 0, 0.2);
+  overflow-y: scroll;
 }
 #sidebar #sidebar-content a {
   cursor: pointer;
 }
-#sidebar #sidebar-content #add_schedule {
-  padding: 8px;
-  padding-right: 10px;
+#sidebar #sidebar-content #top-buttons {
+  padding-top: 8px;
+  padding-right: 7px;
 }
-#sidebar #sidebar-content #add_schedule:hover {
+#sidebar #sidebar-content #top-buttons #add_schedule,
+#sidebar #sidebar-content #top-buttons #fetch_schedule {
+  padding: 3px;
+}
+#sidebar #sidebar-content #top-buttons #add_schedule:hover,
+#sidebar #sidebar-content #top-buttons #fetch_schedule:hover {
   color: whitesmoke;
 }
 #sidebar #sidebar-content #dates li > a {
@@ -59,10 +76,9 @@
   left: 240px;
   right: 0;
   overflow-y: scroll;
-  background-color: #e5e9ec;
 }
 #main-app #content-header {
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 #main-app #content-header #content-view-title {
   margin-left: 25px;
@@ -81,6 +97,7 @@
 }
 #main-app #content-content {
   padding: 20px;
+  background-color: #e5e9ec;
 }
 #main-app #content-content #content {
   padding: 0;
@@ -114,6 +131,55 @@
 }
 .header {
   height: 60px;
+}
+@media (max-width: 800px) {
+  #sidebar {
+    transition: width 0.3s;
+    -webkit-transition: width 0.3s;
+    -moz-transition: width 0.3s;
+    -o-transition: width 0.3s;
+    -ms-transition: width 0.3s;
+    width: 40px;
+    z-index: 1;
+  }
+  #sidebar #toggle-sidebar-trigger {
+    display: block !important;
+    visibility: visible !important;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    line-height: 40px;
+  }
+  #sidebar #toggle-sidebar-trigger:hover {
+    color: whitesmoke;
+  }
+  #sidebar #sidebar-content {
+    width: 240px;
+  }
+  #sidebar div {
+    overflow-x: hidden;
+  }
+  #sidebar:hover,
+  #sidebar.open {
+    width: 240px;
+  }
+  #sidebar:hover #toggle-sidebar-trigger,
+  #sidebar.open #toggle-sidebar-trigger {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  #sidebar.closed #logo {
+    display: none;
+    visibility: hidden;
+  }
+  #main-app {
+    left: 40px;
+  }
 }
 .nav > li > a:hover,
 .nav > li > a:focus {

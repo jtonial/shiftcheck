@@ -6,6 +6,6 @@ Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
 		return data.data;
 	},
 	comparator: function (schedule) {
-		return Date.parse(schedule.get('date'));
+		return (new Date(schedule.get('date'))).getTime();
 	}
 });
