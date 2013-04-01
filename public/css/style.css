@@ -141,6 +141,7 @@ body {
     -ms-transition: width 0.3s;
     width: 40px;
     z-index: 1;
+    /*&:hover, */
   }
   #sidebar #toggle-sidebar-trigger {
     display: block !important;
@@ -161,11 +162,9 @@ body {
   #sidebar div {
     overflow-x: hidden;
   }
-  #sidebar:hover,
   #sidebar.open {
     width: 240px;
   }
-  #sidebar:hover #toggle-sidebar-trigger,
   #sidebar.open #toggle-sidebar-trigger {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
