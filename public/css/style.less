@@ -43,6 +43,13 @@ body {
 
 	//color: whitesmoke !important;
 
+	//This should be put as a mixin
+	transition: width 0.3s;
+	-webkit-transition: width 0.3s;
+	-moz-transition: width 0.3s;
+	-o-transition: width 0.3s;
+	-ms-transition: width 0.3s;
+
 	a {
 		color: whitesmoke;
 	}
@@ -63,6 +70,8 @@ body {
 			line-height: @header-height - 20;
 
 			text-shadow: whitesmoke 0 0 1px;
+
+			overflow-x: hidden;
 		}
 		#toggle-sidebar-trigger {
 			display: none;
@@ -80,7 +89,6 @@ body {
 		background-color: rgba(0,0,0,0.2);
 
 		overflow-y: scroll;
-
 		a {
 			cursor: pointer;
 		}
@@ -95,12 +103,6 @@ body {
 				}
 			}
 		}
-		#dates {
-			li > a {
-				border-top-left-radius: 8px;
-				border-bottom-left-radius: 8px;
-			}
-		}
 		.help-block.small {
 			font-size:12px;
 		}
@@ -112,16 +114,36 @@ body {
 
 		height: @footer-height;
 		bottom:0;
+
+		line-height: @footer-height;
+
+		padding-left:7px;
+
+		a {
+			font-size: 11px;
+			font-weight: normal;
+			color: #999;
+			padding-left:5px;
+			padding-right:5px;
+			&:hover {
+				color: whitesmoke;
+			}
+		}
 	}
 }
 #main-app {
-	position:absolute;
-	top:0;
-	bottom:0;
+	position: absolute;
+	top: 0;
+	bottom: 0;
 	left: @sidebar-width;
-	right:0;
+	right: 0;
 
-	overflow-y: scroll;
+	//This should be put as a mixin
+	transition: left 0.3s;
+	-webkit-transition: left 0.3s;
+	-moz-transition: left 0.3s;
+	-o-transition: left 0.3s;
+	-ms-transition: left 0.3s;
 
 	#content-header {
 		background-color: fade(#fff, 30%);
@@ -131,13 +153,14 @@ body {
 			font-weight: normal;
 		}
 		#header-icons {
-			margin-right:25px;
+			margin-right: 20px;
+			margin-top: 10px;
+			line-height: @header-height - 10px;
 
-			line-height:@header-height;
-
-			#logout-trigger {
+			i {
 				color: #999;
 				cursor: pointer;
+				padding: 10px;
 				&:hover {
 					color: #222;
 				}
@@ -145,12 +168,23 @@ body {
 		}
 	}
 	#content-content {
+
+		// This is necessary so the body extends to the bottom of the screen
+		position: absolute;
+		top: @header-height;
+		bottom: 0px;
+		right: 0px;
+		left: 0px;
+
 		padding:20px;
+
+		overflow: scroll;
 
 		background-color: @background-color;
 
 		#content {
 			padding: 0;
+			overflow-x: scroll;
 		}
 		.large-message-div {
 			display: none;
@@ -189,15 +223,8 @@ body {
 	height: @header-height;
 }
 
-
 @media (max-width: 800px) {
 	#sidebar {
-		//This should be put as a mixin
-		transition: width 0.3s;
-		-webkit-transition: width 0.3s;
-		-moz-transition: width 0.3s;
-		-o-transition: width 0.3s;
-		-ms-transition: width 0.3s;
 
 		width: @sidebar-width-minimized;
 
@@ -241,9 +268,23 @@ body {
 		}
 
 		&.closed {
-			#logo {
+			.open {
 				display: none;
-				visibility: hidden;	
+				visibility: hidden;
+			}
+			.closed {
+				display: block;
+				visibility: visible;
+			}
+		}
+		&.open {
+			.open {
+				display: block;
+				visibility: visible;
+			}
+			.closed {
+				display: none;
+				visibility: hidden;
 			}
 		}
 	}
@@ -259,10 +300,121 @@ body {
   background-color: lighten(@sidebar-background-color, 5%);
 }
 
+.nav > li > a {
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+.nav > .active > a {
+	color: black;
+}
 .nav-list > .active > a,
 .nav-list > .active > a:hover,
 .nav-list > .active > a:focus {
-  color: @sidebar-background-color;
+  color: @sidebar-background-color !important;
   //text-shadow: 0 -1px 0 rgba(0,0,0,.2);
   background-color: @background-mixed-color;
+}
+
+.admin-only {
+	display: none;
+	visibility: none;
+}
+.admin .admin-only {
+	display: block;
+	visibility: visible;
+}
+
+// Account Modal Style
+
+#account-modal {
+	.modal-header {
+	}
+	.modal-body {
+		padding:0;
+		max-height:500px;
+		overflow-x: scroll;
+
+		background-color: @sidebar-background-color;
+
+		.account-nav {
+			width:150px;
+			float:left;
+
+			a {
+				color: whitesmoke;
+				cursor: pointer;
+			}
+		} 
+		.setting-views {
+			float:left;
+
+			width:410px;
+
+			background-color: @background-color;
+			.setting-view {
+				display:none;
+				visibility: hidden;
+				min-height:300px;
+
+				padding-left:10px;
+				padding-right: 10px;
+
+				&.active {
+					display: block;
+					visibility: visible;
+				}
+
+				.no-notifications {
+					display: none;
+				}
+			}
+		}
+		//Bootstrap override
+		.form-horizontal > .control-group {
+			& > .control-label {
+				width: 100px;
+			}
+			& > .controls {
+				margin-left: 120px !important;
+			}
+		}
+	}
+	.modal-footer {
+	}
+}
+
+@media (max-width: 570px) {
+	// make modals only the screen width on small screens
+	.modal { 
+		position: fixed; 
+		top: 3%; 
+		right: 3%; 
+		left: 3%; 
+		width: auto; 
+		margin: 0; 
+	}
+	.modal-body { 
+		height: 60%;
+
+		.account-nav {
+			width:30% !important;
+		}
+		.setting-views {
+			width:70% !important;
+		}
+	}
+}
+
+hr.dark {
+	border-color: @sidebar-background-color;
+	background-color: @sidebar-background-color;
+}
+//Helpers which may be removable later
+.centered {
+	text-align: center;
+}
+.hidden {
+	display: none;
+	visibility: hidden;
 }

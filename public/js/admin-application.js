@@ -1,6 +1,6 @@
 //$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
 
-	window.Scheduleme = {//new Object();
+	window.Scheduleme = window.Scheduleme || {//new Object();
 		classes: {
 			models: {},
 			collections: {},
@@ -46,6 +46,11 @@
 	//------------------PAYLOAD----------------------------
 
 	Scheduleme.Init = function () {
+
+
+		$('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
+
+
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
 		//Router takes care of this
@@ -59,12 +64,6 @@
 			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
 		});
 		//Add global $.ajaxError handlers
-
-		$('#toggle-sidebar-trigger').click( function () {
-			console.log('toggling sidebar state');
-			var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
-			$('#sidebar').removeClass('open closed').addClass(newState);
-		});
 
 		$.ajax({
 			url: '/bootstrap',
@@ -85,6 +84,14 @@
 					$('#schedule-pane').addClass('select-schedule');
 				}
 
+				if ( !res.data.notifications ) {
+					$('#notifications-table').hide();
+					$('#create-notification-wrapper').hide();
+					$('#notification-loading-error').show();
+				} else if ( !res.data.notifications.length ) {
+					$('#notifications-table').hide();
+					$('#no-notifications').show();
+				}
 				
 				// Instead of the prompt to select a schedule, I could auto select the first one
 
@@ -115,10 +122,32 @@
 			}
 		});
 
-	//This is here because I currently do not have a global view. If I do, it will be there
-	$('#logout-trigger').click( function () {
-		window.location.href = '/logout';
-	})
+		//This is here because I currently do not have a global view. If I do, it will be there
+		$('#logout-trigger').click( function () {
+			window.location.href = '/logout';
+		})
+		$('#settings-trigger').click( function () {
+			$('#account-modal').modal('show');
+		})
+
+		//#toggle-sidebar-trigger
+		$('#sidebar.closed #sidebar-header').click( function () {
+			console.log('toggling sidebar state');
+			var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
+			$('#sidebar').removeClass('open closed').addClass(newState);
+		});
+
+		$(window).touchwipe({
+	        wipeLeft: function() {
+	          // Close
+	          console.log('Left Swipe');
+	        },
+	        wipeRight: function() {
+	          // Open
+	          console.log('Right Swipe');
+	        },
+	        preventDefaultEvents: true
+	    });
 
 	};
 

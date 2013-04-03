@@ -1,20 +1,14 @@
-#top-buttons.clearfix
-  i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
-  i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
-  input#test-hidden(type="text", style="display:none;visibility:hidden")
-  //- i#sched-date.icon-calendar.icon-2x.pull-right
-ul#dates.nav.nav-list
-  li.nav-header Current Schedules
-  li#prependHere.nav-header
-    hl
-  //- div
-    //- button#add_schedule.btn.btn-success.btn-block.upload-modal-trigger(style='width: 90%;') Post New Schedule
-  li.nav-header
-    hl
-  div
-    li.nav-header Past Schedules
-    li
-      input#sched-date.datepicker(type='text', style='width: 90%;')
-      span.help-block.small Select a date to view past schedules
+.open
+  #top-buttons.clearfix.admin-only
+    i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
+    i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
+    input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
+    //- i#sched-date.icon-calendar.icon-2x.pull-right
+  ul#dates.nav.nav-list
+    li.nav-header Current Schedules
+    li#prependHere.nav-header
+      hl
+    li.nav-header
+      hl
 
-include ../includes/upload-schedule-modal
+  include ../includes/upload-schedule-modal

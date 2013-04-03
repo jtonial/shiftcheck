@@ -17,7 +17,7 @@ window.AppRouter = Backbone.Router.extend({
 	//	}
 	},
 	routes: {
-		'account':'account',
+		//'account':'account',
 		'schedule/:id': 'schedule',
 		'':'schedules'
 	},
@@ -41,6 +41,8 @@ window.AppRouter = Backbone.Router.extend({
 			console.log(model.get('datestring'));
 			$('#content-view-title').html(model.get('titledatestring'));
 			// Create and render view
+			$('[data-id]').parent().removeClass('active');
+			$('[data-id="'+id+'"]').parent().addClass('active');
 			Scheduleme.CurrentView = new Scheduleme.classes.views.ScheduleView({ model: model });
 			console.log('Created Schedule view');
 		} else {
@@ -61,7 +63,6 @@ window.AppRouter = Backbone.Router.extend({
 	},
 	account: function () {
 		//console.log('Opening AccountView');
-		console.log('not doing anything right now');
-		//this.switchView(Scheduleme.AccountView);
+		//$('#account-modal').modal('show');
 	}
 });

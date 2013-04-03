@@ -24,6 +24,7 @@ html(lang='en')
     script(src='/js/backbone-pushstate-router.js')
     script(src='/js/admin-application.js')
 
+    script(src='/js/jquery.touchwipe.min.js')
 
     script(src='/js/ga.js')
     script(src='/js/addemployee.js')
@@ -36,14 +37,19 @@ html(lang='en')
   body
     #sidebar.closed
       #sidebar-header.header.clearfix
-        #logo.pull-left ShiftCheck
+        #logo.open.pull-left ShiftCheck
         i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
       #sidebar-content
       #sidebar-footer
+        .open
+          a(href="/about") About
+          a(href="/team") Team
+
     #main-app
       #content-header.header.clearfix
         h3#content-view-title.pull-left
         #header-icons.pull-right
+          i#settings-trigger.icon-cogs.icon-2x(title="Settings")
           i#logout-trigger.icon-signout.icon-2x(title="Logout")
       #content-content
         .container-fluid#content
@@ -61,6 +67,7 @@ html(lang='en')
               .icon-remove.icon-4x
               h5 An Error Occured! We apologize
     include includes/add-employee-modal
+    include includes/account-settings-modal
 
     // Placed at the end of the document so the pages load faster
     script(src='/js/bootstrap.js')
@@ -119,10 +126,6 @@ html(lang='en')
     script(src='/js/views/ScheduleBaseView.js')
 
     script(src='/js/views/ScheduleViewPDF.js')
-    //-script(src='/js/views/ScheduleViewDaily.js')
-    //-script(src='/js/views/ScheduleViewWeekly.js')
-    //-script(src='/js/views/ScheduleViewBiweekly.js')
-    //-script(src='/js/views/ScheduleViewMonthly.js')
 
     script(src='/js/views/ScheduleListView.js')
 

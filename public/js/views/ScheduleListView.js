@@ -139,6 +139,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 	events: {
 		"change #sched-date" : "loadByDate",
 		"click .upload-modal-trigger" : "openUploadModel",
+		"click .fetch-date-trigger" : "activateLoadDatepicker",
 
 		"click #upload_submit" : "createUploadObject",
 		"paste #file-text" : "pasted",
@@ -186,11 +187,11 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 			dateFormat: 'yy-mm-dd',
 			minDate: "+0D"
 		});
-		$('#test-hidden').datepicker({
+		/*$('#test-hidden').datepicker({
 			showOtherMonths: true,
 			dateFormat: 'yy-mm-dd',
-			minDate: "+0D"
-		});
+			maxDate: "+0D"
+		});*/
 
 		//this.addAllSchedules();
 		//Select first schedule
@@ -322,6 +323,9 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 		this.addAllSchedules();*/
 	},
+	activateLoadDatepicker: function () {
+		$('#sched-date').focus();
+	},
 	loadByDate: function (date) {
 		var _this = this;
 
@@ -363,7 +367,6 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 		console.log('here');
 		$('#upload-modal').modal('show');
 	},
-
 	createUploadObject: function ( event ) {
 
 		var _this = this;
