@@ -141,7 +141,6 @@
 	        wipeLeft: function() {
 	          // Close
 	          console.log('Left Swipe');
-	          alert('Left Swipe: '+$(window).width());
 	          if ($(window).width() <= 800) {
 	            $('#sidebar').removeClass('open closed').addClass('closed');
 	          }
@@ -149,7 +148,6 @@
 	        wipeRight: function() {
 	          // Open
 	          console.log('Right Swipe');
-	          alert('Right Swipe: '+$(window).width());
 	          if ($(window).width() <= 800) {
 	            $('#sidebar').removeClass('open closed').addClass('open');
 	          }
