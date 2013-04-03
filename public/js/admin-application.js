@@ -141,12 +141,14 @@
 	        wipeLeft: function() {
 	          // Close
 	          console.log('Left Swipe');
+	          alert('LeftSwipe');
 	        },
 	        wipeRight: function() {
 	          // Open
 	          console.log('Right Swipe');
+	          alert('RightSwipe');
 	        },
-	        preventDefaultEvents: true
+	        preventDefaultEvents: false
 	    });
 
 	};
