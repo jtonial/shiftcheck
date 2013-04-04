@@ -1,14 +1,13 @@
-.open
-  #top-buttons.clearfix.admin-only
-    i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
-    i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
-    input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
-    //- i#sched-date.icon-calendar.icon-2x.pull-right
-  ul#dates.nav.nav-list
-    li.nav-header Current Schedules
-    li#prependHere.nav-header
-      hl
-    li.nav-header
-      hl
+#top-buttons.clearfix.admin-only
+  i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
+  i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
+  input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
+  //- i#sched-date.icon-calendar.icon-2x.pull-right
+ul#dates.nav.nav-list
+  li.nav-header Current Schedules
+  li#prependHere.nav-header
+    hl
+  li.nav-header
+    hl
 
-  include ../includes/upload-schedule-modal
+include ../includes/upload-schedule-modal

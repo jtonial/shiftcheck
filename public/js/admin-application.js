@@ -137,26 +137,22 @@
 			$('#sidebar').removeClass('open closed').addClass(newState);
 		});
 
-		$(window).touchwipe({
+		/*$(window).touchwipe({
 			min_move_x: 50,
 			min_move_y: 50,
 	        wipeLeft: function() {
 	          // Close
 	          console.log('Left Swipe');
-	          if ($(window).width() <= 800) {
-	            $('#sidebar').removeClass('open closed').addClass('closed');
-	          }
+
 	        },
 	        wipeRight: function() {
 	          // Open
 	          console.log('Right Swipe');
-	          if ($(window).width() <= 800) {
-	            $('#sidebar').removeClass('open closed').addClass('open');
-	          }
+
 	        },
 	        preventDefaultEvents: false,
 	        preventDefaultEventsX: false
-	    });
+	    });*/
 
 	    new FastClick(document.body);
 
@@ -166,32 +162,8 @@
 	    	$('#console-output').append(x+'<br/>');
 	    	console.log(x);
 	    }
-	    $(document).bind('touchstart', function (e) {
-			window.startX = e.touches[0].pageX;
-    		window.startY = e.touches[0].pageY;
-    		_consolelog('StartX: '+startX);
-    		_consolelog('StartY: '+startY);
-	    })
-	    $(document).bind('touchmove', function (e) {
-	    	var x = e.touches[0].pageX;
-    		var y = e.touches[0].pageY;
-    		var dx = startX - x;
-    		var dy = startY - y;
-    		_consolelog('X: '+x);
-    		_consolelog('Y: '+y);
-    		_consolelog('dX: '+dx);
-    		_consolelog('dY: '+dx);
-	    })
-	    $(document).bind('touchend', function (e) {
-	    	var x = e.changedTouches[0].pageX;
-    		var y = e.changedTouches[0].pageY;
-    		var dx = startX - x;
-    		var dy = startY - y;
-    		_consolelog('EndX: '+x);
-    		_consolelog('EndY: '+y);
-    		_consolelog('End dX: '+dx);
-    		_consolelog('End dY: '+dx);
-	    })
+
+	    nTouch();
 
 	};
 
@@ -200,3 +172,58 @@
 	});
 
 //});
+
+function openSidebar () {
+	if ($(window).width() <= 800) {
+		$('#sidebar').removeClass('open closed').addClass('open');
+	}
+}
+function closeSidebar () {
+	if ($(window).width() <= 800) {
+		$('#sidebar').removeClass('open closed').addClass('closed');
+	}
+}
+
+function nTouch () {
+	window.nTouch = {};
+
+	window.nTouch.shortEventLength = $(window).width() / 3;
+
+	document.addEventListener('touchstart', function (e) {
+		window.nTouch.startX = e.touches[0].pageX;
+		window.nTouch.startY = e.touches[0].pageY;
+		window.nTouch.shortEvent = false;
+		_consolelog('StartX: '+nTouch.startX);
+		_consolelog('StartY: '+nTouch.startY);
+	}, false)
+	document.addEventListener('touchmove', function (e) {
+		var x = e.touches[0].pageX;
+		var y = e.touches[0].pageY;
+		var dx = x - nTouch.startX;
+		var dy = y - nTouch.startY;
+		_consolelog('X: '+x);
+		_consolelog('Y: '+y);
+		_consolelog('dX: '+dx);
+		_consolelog('dY: '+dx);
+
+		if (!nTouch.shortEvent) {
+			if ( dx > nTouch.shortEventLength ) {
+				nTouch.shortEvent = true;
+				openSidebar();
+			} else if ( dx < -nTouch.shortEventLength ) {
+				nTouch.shortEvent = true;
+				closeSidebar();				
+			}
+		}
+	}, false)
+	document.addEventListener('touchend', function (e) {
+		var x = e.changedTouches[0].pageX;
+		var y = e.changedTouches[0].pageY;
+		var dx = x - nTouch.startX;
+		var dy = y - nTouch.startY;
+		_consolelog('EndX: '+x);
+		_consolelog('EndY: '+y);
+		_consolelog('End dX: '+dx);
+		_consolelog('End dY: '+dy);
+    }, false)
+}

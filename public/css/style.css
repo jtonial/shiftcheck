@@ -14,11 +14,11 @@ body {
   bottom: 0;
   overflow-x: hidden;
   background-color: #22262e;
-  transition: width 0.3s;
-  -webkit-transition: width 0.3s;
-  -moz-transition: width 0.3s;
-  -o-transition: width 0.3s;
-  -ms-transition: width 0.3s;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
 }
 #sidebar a {
   color: whitesmoke;
@@ -163,7 +163,7 @@ body {
 }
 @media (max-width: 800px) {
   #sidebar {
-    width: 40px;
+    left: -207px;
     z-index: 1;
     /*&:hover, */
   }
@@ -188,6 +188,7 @@ body {
   }
   #sidebar.open {
     width: 240px;
+    left: 0;
   }
   #sidebar.open #toggle-sidebar-trigger {
     transform: rotate(180deg);
@@ -196,24 +197,8 @@ body {
     -o-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
   }
-  #sidebar.closed .open {
-    display: none;
-    visibility: hidden;
-  }
-  #sidebar.closed .closed {
-    display: block;
-    visibility: visible;
-  }
-  #sidebar.open .open {
-    display: block;
-    visibility: visible;
-  }
-  #sidebar.open .closed {
-    display: none;
-    visibility: hidden;
-  }
   #main-app {
-    left: 40px;
+    left: 33px;
   }
 }
 .nav > li > a:hover,

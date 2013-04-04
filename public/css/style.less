@@ -47,11 +47,11 @@ body {
 	//color: whitesmoke !important;
 
 	//This should be put as a mixin
-	transition: width 0.3s;
-	-webkit-transition: width 0.3s;
-	-moz-transition: width 0.3s;
-	-o-transition: width 0.3s;
-	-ms-transition: width 0.3s;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	-ms-transition: all 0.3s;
 
 	a {
 		color: whitesmoke;
@@ -229,7 +229,8 @@ body {
 @media (max-width: 800px) {
 	#sidebar {
 
-		width: @sidebar-width-minimized;
+		//width: @sidebar-width-minimized;
+		left: -@sidebar-width + 33px;
 
 		z-index: 1;
 
@@ -260,6 +261,7 @@ body {
 
 		/*&:hover, */&.open {
 			width:@sidebar-width;
+			left:0;
 
 			#toggle-sidebar-trigger {
 				transform: rotate(180deg);
@@ -269,30 +271,9 @@ body {
 				-ms-transform: rotate(180deg);
 			}
 		}
-
-		&.closed {
-			.open {
-				display: none;
-				visibility: hidden;
-			}
-			.closed {
-				display: block;
-				visibility: visible;
-			}
-		}
-		&.open {
-			.open {
-				display: block;
-				visibility: visible;
-			}
-			.closed {
-				display: none;
-				visibility: hidden;
-			}
-		}
 	}
 	#main-app {
-		left: @sidebar-width-minimized;
+		left: 33px;//@sidebar-width-minimized;
 	}
 }
 //Bootstrap Overload
