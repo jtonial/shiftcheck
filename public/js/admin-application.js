@@ -160,6 +160,39 @@
 
 	    new FastClick(document.body);
 
+	    $('body').append('<div id="console-output"></div>');
+
+	    _consolelog = function (x) {
+	    	$('#console-output').append(x+'<br/>');
+	    	console.log(x);
+	    }
+	    $(document).bind('touchstart', function (e) {
+			window.startX = e.touches[0].pageX;
+    		window.startY = e.touches[0].pageY;
+    		_consolelog('StartX: '+startX);
+    		_consolelog('StartY: '+startY);
+	    })
+	    $(document).bind('touchmove', function (e) {
+	    	var x = e.touches[0].pageX;
+    		var y = e.touches[0].pageY;
+    		var dx = startX - x;
+    		var dy = startY - y;
+    		_consolelog('X: '+x);
+    		_consolelog('Y: '+y);
+    		_consolelog('dX: '+dx);
+    		_consolelog('dY: '+dx);
+	    })
+	    $(document).bind('touchend', function (e) {
+	    	var x = e.changedTouches[0].pageX;
+    		var y = e.changedTouches[0].pageY;
+    		var dx = startX - x;
+    		var dy = startY - y;
+    		_consolelog('EndX: '+x);
+    		_consolelog('EndY: '+y);
+    		_consolelog('End dX: '+dx);
+    		_consolelog('End dY: '+dx);
+	    })
+
 	};
 
 	$(document).ready(function () {
