@@ -28,8 +28,11 @@
 //@background-mixed-color-s1: mix(@background-color, @body-background-color, 85%); //This is for the active list items
 //@background-mixed-color: hsla(hue(@background-mixed-color-s1),saturation(@background-mixed-color-s1),lightness(@background-mixed-color-s1), 1);
 @background-mixed-color: @base-background-color;
+
 body {
 	background-color:@body-background-color;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-moz-tap-highlight-color: rgba(0,0,0,0);
 }
 #sidebar {
 	width: @sidebar-width;

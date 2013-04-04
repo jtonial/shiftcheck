@@ -138,6 +138,8 @@
 		});
 
 		$(window).touchwipe({
+			min_move_x: 50,
+			min_move_y: 50,
 	        wipeLeft: function() {
 	          // Close
 	          console.log('Left Swipe');
@@ -152,8 +154,11 @@
 	            $('#sidebar').removeClass('open closed').addClass('open');
 	          }
 	        },
-	        preventDefaultEvents: false
+	        preventDefaultEvents: false,
+	        preventDefaultEventsX: false
 	    });
+
+	    new FastClick(document.body);
 
 	};
 
