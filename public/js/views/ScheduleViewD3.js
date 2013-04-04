@@ -557,103 +557,104 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 		})
 	},
 	editShiftHandler: function (e) {
-		_this = this;
+		if (Scheduleme.meta.ADMIN) {
+			_this = this;
 
-		e.detail = {};
+			e.detail = {};
 
-		var id = e.currentTarget.getAttribute('id');
+			var id = e.currentTarget.getAttribute('id');
 
-		var mouseX = e.clientX;
-		var mouseY = e.clientY;
+			var mouseX = e.clientX;
+			var mouseY = e.clientY;
 
-		//Get shift information
-		var shift = null;
-		//If all the shifts can be saved as references (even after modification) I should make a shift index the first time a shift is being editted.
-		if (typeof Scheduleme.Shifts == 'undefined') {
-			Scheduleme.Shifts = {};
+			//Get shift information
+			var shift = null;
+			//If all the shifts can be saved as references (even after modification) I should make a shift index the first time a shift is being editted.
+			if (typeof Scheduleme.Shifts == 'undefined') {
+				Scheduleme.Shifts = {};
 
-			Scheduleme.Schedules.forEach( function (schedule) {
-				schedule.get('shifts').forEach( function (schedShift) {
-					Scheduleme.Shifts[schedShift.shift_id] = schedShift;
+				Scheduleme.Schedules.forEach( function (schedule) {
+					schedule.get('shifts').forEach( function (schedShift) {
+						Scheduleme.Shifts[schedShift.shift_id] = schedShift;
+					});
 				});
+			}
+
+			shift = Scheduleme.Shifts[id];
+
+			this.$('#edit-area').show();
+
+			//This should be redone to use jquery (which will html escape the values)
+
+			var output = [];
+			Scheduleme.data.employees.forEach( function(employee) {
+				output.push('<option value="'+employee.employee_id+'">'+employee.first_name+' '+employee.last_name+'</option>');
 			});
+			this.$('#employee-edit').html(output.join(''));
+
+			output = [];
+			Scheduleme.data.positions.forEach( function(position) {
+				output.push('<option value="'+position.position_id+'">'+position.position+'</option>');
+			});
+			this.$('#position-edit').html(output.join(''));
+
+			this.$('#shift-id-display').html(shift.shift_id);
+			this.$('#employee-edit').val(shift.employee_id);
+			this.$('#position-edit').val(shift.position_id);
+			this.$('#start-time-edit').val(shift.start);
+			this.$('#end-time-edit').val(shift.end);
+
+			var rightDiff = $(window).width() - mouseX;
+			var topDiff   = mouseY + $(document).scrollTop() - 40;
+			var leftDiff  = mouseX;
+			var botDiff   = $(document).height() - (mouseY + $(document).scrollTop());
+
+			var boxWidth  = this.$('#edit-shift-popover').width();
+			var boxHeight = this.$('#edit-shift-popover').height();
+
+			var position = 'right';
+
+			/*
+			console.log('Right diff: '+rightDiff);
+			console.log('top diff: '+topDiff);
+			console.log('left diff: '+leftDiff);
+			console.log('bottom diff: '+botDiff);
+			console.log('Box Width: '+boxWidth);
+			console.log('box height: '+boxHeight);
+			*/
+			if ( rightDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
+				position = 'right';
+			} else if ( topDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
+				position = 'top';
+			} else if ( botDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
+				position = 'bottom';
+			} else if ( leftDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
+				position = 'left';
+			} else {
+				position = 'right';
+			}
+
+			this.$('#edit-shift-popover').removeClass('right left top bottom').addClass(position);
+
+			if (position == 'right' || position == 'left') {
+				this.$('#edit-shift-popover').css('top', (mouseY - boxHeight/2 + $(document).scrollTop() - 5 )+'px');
+			} else if (position == 'top') {
+				this.$('#edit-shift-popover').css('top', (mouseY - boxHeight + $(document).scrollTop() - 5 )+'px');
+			} else if (position == 'bottom') {
+				this.$('#edit-shift-popover').css('top', (mouseY + $(document).scrollTop() - 5 ) + 'px');
+			}
+
+			//Will have to adjust for horizontally scrolled pages
+			if (position == 'top' || position == 'bottom') {
+				this.$('#edit-shift-popover').css('left', (mouseX - boxWidth/2)+'px');
+			} else if (position == 'left') {
+				this.$('#edit-shift-popover').css('left', (mouseX - boxWidth)+'px');
+			} else if (position == 'right') {
+				this.$('#edit-shift-popover').css('left', mouseX + 'px');
+			}
+
+			//Based on x and y, determine if popover needs to be right, left, top, bottom. Default is right
 		}
-
-		shift = Scheduleme.Shifts[id];
-
-		this.$('#edit-area').show();
-
-		//This should be redone to use jquery (which will html escape the values)
-
-		var output = [];
-		Scheduleme.data.employees.forEach( function(employee) {
-			output.push('<option value="'+employee.employee_id+'">'+employee.first_name+' '+employee.last_name+'</option>');
-		});
-		this.$('#employee-edit').html(output.join(''));
-
-		output = [];
-		Scheduleme.data.positions.forEach( function(position) {
-			output.push('<option value="'+position.position_id+'">'+position.position+'</option>');
-		});
-		this.$('#position-edit').html(output.join(''));
-
-		this.$('#shift-id-display').html(shift.shift_id);
-		this.$('#employee-edit').val(shift.employee_id);
-		this.$('#position-edit').val(shift.position_id);
-		this.$('#start-time-edit').val(shift.start);
-		this.$('#end-time-edit').val(shift.end);
-
-		var rightDiff = $(window).width() - mouseX;
-		var topDiff   = mouseY + $(document).scrollTop() - 40;
-		var leftDiff  = mouseX;
-		var botDiff   = $(document).height() - (mouseY + $(document).scrollTop());
-
-		var boxWidth  = this.$('#edit-shift-popover').width();
-		var boxHeight = this.$('#edit-shift-popover').height();
-
-		var position = 'right';
-
-		/*
-		console.log('Right diff: '+rightDiff);
-		console.log('top diff: '+topDiff);
-		console.log('left diff: '+leftDiff);
-		console.log('bottom diff: '+botDiff);
-		console.log('Box Width: '+boxWidth);
-		console.log('box height: '+boxHeight);
-		*/
-		if ( rightDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
-			position = 'right';
-		} else if ( topDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
-			position = 'top';
-		} else if ( botDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
-			position = 'bottom';
-		} else if ( leftDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
-			position = 'left';
-		} else {
-			position = 'right';
-		}
-
-		this.$('#edit-shift-popover').removeClass('right left top bottom').addClass(position);
-
-		if (position == 'right' || position == 'left') {
-			this.$('#edit-shift-popover').css('top', (mouseY - boxHeight/2 + $(document).scrollTop() - 5 )+'px');
-		} else if (position == 'top') {
-			this.$('#edit-shift-popover').css('top', (mouseY - boxHeight + $(document).scrollTop() - 5 )+'px');
-		} else if (position == 'bottom') {
-			this.$('#edit-shift-popover').css('top', (mouseY + $(document).scrollTop() - 5 ) + 'px');
-		}
-
-		//Will have to adjust for horizontally scrolled pages
-		if (position == 'top' || position == 'bottom') {
-			this.$('#edit-shift-popover').css('left', (mouseX - boxWidth/2)+'px');
-		} else if (position == 'left') {
-			this.$('#edit-shift-popover').css('left', (mouseX - boxWidth)+'px');
-		} else if (position == 'right') {
-			this.$('#edit-shift-popover').css('left', mouseX + 'px');
-		}
-
-		//Based on x and y, determine if popover needs to be right, left, top, bottom. Default is right
-
 	},
 	saveModifiedShift: function (e) {
 		e.preventDefault();

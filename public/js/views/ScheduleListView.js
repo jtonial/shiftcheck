@@ -137,7 +137,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 	},
 
 	events: {
-		"change #sched-date" : "loadByDate",
+		/*"change #sched-date" : "loadByDate",
 		"click .upload-modal-trigger" : "openUploadModel",
 		"click .fetch-date-trigger" : "activateLoadDatepicker",
 
@@ -145,7 +145,17 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 		"paste #file-text" : "pasted",
 		"change #file-text" : "pasted",
 
-		"click .schedule-link" : "navToSchedule"
+		"click .schedule-link" : "navToSchedule"*/
+
+		"change #sched-date" : "loadByDate",
+		"touchstart .upload-modal-trigger" : "openUploadModel",
+		"touchstart .fetch-date-trigger" : "activateLoadDatepicker",
+
+		"touchstart #upload_submit" : "createUploadObject",
+		"paste #file-text" : "pasted",
+		"change #file-text" : "pasted",
+
+		"touchstart .schedule-link" : "navToSchedule"
 	},
 	/**
 	 *

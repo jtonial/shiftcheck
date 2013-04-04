@@ -21,6 +21,7 @@
 
 		meta: {
 			state: 'admin',
+			ADMIN: 1,
 			mobile: false,
 			d3: true
 		}
@@ -156,11 +157,11 @@
 
 	    new FastClick(document.body);
 
-	    $('body').append('<div id="console-output"></div>');
+	    //$('body').append('<div id="console-output"></div>');
 
 	    _consolelog = function (x) {
-	    	$('#console-output').append(x+'<br/>');
-	    	console.log(x);
+	    	//$('#console-output').append(x+'<br/>');
+	    	//console.log(x);
 	    }
 
 	    nTouch();
