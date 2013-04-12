@@ -53,20 +53,10 @@ html
           h1 A Schedule Goes Here
         // /content
         #schedule-left-panel(data-role='panel', data-display='push', data-theme='a')
-          ul(data-role='listview', data-theme='a')
+          ul#panel-list(data-role='listview', data-theme='a')
             li(data-icon='none')
               a(href='#', data-rel='close') Nothing should be here
             li(data-role='list-divider') Schedules
-            li(data-icon='arrow-r').schedule-link
-              a(href='#', data-rel='schedule-trigger') January
-            li(data-icon='arrow-r').schedule-link
-              a(href='#', data-rel='schedule-trigger') February
-            li(data-icon='arrow-r').schedule-link
-              a(href='#', data-rel='schedule-trigger') March
-            li(data-icon='arrow-r').schedule-link
-              a(href='#', data-rel='schedule-trigger') April
-            li(data-icon='arrow-r').schedule-link
-              a(href='#', data-rel='schedule-trigger') May
 
         #schedule-right-panel(data-role='panel', data-display='push', data-position='right', data-theme='c')
           ul(data-role='listview', data-theme='d', data-icon='false')
@@ -107,6 +97,7 @@ html
     script(src='/js/views/jquerymobile/ScheduleBaseView.js')
 
     script(src='/js/views/jquerymobile/ScheduleListView.js')
+    script(src='/js/views/jquerymobile/ScheduleListPanelView.js')
 
     script(src='/js/views/ScheduleViewPDF.js')
     script(src='/js/views/ScheduleViewD3.js')

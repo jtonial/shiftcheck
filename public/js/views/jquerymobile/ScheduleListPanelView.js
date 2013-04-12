@@ -1,9 +1,10 @@
-Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
+
+// INCOMPLETE
+
+Scheduleme.classes.views.ScheduleListPanelView = Backbone.View.extend({
 	//This renders directly into the el element; no need to append
 		//Replaces everything in it; and no need to postRender()
-	el: $('#list-page .content'),
-
-	template: Handlebars.compile($('#schedule-list-template').html()),
+	el: $('#schedule-page'),
 
 	initialize: function () {
 
@@ -55,7 +56,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'</a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 		} else if (schedule.get('type') == 'week') {
 			var nd = Scheduleme.helpers.addDays(d, 6);
@@ -64,7 +65,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 		} else if (schedule.get('type') == 'twoweek') {
 			var nd = Scheduleme.helpers.addDays(d, 13);
@@ -73,31 +74,31 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
 		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
 		} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
 		} else { //Defaults to daily schedule
 
 			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+			var htmlText = '<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
 			//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
 		}
 
-		this.$('#dates').append(htmlText);
+		this.$('#panel-list').append(htmlText);
 
-		$('#dates').listview('refresh');
+		//this.$('#panel-list').listview('refresh');
 		
 	},
 	//Used after the view has been destroyed then created again to add back schedule views
@@ -107,13 +108,13 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 			self.addOneSchedule(schedule);
 		});
 
-		$('#dates').listview('refresh');
+		$('#panel-list').listview('refresh');
 
 	},
 	reRenderTabs: function () { //This works
 		var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
-		$('.schedule-tab').remove();
+		$('.schedule-link').remove();
 		_.each(this.collection.models, function(schedule) {
 			console.log('type '+schedule.get('type'));
 			var d = new Date(schedule.get('datenum'));
@@ -121,22 +122,22 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 			d = Scheduleme.helpers.fromUTC(d);
 			//console.log('Day2: '+d);
 			if (schedule.get('type') == 'month') {
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');
+				this.$('#panel-list').append('<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+schedule.get('datestring')+'</a></li>');
 			} else if (schedule.get('type') == 'week') {
 				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#panel-list').append('<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				delete nd;
 			} else if (schedule.get('type') == 'twoweek') {
 				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+				this.$('#panel-list').append('<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
 				delete nd;
 			} else { //Defaults to daily schedule
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+				this.$('#panel-list').append('<li class="schedule-link" data-icon="arrow-r" data-id="'+schedule.id+'"><a href="#", data-rel="schedule-trigger">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
 			}
 			delete d; //Remove the reference to D; it can not be garbage collected
 		});
 
-		$('#dates').listview('refresh');
+		$('#panel-list').listview('refresh');
 
 	}
 

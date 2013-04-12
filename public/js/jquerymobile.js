@@ -10,6 +10,9 @@ $( document ).on( "pageinit", "#login-page", function() {
 
 $( document ).on( "pageinit", "#schedule-page", function() {
 	console.log("schedule-page ready");
+
+	Scheduleme.ScheduleListPanelView.reRenderTabs();
+
     $( document ).on( "swipeleft swiperight", "#schedule-page", function( e ) {
         // We check if there is no open panel on the page because otherwise
         // a swipe to close the left panel would also open the right panel (and v.v.).
@@ -49,6 +52,9 @@ $( document ).on( "pageinit", "#schedule-page", function() {
 
 $( document ).on( "pageinit", "#list-page", function() {
 	console.log("list-page ready");
+
+	Scheduleme.ScheduleListView.reRenderTabs();
+
     $( document ).on( "swipeleft swiperight", "#list-page", function( e ) {
         // We check if there is no open panel on the page because otherwise
         // a swipe to close the left panel would also open the right panel (and v.v.).
@@ -114,7 +120,7 @@ function createSchedulePage(id) {
 		changeHash: true
 	});*/
 
-	$('#schedule-page h1.page-header-text').html(id);
+	$('#schedule-page h1.page-header-text').html( Scheduleme.Schedules.get(id).get('titledatestring') );
 	//$('#schedule-page').trigger('pagecreate');
 
 	$.mobile.changePage( '#schedule-page', {

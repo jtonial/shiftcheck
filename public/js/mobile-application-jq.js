@@ -168,12 +168,14 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 //------------------PAYLOAD----------------------------
 
 	Scheduleme.Init = function () {
+
 		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
 		Scheduleme.AppView = new Scheduleme.classes.views.AppView();
 
 		//Router takes care of this
 		Scheduleme.ScheduleListView	= new Scheduleme.classes.views.ScheduleListView({collection: Scheduleme.Schedules});
+		Scheduleme.ScheduleListPanelView = new Scheduleme.classes.views.ScheduleListPanelView({collection: Scheduleme.Schedules});
 		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
 		Scheduleme.LoginView = new Scheduleme.classes.views.LoginView();
 		//AJAX Setup
