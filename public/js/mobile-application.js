@@ -1,4 +1,4 @@
-window.Scheduleme = {//new Object();
+window.Scheduleme = window.Scheduleme || {//new Object();
 	classes: {
 		models: {},
 		collections: {},
@@ -18,12 +18,14 @@ window.Scheduleme = {//new Object();
 	Router: {},
 
 	meta: {
+		state: 'admin',
+		ADMIN: 1,
 		mobile: true,
 		d3: true
 	}
 };
 
-$(function() {
+//$(function() {
 
 	Scheduleme.helpers.addMinutes = function(date, adding) {
 		return new Date(date.getTime() + minutes*60000);
@@ -164,27 +166,57 @@ $(function() {
 
 			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
 			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
+
+			// This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
 			schedule.set('datenum', datenum);
 			schedule.set('datestring', datestring);
+
 
 			if (schedule.get('type') == 'month') {
 				datestring = Months[d.getMonth()];
 				schedule.set('datestring', datestring);
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'</li>');
+				//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
 			} else if (schedule.get('type') == 'week') {
-				var nd = Scheduleme.helpers.addDays(d, 7);
+				var nd = Scheduleme.helpers.addDays(d, 6);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
+				//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
 			} else if (schedule.get('type') == 'twoweek') {
-				var nd = Scheduleme.helpers.addDays(d, 14);
+				var nd = Scheduleme.helpers.addDays(d, 13);
 				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
 				schedule.set('ndatestring', ndatestring);
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+
 				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
-			} else { //Defaults to daily schedule
+				//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
+			} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
 				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+				//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
+			} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+				//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
+			} else { //Defaults to daily schedule
+
+				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+
+				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+				//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
 			}
-			
 		},
 		//Used after the view has been destroyed then created again to add back schedule views
 		addAllSchedules: function () {
@@ -411,10 +443,29 @@ $(function() {
 
 		Handlebars.registerHelper('outputDate', Scheduleme.helpers.titleDate);
 
+		/*$(window).touchwipe({
+			min_move_x: 50,
+			min_move_y: 50,
+	        wipeLeft: function() {
+	          // Close
+	          window.history.back();
+
+	        },
+	        wipeRight: function() {
+	          // Open
+	          console.log('Right Swipe');
+
+	        },
+	        preventDefaultEvents: false,
+	        preventDefaultEventsX: false
+	    });*/
+
+	    new FastClick(document.body);
+
 	};
 
 	$(document).ready(function () {
 		Scheduleme.Init();
 	});
 
-});
+//});

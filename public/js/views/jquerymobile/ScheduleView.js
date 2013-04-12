@@ -35,6 +35,11 @@ Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 			var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
 		}
 
+		/*view.render();
+		view.requiresPostRender = requiresPostRender;
+
+		return view;*/
+
 		view.render();
 
 		if (requiresPostRender) {

@@ -85,6 +85,10 @@ body {
 #sidebar #sidebar-footer a:hover {
   color: whitesmoke;
 }
+#sidebar-slide-handle {
+  display: none;
+  visibility: hidden;
+}
 #main-app {
   position: absolute;
   top: 0;
@@ -162,6 +166,24 @@ body {
   height: 60px;
 }
 @media (max-width: 800px) {
+  #sidebar-slide-handle {
+    display: block;
+    visibility: visible;
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 33px;
+    border: 3px solid #4d5669;
+    background-color: #22262e;
+    color: whitesmoke;
+    border-left: 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    height: 40px;
+    width: 30px;
+    text-align: center;
+    padding-top: 10px;
+  }
   #sidebar {
     left: -207px;
     z-index: 1;

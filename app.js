@@ -78,7 +78,9 @@ app.configure(function(){
 		Scheduleme.Helpers.Render.code404(req, res);
 	});
 
-
+	app.get('/jquerymobile', function (req, res) {
+		res.render('mobile2', { });
+	});
 	app.get('/', Scheduleme.Helpers.Render.index);
 	app.get('/newdash', function (req, res) {
 		res.render('newdash', { title: 'Schedule.me' })

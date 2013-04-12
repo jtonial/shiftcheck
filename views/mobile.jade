@@ -30,7 +30,9 @@ html(lang='en')
     script(src='/js/jquery-ui-1.8.21.custom.min.js')
     script(src='/js/underscore.js')
     script(src='/js/backbone.js')
-    script(src='/js/backbone-pushstate-router.js')
+
+    script(src='/js/jquery.wipe.js')
+    script(src='/js/fastclick.js')
 
     script(src='/js/mobile-application.js')
 
@@ -64,10 +66,15 @@ html(lang='en')
       include templates/mobile-list-page-template
     script(id='schedule-template', type='text/x-handlebars-template')
       include templates/mobile-schedule-template
+    script(id='schedule-template-d3', type='text/x-handlebars-template')
+      include templates/schedule-template-d3
     script(id='account-template', type='text/x-handlebars-template')
       include templates/admin-account-template
 
+    script(src='/js/views/ScheduleBaseView.js')
 
+    script(src='/js/views/ScheduleViewPDF.js')
     script(src='/js/views/ScheduleViewD3.js')
     script(src='/js/views/ScheduleViewTable.js')
+    script(src='/js/views/ScheduleView.js')
 

@@ -235,8 +235,6 @@ exports.getByEmployer = function (obj, cb) {
 		response.data = {};
 	}
 
-	response.data.schedules = [];
-
 	_this = Schedule;
 
 	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
@@ -250,10 +248,14 @@ exports.getByEmployer = function (obj, cb) {
 		} else {
 			var totalRows = rows.length;
 			if (totalRows) {
+
+				response.data.schedules = [];
+				var flag = true;
 				rows.forEach(function (row) {
 					db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
 						if (err) {
 							console.log(err);
+							flag = false;
 							cb({statusCode:500, message:err});
 						} else {
 							row.shifts = [];
@@ -268,11 +270,13 @@ exports.getByEmployer = function (obj, cb) {
 								row.json = JSON.parse(row.json);
 							}
 
-							response.data.schedules.push(row);
+							if (flag) {
+								response.data.schedules.push(row);
 
-							totalRows--;
-							if (totalRows == 0) {
-								cb(response);
+								totalRows--;
+								if (totalRows == 0) {
+									cb(response);
+								}
 							}
 						}
 					})

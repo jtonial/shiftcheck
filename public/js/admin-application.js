@@ -177,11 +177,13 @@
 function openSidebar () {
 	if ($(window).width() <= 800) {
 		$('#sidebar').removeClass('open closed').addClass('open');
+		$('#sidebar-slide-handle').removeClass('open closed').addClass('open');
 	}
 }
 function closeSidebar () {
 	if ($(window).width() <= 800) {
 		$('#sidebar').removeClass('open closed').addClass('closed');
+		$('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
 	}
 }
 
@@ -190,14 +192,14 @@ function nTouch () {
 
 	window.nTouch.shortEventLength = $(window).width() / 3;
 
-	document.addEventListener('touchstart', function (e) {
+	window.addEventListener('touchstart', function (e) {
 		window.nTouch.startX = e.touches[0].pageX;
 		window.nTouch.startY = e.touches[0].pageY;
 		window.nTouch.shortEvent = false;
 		_consolelog('StartX: '+nTouch.startX);
 		_consolelog('StartY: '+nTouch.startY);
 	}, false)
-	document.addEventListener('touchmove', function (e) {
+	window.addEventListener('touchmove', function (e) {
 		var x = e.touches[0].pageX;
 		var y = e.touches[0].pageY;
 		var dx = x - nTouch.startX;
@@ -217,7 +219,7 @@ function nTouch () {
 			}
 		}
 	}, false)
-	document.addEventListener('touchend', function (e) {
+	window.addEventListener('touchend', function (e) {
 		var x = e.changedTouches[0].pageX;
 		var y = e.changedTouches[0].pageY;
 		var dx = x - nTouch.startX;
