@@ -23,13 +23,18 @@ html(lang='en')
     script(src='/js/underscore.js')
     script(src='/js/backbone.js')
     script(src='/js/backbone-pushstate-router.js')
-    script(src='/js/admin-application.js')
 
     script(src='/js/fastclick.js')
 
     script(src='/js/ga.js')
-    script(src='/js/addemployee.js')
     script(src="/js/d3.v3.min.js")
+
+    - if ( user.employer_id )
+      script(src='/js/addemployee.js')
+      script(src='/js/admin-application.js')
+    - else 
+      script(src='/js/dash-application.js')
+
 
     // Le HTML5 shim, for IE6-8 support of HTML5 elements
     //if lt IE 9
@@ -38,13 +43,13 @@ html(lang='en')
   body
     #sidebar.closed
       #sidebar-header.header.clearfix
-        #logo.open.pull-left ShiftCheck
-        i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
+        block sidebar-header
       #sidebar-content
+        block sidebar-content
       #sidebar-footer
         .open
-          a(href="/about") About
-          a(href="/team") Team
+          block sidebar-footer
+          
     //- #sidebar-slide-handle
       //- i.icon-chevron-right.icon-2x
     #main-app
@@ -68,8 +73,11 @@ html(lang='en')
             #loading-error.large-message-div
               .icon-remove.icon-4x
               h5 An Error Occured! We apologize
-    include includes/add-employee-modal
-    include includes/account-settings-modal
+    - if ( user.employer_id )
+      include includes/add-employee-modal
+      include includes/account-settings-modal
+    - else 
+
 
     // Placed at the end of the document so the pages load faster
     script(src='/js/bootstrap.js')

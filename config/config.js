@@ -35,7 +35,7 @@ mysql_config = {
 	rds 	: {
 		"user" 		: process.env.RDS_USER,
 		"password" 	: process.env.RDS_PASSWORD,
-		"db" 		: 'shiftcheck_'+process.env.shiftcheck_mode,
+		"db" 		: 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
 		"host" 		: process.env.RDS_HOST,
 		"port" 		: 3306
 	}
@@ -51,5 +51,7 @@ if (process.env.RDS_USER) {
 } else {
 	config.mysql = mysql_config.local;
 }
+
+console.log('config: '+JSON.stringify(config.mysql));
 
 module.exports = config;

@@ -193,6 +193,8 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 		$.mobile.defaultPageTransition = 'slide';
 
+	    new FastClick(document.body);
+
 	};
 
 	$(document).ready(function () {

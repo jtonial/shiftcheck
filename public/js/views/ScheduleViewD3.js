@@ -1,18 +1,3 @@
-$.ajax({
-	url: '/positions',
-	type: 'GET',
-	success: function (res) {
-		Scheduleme.data.positions = res.data.positions;
-	}
-})
-//This may already be fetched by the bootstrap but im not sure and it doesnt really matter rightnow
-$.ajax({
-	url: '/employees',
-	type: 'GET',
-	success: function (res) {
-		Scheduleme.data.employees = res.data.employees;
-	}
-})
 
 Scheduleme.events = typeof Scheduleme.events != 'undefined' ? Scheduleme.events : {};
 
@@ -806,6 +791,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 	},
 
 	postRender: function () {
+		console.log('post rendering');
 		var contentTarget = document.getElementById('d3Target');
 		this.createD3(contentTarget, this.model.get('shifts'));
 

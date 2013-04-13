@@ -1,281 +1,240 @@
-$(function() {
+//$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
 
-	window.Scheduleme = {//new Object();
+	window.Scheduleme = window.Scheduleme || {//new Object();
 		classes: {
 			models: {},
 			collections: {},
-			views: {},
+			views: {
+				ScheduleView: {},
+			},
 		},
 		helpers: {},
 
+		data: {},
+
 		Schedules: {},
-		SchedulesView: {},
 
 		Init: function () {},
 
-		AppView: {},
+		CurrentView: {},
 		Router: {},
 
 		meta: {
-			state: 'admin',
+			state: 'employee',
+			ADMIN: 0,
 			mobile: false,
 			d3: true
 		}
 	};
 
-	/*Scheduleme.classes.models.Shift = Backbone.Model.extend({
+	Scheduleme.helpers.addMinutes = function(date, adding) {
+		return new Date(date.getTime() + minutes*60000);
+	};
+	Scheduleme.helpers.UTCify = function (date) {
+		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+	};
+	Scheduleme.helpers.fromUTC = function (date) {
+		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
+	};
+	Scheduleme.helpers.addDays = function(date, adding) {
+		var nd = new Date(date);
 
-		initialize: function () {	
-			console.log('adding shift: '+this.toJSON());
-		}
-	});
-	Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
+		nd.setDate(date.getDate() + adding);
+		return nd;
+	};
 
-		parse: function (data) {
-			return data.data;
-		}
-	});*/
 
-	Scheduleme.classes.models.Schedule = Backbone.Model.extend({
-		//url: '/api/schedules?date='+this.get('date')+'&sessionOverride=1',
-		//model: Scheduleme.classes.models.Shift,
+	//------------------PAYLOAD----------------------------
 
-		initialize: function () {
-			//this.shifts = new Scheduleme.classes.collections.Shifts();
-			//this.shifts.url='/api/schedules?date='+this.get('date')+'&sessionOverride=1';
+	Scheduleme.Init = function () {
 
-			/*var that = this;
-			$.each(this.get('shifts'), function (index, shift) {
-				console.log('adding shift: '+index);
-				that.shifts.add({model: shift});
-				//that.shifts.add(new Scheduleme.classes.model.Shift({model:shift});
-			});*/
-		}
-	});
 
-	Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
-		url: 'api/schedules',
-		model: Scheduleme.classes.models.Schedule,
+		$('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
 
-		parse: function (response) {
-			return response.data;
-		},
-		comparator: function (schedule) {
-			return Date.parse(schedule.get('date'));
-		}
-	});
 
-	/*Scheduleme.classes.views.ShiftView = Backbone.View.extend({
+		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
-		tagName: 'div',
+		//Router takes care of this
+		//Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
+		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
 
-		template: _.template($('#shift-template').html()),
+		Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
-		events: {
-			"click .edit" : "toggleEditOn",
-			"click .save" : "saveChanges"
-		},
+		//AJAX Setup
+		$.ajaxSetup({
+			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
+		});
+		//Add global $.ajaxError handlers
 
-		toggleEditOn: function () {
-			$('.btn.edit').addClass('hidden');
-			$('.btn.save').removeClass('hidden');
-		},
-		saveChanges: function () {
-			$('.btn.edit').removeClass('hidden');
-			$('.btn.save').addClass('hidden');
-			console.log('saving...');
-		},
-		render: function () {
-			$(this.el).html(this.template(this.model.toJSON()));
-			this.$('.shift-slider').slider({
-				range: true,
-				min: 6,
-				max: 30,
-				values: [ 8, 12 ], //values: [this.model.get('start_time'), this.model.get('end_time')],
-				step: 0.25
-			});
-			return this;
-		}
-	});*/
-
-	Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
-
-		template: Handlebars.compile($('#schedule-template').html()),
-		
-		className: 'tab-pane',
-
-		//Create the frame
-		initialize: function () {
-			var that=this;
-			//this._shiftViews = [];
-
-			//if (typeof this.collection != 'undefined') {
-			//	this.collection.each(function(shift) {
-			//		that._shiftViews.push(new ShiftView ({model: shift}));
-			//	});
-			//}
-		},
-
-		//Add in views for each shift in the schedule
-		render: function () {
-			$(this.el).attr('id',this.model.get('datenum'));
-			$(this.el).html(this.template(this.model.toJSON()));
-			return $(this.el);
-		}
-
-	});
-	Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
-		el: $('.page.schedules'),
-
-		initialize: function () {
-			this.views = Array();
-			this.collection.bind('add',this.addOneSchedule, this);
-			//This has to listen for a 'reset' event on the collection
-				//and re-render it all
-		},
-
-		//Adds one schedule to the Schedules page.
-		addOneSchedule: function (schedule) {
-
-			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
-
-			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
-			var d = new Date(datenum);
-			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate()+1);
-			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()+1); //This will be the date string
-			schedule.set('datenum', datenum);
-			schedule.set('datestring', datestring);
-			//var test = d.getDate()+1; console.log('Date: '+test+'; %10: '+test%10+'; sup: '+Sups[test%10]);
-			this.$('#dates.nav-tabs').append('<li class="schedule-tab"><a href="#'+datenum+'" data-toggle="tab">'+datestring+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
-
-			var view = new Scheduleme.classes.views.ScheduleView ({model:schedule, datenum: datenum});
-			this.views.push(view);
-			this.$('.tab-content').append(view.render());
-			//this.$('.tab-content').append('<div id="'+datenum+'" class="tab-pane"></div>');
-			
-		},
-		addAllSchedules: function () {
-			var self = this;
-			console.log('adding all schedules... '+JSON.stringify(this.collection));
-			_.each(this.collection.models, function (schedule) {
-				self.addOneSchedule(schedule);
-			});
-		},
-		reRenderTabs: function () { //This works
-			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
-
-			$('.schedule-tab').remove();
-			console.log('Length: '+this.collection.length);
-			_.each(this.collection.models, function(schedule) {
-				var d = new Date(schedule.get('datenum'));
-				this.$('#dates.nav-tabs').append('<li class="schedule-tab"><a href="#'+schedule.get('datenum')+'" data-toggle="tab">'+schedule.get('datestring')+'<sup>'+Sups[(d.getDate()+1)%10]+'</sup></a></li>');
-				delete d; //Remove the reference to D; it can not be garbage collected
-			});
-		},
-		/*
-			This should work, but hasn't had final testing.
-			I don't know if it's really necessary to rerender the schedules when
-			keeping the tabs in order, so I'm leaving this for now.
-		*/
-		reRenderCollection: function () {
-			//Actually I dont have to re-render the views... I only really have to re-render the tabs
-			console.log('rerendering....');
-			//Clear all views (remove/undelegateEvents)
-			/*_.each(this.views, function (view){
-				console.log('removing view');
-				view.remove();
-				delete view; //Clear reference
-			});
-			this.views = Array(); //Reset array;
-
-			this.addAllSchedules();*/
-		}
-	});
-
-	//-------------------------------ROUTER------------------------------------
-	window.AppRouter = Backbone.Router.extend({
-
-		initialize: function() {
-			return this.bind('all', this._trackPageview);
-		},
-		_trackPageview: function() {
-			console.log('tracking pageview... but not really');
-		},
-		/*_trackPageview: function() {
-			var url;
-			url = Backbone.history.getFragment();
-			//alert('tracking...: '+url);
-//			if (this.currentMain != url ) {
-				return _gaq.push(['_trackPageview',"/" + url]);
-	//		}
-		},*/
-		routes: {
-			//'schedules':'schedules',
-			//'exchanges':'exchanges',
-			//'approvals':'approvals',
-			//'account':'account',
-
-			'':'schedules'
-		},
-
-		schedules: function () {
-			$('.link, .page').removeClass('active');
-			$('.schedules').addClass('active');
-		}/*,
-		employees: function() {
-			$('.link, .page').removeClass('active');
-			$('.employees').addClass('active');
-		},
-		exchanges: function () {
-			$('.link, .page').removeClass('active');
-			$('.exchanges').addClass('active');
-		},
-		account: function () {
-			$('.link, .page').removeClass('active');
-			$('.account').addClass('active');
-		}*/
-	});
-//------------------PAYLOAD----------------------------
-
-	Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
-	Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({collection: Scheduleme.Schedules});
-
-	Scheduleme.Router = new AppRouter;
-	Backbone.history.start();
-
-	Handlebars.registerHelper('isPDF', function (s) {
-		var reg_pdf = /^.+\.pdf$/;
-		return reg_pdf.test(s);
-	});
-	Handlebars.registerHelper('isJPG', function (s) {
-		var reg_jpg = /^.+\.jpg$/;
-		return reg_jpg.test(s);
-	});
-	Handlebars.registerHelper('isPNG', function (s) {
-		var reg_png = /^.+\.png$/;
-		return reg_png.test(s);
-	});
-
-	$(document).ready(function () {
 		$.ajax({
 			url: '/bootstrap',
 			success: function (res) {
 				//Removing loading div
-				console.log(JSON.stringify(res));
+
 				$.each(res.data.schedules, function () {
 					Scheduleme.Schedules.add(this);
 				});
-				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
-				//Other option is to reRenderTabs() at the end of addOneSchedule
-				Scheduleme.SchedulesView.reRenderTabs();
-				$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+
+				Scheduleme.ScheduleListView.reRenderTabs();
+
+				$('#schedule-pane').removeClass('loading');
+
+				if (!res.data.schedules.length) {
+					$('#schedule-pane').addClass('no-schedules');
+				} else {
+					$('#schedule-pane').addClass('select-schedule');
+				}
+
+				if ( !res.data.notifications ) {
+					$('#notifications-table').hide();
+					$('#create-notification-wrapper').hide();
+					$('#notification-loading-error').show();
+				} else if ( !res.data.notifications.length ) {
+					$('#notifications-table').hide();
+					$('#no-notifications').show();
+				}
+				
+				// Instead of the prompt to select a schedule, I could auto select the first one
+
+				//	Scheduleme.CurrentView.reRenderTabs();
+				//	$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+
+				//Add data into global object
+				Scheduleme.data.email = res.data.email;
+				if (Scheduleme.CurrentView.viewType !='undefined') {
+					$('#email').val(Scheduleme.data.email);
+				}
+				Scheduleme.data.name = res.data.name;
+				Scheduleme.data.username = res.data.username;
 			}, error: function () {
 				//Remove loading div
+				$('#schedule-pane').removeClass('loading').addClass('loading-error');
+
 				console.log('An error occured');
-				alert('We seem to be having some technical difficulties');
+				//alert('We seem to be having some technical difficulties');
+			}, complete: function () {
+				Scheduleme.Router = new AppRouter;
+
+				Backbone.history.start({
+					pushState: true,
+					root: '/'
+				});
+				//configPushState();
+			}
+		});
+
+		//This is here because I currently do not have a global view. If I do, it will be there
+		$('#logout-trigger').click( function () {
+			window.location.href = '/logout';
+		})
+		$('#settings-trigger').click( function () {
+			$('#account-modal').modal('show');
+		})
+
+		//#toggle-sidebar-trigger
+		$('#sidebar.closed #sidebar-header').click( function () {
+			console.log('toggling sidebar state');
+			var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
+			$('#sidebar').removeClass('open closed').addClass(newState);
+		});
+
+		$.ajax({
+			url: '/positions',
+			type: 'GET',
+			success: function (res) {
+				Scheduleme.data.positions = res.data.positions;
 			}
 		})
+
+		/*$(window).touchwipe({
+			min_move_x: 50,
+			min_move_y: 50,
+	        wipeLeft: function() {
+	          // Close
+	          console.log('Left Swipe');
+
+	        },
+	        wipeRight: function() {
+	          // Open
+	          console.log('Right Swipe');
+
+	        },
+	        preventDefaultEvents: false,
+	        preventDefaultEventsX: false
+	    });*/
+
+	    new FastClick(document.body);
+
+	    //$('body').append('<div id="console-output"></div>');
+
+	    _consolelog = function (x) {
+	    	//$('#console-output').append(x+'<br/>');
+	    	//console.log(x);
+	    }
+
+	    nTouch();
+
+	};
+
+	$(document).ready(function () {
+		Scheduleme.Init();
 	});
-});
+
+//});
+
+function openSidebar () {
+	if ($(window).width() <= 800) {
+		$('#sidebar').removeClass('open closed').addClass('open');
+		$('#sidebar-slide-handle').removeClass('open closed').addClass('open');
+	}
+}
+function closeSidebar () {
+	if ($(window).width() <= 800) {
+		$('#sidebar').removeClass('open closed').addClass('closed');
+		$('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
+	}
+}
+
+function nTouch () {
+	window.nTouch = {};
+
+	window.nTouch.shortEventLength = $(window).width() / 3;
+
+	window.addEventListener('touchstart', function (e) {
+		window.nTouch.startX = e.touches[0].pageX;
+		window.nTouch.startY = e.touches[0].pageY;
+		window.nTouch.shortEvent = false;
+		_consolelog('StartX: '+nTouch.startX);
+		_consolelog('StartY: '+nTouch.startY);
+	}, false)
+	window.addEventListener('touchmove', function (e) {
+		var x = e.touches[0].pageX;
+		var y = e.touches[0].pageY;
+		var dx = x - nTouch.startX;
+		var dy = y - nTouch.startY;
+		_consolelog('X: '+x);
+		_consolelog('Y: '+y);
+		_consolelog('dX: '+dx);
+		_consolelog('dY: '+dx);
+
+		if (!nTouch.shortEvent) {
+			if ( dx > nTouch.shortEventLength ) {
+				nTouch.shortEvent = true;
+				openSidebar();
+			} else if ( dx < -nTouch.shortEventLength ) {
+				nTouch.shortEvent = true;
+				closeSidebar();				
+			}
+		}
+	}, false)
+	window.addEventListener('touchend', function (e) {
+		var x = e.changedTouches[0].pageX;
+		var y = e.changedTouches[0].pageY;
+		var dx = x - nTouch.startX;
+		var dy = y - nTouch.startY;
+		_consolelog('EndX: '+x);
+		_consolelog('EndY: '+y);
+		_consolelog('End dX: '+dx);
+		_consolelog('End dY: '+dy);
+    }, false)
+}

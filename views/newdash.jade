@@ -1,1 +1,57 @@
 extends newdashlayout
+
+block sidebar-header
+	#logo.open.pull-left ShiftCheck
+	i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
+
+block sidebar-footer
+	a(href="/about") About
+	a(href="/team") Team
+
+block content-header
+	h3#content-view-title.pull-left
+	#header-icons.pull-right
+		i#settings-trigger.icon-cogs.icon-2x(title="Settings")
+		i#logout-trigger.icon-signout.icon-2x(title="Logout")
+		
+block content-content
+	#schedule-pane.loading
+	#no-schedules.large-message-div
+		.icon-inbox.icon-4x
+		h5 No current schedules have been uploaded
+	#select-schedule.large-message-div
+		.icon-circle-arrow-left.icon-4x
+		h5 Select a schedule on the left to view it
+	#loading.large-message-div
+		.icon-refresh.icon-spin.icon-4x
+		h5 Loading...
+	#loading-error.large-message-div
+		.icon-remove.icon-4x
+		h5 An Error Occured! We apologize
+
+block end-scripts
+	script(src='/js/models/EmployeeModel.js')
+	script(src='/js/models/ScheduleModel.js')
+	script(src='/js/models/ShiftModel.js')
+
+	script(src='/js/collections/EmployeeCollection.js')
+	script(src='/js/collections/ScheduleCollection.js')
+	script(src='/js/collections/ShiftCollection.js')
+
+	script(src='/js/views/AccountView.js')
+	script(src='/js/views/EmployeeView.js')
+
+	script(src='/js/views/ScheduleView.js')
+	script(src='/js/views/ScheduleBaseView.js')
+
+	script(src='/js/views/ScheduleViewPDF.js')
+
+	script(src='/js/views/ScheduleListView.js')
+
+	script(src='/js/views/ScheduleViewD3.js')
+	script(src='/js/views/ScheduleViewTable.js')
+	script(src='/js/views/ScheduleViewSpreadsheet.js')
+
+	//- script(src='/js/views/SchedulesView.js')
+
+	script(src='/js/routers/employer-router.js')

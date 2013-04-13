@@ -125,7 +125,7 @@ exports.getEmployees = function (req, res) {
 
 	//Passed in case I add search functionality in the API later (instead of just client side)
 	var obj = {
-		employer : req.session.employer_id
+		employer : req.session.employer_id || req.session.employer
 	}
 
 	Scheduleme.Models.Employee.getByEmployer (obj, function (err, response) {
@@ -147,7 +147,7 @@ exports.addPosition = function (req, res) {
 exports.getPositions = function (req, res) {
 	//Passed in case I add search functionality in the API later (instead of just client side)
 	var obj = {
-		employer : req.session.employer_id
+		employer : req.session.employer_id || req.session.employer
 	}
 
 	Scheduleme.Models.Employer.getPositions (obj, function (err, response) {

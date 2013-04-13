@@ -17,12 +17,14 @@ exports.renderSignup = function (req, res) {
 exports.index = function(req, res){
 	res.setHeader('Content-Type','text/html');
 
+	console.log(req.session);
+
 	if (typeof req.session.employee_id != 'undefined') {
-		res.render('dash', { title: 'Schedule.me' });
+		res.render('newdash', { title: 'Schedule.me', user: req.session });
 	} else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
-		res.render('newdash', { title: 'Schedule.me' });
+		res.render('newdash', { title: 'Schedule.me', user: req.session });
 	} else {
-		res.render('welcome', { title: 'Schedule.me' });
+		res.render('welcome', { title: 'Schedule.me', user: req.session });
 	}
 
 };
