@@ -80,7 +80,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 	};*/
 	Scheduleme.helpers.fetchBootstrap = function () {
 		$.ajax({
-			url: '/bootstrap',
+			url: 'http://staging-shift-check.herokuapp.com/bootstrap',
 			success: function (res) {
 
 				window.Scheduleme.User = {
@@ -114,7 +114,6 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 			}, error: function (xhr, status, text) {
 				//Remove loading div
-				alert('bootstrap failed');
 				if (xhr.status == '403') {
 					//Scheduleme.helpers.switchView(Scheduleme.LoginView);
 					$.mobile.changePage( '#login-page', {
@@ -123,7 +122,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 					});
 				} else  {
 					console.log('An error occured: '+xhr.status);
-					alert('We seem to be having some technical difficulties');
+					alert('We seem to be having some technical difficulties: '+xhr.status);
 				}
 			}
 		});
@@ -203,7 +202,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 			e.preventDefault();
 
 			$.ajax({
-				url: '/login',
+				url: 'http://staging-shift-check.herokuapp.com/login',
 				type: 'POST',
 				data: $(this).serialize(),
 				success: function (response) {
