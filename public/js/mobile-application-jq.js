@@ -198,6 +198,22 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 	$(document).ready(function () {
 		Scheduleme.Init();
+
+		$('#login-form').submit(function (e) {
+			e.preventDefault();
+
+			$.ajax({
+				url: '/login',
+				type: 'POST',
+				data: $(this).serialize(),
+				success: function (response) {
+					//Set loading screen
+					Scheduleme.helpers.fetchBootstrap();
+				}, error: function (response) {
+					alert('Username and password do not match. Please try again');
+				}
+			});	
+		})
 	});
 
 //});
