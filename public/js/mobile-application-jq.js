@@ -89,7 +89,6 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 				// Switch the active page to list view
 				//window.location.hash = 'schedule-page';
-				alert('bootstrap success');
 				$.mobile.changePage( '#list-page', {
 					transition: "fade",
 					reverse: false
@@ -110,6 +109,8 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				Scheduleme.data.email = res.data.email;
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
+
+				alert('bootstrap success');
 
 			}, error: function (xhr, status, text) {
 				//Remove loading div
