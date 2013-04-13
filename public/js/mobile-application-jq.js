@@ -104,6 +104,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				//Other option is to reRenderTabs() at the end of addOneSchedule
 
 				Scheduleme.ScheduleListView.reRenderTabs();
+				Scheduleme.ScheduleListPanelView.reRenderTabs();
 
 				//Add data into global object
 				Scheduleme.data.email = res.data.email;
@@ -114,7 +115,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				//Remove loading div
 				if (xhr.status == '403') {
 					//Scheduleme.helpers.switchView(Scheduleme.LoginView);
-					$.mobile.changePage( '#list-page', {
+					$.mobile.changePage( '#login-page', {
 						transition: "fade",
 						reverse: false
 					});

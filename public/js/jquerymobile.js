@@ -1,4 +1,4 @@
-$( document ).on( "pageinit", "#login-page", function() {
+$( document ).on( "pageshow", "#login-page", function() {
 	console.log("login-page ready");
 	if (Scheduleme.User.loggedIn) {
 		$.mobile.changePage( '#list-page', {
@@ -7,6 +7,7 @@ $( document ).on( "pageinit", "#login-page", function() {
 		});
 	}
 });
+
 
 $( document ).on( "pageinit", "#schedule-page", function() {
 	console.log("schedule-page ready");
@@ -92,7 +93,10 @@ $( document ).on( "pageinit", "#list-page", function() {
 		});*/
 	});
 });
-
+$( document ).on( "pageshow", "#list-page", function() {
+	console.log('List view visible');
+	Scheduleme.ScheduleListView.reRenderTabs();
+});
 function createSchedulePage(id) {
 	console.log('The page doesn\'t exist yet; creating it');
 

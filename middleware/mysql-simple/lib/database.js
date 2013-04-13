@@ -17,7 +17,7 @@ exports.init = function(dbUser, dbPass, dbDatabase, dbHost, dbPort) {
       if (dbDatabase) c.database = dbDatabase;
       if (dbHost) c.host = dbHost;
       if (dbPort) c.port = dbPort;
-      
+
       callback(c);
     },
     destroy : function(client) {
