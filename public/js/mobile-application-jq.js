@@ -89,7 +89,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 				// Switch the active page to list view
 				//window.location.hash = 'schedule-page';
-
+				alert('bootstrap success');
 				$.mobile.changePage( '#list-page', {
 					transition: "fade",
 					reverse: false
@@ -113,6 +113,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 
 			}, error: function (xhr, status, text) {
 				//Remove loading div
+				alert('bootstrap failed');
 				if (xhr.status == '403') {
 					//Scheduleme.helpers.switchView(Scheduleme.LoginView);
 					$.mobile.changePage( '#login-page', {
