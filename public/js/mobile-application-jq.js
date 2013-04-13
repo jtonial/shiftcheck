@@ -126,6 +126,13 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				}
 			}
 		});
+		$.ajax({
+			url: '/positions',
+			type: 'GET',
+			success: function (res) {
+				Scheduleme.data.positions = res.data.positions;
+			}
+		})
 	};
 	Scheduleme.helpers.handleLogout = function () {
 		//Destory session;
