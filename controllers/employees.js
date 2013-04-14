@@ -3,6 +3,7 @@ var Scheduleme = require('../helpers/global');
 var _ = require('underscore');
 
 exports.bootstrap = function(req, res){
+	console.log(req.session);
 	if (typeof req.session.employee_id != 'undefined') {//If an employer is signed in
 
 		var input = {
@@ -27,7 +28,7 @@ exports.bootstrap = function(req, res){
 			statusCode: 403
 		};
 		Scheduleme.Helpers.Render.code(req.xhr, res, response);
-		console.log('Unauthorized access attempt: employer bootstrap');
+		console.log('Unauthorized access attempt: employee bootstrap');
 	}
 };
 exports.processLogin = function (req, res) {

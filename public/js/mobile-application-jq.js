@@ -80,7 +80,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 	};*/
 	Scheduleme.helpers.fetchBootstrap = function () {
 		$.ajax({
-			url: 'http://staging-shift-check.herokuapp.com/bootstrap',
+			url: '/bootstrap',
 			success: function (res) {
 
 				window.Scheduleme.User = {
@@ -110,17 +110,15 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				Scheduleme.data.name = res.data.name;
 				Scheduleme.data.username = res.data.username;
 
-				alert('bootstrap success');
-
 			}, error: function (xhr, status, text) {
 				//Remove loading div
-				if (xhr.status == '403') {
 					//Scheduleme.helpers.switchView(Scheduleme.LoginView);
-					$.mobile.changePage( '#login-page', {
-						transition: "fade",
-						reverse: false
-					});
-				} else  {
+				$.mobile.changePage( '#login-page', {
+					transition: "fade",
+					reverse: false
+				});
+
+				if (xhr.status != '403') {
 					console.log('An error occured: '+xhr.status);
 					alert('We seem to be having some technical difficulties: '+xhr.status);
 				}

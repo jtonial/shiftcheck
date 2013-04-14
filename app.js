@@ -54,7 +54,7 @@ app.configure(function(){
 
 		next();
 	});
-	app.use(function (req, res, next) { //If static resources are put to S3 then their events wont appear here
+	/*app.use(function (req, res, next) { //If static resources are put to S3 then their events wont appear here
 
 		var response = require( "express" ).response;
 
@@ -65,7 +65,7 @@ app.configure(function(){
 		};
 
 		next();
-	});
+	});*/
 	app.use(function (req, res, next) {
 
 		Scheduleme.Tracking.trackRequest(req);
@@ -188,6 +188,8 @@ app.configure(function(){
 
 	//Me
 	app.get('/bootstrap', function (req, res) {
+		console.log('a');
+		console.log(req.session);
 		if (employee) { //An employee is signed in
 			Scheduleme.Controllers.Employees.bootstrap(req, res); // TODO: Write this function
 		} else if (employer) {

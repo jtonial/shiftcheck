@@ -20,6 +20,10 @@ html
 
     script(src='js/fastclick.js')
 
+    style
+      [data-role='panel'] {
+        margin-top: 46px;
+      }
   body
 
     #pages
@@ -42,10 +46,9 @@ html
             button.btn.btn-primary.input-block-level(type='submit') Login
 
       #list-page(data-role='page', data-theme='d', data-title='ShiftCheck')
-        div(data-role='header', data-theme='a')
+        div(data-role='header', data-theme='a', data-nobackbtn="true")
           h1 Schedules
-          a.ui-icon-nodisc(href='#', data-theme='a', data-icon='none', data-iconpos='notext', data-shadow='false', data-iconshadow='false') Open right panel
-          a.ui-icon-nodisc(href='#right-panel', data-theme='a', data-icon='arrow-l', data-iconpos='notext', data-shadow='false', data-iconshadow='false') Open right panel
+          a.ui-btn-right(href='#right-panel', data-theme='a', data-icon='arrow-l', data-iconpos='notext', data-shadow='false', data-iconshadow='false') Open right panel
         // /header
         div.content(data-role='content')
 
@@ -53,7 +56,11 @@ html
 
         // /content
         #list-right-panel(data-role='panel', data-display='push', data-position='right', data-theme='c')
-
+          ul(data-role='listview', data-theme='d', data-icon='false')
+            li
+              a(href='#') Call Work
+            li
+              a(href='#') Logout
       #schedule-page(data-role='page', data-theme='d', data-title='Title')
         div(data-role='header', data-theme='a')
           h1.page-header-text Schedule Date
@@ -66,15 +73,10 @@ html
         // /content
         #schedule-left-panel(data-role='panel', data-display='push', data-theme='a')
           ul#panel-list(data-role='listview', data-theme='a')
-            li(data-icon='none')
-              a(href='#', data-rel='close') Nothing should be here
             li(data-role='list-divider') Schedules
 
         #schedule-right-panel(data-role='panel', data-display='push', data-position='right', data-theme='c')
           ul(data-role='listview', data-theme='d', data-icon='false')
-            li(data-icon='none')
-              a(href='#', data-rel='close') Nothing should be here
-            li(data-role='list-divider') Share this page
             li
               a(href='#') Call Work
             li
