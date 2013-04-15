@@ -32,7 +32,10 @@ app.configure(function(){
 	app.set('view engine', 'jade');
 	app.locals({
 		site_name: Scheduleme.Config.name,
-		site_name_lower: Scheduleme.Config.name_lower
+		site_name_lower: Scheduleme.Config.name_lower,
+
+		facebook_url: Scheduleme.Config.facebook_url,
+		twitter_url: Scheduleme.Config.twitter_url
 	});
 	app.use(express.favicon());
 	//app.use(express.logger());//'dev'));
@@ -67,9 +70,19 @@ app.configure(function(){
 		next();
 	});*/
 
-	var about = require('./lib/about');
+	var about      = require('./lib/about');
+	var schedules  = require('./lib/schedules');
+	var employees  = require('./lib/employees');
+	var me         = require('./lib/me');
+	var positions  = require('./lib/positions');
+	var shifts     = require('./lib/shifts');
 
 	app.use('/about', about);
+	app.use('/', schedules);
+	app.use('/', me);
+	app.use('/', positions);
+	app.use('/', employees);
+	app.use('/', shifts);
 
 	app.use(function (req, res, next) {
 
@@ -83,174 +96,68 @@ app.configure(function(){
 		Scheduleme.Helpers.Render.code404(req, res);
 	});
 
-	app.get('/jquerymobile', function (req, res) {
-		res.render('jquerymobile', { });
-	});
-	app.get('/', Scheduleme.Helpers.Render.index);
-	app.get('/newdash', function (req, res) {
-		res.render('newdash', { title: Scheduleme.Config.name })
-	})
-	app.get('/schedule/*', Scheduleme.Helpers.Render.index)
-	app.get('/login', function (req, res) {
-		if (!employee && !employer) {
-			Scheduleme.Helpers.Render.renderLoginPage(req, res);
-		} else {
-			res.redirect('/');
-		}
-	});
-	app.get('/manager-login', function (req, res) {
-		if (!employee && !employer) {
-			Scheduleme.Helpers.Render.renderAdminloginPage(req, res);
-		} else {
-			res.redirect('/');
-		}
-	});
-
-	app.post('/login', function (req, res) {
-		if (!employee && !employer) {
-			Scheduleme.Controllers.Employees.processLogin(req, res);
-		} else {
-			res.redirect('/');
-		}
-	});
-	app.post('/manager-login', function (req, res) {
-		if (!employee && !employer) {
-			console.log('Is employer: '+!employer);
-			Scheduleme.Controllers.Employers.processLogin(req, res);
-		} else {
-			res.redirect('/');
-		}
-	});
-
-	app.get('/logout', Scheduleme.Helpers.Helpers.logout);
-
-	app.get('/signup', function (req, res) {
-		if (!employee && !employer) {
-			Scheduleme.Helpers.Render.renderSignup(req, res);
-		} else {
-			res.redirect('/');
-		}
-	});
-	app.post('/signup', function (req, res) {
-		Scheduleme.Controllers.Employers.processSignup(req, res);
-	});
-
-	// Change stuff about curent account
-	app.post('/me/changePassword', function (req,res) {
-		if (employee) {
-			Scheduleme.Controllers.Employees.changePassword(req, res);
-		} else if (employer) {
-			Scheduleme.Controllers.Employers.changePassword(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	});
-	app.post('/me/update', function (req, res) {
-		if (employee) {
-			Scheduleme.Controllers.Employees.updateContact(req, res);
-		} else if (employer) {
-			Scheduleme.Controllers.Employers.update(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	});
-	app.post('/me/employee', function (req, res) {
-		if (employer) {
-			// Not sure if this method should be put with employers or employees controllers
-			Scheduleme.Controllers.Employers.addEmployee(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-
-	// Uploading Schedules
-	app.post('/client-upload', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Schedules.clientUpload(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	});
-	app.post('/upload', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Schedules.upload(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	});
-
-	app.post('/uploadshifts', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Schedules.upload(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-
-	app.post('/verifyUpload', function (req, res) {
-		Scheduleme.Controllers.Schedules.verifyUpload(req,res);
-	});
-
-	//Me
-	app.get('/bootstrap', function (req, res) {
-		console.log('a');
-		console.log(req.session);
-		if (employee) { //An employee is signed in
-			Scheduleme.Controllers.Employees.bootstrap(req, res); // TODO: Write this function
-		} else if (employer) {
-			Scheduleme.Controllers.Employers.bootstrap(req, res); //TODO: Write this function
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	});
-	
-	app.get('/schedules/:date', Scheduleme.Controllers.Schedules.loadDate);
-
-	app.get('/mobile', function (req, res) {
-		res.render('mobile', { });
-	});
-
-	app.get('/employees', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Employers.getEmployees(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-	app.get('/positions', function (req, res) {
-		//if (employer) {
-			Scheduleme.Controllers.Employers.getPositions(req, res);
-		//} else {
-		//	Scheduleme.Helpers.Render.code403(req, res);
-		//}
-	})
-	app.post('/positions', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Employers.addPosition(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-	app.put('/positions/:id', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Employers.updatePosition(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-	app.put('/shift/:id', function (req, res) {
-		if (employer) {
-			Scheduleme.Controllers.Schedules.updateShift(req, res);
-		} else {
-			Scheduleme.Helpers.Render.code403(req, res);
-		}
-	})
-
-	app.get('/testPaste', function (req, res) {
-		res.render('testPaste', { title: Scheduleme.Config.name });
-	})
-
 });
+
+
+app.get('/', Scheduleme.Helpers.Render.index);
+// In order to accomodate push-state
+app.get('/schedule/*', Scheduleme.Helpers.Render.index)
+
+
+app.get('/jquerymobile', function (req, res) {
+	res.render('jquerymobile', { });
+});
+
+
+app.get('/login', function (req, res) {
+	if (!employee && !employer) {
+		Scheduleme.Helpers.Render.renderLoginPage(req, res);
+	} else {
+		res.redirect('/');
+	}
+});
+app.get('/manager-login', function (req, res) {
+	if (!employee && !employer) {
+		Scheduleme.Helpers.Render.renderAdminloginPage(req, res);
+	} else {
+		res.redirect('/');
+	}
+});
+
+app.post('/login', function (req, res) {
+	if (!employee && !employer) {
+		Scheduleme.Controllers.Employees.processLogin(req, res);
+	} else {
+		res.redirect('/');
+	}
+});
+app.post('/manager-login', function (req, res) {
+	if (!employee && !employer) {
+		console.log('Is employer: '+!employer);
+		Scheduleme.Controllers.Employers.processLogin(req, res);
+	} else {
+		res.redirect('/');
+	}
+});
+
+app.get('/logout', Scheduleme.Helpers.Helpers.logout);
+
+app.get('/signup', function (req, res) {
+	if (!employee && !employer) {
+		Scheduleme.Helpers.Render.renderSignup(req, res);
+	} else {
+		res.redirect('/');
+	}
+});
+app.post('/signup', function (req, res) {
+	Scheduleme.Controllers.Employers.processSignup(req, res);
+});
+
+
+app.get('/testPaste', function (req, res) {
+	res.render('testPaste', { title: Scheduleme.Config.name });
+})
+
 
 app.configure('development', function() {
   app.use(express.errorHandler());

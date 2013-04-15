@@ -3,7 +3,7 @@ $(function () {
 		e.preventDefault(); //Prevent default submission
 		var that = $(this);
 		$.ajax({
-			url: '/me/employee',
+			url: '/employees',
 			type: 'POST',
 			data: $(this).serialize(),
 			success: function (response) {

@@ -250,13 +250,14 @@ exports.getByEmployer = function (obj, cb) {
 			if (totalRows) {
 
 				response.data.schedules = [];
-				var flag = true;
+				var flag = false;
+				var error = {};
 				rows.forEach(function (row) {
 					db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
 						if (err) {
 							console.log(err);
-							flag = false;
-							cb({statusCode:500, message:err});
+							flag = true;
+							error = err;
 						} else {
 							row.shifts = [];
 							shiftRows.forEach(function (shiftRow) {
@@ -270,11 +271,13 @@ exports.getByEmployer = function (obj, cb) {
 								row.json = JSON.parse(row.json);
 							}
 
-							if (flag && response.data.schedules) {
-								response.data.schedules.push(row);
+							response.data.schedules.push(row);
 
-								totalRows--;
-								if (totalRows == 0) {
+							totalRows--;
+							if (totalRows == 0) {
+								if (flag) {
+									cb({statusCode:500, message:err});
+								} else {
 									cb(response);
 								}
 							}

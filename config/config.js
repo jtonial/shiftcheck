@@ -6,7 +6,10 @@ config = {
 	"port" : 3100,
 	"ssl_port" : 3101,
 
-	"debug": true
+	"debug": true,
+
+	"facebook_url" : '',
+	"twitter_url" : ''
 }
 
 //Note that process.env.shiftcheck_mode will be either 'development' or 'production' and will match the db suffix
@@ -51,7 +54,5 @@ if (process.env.RDS_USER) {
 } else {
 	config.mysql = mysql_config.local;
 }
-
-console.log('config: '+JSON.stringify(config.mysql));
 
 module.exports = config;
