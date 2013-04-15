@@ -55,5 +55,10 @@ exports.logout = function (req, res) {
 	var message = 'Logged out';
 	req.session.destroy();
 	console.log(message);
-	res.redirect('/');
+	console.log(req.headers);
+	if (req.headers['accept'] == 'application/json') {
+		res.end();
+	} else {
+		res.redirect('/');
+	}
 };

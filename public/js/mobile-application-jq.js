@@ -137,15 +137,19 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 		$.ajax({
 			url: '/logout',
 			type: 'GET',
+			beforeSend: function (request) {
+				request.setRequestHeader("Accept", 'application/json');
+			},
 			error: function () {
 				console.log('wtf cannot log out');
 			},
 			success: function () {
-				
-			},
-			complete: function () {
-				Scheduleme.helpers.switchView(Scheduleme.LoginView);
-				//Destroy data;
+				Scheduleme.User.loggedIn = false;
+
+				$.mobile.changePage( '#login-page', {
+					transition: "fade",
+					reverse: false
+				});
 			}
 		})
 	};
@@ -209,7 +213,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 			e.preventDefault();
 
 			$.ajax({
-				url: 'http://staging-shift-check.herokuapp.com/login',
+				url: '/login',
 				type: 'POST',
 				data: $(this).serialize(),
 				success: function (response) {
@@ -218,7 +222,12 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 				}, error: function (response) {
 					alert('Username and password do not match. Please try again');
 				}
-			});	
+			});
+			return false;
+		})
+
+		$('.logout_trigger').click( function () {
+			Scheduleme.helpers.handleLogout();
 		})
 	});
 
