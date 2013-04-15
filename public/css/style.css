@@ -112,6 +112,7 @@ body {
   margin-right: 20px;
   margin-top: 10px;
   line-height: 50px;
+  text-decoration: none;
 }
 #main-app #content-header #header-icons i {
   color: #999;
@@ -120,6 +121,7 @@ body {
 }
 #main-app #content-header #header-icons i:hover {
   color: #222;
+  text-decoration: none;
 }
 #main-app #content-content {
   position: absolute;

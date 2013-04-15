@@ -7,9 +7,9 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='author', content='nrmitchi')
     link(href='./css/bootstrap.css', rel='stylesheet')
-    script(src='./js/jquery.js')
+    script(src='./js/vendor/jquery.js')
     script(src='./js/login.js')
-    script(src='./js/bootstrap.js')
+    script(src='./js/vendor/bootstrap.js')
     script(src='./js/ga.js')
     style
       .navbar-static-top {
@@ -23,7 +23,7 @@ html(lang='en')
           ul.nav.pull-right
             li
               a(href='/manager-login') Manager Login
-            li
+            li.active
               a(href='/login') Employee Login
     .container
       .span4.offset4

@@ -1,4 +1,14 @@
-extends newdashlayout
+extends newlayout
+
+block append scripts
+	- if ( user.employer_id )
+		script(src='/js/addemployee.js')
+		script(src='/js/admin-application.js')
+	- else 
+		script(src='/js/dash-application.js')
+
+block append styles
+
 
 block sidebar-header
 	#logo.open.pull-left ShiftCheck
@@ -6,29 +16,60 @@ block sidebar-header
 
 block sidebar-footer
 	a(href="/about") About
-	a(href="/team") Team
+	a(href="/about/team") Team
 
 block content-header
 	h3#content-view-title.pull-left
 	#header-icons.pull-right
-		i#settings-trigger.icon-cogs.icon-2x.admin-only(title="Settings")
+		- if ( user.employer_id )
+			i#settings-trigger.icon-cogs.icon-2x(title="Settings")
+		- else
+
 		i#logout-trigger.icon-signout.icon-2x(title="Logout")
 
 block content-content
 	#schedule-pane.loading
-	#no-schedules.large-message-div
-		.icon-inbox.icon-4x
-		h5 No current schedules have been uploaded
-	#select-schedule.large-message-div
-		.icon-circle-arrow-left.icon-4x
-		h5 Select a schedule on the left to view it
-	#loading.large-message-div
-		.icon-refresh.icon-spin.icon-4x
-		h5 Loading...
-	#loading-error.large-message-div
-		.icon-remove.icon-4x
-		h5 An Error Occured! We apologize
+		#no-schedules.large-message-div
+			.icon-inbox.icon-4x
+			h5 No current schedules have been uploaded
+		#select-schedule.large-message-div
+			.icon-circle-arrow-left.icon-4x
+			h5 Select a schedule on the left to view it
+		#loading.large-message-div
+			.icon-refresh.icon-spin.icon-4x
+			h5 Loading...
+		#loading-error.large-message-div
+			.icon-remove.icon-4x
+			h5 An Error Occured! We apologize
 
+block templates
+	script#employee-template(type='text/x-handlebars-template')
+		<div class="well">
+		<h1 class="name"><%= name =></h1>
+		<p class="number"><$= enumber =></p>
+		</div>
+
+	script(id='login-template', type='text/x-handlebars-template')
+		include templates/login-template
+	script(id='approval-template', type='text/x-handlebars-template')
+
+	script(id='schedule-template', type='text/x-handlebars-template')
+		include templates/schedule-template
+	script(id='schedule-template-spreadsheet', type='text/x-handlebars-template')
+		include templates/schedule-gdocSpreadsheet-template
+	script(id='schedule-template-table', type='text/x-handlebars-template')
+		include templates/schedule-template-table
+	script(id='schedule-template-d3', type='text/x-handlebars-template')
+		include templates/schedule-template-d3
+	script(id='schedules-template', type='text/x-handlebars-template')
+		include templates/admin-dash-template
+	script(id='account-template', type='text/x-handlebars-template')
+		include templates/admin-account-template
+	script(id='edit-shift-template', type='text/x-handlebars-template')
+		include templates/edit-shift-template
+	script(id='schedule-list-template', type='text/x-handlebars-template')
+		include templates/schedule-list-template
+				
 block end-scripts
 	script(src='/js/models/EmployeeModel.js')
 	script(src='/js/models/ScheduleModel.js')

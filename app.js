@@ -66,6 +66,11 @@ app.configure(function(){
 
 		next();
 	});*/
+
+	var about = require('./lib/about');
+
+	app.use('/about', about);
+
 	app.use(function (req, res, next) {
 
 		Scheduleme.Tracking.trackRequest(req);
@@ -79,11 +84,11 @@ app.configure(function(){
 	});
 
 	app.get('/jquerymobile', function (req, res) {
-		res.render('mobile2', { });
+		res.render('jquerymobile', { });
 	});
 	app.get('/', Scheduleme.Helpers.Render.index);
 	app.get('/newdash', function (req, res) {
-		res.render('newdash', { title: 'Schedule.me' })
+		res.render('newdash', { title: Scheduleme.Config.name })
 	})
 	app.get('/schedule/*', Scheduleme.Helpers.Render.index)
 	app.get('/login', function (req, res) {
@@ -242,7 +247,7 @@ app.configure(function(){
 	})
 
 	app.get('/testPaste', function (req, res) {
-		res.render('testPaste', { title: 'Schedule.me' });
+		res.render('testPaste', { title: Scheduleme.Config.name });
 	})
 
 });

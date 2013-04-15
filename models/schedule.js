@@ -270,7 +270,7 @@ exports.getByEmployer = function (obj, cb) {
 								row.json = JSON.parse(row.json);
 							}
 
-							if (flag) {
+							if (flag && response.data.schedules) {
 								response.data.schedules.push(row);
 
 								totalRows--;

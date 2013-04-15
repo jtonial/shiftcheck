@@ -1,0 +1,47 @@
+
+extends ../../../views/newlayout
+
+block append scripts
+block append styles
+  style
+    .navbar-static-top {
+    margin-bottom:20px;
+    }
+
+block sidebar-content
+  ul.nav.nav-list(style="margin-top:60px;")
+    - var c = ( page == 'About' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about") About
+    - var c = ( page == 'Team' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about/team") Team
+    - var c = ( page == 'Privacy' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about/privacy") Privacy
+    - var c = ( page == 'Security' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about/security") Security
+    - var c = ( page == 'Terms Of Use' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about/termsofuse") Terms of Use
+    - var c = ( page == 'Contact' ? ' active' : '' )
+    li.nav-link(class=c)
+      a(href="/about/contact") Contact Us
+
+block content-header
+  h3#content-view-title.pull-left #{page}
+  #header-icons.pull-right
+    - if ( user.employer_id || user.employee_id )
+      a(href='/')
+        i.icon-dashboard.icon-2x(title="Dashboard")
+    - else
+
+    - if ( user.employer_id || user.employee_id )
+      a(href='/logout')
+        i.icon-signout.icon-2x(title="Logout")
+    - else
+      a(href='/login')
+        i.icon-signin.icon-2x(title="Login")
+
+block content-content
