@@ -24,7 +24,7 @@ exports.index = function(req, res){
 	} else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
 		res.render('newdash', { title: 'Schedule.me', user: req.session });
 	} else {
-		res.render('welcome', { title: 'Schedule.me', user: req.session });
+		res.render('landing', { title: 'Schedule.me', user: req.session });
 	}
 
 };
