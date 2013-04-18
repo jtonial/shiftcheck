@@ -229,34 +229,28 @@ exports.verifyUpload = function (id, cb) {
 exports.getByEmployer = function (obj, cb) {
 
 	id 			= obj.id;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	response 	= {};
 
-	if (typeof response.data == 'undefined') {
-		response.data = {};
-	}
+	response.schedules = [];
 
 	_this = Schedule;
 
 	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id, (new Date()).toISOString()], function (err, rows) {
 		if (err) {
-			response.statusCode = 500;
-			response.message = err.code;
-			response.data.schedules = [];
-			Scheduleme.Logger.error(err.code);
-			cb({'error': err});
+			Scheduleme.Logger.error(err);
+			cb(err, null);
 		} else {
 			var totalRows = rows.length;
 			if (totalRows) {
 
-				response.data.schedules = [];
 				var flag = false;
-				var error = {};
+				var error = null;
+				
 				rows.forEach(function (row) {
 					db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
 						if (err) {
 							console.log(err);
-							flag = true;
 							error = err;
 						} else {
 							row.shifts = [];
@@ -271,22 +265,18 @@ exports.getByEmployer = function (obj, cb) {
 								row.json = JSON.parse(row.json);
 							}
 
-							response.data.schedules.push(row);
-
-							totalRows--;
-							if (totalRows == 0) {
-								if (flag) {
-									cb({statusCode:500, message: error});
-								} else {
-									cb(response);
-								}
-							}
+							response.schedules.push(row);
 						}
+
+						totalRows--;
+						if (totalRows == 0) {
+							cb(error, response);
+						}
+
 					})
 				})
 			} else {
-				response.data.schedules = [];
-				cb(response);
+				cb(err, response);
 			}
 		}
 	});

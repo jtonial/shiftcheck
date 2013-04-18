@@ -106,7 +106,7 @@ exports.create = function (obj, cb) {
 };
 //Export static methods
 //I should not do two callbacks here... I should leave this up to the controller to handle
-exports.fetch = function (obj, cb, cb2) {
+exports.fetch = function (obj, cb) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
 	if (typeof obj.id == 'undefined') {
@@ -114,33 +114,20 @@ exports.fetch = function (obj, cb, cb2) {
 		console.log('No id; Model.Employer.fetch');
 	}
 
-	id 			= obj.id;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	id = obj.id;
 
 	db.query(Scheduleme.Queries.selectEmployer, [id], function (err, row) {
+		
+		response = {};
+
 		if (err) {
-			response.statusCode = 500;
-			response.message = err.code;
 			console.log(err.code);
-			cb2(response);
+			cb(err, response);
 		} else {
-			if (row[0]) {
-				response.statusCode = 200;
-
-				//This is done to preserve response.data that was injected
-				for (key in row[0]) {
-					response.data[key] = row[0][key];
-				}
-				//response.data = row[0];
-
-				obj.response = response;
-
-				cb(obj, cb2);
-			} else {
-				response.statusCode = 404;
-				cb2(response);
-			}
+			response = row[0];
 		}
+
+		cb(err, response);
 	});
 }
 exports.getPositions= function (obj, cb) {
@@ -151,8 +138,8 @@ exports.getPositions= function (obj, cb) {
 		//Exit here or something
 	}
 
-	employer 	= obj.employer;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	var employer 	= obj.employer;
+	var response 	= {};
 
 	db.query(Scheduleme.Queries.selectPositions, [employer], function (err, rows) {
 		if (err) {

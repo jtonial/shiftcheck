@@ -5,24 +5,51 @@ var _ = require('underscore');
 exports.bootstrap = function(req, res){
 	if (typeof req.session.employer_id != 'undefined') {//If an employer is signed in
 
+		var response = {};
+		response.data = {};
+
 		//Simply wrapped the old Bootstrap with getByEmployer, to include the employees in bootstrap response.
 			//This has been commmented out for now as employees aren't really needed on bootstrap right now
-		Scheduleme.Models.Employee.getByEmployer ({employer : req.session.employer_id}, function (err, response) {
-			var input = {
-				id 			: req.session.employer_id,
-				response	: response
-			}
-			Scheduleme.Models.Employer.fetch(input, 
-				Scheduleme.Models.Schedule.getByEmployer,
-					function (obj) {
-						if (typeof obj.error != 'undefined') {
-							obj.statusCode = 500;
-							Scheduleme.Helpers.Render.code(req.xhr, res, obj)
-						} else {
-							Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+		//Scheduleme.Models.Employee.getByEmployer ({ employer : req.session.employer_id }, function (err, result) {
+
+		Scheduleme.Models.Employer.fetch({ id : req.session.employer_id }, function (err, result) {
+
+			if (err) {
+				var obj = {
+					statusCode : 500,
+					message : err.code
+				}
+				Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+			} else if ( typeof result == 'undefined' ) {
+				var obj = {
+					statusCode : 404,
+					message : 'The employer does not seem to exist, or could not be found'
+				}
+				Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+			} else {
+
+				_.extend(response.data, result);
+
+				Scheduleme.Models.Schedule.getByEmployer( { id : req.session.employer_id }, function (err, result) {
+					if (err) {
+						var obj = {
+							statusCode : 500,
+							message : err.code
 						}
-					});
+						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+					} else {
+
+						_.extend(response.data, result);
+
+						response.statusCode = 200;
+
+						Scheduleme.Helpers.Render.code(req.xhr, res, response);
+					}
+				});
+			}
 		});
+
+		//});
 	} else {
 		response = {
 			statusCode: 403

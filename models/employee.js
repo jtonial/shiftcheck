@@ -114,31 +114,20 @@ exports.fetch = function (obj, cb, cb2) {
 		Scheduleme.Logger.info('No id; Model.Employer.fetch');
 	}
 
-	id 			= obj.id;
-	employer 	= obj.employer;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	id = obj.id;
 
-	db.query(Scheduleme.Queries.selectEmployee, [id], function (err, row) {
+	db.query(Scheduleme.Queries.selectEmployer, [id], function (err, row) {
+		
+		response = {};
+
 		if (err) {
-			response.statusCode = 500;
-			response.message = err.code;
-			Scheduleme.Logger.error(err.code);
-			cb2(response);
-
+			console.log(err.code);
+			cb(err, response);
 		} else {
-			if (row[0]) {
-				response.statusCode = 200;
-
-				response.data = row[0];
-
-				obj.id = employer;
-				obj.response = response;
-				cb(obj, cb2);
-			} else {
-				response.statusCode = 404;
-				cb2(response);
-			}
+			response = row[0];
 		}
+
+		cb(err, response);
 	});
 }
 exports.getByEmployer = function (obj, cb) {

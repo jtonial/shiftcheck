@@ -6,22 +6,50 @@ exports.bootstrap = function(req, res){
 	console.log(req.session);
 	if (typeof req.session.employee_id != 'undefined') {//If an employer is signed in
 
+		var response = {};
+		response.data = {};
+		
 		var input = {
 			id 			: req.session.employee_id,
-			employer 	: req.session.employer,
-			response	: {}
+			employer 	: req.session.employer
 		}
 
-		Scheduleme.Models.Employee.fetch(input, 
-			Scheduleme.Models.Schedule.getByEmployer,
-				function (obj) {
-					if (typeof obj.error != 'undefined') {
-						obj.statusCode = 500;
+		Scheduleme.Models.Employee.fetch( input , function (err, result) {
+
+			if (err) {
+				var obj = {
+					statusCode : 500,
+					message : err.code
+				}
+				Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+			} else if ( typeof result == 'undefined' ) {
+				var obj = {
+					statusCode : 404,
+					message : 'The employer does not seem to exist, or could not be found'
+				}
+				Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+			} else {
+
+				_.extend(response.data, result);
+
+				Scheduleme.Models.Schedule.getByEmployer( { id: req.session.employer } , function (err, result) {
+					if (err) {
+						var obj = {
+							statusCode : 500,
+							message : err.code
+						}
 						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
 					} else {
-						Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+
+						_.extend(response.data, result);
+
+						response.statusCode = 200;
+
+						Scheduleme.Helpers.Render.code(req.xhr, res, response);
 					}
 				});
+			}
+		})
 
 	} else {
 		var response = {
