@@ -2,7 +2,6 @@ extends newlayout
 
 block append scripts
 	- if ( user.employer_id )
-		script(src='/js/addemployee.js')
 		script(src='/js/admin-application.js')
 	- else 
 		script(src='/js/dash-application.js')
@@ -22,6 +21,7 @@ block content-header
 	h3#content-view-title.pull-left
 	#header-icons.pull-right
 		- if ( user.employer_id )
+			i#add-employee-modal-trigger.icon-plus.icon-2x(title="Add Employee")
 			i#settings-trigger.icon-cogs.icon-2x(title="Settings")
 		- else
 
@@ -61,8 +61,6 @@ block templates
 		include templates/schedule-template-table
 	script(id='schedule-template-d3', type='text/x-handlebars-template')
 		include templates/schedule-template-d3
-	script(id='schedules-template', type='text/x-handlebars-template')
-		include templates/admin-dash-template
 	script(id='account-template', type='text/x-handlebars-template')
 		include templates/admin-account-template
 	script(id='edit-shift-template', type='text/x-handlebars-template')

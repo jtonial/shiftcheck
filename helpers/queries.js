@@ -36,5 +36,8 @@ module.exports = queries = {
 	'getShiftsBySchedule'		: 'SELECT s.shift_id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
 
 	'insertPosition'			: 'INSERT INTO positions (employer_id, position, full_name, description) VALUES (?,?,?,?)',
-	'selectPositions'			: 'SELECT position_id, position, full_name, description FROM positions WHERE employer_id=?'
+	'selectPositions'			: 'SELECT position_id, position, full_name, description FROM positions WHERE employer_id=?',
+
+	'publishSchedule'			: 'UPDATE schedules SET published=1 WHERE schedule_id=? AND employer_id=?',
+	'unpublishSchedule'			: 'UPDATE schedules SET published=0 WHERE schedule_id=? AND employer_id=?'
 }

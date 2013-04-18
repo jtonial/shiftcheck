@@ -269,4 +269,26 @@ exports.updateShift = function (req, res) {
 	Scheduleme.Models.Schedule.updateShift (obj, function () {
 
 	}*/
-}
+};
+
+exports.publish = function (req, res) {
+	var obj = {
+		employer_id: req.session.employer_id,
+		schedule_id: req.params.schedule_id
+	}
+
+	Scheduleme.Models.Schedule.publish(obj, function (err, response) {
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	})
+};
+
+exports.unpublish = function (req, res) {
+	var obj = {
+		employer_id: req.session.employer_id,
+		schedule_id: req.params.schedule_id
+	}
+
+	Scheduleme.Models.Schedule.unpublish(obj, function (err, response) {
+		Scheduleme.Helpers.Render.code(req.xhr, res, response);
+	})
+};

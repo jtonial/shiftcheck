@@ -276,7 +276,7 @@ exports.getByEmployer = function (obj, cb) {
 							totalRows--;
 							if (totalRows == 0) {
 								if (flag) {
-									cb({statusCode:500, message:err});
+									cb({statusCode:500, message: error});
 								} else {
 									cb(response);
 								}
@@ -293,9 +293,9 @@ exports.getByEmployer = function (obj, cb) {
 }
 
 exports.getByEmployerDate = function (obj, cb) {
-	id 			= obj.id;
-	date 		= obj.date;
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	var id 			= obj.id;
+	var date 		= obj.date;
+	var response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	db.query(Scheduleme.Queries.getScheduleByEmployerDate, [id,date], function (err, row) {
 
@@ -336,4 +336,42 @@ exports.getByEmployerDate = function (obj, cb) {
 			cb(obj);
 		}
 	});
+}
+
+exports.publish = function (obj, cb) {
+	var employer_id = obj.employer_id;
+	var schedule_id = obj.schedule_id;
+
+	db.query(Scheduleme.Queries.publishSchedule, [schedule_id, employer_id], function (err, result) {
+		var response = {};
+
+		if (err) {
+			response.statusCode = 500;
+			response.message = err;
+		} else {
+			response.statusCode = 200;
+		}
+
+		cb(null, response);
+
+	})
+}
+
+exports.unpublish = function (obj, cb) {
+	var employer_id = obj.employer_id;
+	var schedule_id = obj.schedule_id;
+
+	db.query(Scheduleme.Queries.unpublishSchedule, [schedule_id, employer_id], function (err, result) {
+		var response = {};
+
+		if (err) {
+			response.statusCode = 500;
+			response.message = err;
+		} else {
+			response.statusCode = 200;
+		}
+
+		cb(null, response);
+		
+	})
 }

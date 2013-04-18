@@ -1,3 +1,10 @@
+/*
+	WTF is wrong with me. Employer should not be an account, it should just be an entry.
+	Admins should just be users with an admin table row
+	This allows for a user to be admin of multiple employers, and an employer to have multiple admins
+*/
+
+
 var express = require('express')
 	, http = require('http')
 	, https = require('https')
@@ -53,7 +60,7 @@ app.configure(function(){
 	app.use(function (req, res, next) {
 		//Initialize shortcuts for checking employee/employer
 		employee = (typeof req.session.employee_id != 'undefined');
-		employer = (typeof req.session.employer_id != 'undefined');
+		admin = (typeof req.session.employer_id != 'undefined');
 
 		next();
 	});
@@ -81,7 +88,7 @@ app.configure(function(){
 	app.use('/', schedules);
 	app.use('/', me);
 	app.use('/', positions);
-	app.use('/', employees);
+	app.use('/employees', employees);
 	app.use('/', shifts);
 
 	app.use(function (req, res, next) {
@@ -110,14 +117,14 @@ app.get('/jquerymobile', function (req, res) {
 
 
 app.get('/login', function (req, res) {
-	if (!employee && !employer) {
+	if (!employee && !admin) {
 		Scheduleme.Helpers.Render.renderLoginPage(req, res);
 	} else {
 		res.redirect('/');
 	}
 });
 app.get('/manager-login', function (req, res) {
-	if (!employee && !employer) {
+	if (!employee && !admin) {
 		Scheduleme.Helpers.Render.renderAdminloginPage(req, res);
 	} else {
 		res.redirect('/');
@@ -125,15 +132,14 @@ app.get('/manager-login', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-	if (!employee && !employer) {
+	if (!employee && !admin) {
 		Scheduleme.Controllers.Employees.processLogin(req, res);
 	} else {
 		res.redirect('/');
 	}
 });
 app.post('/manager-login', function (req, res) {
-	if (!employee && !employer) {
-		console.log('Is employer: '+!employer);
+	if (!employee && !admin) {
 		Scheduleme.Controllers.Employers.processLogin(req, res);
 	} else {
 		res.redirect('/');
@@ -143,7 +149,7 @@ app.post('/manager-login', function (req, res) {
 app.get('/logout', Scheduleme.Helpers.Helpers.logout);
 
 app.get('/signup', function (req, res) {
-	if (!employee && !employer) {
+	if (!employee && !admin) {
 		Scheduleme.Helpers.Render.renderSignup(req, res);
 	} else {
 		res.redirect('/');

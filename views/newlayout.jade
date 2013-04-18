@@ -59,18 +59,19 @@ html(lang='en')
     // Placed at the end of the document so the pages load faster
     script(src='/js/vendor/bootstrap.js')
 
-    script
-      $(document).ready(function() {
-        //This should instead pluck the names of all employees
+    - if ( user.employer_id )
+      script
+        $(document).ready(function() {
+          //This should instead pluck the names of all employees
 
-        var data = new Array("Andrew","Brandon","Connor","David","Julie","Michelle","Janice","Jackson","Nicole","Samanth","Evan","Nick","Johnathan","Matt");
+          var data = new Array("Andrew","Brandon","Connor","David","Julie","Michelle","Janice","Jackson","Nicole","Samanth","Evan","Nick","Johnathan","Matt");
 
-        $('.employee-typeahead').typeahead({source: data});
+          $('.employee-typeahead').typeahead({source: data});
 
-        $('#add-employee-modal-trigger').click(function () {
-          $('#add-employee-modal').modal('show');
-        })
-      });
+          $('#add-employee-modal-trigger').click(function () {
+            $('#add-employee-modal').modal('show');
+          })
+        });
 
     block templates
 
