@@ -27,6 +27,9 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 	}
 };
 
+window.isPhonegap = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+
+Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.com' : '';
 //$(function() {
 
 	Scheduleme.helpers.addMinutes = function(date, adding) {
@@ -80,7 +83,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 	};*/
 	Scheduleme.helpers.fetchBootstrap = function () {
 		$.ajax({
-			url: '/bootstrap',
+			url: Scheduleme.meta.url+'/bootstrap',
 			success: function (res) {
 
 				window.Scheduleme.User = {
@@ -125,7 +128,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 			}
 		});
 		$.ajax({
-			url: '/positions',
+			url: Scheduleme.meta.url+'/positions',
 			type: 'GET',
 			success: function (res) {
 				Scheduleme.data.positions = res.data.positions;
@@ -135,7 +138,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 	Scheduleme.helpers.handleLogout = function () {
 		//Destory session;
 		$.ajax({
-			url: '/logout',
+			url: Scheduleme.meta.url+'/logout',
 			type: 'GET',
 			beforeSend: function (request) {
 				request.setRequestHeader("Accept", 'application/json');
@@ -213,7 +216,7 @@ window.Scheduleme = window.Scheduleme || {//new Object();
 			e.preventDefault();
 
 			$.ajax({
-				url: '/login',
+				url: Scheduleme.meta.url+'/login',
 				type: 'POST',
 				data: $(this).serialize(),
 				success: function (response) {

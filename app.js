@@ -64,18 +64,6 @@ app.configure(function(){
 
 		next();
 	});
-	/*app.use(function (req, res, next) { //If static resources are put to S3 then their events wont appear here
-
-		var response = require( "express" ).response;
-
-		var _end = response.end;
-		response.end = function( ) {
-			// Scheduleme.Logger.info('End event intercepted');
-			_end.apply( this, arguments );
-		};
-
-		next();
-	});*/
 
 	var about      = require('./lib/about');
 	var schedules  = require('./lib/schedules');
@@ -135,14 +123,22 @@ app.post('/login', function (req, res) {
 	if (!employee && !admin) {
 		Scheduleme.Controllers.Employees.processLogin(req, res);
 	} else {
-		res.redirect('/');
+		if (req.xhr) {
+			Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 200 });
+		} else {
+			res.redirect('/');
+		}
 	}
 });
 app.post('/manager-login', function (req, res) {
 	if (!employee && !admin) {
 		Scheduleme.Controllers.Employers.processLogin(req, res);
 	} else {
-		res.redirect('/');
+		if (req.xhr) {
+			Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 200 });
+		} else {
+			res.redirect('/');
+		}
 	}
 });
 
