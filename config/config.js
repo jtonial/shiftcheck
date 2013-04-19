@@ -41,6 +41,13 @@ mysql_config = {
 		"db" 		: 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
 		"host" 		: process.env.RDS_HOST,
 		"port" 		: 3306
+	},
+	test	: {
+		"user" 	 	: 'root',
+		"password" 	: 'password',
+		"db" 		: 'shiftcheck_test',
+		"host" 		: 'localhost',
+		"port" 		: 3306
 	}
 }
 
