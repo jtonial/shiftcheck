@@ -265,7 +265,11 @@ exports.getByEmployer = function (obj, cb) {
 								row.json = JSON.parse(row.json);
 							}
 
-							response.schedules.push(row);
+							try {
+								response.schedules.push(row);
+							} catch (e) {
+								Scheduleme.Logger.error(e);
+							}
 						}
 
 						totalRows--;
