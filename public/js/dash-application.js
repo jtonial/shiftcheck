@@ -1,240 +1,240 @@
 //$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
 
-	window.Scheduleme = window.Scheduleme || {//new Object();
-		classes: {
-			models: {},
-			collections: {},
-			views: {
-				ScheduleView: {},
-			},
-		},
-		helpers: {},
+  window.Scheduleme = window.Scheduleme || {//new Object();
+    classes: {
+      models: {},
+      collections: {},
+      views: {
+        ScheduleView: {},
+      },
+    },
+    helpers: {},
 
-		data: {},
+    data: {},
 
-		Schedules: {},
+    Schedules: {},
 
-		Init: function () {},
+    Init: function () {},
 
-		CurrentView: {},
-		Router: {},
+    CurrentView: {},
+    Router: {},
 
-		meta: {
-			state: 'employee',
-			ADMIN: 0,
-			mobile: false,
-			d3: true
-		}
-	};
+    meta: {
+      state: 'employee',
+      ADMIN: 0,
+      mobile: false,
+      d3: true
+    }
+  };
 
-	Scheduleme.helpers.addMinutes = function(date, adding) {
-		return new Date(date.getTime() + minutes*60000);
-	};
-	Scheduleme.helpers.UTCify = function (date) {
-		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
-	};
-	Scheduleme.helpers.fromUTC = function (date) {
-		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
-	};
-	Scheduleme.helpers.addDays = function(date, adding) {
-		var nd = new Date(date);
+  Scheduleme.helpers.addMinutes = function(date, adding) {
+    return new Date(date.getTime() + minutes*60000);
+  };
+  Scheduleme.helpers.UTCify = function (date) {
+    return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+  };
+  Scheduleme.helpers.fromUTC = function (date) {
+    return new Date(date.getTime() - date.getTimezoneOffset()*60000);
+  };
+  Scheduleme.helpers.addDays = function(date, adding) {
+    var nd = new Date(date);
 
-		nd.setDate(date.getDate() + adding);
-		return nd;
-	};
-
-
-	//------------------PAYLOAD----------------------------
-
-	Scheduleme.Init = function () {
+    nd.setDate(date.getDate() + adding);
+    return nd;
+  };
 
 
-		$('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
+  //------------------PAYLOAD----------------------------
+
+  Scheduleme.Init = function () {
 
 
-		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+    $('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
 
-		//Router takes care of this
-		//Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
-		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
 
-		Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
+    Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
-		//AJAX Setup
-		$.ajaxSetup({
-			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
-		});
-		//Add global $.ajaxError handlers
+    //Router takes care of this
+    //Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
+    Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
 
-		$.ajax({
-			url: '/bootstrap',
-			success: function (res) {
-				//Removing loading div
+    Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
-				$.each(res.data.schedules, function () {
-					Scheduleme.Schedules.add(this);
-				});
+    //AJAX Setup
+    $.ajaxSetup({
+      dataType: 'json' //AJAX responses will all be treated as json dispite content-type
+    });
+    //Add global $.ajaxError handlers
 
-				Scheduleme.ScheduleListView.reRenderTabs();
+    $.ajax({
+      url: '/bootstrap',
+      success: function (res) {
+        //Removing loading div
 
-				$('#schedule-pane').removeClass('loading');
+        $.each(res.data.schedules, function () {
+          Scheduleme.Schedules.add(this);
+        });
 
-				if (!res.data.schedules.length) {
-					$('#schedule-pane').addClass('no-schedules');
-				} else {
-					$('#schedule-pane').addClass('select-schedule');
-				}
+        Scheduleme.ScheduleListView.reRenderTabs();
 
-				if ( !res.data.notifications ) {
-					$('#notifications-table').hide();
-					$('#create-notification-wrapper').hide();
-					$('#notification-loading-error').show();
-				} else if ( !res.data.notifications.length ) {
-					$('#notifications-table').hide();
-					$('#no-notifications').show();
-				}
-				
-				// Instead of the prompt to select a schedule, I could auto select the first one
+        $('#schedule-pane').removeClass('loading');
 
-				//	Scheduleme.CurrentView.reRenderTabs();
-				//	$('#dates.nav.nav-tabs li:nth-child(2) a').click();
+        if (!res.data.schedules.length) {
+          $('#schedule-pane').addClass('no-schedules');
+        } else {
+          $('#schedule-pane').addClass('select-schedule');
+        }
 
-				//Add data into global object
-				Scheduleme.data.email = res.data.email;
-				if (Scheduleme.CurrentView.viewType !='undefined') {
-					$('#email').val(Scheduleme.data.email);
-				}
-				Scheduleme.data.name = res.data.name;
-				Scheduleme.data.username = res.data.username;
-			}, error: function () {
-				//Remove loading div
-				$('#schedule-pane').removeClass('loading').addClass('loading-error');
+        if ( !res.data.notifications ) {
+          $('#notifications-table').hide();
+          $('#create-notification-wrapper').hide();
+          $('#notification-loading-error').show();
+        } else if ( !res.data.notifications.length ) {
+          $('#notifications-table').hide();
+          $('#no-notifications').show();
+        }
+        
+        // Instead of the prompt to select a schedule, I could auto select the first one
 
-				console.log('An error occured');
-				//alert('We seem to be having some technical difficulties');
-			}, complete: function () {
-				Scheduleme.Router = new AppRouter;
+        //  Scheduleme.CurrentView.reRenderTabs();
+        //  $('#dates.nav.nav-tabs li:nth-child(2) a').click();
 
-				Backbone.history.start({
-					pushState: true,
-					root: '/'
-				});
-				//configPushState();
-			}
-		});
+        //Add data into global object
+        Scheduleme.data.email = res.data.email;
+        if (Scheduleme.CurrentView.viewType !='undefined') {
+          $('#email').val(Scheduleme.data.email);
+        }
+        Scheduleme.data.name = res.data.name;
+        Scheduleme.data.username = res.data.username;
+      }, error: function () {
+        //Remove loading div
+        $('#schedule-pane').removeClass('loading').addClass('loading-error');
 
-		//This is here because I currently do not have a global view. If I do, it will be there
-		$('#logout-trigger').click( function () {
-			window.location.href = '/logout';
-		})
-		$('#settings-trigger').click( function () {
-			$('#account-modal').modal('show');
-		})
+        console.log('An error occured');
+        //alert('We seem to be having some technical difficulties');
+      }, complete: function () {
+        Scheduleme.Router = new AppRouter;
 
-		//#toggle-sidebar-trigger
-		$('#sidebar.closed #sidebar-header').click( function () {
-			console.log('toggling sidebar state');
-			var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
-			$('#sidebar').removeClass('open closed').addClass(newState);
-		});
+        Backbone.history.start({
+          pushState: true,
+          root: '/'
+        });
+        //configPushState();
+      }
+    });
 
-		$.ajax({
-			url: '/positions',
-			type: 'GET',
-			success: function (res) {
-				Scheduleme.data.positions = res.data.positions;
-			}
-		})
+    //This is here because I currently do not have a global view. If I do, it will be there
+    $('#logout-trigger').click( function () {
+      window.location.href = '/logout';
+    })
+    $('#settings-trigger').click( function () {
+      $('#account-modal').modal('show');
+    })
 
-		/*$(window).touchwipe({
-			min_move_x: 50,
-			min_move_y: 50,
-	        wipeLeft: function() {
-	          // Close
-	          console.log('Left Swipe');
+    //#toggle-sidebar-trigger
+    $('#sidebar.closed #sidebar-header').click( function () {
+      console.log('toggling sidebar state');
+      var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
+      $('#sidebar').removeClass('open closed').addClass(newState);
+    });
 
-	        },
-	        wipeRight: function() {
-	          // Open
-	          console.log('Right Swipe');
+    $.ajax({
+      url: '/positions',
+      type: 'GET',
+      success: function (res) {
+        Scheduleme.data.positions = res.data.positions;
+      }
+    })
 
-	        },
-	        preventDefaultEvents: false,
-	        preventDefaultEventsX: false
-	    });*/
+    /*$(window).touchwipe({
+      min_move_x: 50,
+      min_move_y: 50,
+          wipeLeft: function() {
+            // Close
+            console.log('Left Swipe');
 
-	    new FastClick(document.body);
+          },
+          wipeRight: function() {
+            // Open
+            console.log('Right Swipe');
 
-	    //$('body').append('<div id="console-output"></div>');
+          },
+          preventDefaultEvents: false,
+          preventDefaultEventsX: false
+      });*/
 
-	    _consolelog = function (x) {
-	    	//$('#console-output').append(x+'<br/>');
-	    	//console.log(x);
-	    }
+      new FastClick(document.body);
 
-	    nTouch();
+      //$('body').append('<div id="console-output"></div>');
 
-	};
+      _consolelog = function (x) {
+        //$('#console-output').append(x+'<br/>');
+        //console.log(x);
+      }
 
-	$(document).ready(function () {
-		Scheduleme.Init();
-	});
+      nTouch();
+
+  };
+
+  $(document).ready(function () {
+    Scheduleme.Init();
+  });
 
 //});
 
 function openSidebar () {
-	if ($(window).width() <= 800) {
-		$('#sidebar').removeClass('open closed').addClass('open');
-		$('#sidebar-slide-handle').removeClass('open closed').addClass('open');
-	}
+  if ($(window).width() <= 800) {
+    $('#sidebar').removeClass('open closed').addClass('open');
+    $('#sidebar-slide-handle').removeClass('open closed').addClass('open');
+  }
 }
 function closeSidebar () {
-	if ($(window).width() <= 800) {
-		$('#sidebar').removeClass('open closed').addClass('closed');
-		$('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
-	}
+  if ($(window).width() <= 800) {
+    $('#sidebar').removeClass('open closed').addClass('closed');
+    $('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
+  }
 }
 
 function nTouch () {
-	window.nTouch = {};
+  window.nTouch = {};
 
-	window.nTouch.shortEventLength = $(window).width() / 3;
+  window.nTouch.shortEventLength = $(window).width() / 3;
 
-	window.addEventListener('touchstart', function (e) {
-		window.nTouch.startX = e.touches[0].pageX;
-		window.nTouch.startY = e.touches[0].pageY;
-		window.nTouch.shortEvent = false;
-		_consolelog('StartX: '+nTouch.startX);
-		_consolelog('StartY: '+nTouch.startY);
-	}, false)
-	window.addEventListener('touchmove', function (e) {
-		var x = e.touches[0].pageX;
-		var y = e.touches[0].pageY;
-		var dx = x - nTouch.startX;
-		var dy = y - nTouch.startY;
-		_consolelog('X: '+x);
-		_consolelog('Y: '+y);
-		_consolelog('dX: '+dx);
-		_consolelog('dY: '+dx);
+  window.addEventListener('touchstart', function (e) {
+    window.nTouch.startX = e.touches[0].pageX;
+    window.nTouch.startY = e.touches[0].pageY;
+    window.nTouch.shortEvent = false;
+    _consolelog('StartX: '+nTouch.startX);
+    _consolelog('StartY: '+nTouch.startY);
+  }, false)
+  window.addEventListener('touchmove', function (e) {
+    var x = e.touches[0].pageX;
+    var y = e.touches[0].pageY;
+    var dx = x - nTouch.startX;
+    var dy = y - nTouch.startY;
+    _consolelog('X: '+x);
+    _consolelog('Y: '+y);
+    _consolelog('dX: '+dx);
+    _consolelog('dY: '+dx);
 
-		if (!nTouch.shortEvent) {
-			if ( dx > nTouch.shortEventLength ) {
-				nTouch.shortEvent = true;
-				openSidebar();
-			} else if ( dx < -nTouch.shortEventLength ) {
-				nTouch.shortEvent = true;
-				closeSidebar();				
-			}
-		}
-	}, false)
-	window.addEventListener('touchend', function (e) {
-		var x = e.changedTouches[0].pageX;
-		var y = e.changedTouches[0].pageY;
-		var dx = x - nTouch.startX;
-		var dy = y - nTouch.startY;
-		_consolelog('EndX: '+x);
-		_consolelog('EndY: '+y);
-		_consolelog('End dX: '+dx);
-		_consolelog('End dY: '+dy);
+    if (!nTouch.shortEvent) {
+      if ( dx > nTouch.shortEventLength ) {
+        nTouch.shortEvent = true;
+        openSidebar();
+      } else if ( dx < -nTouch.shortEventLength ) {
+        nTouch.shortEvent = true;
+        closeSidebar();        
+      }
+    }
+  }, false)
+  window.addEventListener('touchend', function (e) {
+    var x = e.changedTouches[0].pageX;
+    var y = e.changedTouches[0].pageY;
+    var dx = x - nTouch.startX;
+    var dy = y - nTouch.startY;
+    _consolelog('EndX: '+x);
+    _consolelog('EndY: '+y);
+    _consolelog('End dX: '+dx);
+    _consolelog('End dY: '+dy);
     }, false)
 }

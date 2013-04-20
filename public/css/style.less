@@ -30,283 +30,283 @@
 @background-mixed-color: @base-background-color;
 
 body {
-	background-color:@body-background-color;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
-	-moz-tap-highlight-color: rgba(0,0,0,0);
+  background-color:@body-background-color;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -moz-tap-highlight-color: rgba(0,0,0,0);
 }
 #sidebar {
-	width: @sidebar-width;
-	position: absolute;
-	top: 0;
-	bottom: 0;
+  width: @sidebar-width;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 
-	overflow-x: hidden;
+  overflow-x: hidden;
 
-	background-color: @sidebar-background-color;
+  background-color: @sidebar-background-color;
 
-	//color: whitesmoke !important;
+  //color: whitesmoke !important;
 
-	//This should be put as a mixin
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
-	-ms-transition: all 0.3s;
+  //This should be put as a mixin
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
 
-	a {
-		color: whitesmoke;
-	}
+  a {
+    color: whitesmoke;
+  }
 
-	#sidebar-header {
+  #sidebar-header {
 
-		position: absolute;
-		width:100%;
+    position: absolute;
+    width:100%;
 
-		box-sizing:border-box;
-		padding:10px;
-		padding-left:15px;
+    box-sizing:border-box;
+    padding:10px;
+    padding-left:15px;
 
-		#logo {
-			color: whitesmoke;
+    #logo {
+      color: whitesmoke;
 
-			font-size: 22px;
-			line-height: @header-height - 20;
+      font-size: 22px;
+      line-height: @header-height - 20;
 
-			text-shadow: whitesmoke 0 0 1px;
+      text-shadow: whitesmoke 0 0 1px;
 
-			overflow-x: hidden;
-		}
-		#toggle-sidebar-trigger {
-			display: none;
-			visibility: hidden;
-		}
-	}
-	#sidebar-content {
-		position: absolute;
-		
-		width:100%;
+      overflow-x: hidden;
+    }
+    #toggle-sidebar-trigger {
+      display: none;
+      visibility: hidden;
+    }
+  }
+  #sidebar-content {
+    position: absolute;
+    
+    width:100%;
 
-		top: @header-height;
-		bottom: @footer-height;
+    top: @header-height;
+    bottom: @footer-height;
 
-		background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.2);
 
-		overflow-y: scroll;
-		a {
-			cursor: pointer;
-		}
-		#top-buttons {
-			padding-top:8px;
-			padding-right:7px;
+    overflow-y: scroll;
+    a {
+      cursor: pointer;
+    }
+    #top-buttons {
+      padding-top:8px;
+      padding-right:7px;
 
-			#add_schedule, #fetch_schedule {
-				padding:3px;
-				&:hover {
-					color: whitesmoke;
-				}
-			}
-		}
-		.help-block.small {
-			font-size:12px;
-		}
-	}
-	#sidebar-footer {
-		position: absolute;
-		
-		width:100%;
+      #add_schedule, #fetch_schedule {
+        padding:3px;
+        &:hover {
+          color: whitesmoke;
+        }
+      }
+    }
+    .help-block.small {
+      font-size:12px;
+    }
+  }
+  #sidebar-footer {
+    position: absolute;
+    
+    width:100%;
 
-		height: @footer-height;
-		bottom:0;
+    height: @footer-height;
+    bottom:0;
 
-		line-height: @footer-height;
+    line-height: @footer-height;
 
-		padding-left:7px;
+    padding-left:7px;
 
-		a {
-			font-size: 11px;
-			font-weight: normal;
-			color: #999;
-			padding-left:5px;
-			padding-right:5px;
-			&:hover {
-				color: whitesmoke;
-			}
-		}
-	}
+    a {
+      font-size: 11px;
+      font-weight: normal;
+      color: #999;
+      padding-left:5px;
+      padding-right:5px;
+      &:hover {
+        color: whitesmoke;
+      }
+    }
+  }
 }
 #sidebar-slide-handle {
-	display: none;
-	visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 #main-app {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: @sidebar-width;
-	right: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: @sidebar-width;
+  right: 0;
 
-	//This should be put as a mixin
-	transition: left 0.3s;
-	-webkit-transition: left 0.3s;
-	-moz-transition: left 0.3s;
-	-o-transition: left 0.3s;
-	-ms-transition: left 0.3s;
+  //This should be put as a mixin
+  transition: left 0.3s;
+  -webkit-transition: left 0.3s;
+  -moz-transition: left 0.3s;
+  -o-transition: left 0.3s;
+  -ms-transition: left 0.3s;
 
-	#content-header {
-		background-color: fade(#fff, 30%);
+  #content-header {
+    background-color: fade(#fff, 30%);
 
-		#content-view-title {
-			margin-left: 25px;
-			font-weight: normal;
-		}
-		#header-icons {
-			margin-right: 20px;
-			margin-top: 10px;
-			line-height: @header-height - 10px;
-			text-decoration: none;
+    #content-view-title {
+      margin-left: 25px;
+      font-weight: normal;
+    }
+    #header-icons {
+      margin-right: 20px;
+      margin-top: 10px;
+      line-height: @header-height - 10px;
+      text-decoration: none;
 
-			i {
-				color: #999;
-				cursor: pointer;
-				padding: 10px;
-				&:hover {
-					color: #222;
-					text-decoration: none;
-				}
-			}
-		}
-	}
-	#content-content {
+      i {
+        color: #999;
+        cursor: pointer;
+        padding: 10px;
+        &:hover {
+          color: #222;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  #content-content {
 
-		// This is necessary so the body extends to the bottom of the screen
-		position: absolute;
-		top: @header-height;
-		bottom: 0px;
-		right: 0px;
-		left: 0px;
+    // This is necessary so the body extends to the bottom of the screen
+    position: absolute;
+    top: @header-height;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
 
-		padding:20px;
+    padding:20px;
 
-		overflow: scroll;
+    overflow: scroll;
 
-		background-color: @background-color;
+    background-color: @background-color;
 
-		#content {
-			padding: 0;
-			overflow-x: scroll;
-		}
-		.large-message-div {
-			display: none;
-			visibility: hidden;
+    #content {
+      padding: 0;
+      overflow-x: scroll;
+    }
+    .large-message-div {
+      display: none;
+      visibility: hidden;
 
-			font-size:40px;
-			color:#999;
-			padding:50px;
-			width:60%;
-			text-align:center;
-			background-color:#fff;
-			margin:0 auto;
-		}
-	}
-	#schedule-pane{
-		&.no-schedules #no-schedules {
-			display: block;
-			visibility: visible;
-		}
-		&.select-schedule #select-schedule {
-			display: block;
-			visibility: visible;
-		}
-		&.loading #loading {
-			display: block;
-			visibility: visible;
-		}
-		&.loading-error #loading-error {
-			display: block;
-			visibility: visible;
-		}
-	}
+      font-size:40px;
+      color:#999;
+      padding:50px;
+      width:60%;
+      text-align:center;
+      background-color:#fff;
+      margin:0 auto;
+    }
+  }
+  #schedule-pane{
+    &.no-schedules #no-schedules {
+      display: block;
+      visibility: visible;
+    }
+    &.select-schedule #select-schedule {
+      display: block;
+      visibility: visible;
+    }
+    &.loading #loading {
+      display: block;
+      visibility: visible;
+    }
+    &.loading-error #loading-error {
+      display: block;
+      visibility: visible;
+    }
+  }
 }
 
 .header {
-	height: @header-height;
+  height: @header-height;
 }
 
 @media (max-width: 800px) {
 
-	#sidebar-slide-handle {
-		display: block;
-		visibility: visible;
+  #sidebar-slide-handle {
+    display: block;
+    visibility: visible;
 
-		position: absolute;
-		z-index: 100;
-		top: 50%;
-		left: 33px;
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 33px;
 
-		border: 3px solid lighten(@sidebar-background-color, 20%);
-		background-color: @sidebar-background-color;
-		color: whitesmoke;
+    border: 3px solid lighten(@sidebar-background-color, 20%);
+    background-color: @sidebar-background-color;
+    color: whitesmoke;
 
-		border-left: 0;
-		border-top-right-radius: 15px;
-		border-bottom-right-radius: 15px;
+    border-left: 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
 
-		height:40px;
-		width:30px;
+    height:40px;
+    width:30px;
 
-		text-align:center;
+    text-align:center;
 
-		padding-top: 10px;
-	}
+    padding-top: 10px;
+  }
 
-	#sidebar {
+  #sidebar {
 
-		//width: @sidebar-width-minimized;
-		left: -@sidebar-width + 33px;
+    //width: @sidebar-width-minimized;
+    left: -@sidebar-width + 33px;
 
-		z-index: 1;
+    z-index: 1;
 
-		#toggle-sidebar-trigger {
-			display:block !important;
-			visibility: visible !important;
+    #toggle-sidebar-trigger {
+      display:block !important;
+      visibility: visible !important;
 
-			transition: all 0.3s;
-			-webkit-transition: all 0.3s;
-			-moz-transition: all 0.3s;
-			-o-transition: all 0.3s;
-			-ms-transition: all 0.3s;
+      transition: all 0.3s;
+      -webkit-transition: all 0.3s;
+      -moz-transition: all 0.3s;
+      -o-transition: all 0.3s;
+      -ms-transition: all 0.3s;
 
-			line-height: @header-height - 20px;
-			&:hover {
-				color: whitesmoke;
-			}
-		}
-		#sidebar-header {
-			//- width: @sidebar-width;
-		}
-		#sidebar-content {
-			width: @sidebar-width;
-		}
-		div {
-			overflow-x: hidden;
-		}
+      line-height: @header-height - 20px;
+      &:hover {
+        color: whitesmoke;
+      }
+    }
+    #sidebar-header {
+      //- width: @sidebar-width;
+    }
+    #sidebar-content {
+      width: @sidebar-width;
+    }
+    div {
+      overflow-x: hidden;
+    }
 
-		/*&:hover, */&.open {
-			width:@sidebar-width;
-			left:0;
+    /*&:hover, */&.open {
+      width:@sidebar-width;
+      left:0;
 
-			#toggle-sidebar-trigger {
-				transform: rotate(180deg);
-				-webkit-transform: rotate(180deg);
-				-moz-transform: rotate(180deg);
-				-o-transform: rotate(180deg);
-				-ms-transform: rotate(180deg);
-			}
-		}
-	}
-	#main-app {
-		left: 33px;//@sidebar-width-minimized;
-	}
+      #toggle-sidebar-trigger {
+        transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+      }
+    }
+  }
+  #main-app {
+    left: 33px;//@sidebar-width-minimized;
+  }
 }
 //Bootstrap Overload
 
@@ -317,12 +317,12 @@ body {
 }
 
 .nav > li > a {
-	border-top-left-radius: 8px;
-	border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .nav > .active > a {
-	color: black;
+  color: black;
 }
 .nav-list > .active > a,
 .nav-list > .active > a:hover,
@@ -333,116 +333,116 @@ body {
 }
 
 .admin-only {
-	display: none;
-	visibility: none;
+  display: none;
+  visibility: none;
 }
 .admin .admin-only {
-	display: block;
-	visibility: visible;
+  display: block;
+  visibility: visible;
 }
 
 // Account Modal Style
 
 #account-modal {
-	.modal-header {
-	}
-	.modal-body {
-		padding:0;
-		max-height:500px;
-		overflow-x: scroll;
+  .modal-header {
+  }
+  .modal-body {
+    padding:0;
+    max-height:500px;
+    overflow-x: scroll;
 
-		background-color: @sidebar-background-color;
+    background-color: @sidebar-background-color;
 
-		.account-nav {
-			width:150px;
-			float:left;
+    .account-nav {
+      width:150px;
+      float:left;
 
-			a {
-				color: whitesmoke;
-				cursor: pointer;
-			}
-		} 
-		.setting-views {
-			float:left;
+      a {
+        color: whitesmoke;
+        cursor: pointer;
+      }
+    } 
+    .setting-views {
+      float:left;
 
-			width:410px;
+      width:410px;
 
-			background-color: @background-color;
-			.setting-view {
-				display:none;
-				visibility: hidden;
-				min-height:300px;
+      background-color: @background-color;
+      .setting-view {
+        display:none;
+        visibility: hidden;
+        min-height:300px;
 
-				padding-left:10px;
-				padding-right: 10px;
+        padding-left:10px;
+        padding-right: 10px;
 
-				&.active {
-					display: block;
-					visibility: visible;
-				}
+        &.active {
+          display: block;
+          visibility: visible;
+        }
 
-				.no-notifications {
-					display: none;
-				}
-			}
-		}
-		//Bootstrap override
-		.form-horizontal > .control-group {
-			& > .control-label {
-				width: 100px;
-			}
-			& > .controls {
-				margin-left: 120px !important;
-			}
-		}
-	}
-	.modal-footer {
-	}
+        .no-notifications {
+          display: none;
+        }
+      }
+    }
+    //Bootstrap override
+    .form-horizontal > .control-group {
+      & > .control-label {
+        width: 100px;
+      }
+      & > .controls {
+        margin-left: 120px !important;
+      }
+    }
+  }
+  .modal-footer {
+  }
 }
 
 @media (max-width: 570px) {
-	// make modals only the screen width on small screens
-	.modal { 
-		position: fixed; 
-		top: 3%; 
-		right: 3%; 
-		left: 3%; 
-		width: auto; 
-		margin: 0; 
-	}
-	.modal-body { 
-		height: 60%;
+  // make modals only the screen width on small screens
+  .modal { 
+    position: fixed; 
+    top: 3%; 
+    right: 3%; 
+    left: 3%; 
+    width: auto; 
+    margin: 0; 
+  }
+  .modal-body { 
+    height: 60%;
 
-		.account-nav {
-			width:30% !important;
-		}
-		.setting-views {
-			width:70% !important;
-		}
-	}
+    .account-nav {
+      width:30% !important;
+    }
+    .setting-views {
+      width:70% !important;
+    }
+  }
 }
 
 hr.dark {
-	border-color: @sidebar-background-color;
-	background-color: @sidebar-background-color;
+  border-color: @sidebar-background-color;
+  background-color: @sidebar-background-color;
 }
 //Helpers which may be removable later
 .centered {
-	text-align: center;
+  text-align: center;
 }
 .hidden {
-	display: none;
-	visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 
 #console-output {
-	border: 1px solid black;
-	background-color:white;
-	color: black;
-	position:fixed;
-	bottom:0;
-	right:0;
-	height:100px;
-	width:200px;
-	overflow: scroll;
+  border: 1px solid black;
+  background-color:white;
+  color: black;
+  position:fixed;
+  bottom:0;
+  right:0;
+  height:100px;
+  width:200px;
+  overflow: scroll;
 }

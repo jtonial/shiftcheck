@@ -1,96 +1,96 @@
 extends newlayout
 
 block append scripts
-	- if ( user.employer_id )
-		script(src='/js/admin-application.js')
-	- else 
-		script(src='/js/dash-application.js')
+  - if ( user.employer_id )
+    script(src='/js/admin-application.js')
+  - else 
+    script(src='/js/dash-application.js')
 
 block append styles
 
 
 block sidebar-header
-	#logo.open.pull-left ShiftCheck
-	i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
+  #logo.open.pull-left ShiftCheck
+  i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
 
 block sidebar-footer
-	a(href="/about") About
-	a(href="/about/team") Team
+  a(href="/about") About
+  a(href="/about/team") Team
 
 block content-header
-	h3#content-view-title.pull-left
-	#header-icons.pull-right
-		- if ( user.employer_id )
-			i#add-employee-modal-trigger.icon-plus.icon-2x(title="Add Employee")
-			i#settings-trigger.icon-cogs.icon-2x(title="Settings")
-		- else
+  h3#content-view-title.pull-left
+  #header-icons.pull-right
+    - if ( user.employer_id )
+      i#add-employee-modal-trigger.icon-plus.icon-2x(title="Add Employee")
+      i#settings-trigger.icon-cogs.icon-2x(title="Settings")
+    - else
 
-		i#logout-trigger.icon-signout.icon-2x(title="Logout")
+    i#logout-trigger.icon-signout.icon-2x(title="Logout")
 
 block content-content
-	#schedule-pane.loading
-		#no-schedules.large-message-div
-			.icon-inbox.icon-4x
-			h5 No current schedules have been uploaded
-		#select-schedule.large-message-div
-			.icon-circle-arrow-left.icon-4x
-			h5 Select a schedule on the left to view it
-		#loading.large-message-div
-			.icon-refresh.icon-spin.icon-4x
-			h5 Loading...
-		#loading-error.large-message-div
-			.icon-remove.icon-4x
-			h5 An Error Occured! We apologize
+  #schedule-pane.loading
+    #no-schedules.large-message-div
+      .icon-inbox.icon-4x
+      h5 No current schedules have been uploaded
+    #select-schedule.large-message-div
+      .icon-circle-arrow-left.icon-4x
+      h5 Select a schedule on the left to view it
+    #loading.large-message-div
+      .icon-refresh.icon-spin.icon-4x
+      h5 Loading...
+    #loading-error.large-message-div
+      .icon-remove.icon-4x
+      h5 An Error Occured! We apologize
 
 block templates
-	script#employee-template(type='text/x-handlebars-template')
-		<div class="well">
-		<h1 class="name"><%= name =></h1>
-		<p class="number"><$= enumber =></p>
-		</div>
+  script#employee-template(type='text/x-handlebars-template')
+    <div class="well">
+    <h1 class="name"><%= name =></h1>
+    <p class="number"><$= enumber =></p>
+    </div>
 
-	script(id='login-template', type='text/x-handlebars-template')
-		include templates/login-template
-	script(id='approval-template', type='text/x-handlebars-template')
+  script(id='login-template', type='text/x-handlebars-template')
+    include templates/login-template
+  script(id='approval-template', type='text/x-handlebars-template')
 
-	script(id='schedule-template', type='text/x-handlebars-template')
-		include templates/schedule-template
-	script(id='schedule-template-spreadsheet', type='text/x-handlebars-template')
-		include templates/schedule-gdocSpreadsheet-template
-	script(id='schedule-template-table', type='text/x-handlebars-template')
-		include templates/schedule-template-table
-	script(id='schedule-template-d3', type='text/x-handlebars-template')
-		include templates/schedule-template-d3
-	script(id='account-template', type='text/x-handlebars-template')
-		include templates/admin-account-template
-	script(id='edit-shift-template', type='text/x-handlebars-template')
-		include templates/edit-shift-template
-	script(id='schedule-list-template', type='text/x-handlebars-template')
-		include templates/schedule-list-template
-				
+  script(id='schedule-template', type='text/x-handlebars-template')
+    include templates/schedule-template
+  script(id='schedule-template-spreadsheet', type='text/x-handlebars-template')
+    include templates/schedule-gdocSpreadsheet-template
+  script(id='schedule-template-table', type='text/x-handlebars-template')
+    include templates/schedule-template-table
+  script(id='schedule-template-d3', type='text/x-handlebars-template')
+    include templates/schedule-template-d3
+  script(id='account-template', type='text/x-handlebars-template')
+    include templates/admin-account-template
+  script(id='edit-shift-template', type='text/x-handlebars-template')
+    include templates/edit-shift-template
+  script(id='schedule-list-template', type='text/x-handlebars-template')
+    include templates/schedule-list-template
+        
 block end-scripts
-	script(src='/js/models/EmployeeModel.js')
-	script(src='/js/models/ScheduleModel.js')
-	script(src='/js/models/ShiftModel.js')
+  script(src='/js/models/EmployeeModel.js')
+  script(src='/js/models/ScheduleModel.js')
+  script(src='/js/models/ShiftModel.js')
 
-	script(src='/js/collections/EmployeeCollection.js')
-	script(src='/js/collections/ScheduleCollection.js')
-	script(src='/js/collections/ShiftCollection.js')
+  script(src='/js/collections/EmployeeCollection.js')
+  script(src='/js/collections/ScheduleCollection.js')
+  script(src='/js/collections/ShiftCollection.js')
 
-	script(src='/js/views/AccountView.js')
-	script(src='/js/views/EmployeeView.js')
+  script(src='/js/views/AccountView.js')
+  script(src='/js/views/EmployeeView.js')
 
-	script(src='/js/views/ScheduleView.js')
-	script(src='/js/views/ScheduleBaseView.js')
+  script(src='/js/views/ScheduleView.js')
+  script(src='/js/views/ScheduleBaseView.js')
 
-	script(src='/js/views/ScheduleViewPDF.js')
+  script(src='/js/views/ScheduleViewPDF.js')
 
-	script(src='/js/views/ScheduleListView.js')
+  script(src='/js/views/ScheduleListView.js')
 
-	script(src='/js/views/ScheduleViewD3.js')
-	script(src='/js/views/ScheduleViewTable.js')
-	script(src='/js/views/ScheduleViewSpreadsheet.js')
+  script(src='/js/views/ScheduleViewD3.js')
+  script(src='/js/views/ScheduleViewTable.js')
+  script(src='/js/views/ScheduleViewSpreadsheet.js')
 
-	//- script(src='/js/views/SchedulesView.js')
+  //- script(src='/js/views/SchedulesView.js')
 
-	script(src='/js/routers/employer-router.js')
+  script(src='/js/routers/employer-router.js')

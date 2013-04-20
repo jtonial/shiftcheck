@@ -1,62 +1,62 @@
 !!! 5
 html(lang='en')
-	head
-		meta(charset='utf-8')
-		title= site_name
-		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		meta(name='description', content='')
-		meta(name='author', content='nrmitchi')
-		link(href='./css/bootstrap.css', rel='stylesheet')
-		script(src='./js/jquery.js')
-		script(src='./js/signup.js')
-		script(src='./js/bootstrap.js')
-		script(src='./js/ga.js')
-		style
-			.navbar-static-top {
-			margin-bottom:20px;
-			}
-	body
-		.navbar.navbar-static-top
-			.navbar-inner
-				.container
-					a.brand(href='/') #{site_name_lower}
-					ul.nav.pull-right
-						li
-							a(href='manager-login') Manager Login
-						li.active
-							a(href='login') Employee Login
-		.container
-			.span8.offset2
-				.well
-					h1 Signup
-					form#signup-form.form-horizontal
-						.control-group
-							label.control-label Name
-							.controls
-								input#name(type='text', name='name', placeholder='Name')
-						.control-group
-							label.control-label Email
-							.controls
-								input#email(type='text', name='email', placeholder='Email')
-						.control-group
-							label.control-label Username
-							.controls
-								input#username(type='text', name='username', placeholder='Username')
-						.control-group
-							label.control-label Password
-							.controls
-								input#password(type='password', name='password', placeholder='Name')
-						.control-group
-							label.control-label Contact Email
-							.controls
-								input#contact-email(type='text', name='contact[email]', placeholder='Contact Email')
-						.control-group
-							label.control-label Contact Phone
-							.controls
-								input#contact-phone(type='text', name='contact[phone]', placeholder='Contact Phone')
-						.control-group
-							label.control-label Contact Address
-							.controls
-								input#contact-address(type='text', name='contact[address]', placeholder='Contact Address')
-						button.btn.btn-primary.input-block-level(type='submit') Sign up!
-		// /container
+  head
+    meta(charset='utf-8')
+    title= site_name
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='')
+    meta(name='author', content='nrmitchi')
+    link(href='./css/bootstrap.css', rel='stylesheet')
+    script(src='./js/jquery.js')
+    script(src='./js/signup.js')
+    script(src='./js/bootstrap.js')
+    script(src='./js/ga.js')
+    style
+      .navbar-static-top {
+      margin-bottom:20px;
+      }
+  body
+    .navbar.navbar-static-top
+      .navbar-inner
+        .container
+          a.brand(href='/') #{site_name_lower}
+          ul.nav.pull-right
+            li
+              a(href='manager-login') Manager Login
+            li.active
+              a(href='login') Employee Login
+    .container
+      .span8.offset2
+        .well
+          h1 Signup
+          form#signup-form.form-horizontal
+            .control-group
+              label.control-label Name
+              .controls
+                input#name(type='text', name='name', placeholder='Name')
+            .control-group
+              label.control-label Email
+              .controls
+                input#email(type='text', name='email', placeholder='Email')
+            .control-group
+              label.control-label Username
+              .controls
+                input#username(type='text', name='username', placeholder='Username')
+            .control-group
+              label.control-label Password
+              .controls
+                input#password(type='password', name='password', placeholder='Name')
+            .control-group
+              label.control-label Contact Email
+              .controls
+                input#contact-email(type='text', name='contact[email]', placeholder='Contact Email')
+            .control-group
+              label.control-label Contact Phone
+              .controls
+                input#contact-phone(type='text', name='contact[phone]', placeholder='Contact Phone')
+            .control-group
+              label.control-label Contact Address
+              .controls
+                input#contact-address(type='text', name='contact[address]', placeholder='Contact Address')
+            button.btn.btn-primary.input-block-level(type='submit') Sign up!
+    // /container

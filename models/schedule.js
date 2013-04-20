@@ -10,362 +10,362 @@ var connection = mysql.createConnection({});
 // arrays. The default delimiter is the comma, but this
 // can be overriden in the second argument.
 function CSVToArray( strData, strDelimiter ){
-	// Check to see if the delimiter is defined. If not,
-	// then default to comma.
-	strDelimiter = (strDelimiter || ",");
+  // Check to see if the delimiter is defined. If not,
+  // then default to comma.
+  strDelimiter = (strDelimiter || ",");
 
-	// Create a regular expression to parse the CSV values.
-	var objPattern = new RegExp(
-		(
-			// Delimiters.
-			"(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+  // Create a regular expression to parse the CSV values.
+  var objPattern = new RegExp(
+    (
+      // Delimiters.
+      "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
 
-			// Quoted fields.
-			"(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+      // Quoted fields.
+      "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
 
-			// Standard fields.
-			"([^\"\\" + strDelimiter + "\\r\\n]*))"
-		),
-		"gi"
-		);
-
-
-	// Create an array to hold our data. Give the array
-	// a default empty first row.
-	var arrData = [[]];
-
-	// Create an array to hold our individual pattern
-	// matching groups.
-	var arrMatches = null;
+      // Standard fields.
+      "([^\"\\" + strDelimiter + "\\r\\n]*))"
+    ),
+    "gi"
+    );
 
 
-	// Keep looping over the regular expression matches
-	// until we can no longer find a match.
-	while (arrMatches = objPattern.exec( strData )){
+  // Create an array to hold our data. Give the array
+  // a default empty first row.
+  var arrData = [[]];
 
-		// Get the delimiter that was found.
-		var strMatchedDelimiter = arrMatches[ 1 ];
-
-		// Check to see if the given delimiter has a length
-		// (is not the start of string) and if it matches
-		// field delimiter. If id does not, then we know
-		// that this delimiter is a row delimiter.
-		if (
-			strMatchedDelimiter.length &&
-			(strMatchedDelimiter != strDelimiter)
-			){
-
-			// Since we have reached a new row of data,
-			// add an empty row to our data array.
-			arrData.push( [] );
-
-		}
+  // Create an array to hold our individual pattern
+  // matching groups.
+  var arrMatches = null;
 
 
-		// Now that we have our delimiter out of the way,
-		// let's check to see which kind of value we
-		// captured (quoted or unquoted).
-		if (arrMatches[ 2 ]){
+  // Keep looping over the regular expression matches
+  // until we can no longer find a match.
+  while (arrMatches = objPattern.exec( strData )){
 
-			// We found a quoted value. When we capture
-			// this value, unescape any double quotes.
-			var strMatchedValue = arrMatches[ 2 ].replace(
-				new RegExp( "\"\"", "g" ),
-				"\""
-				);
+    // Get the delimiter that was found.
+    var strMatchedDelimiter = arrMatches[ 1 ];
 
-		} else {
+    // Check to see if the given delimiter has a length
+    // (is not the start of string) and if it matches
+    // field delimiter. If id does not, then we know
+    // that this delimiter is a row delimiter.
+    if (
+      strMatchedDelimiter.length &&
+      (strMatchedDelimiter != strDelimiter)
+      ){
 
-			// We found a non-quoted value.
-			var strMatchedValue = arrMatches[ 3 ];
+      // Since we have reached a new row of data,
+      // add an empty row to our data array.
+      arrData.push( [] );
 
-		}
+    }
 
 
-		// Now that we have our value string, let's add
-		// it to the data array.
-		arrData[ arrData.length - 1 ].push( strMatchedValue );
-	}
+    // Now that we have our delimiter out of the way,
+    // let's check to see which kind of value we
+    // captured (quoted or unquoted).
+    if (arrMatches[ 2 ]){
 
-	// Return the parsed data.
-	return( arrData );
+      // We found a quoted value. When we capture
+      // this value, unescape any double quotes.
+      var strMatchedValue = arrMatches[ 2 ].replace(
+        new RegExp( "\"\"", "g" ),
+        "\""
+        );
+
+    } else {
+
+      // We found a non-quoted value.
+      var strMatchedValue = arrMatches[ 3 ];
+
+    }
+
+
+    // Now that we have our value string, let's add
+    // it to the data array.
+    arrData[ arrData.length - 1 ].push( strMatchedValue );
+  }
+
+  // Return the parsed data.
+  return( arrData );
 }
 
 var Schedule = {
 
-	data: {
+  data: {
 
-	},
-	validate: function () {
+  },
+  validate: function () {
 
-	},
-	UTCify: function (date) {
-		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
-	},
-	unUTCify: function (date) {
-		return new Date(date.getTime() - date.getTimezoneOffset()*60000);
-	},
-	generateUpdateQuery: function () {
-		var sets = [];
-		var vals = [];
-		for (var key in this.data) {
-			sets.push(key+'=');
-			vals.push(this.data[key]);
-		}
-		var returnObject = {
-			queryString : 'UPDATE schedules SET '+sets.join()+' WHERE schedule_id='+this.id,
-			values		: vals
-		}
+  },
+  UTCify: function (date) {
+    return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+  },
+  unUTCify: function (date) {
+    return new Date(date.getTime() - date.getTimezoneOffset()*60000);
+  },
+  generateUpdateQuery: function () {
+    var sets = [];
+    var vals = [];
+    for (var key in this.data) {
+      sets.push(key+'=');
+      vals.push(this.data[key]);
+    }
+    var returnObject = {
+      queryString : 'UPDATE schedules SET '+sets.join()+' WHERE schedule_id='+this.id,
+      values    : vals
+    }
 
-		return returnObject;
-	},
-	generateInsertQuery: function () {
-		if (this.data.image_loc != '') {
-			var returnObject = {
-				queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json) VALUES (?,?,?,NOW(),?,?,?)',
-				values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
-			}
-		} else {
-			var returnObject = {
-				queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json, awaitingupload, published) VALUES (?,?,?,NOW(),?,?,?,0,1)',
-				values		: [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
-			}
-		}
+    return returnObject;
+  },
+  generateInsertQuery: function () {
+    if (this.data.image_loc != '') {
+      var returnObject = {
+        queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json) VALUES (?,?,?,NOW(),?,?,?)',
+        values    : [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
+      }
+    } else {
+      var returnObject = {
+        queryString : 'INSERT INTO schedules (employer_id, date, type, creation_time, image_loc, timezone, json, awaitingupload, published) VALUES (?,?,?,NOW(),?,?,?,0,1)',
+        values    : [this.data.employer_id, this.data.date, this.data.type, this.data.image_loc, this.data.timezone, this.data.json]
+      }
+    }
 
-		return returnObject;
-	},
-	save : function (cb) {
-		if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Schedule');
+    return returnObject;
+  },
+  save : function (cb) {
+    if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Schedule');
 
-		_this = this;
+    _this = this;
 
-		if (typeof this.id == 'undefined') { //Create
-			_this = this;
+    if (typeof this.id == 'undefined') { //Create
+      _this = this;
 
-			var obj = this.generateInsertQuery();
+      var obj = this.generateInsertQuery();
 
-			if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
+      if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
 
-			db.query(obj.queryString, obj.values, function (err, result) {
-				if (!err) {
-					//not method forEach of undefined
-					var counter = _this.data.shifts.length;
-					if (counter) {
-						_this.data.shifts.forEach( function (shift) {
-							db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
-								if (err) {
-									Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
-									console.log('Error: '+err);
-								}
-								counter--;
-								if (counter == 0) {
-									cb(err, result);
-								}
-							});
-						})
-					} else {
-						cb(err, result);
-					}
-				} else {
-					cb(err, result);
-				}
-			});
-		} else { //Update
-			var obj = this.generateUpdateQuery();
+      db.query(obj.queryString, obj.values, function (err, result) {
+        if (!err) {
+          //not method forEach of undefined
+          var counter = _this.data.shifts.length;
+          if (counter) {
+            _this.data.shifts.forEach( function (shift) {
+              db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+                if (err) {
+                  Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
+                  console.log('Error: '+err);
+                }
+                counter--;
+                if (counter == 0) {
+                  cb(err, result);
+                }
+              });
+            })
+          } else {
+            cb(err, result);
+          }
+        } else {
+          cb(err, result);
+        }
+      });
+    } else { //Update
+      var obj = this.generateUpdateQuery();
 
-			if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
+      if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
 
-			db.query(obj.queryString, obj.values, cb);
-		}
+      db.query(obj.queryString, obj.values, cb);
+    }
 
-		return true;
-	},
-	delete : function (cb) {
-		if (Scheduleme.Config.debug)Scheduleme.Logger.info('Updating Employee');
-	}
+    return true;
+  },
+  delete : function (cb) {
+    if (Scheduleme.Config.debug)Scheduleme.Logger.info('Updating Employee');
+  }
 };
 
 exports.new = function (obj) {
-	var tmp = Object.create(Schedule);
+  var tmp = Object.create(Schedule);
 
-	if (typeof obj.employer_id != 'undefined') {
-		tmp.data.employer_id = obj.employer_id;
-	}
-	if (typeof obj.date != 'undefined') {
-		tmp.data.date = obj.date;
-	}
-	if (typeof obj.type != 'undefined') {
-		tmp.data.type = obj.type;
-	}
-	if (typeof obj.creation_time != 'undefined') {
-		tmp.data.creation_time = obj.creation_time;
-	}
-	if (typeof obj.image_loc != 'undefined') {
-		tmp.data.image_loc = obj.image_loc;
-	}
-	if (typeof obj.shifts != 'undefined') {
-		tmp.data.shifts = obj.shifts;
-	}
-	if (typeof obj.timezone != 'undefined') {
-		tmp.data.timezone = obj.timezone;
-	} else {
-		tmp.data.timezone = 0;
-	}
-	if (typeof obj.json != 'undefined') {
-		tmp.data.json = obj.json;
-	}
+  if (typeof obj.employer_id != 'undefined') {
+    tmp.data.employer_id = obj.employer_id;
+  }
+  if (typeof obj.date != 'undefined') {
+    tmp.data.date = obj.date;
+  }
+  if (typeof obj.type != 'undefined') {
+    tmp.data.type = obj.type;
+  }
+  if (typeof obj.creation_time != 'undefined') {
+    tmp.data.creation_time = obj.creation_time;
+  }
+  if (typeof obj.image_loc != 'undefined') {
+    tmp.data.image_loc = obj.image_loc;
+  }
+  if (typeof obj.shifts != 'undefined') {
+    tmp.data.shifts = obj.shifts;
+  }
+  if (typeof obj.timezone != 'undefined') {
+    tmp.data.timezone = obj.timezone;
+  } else {
+    tmp.data.timezone = 0;
+  }
+  if (typeof obj.json != 'undefined') {
+    tmp.data.json = obj.json;
+  }
 
-	return tmp;
+  return tmp;
 }
 exports.verifyUpload = function (id, cb) {
-	db.query(Scheduleme.Queries.verifyUpload,[id], function (err, result) {
-		var obj = {
-			err 	: err,
-			result 	: result
-		}
-		cb(obj);
-	});
+  db.query(Scheduleme.Queries.verifyUpload,[id], function (err, result) {
+    var obj = {
+      err   : err,
+      result   : result
+    }
+    cb(obj);
+  });
 }
 exports.getByEmployer = function (obj, cb) {
 
-	id 			= obj.id;
-	response 	= {};
+  id       = obj.id;
+  response   = {};
 
-	response.schedules = [];
+  response.schedules = [];
 
-	_this = Schedule;
+  _this = Schedule;
 
-	//var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-	db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id, (new Date()).toISOString()], function (err, rows) {
-		if (err) {
-			Scheduleme.Logger.error(err);
-			cb(err, null);
-		} else {
-			var totalRows = rows.length;
-			if (totalRows) {
+  //var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id, (new Date()).toISOString()], function (err, rows) {
+    if (err) {
+      Scheduleme.Logger.error(err);
+      cb(err, null);
+    } else {
+      var totalRows = rows.length;
+      if (totalRows) {
 
-				var flag = false;
-				var error = null;
-				
-				rows.forEach(function (row) {
-					db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
-						if (err) {
-							console.log(err);
-							error = err;
-						} else {
-							row.shifts = [];
-							shiftRows.forEach(function (shiftRow) {
-								shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
-								shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
-								row.shifts.push(shiftRow);
-							})
-							if (row.shifts.length) {
-								row.type = "shifted";
-							} else if (row.json) {
-								row.json = JSON.parse(row.json);
-							}
+        var flag = false;
+        var error = null;
+        
+        rows.forEach(function (row) {
+          db.query(Scheduleme.Queries.getShiftsBySchedule, [row.id], function (err, shiftRows) {
+            if (err) {
+              console.log(err);
+              error = err;
+            } else {
+              row.shifts = [];
+              shiftRows.forEach(function (shiftRow) {
+                shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
+                shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
+                row.shifts.push(shiftRow);
+              })
+              if (row.shifts.length) {
+                row.type = "shifted";
+              } else if (row.json) {
+                row.json = JSON.parse(row.json);
+              }
 
-							try {
-								response.schedules.push(row);
-							} catch (e) {
-								Scheduleme.Logger.error(e);
-							}
-						}
+              try {
+                response.schedules.push(row);
+              } catch (e) {
+                Scheduleme.Logger.error(e);
+              }
+            }
 
-						totalRows--;
-						if (totalRows == 0) {
-							cb(error, response);
-						}
+            totalRows--;
+            if (totalRows == 0) {
+              cb(error, response);
+            }
 
-					})
-				})
-			} else {
-				cb(err, response);
-			}
-		}
-	});
+          })
+        })
+      } else {
+        cb(err, response);
+      }
+    }
+  });
 }
 
 exports.getByEmployerDate = function (obj, cb) {
-	var id 			= obj.id;
-	var date 		= obj.date;
-	var response 	= typeof obj.response != 'undefined' ? obj.response : {};
+  var id       = obj.id;
+  var date     = obj.date;
+  var response   = typeof obj.response != 'undefined' ? obj.response : {};
 
-	db.query(Scheduleme.Queries.getScheduleByEmployerDate, [id,date], function (err, row) {
+  db.query(Scheduleme.Queries.getScheduleByEmployerDate, [id,date], function (err, row) {
 
-		if (row[0]) {
+    if (row[0]) {
 
-			db.query(Scheduleme.Queries.getShiftsBySchedule, [row[0].id], function (err, shiftRows) {
-				row[0].shifts = [];
-				shiftRows.forEach(function (shiftRow) {
-					shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
-					shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
-					row[0].shifts.push(shiftRow);
-				})
+      db.query(Scheduleme.Queries.getShiftsBySchedule, [row[0].id], function (err, shiftRows) {
+        row[0].shifts = [];
+        shiftRows.forEach(function (shiftRow) {
+          shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
+          shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
+          row[0].shifts.push(shiftRow);
+        })
 
-				if (row[0].shifts.length) {
-					row[0].type = "shifted";
-				} else if (row[0].json) {
-					row[0].type = "table";
-					row[0].json = JSON.parse(row[0].json);
-				}
+        if (row[0].shifts.length) {
+          row[0].type = "shifted";
+        } else if (row[0].json) {
+          row[0].type = "table";
+          row[0].json = JSON.parse(row[0].json);
+        }
 
-				var obj = {
-					err 		: err,
-					row 		: row[0],
-					response 	: response
-				}
+        var obj = {
+          err     : err,
+          row     : row[0],
+          response   : response
+        }
 
-				cb(obj);
+        cb(obj);
 
-			})
-		} else {
+      })
+    } else {
 
-			var obj = {
-				err 		: err,
-				row 		: row[0],
-				response 	: response
-			}
+      var obj = {
+        err     : err,
+        row     : row[0],
+        response   : response
+      }
 
-			cb(obj);
-		}
-	});
+      cb(obj);
+    }
+  });
 }
 
 exports.publish = function (obj, cb) {
-	var employer_id = obj.employer_id;
-	var schedule_id = obj.schedule_id;
+  var employer_id = obj.employer_id;
+  var schedule_id = obj.schedule_id;
 
-	db.query(Scheduleme.Queries.publishSchedule, [schedule_id, employer_id], function (err, result) {
-		var response = {};
+  db.query(Scheduleme.Queries.publishSchedule, [schedule_id, employer_id], function (err, result) {
+    var response = {};
 
-		if (err) {
-			response.statusCode = 500;
-			response.message = err;
-		} else {
-			response.statusCode = 200;
-		}
+    if (err) {
+      response.statusCode = 500;
+      response.message = err;
+    } else {
+      response.statusCode = 200;
+    }
 
-		cb(null, response);
+    cb(null, response);
 
-	})
+  })
 }
 
 exports.unpublish = function (obj, cb) {
-	var employer_id = obj.employer_id;
-	var schedule_id = obj.schedule_id;
+  var employer_id = obj.employer_id;
+  var schedule_id = obj.schedule_id;
 
-	db.query(Scheduleme.Queries.unpublishSchedule, [schedule_id, employer_id], function (err, result) {
-		var response = {};
+  db.query(Scheduleme.Queries.unpublishSchedule, [schedule_id, employer_id], function (err, result) {
+    var response = {};
 
-		if (err) {
-			response.statusCode = 500;
-			response.message = err;
-		} else {
-			response.statusCode = 200;
-		}
+    if (err) {
+      response.statusCode = 500;
+      response.message = err;
+    } else {
+      response.statusCode = 200;
+    }
 
-		cb(null, response);
-		
-	})
+    cb(null, response);
+    
+  })
 }

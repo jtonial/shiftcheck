@@ -1,143 +1,143 @@
 Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
-	//This renders directly into the el element; no need to append
-		//Replaces everything in it; and no need to postRender()
-	el: $('#list-page .content'),
+  //This renders directly into the el element; no need to append
+    //Replaces everything in it; and no need to postRender()
+  el: $('#list-page .content'),
 
-	template: Handlebars.compile($('#schedule-list-template').html()),
+  template: Handlebars.compile($('#schedule-list-template').html()),
 
-	initialize: function () {
+  initialize: function () {
 
-		console.log('initialized');
+    console.log('initialized');
 
-		//Callback incase I forget to pass reference to collection
-		this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
+    //Callback incase I forget to pass reference to collection
+    this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
 
-		this.collection.bind('add',this.addOneSchedule, this);
+    this.collection.bind('add',this.addOneSchedule, this);
 
-		this.render();
-	},
+    this.render();
+  },
 
-	events: {
+  events: {
 
-	},
+  },
 
-	render: function () {
-		//The JSON passed in does nothing right now, but may in the future
-		//$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
-		return $(this.el);
-	},
+  render: function () {
+    //The JSON passed in does nothing right now, but may in the future
+    //$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+    return $(this.el);
+  },
 
-	//Adds one schedule to the Schedules page.
-	addOneSchedule: function (schedule) {
-		console.log('add one schedule '+schedule.get('type'));
-		var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-		var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-		var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
+  //Adds one schedule to the Schedules page.
+  addOneSchedule: function (schedule) {
+    console.log('add one schedule '+schedule.get('type'));
+    var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
-		var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
-		var d = new Date(datenum);
+    var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
+    var d = new Date(datenum);
 
-		d = Scheduleme.helpers.UTCify(d);
+    d = Scheduleme.helpers.UTCify(d);
 
-		datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
-		var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
+    datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
+    var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
 
-		// This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
-		schedule.set('datenum', datenum);
-		schedule.set('datestring', datestring);
+    // This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
+    schedule.set('datenum', datenum);
+    schedule.set('datestring', datestring);
 
-		//Hack to test D3 schedules
-		//schedule.set('type', 'shifted');
+    //Hack to test D3 schedules
+    //schedule.set('type', 'shifted');
 
-		if (schedule.get('type') == 'month') {
-			datestring = Months[d.getMonth()];
-			schedule.set('datestring', datestring);
+    if (schedule.get('type') == 'month') {
+      datestring = Months[d.getMonth()];
+      schedule.set('datestring', datestring);
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
-		} else if (schedule.get('type') == 'week') {
-			var nd = Scheduleme.helpers.addDays(d, 6);
-			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
-			schedule.set('ndatestring', ndatestring);
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
+    } else if (schedule.get('type') == 'week') {
+      var nd = Scheduleme.helpers.addDays(d, 6);
+      var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+      schedule.set('ndatestring', ndatestring);
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
-		} else if (schedule.get('type') == 'twoweek') {
-			var nd = Scheduleme.helpers.addDays(d, 13);
-			var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
-			schedule.set('ndatestring', ndatestring);
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
+    } else if (schedule.get('type') == 'twoweek') {
+      var nd = Scheduleme.helpers.addDays(d, 13);
+      var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+      schedule.set('ndatestring', ndatestring);
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
-		} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
+    } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
-		} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
+    } else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
-		} else { //Defaults to daily schedule
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
+    } else { //Defaults to daily schedule
 
-			schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+      schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-			var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-			//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
-		}
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
+      //var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
+    }
 
-		this.$('#dates').append(htmlText);
+    this.$('#dates').append(htmlText);
 
-		$('#dates').listview('refresh');
-		
-	},
-	//Used after the view has been destroyed then created again to add back schedule views
-	addAllSchedules: function () {
-		var self = this;
-		_.each(this.collection.models, function (schedule) {
-			self.addOneSchedule(schedule);
-		});
+    $('#dates').listview('refresh');
+    
+  },
+  //Used after the view has been destroyed then created again to add back schedule views
+  addAllSchedules: function () {
+    var self = this;
+    _.each(this.collection.models, function (schedule) {
+      self.addOneSchedule(schedule);
+    });
 
-		$('#dates').listview('refresh');
+    $('#dates').listview('refresh');
 
-	},
-	reRenderTabs: function () { //This works
-		var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
+  },
+  reRenderTabs: function () { //This works
+    var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
-		$('.schedule-tab').remove();
-		_.each(this.collection.models, function(schedule) {
-			console.log('type '+schedule.get('type'));
-			var d = new Date(schedule.get('datenum'));
-			//console.log('Day1: '+d);
-			d = Scheduleme.helpers.fromUTC(d);
-			//console.log('Day2: '+d);
-			if (schedule.get('type') == 'month') {
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');
-			} else if (schedule.get('type') == 'week') {
-				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
-				delete nd;
-			} else if (schedule.get('type') == 'twoweek') {
-				var nd = new Date(schedule.get('ndatestring'));
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
-				delete nd;
-			} else { //Defaults to daily schedule
-				this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
-			}
-			delete d; //Remove the reference to D; it can not be garbage collected
-		});
+    $('.schedule-tab').remove();
+    _.each(this.collection.models, function(schedule) {
+      console.log('type '+schedule.get('type'));
+      var d = new Date(schedule.get('datenum'));
+      //console.log('Day1: '+d);
+      d = Scheduleme.helpers.fromUTC(d);
+      //console.log('Day2: '+d);
+      if (schedule.get('type') == 'month') {
+        this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');
+      } else if (schedule.get('type') == 'week') {
+        var nd = new Date(schedule.get('ndatestring'));
+        this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+        delete nd;
+      } else if (schedule.get('type') == 'twoweek') {
+        var nd = new Date(schedule.get('ndatestring'));
+        this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
+        delete nd;
+      } else { //Defaults to daily schedule
+        this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
+      }
+      delete d; //Remove the reference to D; it can not be garbage collected
+    });
 
-		$('#dates').listview('refresh');
+    $('#dates').listview('refresh');
 
-	}
+  }
 
 });

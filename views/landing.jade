@@ -1,66 +1,66 @@
 !!! 5
 html(lang='en')
-	head
-		title= site_name
-		meta(charset='utf-8')
-		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		meta(name='description', content='Schedule.me is an application to help business and employees manage schedules')
-		meta(name='author', content='nrmitchi')
-		// Le styles
-		link(href='/css/bootstrap.css', rel='stylesheet')
-		script(src='/js/jquery.js')
-		script(src='/js/bootstrap.js')
-		script(src='/js/ga.js')
+  head
+    title= site_name
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='Schedule.me is an application to help business and employees manage schedules')
+    meta(name='author', content='nrmitchi')
+    // Le styles
+    link(href='/css/bootstrap.css', rel='stylesheet')
+    script(src='/js/jquery.js')
+    script(src='/js/bootstrap.js')
+    script(src='/js/ga.js')
 
-		style
-			@media (min-width: 979px) {
-				body {
-					padding-top: 60px;
-				}
-			}
-			@media (max-width: 979px) {
-				body {
-					padding-top: 0px;
-				}
-			}
-		// <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-		// Le HTML5 shim, for IE6-8 support of HTML5 elements
-		//if lt IE 9
-			script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
-	body
-		.navbar.navbar-fixed-top
-			.navbar-inner
-				.container
-					a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					a.brand(href='./')= site_name_lower
-					.nav-collapse
-						ul.nav.pull-right
-							li
-								a(href='/manager-login') Manager Login
-							li
-								a(href='/login') Employee Login
-		.container
-			.row
-				.span6
-					h1= site_name
-					p Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
-					p If you would like to discuss how Schedule.me can work with your business, please contact me at 
-						a(href='mailto:nrmitchi@gmail.com') nrmitchi@gmail.com
-			.row
-				.span12
-					h3 Features:
-				.span4
-					.well
-						h4 Instant Publishing
-						p Your employees will be notified as soon as schedules are published, and we able to access their schedules from any web-enabled device
-				.span4
-					.well
-						h4 Easy Upload
-						p You can easily upload your schedule in whatever format your scheduler uses. If your format is not currently supported, we will work quickly to get it working for you
-				.span4
-					.well
-						h4 Easy Trading
-						p Your employees can easily offer shifts to co-workers and pick up extra shifts when needed, with you having the final say on all changes.
+    style
+      @media (min-width: 979px) {
+        body {
+          padding-top: 60px;
+        }
+      }
+      @media (max-width: 979px) {
+        body {
+          padding-top: 0px;
+        }
+      }
+    // <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    // Le HTML5 shim, for IE6-8 support of HTML5 elements
+    //if lt IE 9
+      script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+  body
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.brand(href='./')= site_name_lower
+          .nav-collapse
+            ul.nav.pull-right
+              li
+                a(href='/manager-login') Manager Login
+              li
+                a(href='/login') Employee Login
+    .container
+      .row
+        .span6
+          h1= site_name
+          p Schedule.me can help any business that employs part-time, shift work employees. We provide a seamless way to deliver schedules to employees, and make it easier for your employees to trade or get rid of shifts when necessary.
+          p If you would like to discuss how Schedule.me can work with your business, please contact me at 
+            a(href='mailto:nrmitchi@gmail.com') nrmitchi@gmail.com
+      .row
+        .span12
+          h3 Features:
+        .span4
+          .well
+            h4 Instant Publishing
+            p Your employees will be notified as soon as schedules are published, and we able to access their schedules from any web-enabled device
+        .span4
+          .well
+            h4 Easy Upload
+            p You can easily upload your schedule in whatever format your scheduler uses. If your format is not currently supported, we will work quickly to get it working for you
+        .span4
+          .well
+            h4 Easy Trading
+            p Your employees can easily offer shifts to co-workers and pick up extra shifts when needed, with you having the final say on all changes.

@@ -1,25 +1,25 @@
 .navbar.navbar-fixed-top
-	.navbar-inner
-		.container-fluid(style="text-align: center")
-			#mobile-nav-left-space
-				ul.nav
-					li
-						span.back-to-list
-							i.icon-reply.icon-2x
-			span.header-text {{outputDate}}
-			#mobile-nav-right-space
-				ul.nav.pull-right
-					li.dropdown
-						span.dropdown-toggle(href='#', data-toggle='dropdown')
-							i.icon-cog.icon-2x
-						ul.dropdown-menu
-							li
-								a.account-trigger Options
-							li.divider
-							li
-								a.logout-trigger Logout
+  .navbar-inner
+    .container-fluid(style="text-align: center")
+      #mobile-nav-left-space
+        ul.nav
+          li
+            span.back-to-list
+              i.icon-reply.icon-2x
+      span.header-text {{outputDate}}
+      #mobile-nav-right-space
+        ul.nav.pull-right
+          li.dropdown
+            span.dropdown-toggle(href='#', data-toggle='dropdown')
+              i.icon-cog.icon-2x
+            ul.dropdown-menu
+              li
+                a.account-trigger Options
+              li.divider
+              li
+                a.logout-trigger Logout
 .container-fluid
-	#content-wrapper
-		#content
-			h3 {{outputDate}}
-			iframe.scheduleFrame(src='http://docs.google.com/gview?url=https://s3.amazonaws.com/schedule-me/{{url}}&embedded=true', style='width: 100%; min-width: 200px; height: 700px;', frameborder='0')
+  #content-wrapper
+    #content
+      h3 {{outputDate}}
+      iframe.scheduleFrame(src='http://docs.google.com/gview?url=https://s3.amazonaws.com/schedule-me/{{url}}&embedded=true', style='width: 100%; min-width: 200px; height: 700px;', frameborder='0')

@@ -1,471 +1,471 @@
 window.Scheduleme = window.Scheduleme || {//new Object();
-	classes: {
-		models: {},
-		collections: {},
-		views: {
-			ScheduleView: {},
-		},
-	},
-	helpers: {},
+  classes: {
+    models: {},
+    collections: {},
+    views: {
+      ScheduleView: {},
+    },
+  },
+  helpers: {},
 
-	data: {},
+  data: {},
 
-	Schedules: {},
+  Schedules: {},
 
-	Init: function () {},
+  Init: function () {},
 
-	CurrentView: {},
-	Router: {},
+  CurrentView: {},
+  Router: {},
 
-	meta: {
-		state: 'admin',
-		ADMIN: 1,
-		mobile: true,
-		d3: true
-	}
+  meta: {
+    state: 'admin',
+    ADMIN: 1,
+    mobile: true,
+    d3: true
+  }
 };
 
 //$(function() {
 
-	Scheduleme.helpers.addMinutes = function(date, adding) {
-		return new Date(date.getTime() + minutes*60000);
-	};
-	Scheduleme.helpers.UTCify = function (date) {
-		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
-	};
-	Scheduleme.helpers.fromUTC = function (date) {
-		return new Date(date.getTime() + date.getTimezoneOffset()*60000);
-	};
-	Scheduleme.helpers.addDays = function(date, adding) {
-		var nd = new Date();
-		nd.setDate(date.getDate() + adding);
-		return nd;
-	};
-	Scheduleme.helpers.switchView = function (view, postRender) {
-		if (typeof Scheduleme.CurrentView.viewType !='undefined') {
-			Scheduleme.CurrentView.undelegateEvents();
-		}
-		Scheduleme.CurrentView = view;
-		Scheduleme.CurrentView.delegateEvents();
-		Scheduleme.CurrentView.render();
+  Scheduleme.helpers.addMinutes = function(date, adding) {
+    return new Date(date.getTime() + minutes*60000);
+  };
+  Scheduleme.helpers.UTCify = function (date) {
+    return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+  };
+  Scheduleme.helpers.fromUTC = function (date) {
+    return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+  };
+  Scheduleme.helpers.addDays = function(date, adding) {
+    var nd = new Date();
+    nd.setDate(date.getDate() + adding);
+    return nd;
+  };
+  Scheduleme.helpers.switchView = function (view, postRender) {
+    if (typeof Scheduleme.CurrentView.viewType !='undefined') {
+      Scheduleme.CurrentView.undelegateEvents();
+    }
+    Scheduleme.CurrentView = view;
+    Scheduleme.CurrentView.delegateEvents();
+    Scheduleme.CurrentView.render();
 
-		if (postRender) {
-			Scheduleme.CurrentView.postRender();
-		}
-	};
-	Scheduleme.helpers.titleDate = function(datenum, datestring) {
-		var t = new Date();
-		var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
-		var output = '';
-		if (datenum == today) {
-			return 'Today';
-		} else {
-			return datestring;
-		}
-	}
-	/*Scheduleme.helpers.viewSchedule = function (id) {
-		console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
-		if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
-			var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
-		} else if (typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined') {
-			console.log('here');
-			var view = new Scheduleme.classes.views.ScheduleView.table({model: Scheduleme.Schedules.get(id)});
-		} else {
-			var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
-		}
-		//Note this needs a back button
-		Scheduleme.helpers.switchView(view);
-	};*/
-	Scheduleme.helpers.fetchBootstrap = function () {
-		$.ajax({
-			url: '/bootstrap',
-			success: function (res) {
+    if (postRender) {
+      Scheduleme.CurrentView.postRender();
+    }
+  };
+  Scheduleme.helpers.titleDate = function(datenum, datestring) {
+    var t = new Date();
+    var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
+    var output = '';
+    if (datenum == today) {
+      return 'Today';
+    } else {
+      return datestring;
+    }
+  }
+  /*Scheduleme.helpers.viewSchedule = function (id) {
+    console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
+    if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
+      var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
+    } else if (typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined') {
+      console.log('here');
+      var view = new Scheduleme.classes.views.ScheduleView.table({model: Scheduleme.Schedules.get(id)});
+    } else {
+      var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
+    }
+    //Note this needs a back button
+    Scheduleme.helpers.switchView(view);
+  };*/
+  Scheduleme.helpers.fetchBootstrap = function () {
+    $.ajax({
+      url: '/bootstrap',
+      success: function (res) {
 
-				Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+        Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
 
-				//Removing loading div
-				$.each(res.data.schedules, function () {
-					Scheduleme.Schedules.add(this);
-				});
-				//I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
-				//Other option is to reRenderTabs() at the end of addOneSchedule
-				if (Scheduleme.CurrentView.viewType == 'scheduleList') {
-					Scheduleme.CurrentView.reRenderTabs();
-					$('#dates.nav.nav-tabs li:nth-child(2) a').click();
-				}
+        //Removing loading div
+        $.each(res.data.schedules, function () {
+          Scheduleme.Schedules.add(this);
+        });
+        //I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
+        //Other option is to reRenderTabs() at the end of addOneSchedule
+        if (Scheduleme.CurrentView.viewType == 'scheduleList') {
+          Scheduleme.CurrentView.reRenderTabs();
+          $('#dates.nav.nav-tabs li:nth-child(2) a').click();
+        }
 
-				//Add data into global object
-				Scheduleme.data.email = res.data.email;
-				Scheduleme.data.name = res.data.name;
-				Scheduleme.data.username = res.data.username;
+        //Add data into global object
+        Scheduleme.data.email = res.data.email;
+        Scheduleme.data.name = res.data.name;
+        Scheduleme.data.username = res.data.username;
 
-				Scheduleme.Router = new AppRouter;
-				Backbone.history.start();
+        Scheduleme.Router = new AppRouter;
+        Backbone.history.start();
 
-			}, error: function (xhr, status, text) {
-				//Remove loading div
-				if (xhr.status == '403') {
-					Scheduleme.helpers.switchView(Scheduleme.LoginView);
-				} else  {
-					console.log('An error occured: '+xhr.status);
-					alert('We seem to be having some technical difficulties');
-				}
-			}
-		});
-	};
-	Scheduleme.helpers.handleLogout = function () {
-		//Destory session;
-		$.ajax({
-			url: '/logout',
-			type: 'GET',
-			error: function () {
-				console.log('wtf cannot log out');
-			},
-			success: function () {
-				
-			},
-			complete: function () {
-				Scheduleme.helpers.switchView(Scheduleme.LoginView);
-				//Destroy data;
-			}
-		})
-	};
+      }, error: function (xhr, status, text) {
+        //Remove loading div
+        if (xhr.status == '403') {
+          Scheduleme.helpers.switchView(Scheduleme.LoginView);
+        } else  {
+          console.log('An error occured: '+xhr.status);
+          alert('We seem to be having some technical difficulties');
+        }
+      }
+    });
+  };
+  Scheduleme.helpers.handleLogout = function () {
+    //Destory session;
+    $.ajax({
+      url: '/logout',
+      type: 'GET',
+      error: function () {
+        console.log('wtf cannot log out');
+      },
+      success: function () {
+        
+      },
+      complete: function () {
+        Scheduleme.helpers.switchView(Scheduleme.LoginView);
+        //Destroy data;
+      }
+    })
+  };
 
-	Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
-		el: $('body'),
+  Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
+    el: $('body'),
 
-		template: Handlebars.compile($('#list-page-template').html()),
+    template: Handlebars.compile($('#list-page-template').html()),
 
-		initialize: function () {
-			this.viewType = 'scheduleList';
-			//Callback incase I forget to pass reference to collection
-			this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
+    initialize: function () {
+      this.viewType = 'scheduleList';
+      //Callback incase I forget to pass reference to collection
+      this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
 
-			this.collection.bind('add',this.addOneSchedule, this);
-		},
+      this.collection.bind('add',this.addOneSchedule, this);
+    },
 
-		events: {
-			"click .schedule-tab" : "viewSchedule"
-		},
+    events: {
+      "click .schedule-tab" : "viewSchedule"
+    },
 
-		render: function () {
-			//The JSON passed in does nothing right now, but may in the future
-			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
-			this.addAllSchedules();
-			return $(this.el);
-		},
-		addOneSchedule: function (schedule) {
-			var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-			var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
+    render: function () {
+      //The JSON passed in does nothing right now, but may in the future
+      $(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+      this.addAllSchedules();
+      return $(this.el);
+    },
+    addOneSchedule: function (schedule) {
+      var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
-			var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
-			var d = new Date(datenum);
+      var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
+      var d = new Date(datenum);
 
-			d = Scheduleme.helpers.UTCify(d);
+      d = Scheduleme.helpers.UTCify(d);
 
-			datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
-			var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
+      datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
+      var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
 
-			// This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
-			schedule.set('datenum', datenum);
-			schedule.set('datestring', datestring);
+      // This should be done as schedule.datenum, without setting. Once it's been set, it will try to save to the server when saved
+      schedule.set('datenum', datenum);
+      schedule.set('datestring', datestring);
 
 
-			if (schedule.get('type') == 'month') {
-				datestring = Months[d.getMonth()];
-				schedule.set('datestring', datestring);
+      if (schedule.get('type') == 'month') {
+        datestring = Months[d.getMonth()];
+        schedule.set('datestring', datestring);
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'</li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
-			} else if (schedule.get('type') == 'week') {
-				var nd = Scheduleme.helpers.addDays(d, 6);
-				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
-				schedule.set('ndatestring', ndatestring);
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'</li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
+      } else if (schedule.get('type') == 'week') {
+        var nd = Scheduleme.helpers.addDays(d, 6);
+        var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+        schedule.set('ndatestring', ndatestring);
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
-			} else if (schedule.get('type') == 'twoweek') {
-				var nd = Scheduleme.helpers.addDays(d, 13);
-				var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
-				schedule.set('ndatestring', ndatestring);
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
+      } else if (schedule.get('type') == 'twoweek') {
+        var nd = Scheduleme.helpers.addDays(d, 13);
+        var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
+        schedule.set('ndatestring', ndatestring);
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
-			} else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
+      } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
-			} else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
+      } else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
-			} else { //Defaults to daily schedule
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
+      } else { //Defaults to daily schedule
 
-				schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
+        schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
-				this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
-				//var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
-			}
-		},
-		//Used after the view has been destroyed then created again to add back schedule views
-		addAllSchedules: function () {
-			var self = this;
-			_.each(this.collection.models, function (schedule) {
-				self.addOneSchedule(schedule);
-			});
-		},
-		reRenderTabs: function () { //This works
-			var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
+        this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+        //var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
+      }
+    },
+    //Used after the view has been destroyed then created again to add back schedule views
+    addAllSchedules: function () {
+      var self = this;
+      _.each(this.collection.models, function (schedule) {
+        self.addOneSchedule(schedule);
+      });
+    },
+    reRenderTabs: function () { //This works
+      var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
-			$('.schedule-tab').remove();
-			_.each(this.collection.models, function(schedule) {
-				var d = new Date(schedule.get('datenum'));
-				//console.log('Day1: '+d);
-				d = Scheduleme.helpers.fromUTC(d);
-				//console.log('Day2: '+d);
-				if (schedule.get('type') == 'month') {
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'</li>');
-				} else if (schedule.get('type') == 'week') {
-					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
-					delete nd;
-				} else if (schedule.get('type') == 'twoweek') {
-					var nd = new Date(schedule.get('ndatestring'));
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
-					delete nd;
-				} else { //Defaults to daily schedule
-					this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
-				}
-				delete d; //Remove the reference to D; it can not be garbage collected
-			});
-		},
-		viewSchedule: function (e) {
-			//console.log(e.currentTarget);
-			//Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
-			Scheduleme.Router.navigate("viewSchedule/"+$(e.currentTarget).attr('data-id'), {trigger: true});
-		}
-	});
-	Scheduleme.classes.views.ScheduleView.gview = Backbone.View.extend({
+      $('.schedule-tab').remove();
+      _.each(this.collection.models, function(schedule) {
+        var d = new Date(schedule.get('datenum'));
+        //console.log('Day1: '+d);
+        d = Scheduleme.helpers.fromUTC(d);
+        //console.log('Day2: '+d);
+        if (schedule.get('type') == 'month') {
+          this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'</li>');
+        } else if (schedule.get('type') == 'week') {
+          var nd = new Date(schedule.get('ndatestring'));
+          this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
+          delete nd;
+        } else if (schedule.get('type') == 'twoweek') {
+          var nd = new Date(schedule.get('ndatestring'));
+          this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></li>');
+          delete nd;
+        } else { //Defaults to daily schedule
+          this.$('#dates').append('<li class="schedule-tab" data-id="'+schedule.get('id')+'">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></li>');
+        }
+        delete d; //Remove the reference to D; it can not be garbage collected
+      });
+    },
+    viewSchedule: function (e) {
+      //console.log(e.currentTarget);
+      //Scheduleme.helpers.viewSchedule($(e.currentTarget).attr('data-id'));
+      Scheduleme.Router.navigate("viewSchedule/"+$(e.currentTarget).attr('data-id'), {trigger: true});
+    }
+  });
+  Scheduleme.classes.views.ScheduleView.gview = Backbone.View.extend({
 
-		el: $('body'),
+    el: $('body'),
 
-		template: Handlebars.compile($('#schedule-template').html()),
+    template: Handlebars.compile($('#schedule-template').html()),
 
-		render: function () {
-			//$(this.el).attr('id',this.model.get('datenum'));
-			$(this.el).html(this.template(this.model.toJSON()));
+    render: function () {
+      //$(this.el).attr('id',this.model.get('datenum'));
+      $(this.el).html(this.template(this.model.toJSON()));
 
-			return $(this.el);
-		}
-	})
+      return $(this.el);
+    }
+  })
 
-	Scheduleme.classes.views.AccountView = Backbone.View.extend({
-		el: $('body'),
+  Scheduleme.classes.views.AccountView = Backbone.View.extend({
+    el: $('body'),
 
-		//tagName: 'div',
-		//className: 'page account',
+    //tagName: 'div',
+    //className: 'page account',
 
-		template: Handlebars.compile($('#account-template').html()),
+    template: Handlebars.compile($('#account-template').html()),
 
-		initialize: function () {
-			this.viewType = 'account';
-			console.log('Initializing AccountView');
-		},
+    initialize: function () {
+      this.viewType = 'account';
+      console.log('Initializing AccountView');
+    },
 
-		events: {
-			"click #change-password-trigger" : "changePassword",
-			"click #edit-email-trigger" : "emailMakeEdittable",
-			"click #save-email-trigger" : "emailSaveChange",
-		},
-		render: function () {
-			$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
-			$('#email').val(Scheduleme.data.email);
+    events: {
+      "click #change-password-trigger" : "changePassword",
+      "click #edit-email-trigger" : "emailMakeEdittable",
+      "click #save-email-trigger" : "emailSaveChange",
+    },
+    render: function () {
+      $(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+      $('#email').val(Scheduleme.data.email);
 
-			$('#sched-date').datepicker({
-				showOtherMonths: true,
-				dateFormat: 'yy-mm-dd',
-				maxDate: "+0D"
-			});
-			$('#upload-schedule-date').datepicker({
-				showOtherMonths: true,
-				dateFormat: 'yy-mm-dd',
-				minDate: "+0D"
-			});
+      $('#sched-date').datepicker({
+        showOtherMonths: true,
+        dateFormat: 'yy-mm-dd',
+        maxDate: "+0D"
+      });
+      $('#upload-schedule-date').datepicker({
+        showOtherMonths: true,
+        dateFormat: 'yy-mm-dd',
+        minDate: "+0D"
+      });
 
-			return $(this.el);
-		},
-		changePassword: function () {
-			console.log('trying to changing password...');
-			function validatePasswords () {
-				var newpass = $('#newpassword').val();
-				var newpass1 = $('#newpassword1').val();
-				if (newpass.length < 6) {
-					return 3;
-				}
-				if (newpass != newpass1) {
-					return 2;
-				}
-				return 1;
-			}
+      return $(this.el);
+    },
+    changePassword: function () {
+      console.log('trying to changing password...');
+      function validatePasswords () {
+        var newpass = $('#newpassword').val();
+        var newpass1 = $('#newpassword1').val();
+        if (newpass.length < 6) {
+          return 3;
+        }
+        if (newpass != newpass1) {
+          return 2;
+        }
+        return 1;
+      }
 
-			console.log('validating password change...');
+      console.log('validating password change...');
 
-			var validate = validatePasswords();
-			if (validate == 1) {
-				if ( $('#oldpassword').val() != $('#newpassword').val() ) {
-					console.log('Inputs valid.');
-					$.ajax({url: '/me/changePassword',
-						type: 'POST',
-						data: 'oldpassword='+$('#oldpassword').val()+'&newpassword='+$('#newpassword').val(),
-						success: function (response) {
-							alert ('Password successfully changed!');
-							//Clear fields
-							$('#oldpassword').val('');
-							$('#newpassword').val('');
-							$('#newpassword1').val('');
-						}, error: function () {
-							alert ('Password change failed.');
-						}
-					});
-					console.log('after request...');
-				} else {
-					console.log('The new password cannot match the old password');
-				}
-			} else if (validate == 2) {
-				console.log('The new password entries must match.');
-			} else if (validate == 3) {
-				console.log('Your new password must be at last 6 characters long');
-			}
-		},
-		emailMakeEdittable: function () {
-			$('#email').removeAttr('disabled');
-			$('#save-email-trigger').show();
-			$('#edit-email-trigger').hide();
-		},
-		emailSaveChange: function () {
-			function validateEmail(email) {
-				var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-				return re.test(email);
-			}
-			console.log('new email: '+$('#email').val());
-			if (validateEmail($('#email').val())) {
-				console.log('email valid. changing email');
-				$('#email').attr('disabled','');
-				$('#edit-email-trigger').show();
-				$('#save-email-trigger').hide();
-			} else {
-				console.log('the entered email is not valid');
-			}
-		}
-	});
+      var validate = validatePasswords();
+      if (validate == 1) {
+        if ( $('#oldpassword').val() != $('#newpassword').val() ) {
+          console.log('Inputs valid.');
+          $.ajax({url: '/me/changePassword',
+            type: 'POST',
+            data: 'oldpassword='+$('#oldpassword').val()+'&newpassword='+$('#newpassword').val(),
+            success: function (response) {
+              alert ('Password successfully changed!');
+              //Clear fields
+              $('#oldpassword').val('');
+              $('#newpassword').val('');
+              $('#newpassword1').val('');
+            }, error: function () {
+              alert ('Password change failed.');
+            }
+          });
+          console.log('after request...');
+        } else {
+          console.log('The new password cannot match the old password');
+        }
+      } else if (validate == 2) {
+        console.log('The new password entries must match.');
+      } else if (validate == 3) {
+        console.log('Your new password must be at last 6 characters long');
+      }
+    },
+    emailMakeEdittable: function () {
+      $('#email').removeAttr('disabled');
+      $('#save-email-trigger').show();
+      $('#edit-email-trigger').hide();
+    },
+    emailSaveChange: function () {
+      function validateEmail(email) {
+        var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+      }
+      console.log('new email: '+$('#email').val());
+      if (validateEmail($('#email').val())) {
+        console.log('email valid. changing email');
+        $('#email').attr('disabled','');
+        $('#edit-email-trigger').show();
+        $('#save-email-trigger').hide();
+      } else {
+        console.log('the entered email is not valid');
+      }
+    }
+  });
 
-	Scheduleme.classes.views.LoginView = Backbone.View.extend({
-		el: $('body'),
+  Scheduleme.classes.views.LoginView = Backbone.View.extend({
+    el: $('body'),
 
-		template: Handlebars.compile($('#login-template').html()),
+    template: Handlebars.compile($('#login-template').html()),
 
-		events: {
-			'submit #login-form' : 'handleLogin'
-		},
-		handleLogin: function (e) {
-			console.log('test');
-			e.preventDefault(); //Prevent default submission
-			$.ajax({
-				url: '/login',
-				type: 'POST',
-				data: $('#login-form').serialize(),
-				success: function (response) {
-					console.log('successful login');	
-					Scheduleme.helpers.fetchBootstrap();
-				}, error: function (response) {
-					alert('Username and password do not match. Please try again');
-				}
-			});	
-		},
-		render: function () {
-			//$(this.el).attr('id',this.model.get('datenum'));
-			$(this.el).html(this.template());
-			return $(this.el);
-		}
-	});
-	//Used for global events
-	Scheduleme.classes.views.AppView = Backbone.View.extend({
-		el: $('body'),
+    events: {
+      'submit #login-form' : 'handleLogin'
+    },
+    handleLogin: function (e) {
+      console.log('test');
+      e.preventDefault(); //Prevent default submission
+      $.ajax({
+        url: '/login',
+        type: 'POST',
+        data: $('#login-form').serialize(),
+        success: function (response) {
+          console.log('successful login');  
+          Scheduleme.helpers.fetchBootstrap();
+        }, error: function (response) {
+          alert('Username and password do not match. Please try again');
+        }
+      });  
+    },
+    render: function () {
+      //$(this.el).attr('id',this.model.get('datenum'));
+      $(this.el).html(this.template());
+      return $(this.el);
+    }
+  });
+  //Used for global events
+  Scheduleme.classes.views.AppView = Backbone.View.extend({
+    el: $('body'),
 
-		template: Handlebars.compile($('#app-template').html()),
+    template: Handlebars.compile($('#app-template').html()),
 
-		events: {
-			'click .back-to-list' 		: 'back',
-			'click .account-trigger' 	: 'openAccountView',
-			'click .logout-trigger' 	: 'logout'
-		},
-		back: function () {
-			Scheduleme.Router.navigate("/", {trigger: true});
-		},
-		openAccountView: function () {
-			Scheduleme.Router.navigate("/account", {trigger: true});
-		},
-		logout: function () {
-			Scheduleme.helpers.handleLogout();
-		}
-	});
+    events: {
+      'click .back-to-list'     : 'back',
+      'click .account-trigger'   : 'openAccountView',
+      'click .logout-trigger'   : 'logout'
+    },
+    back: function () {
+      Scheduleme.Router.navigate("/", {trigger: true});
+    },
+    openAccountView: function () {
+      Scheduleme.Router.navigate("/account", {trigger: true});
+    },
+    logout: function () {
+      Scheduleme.helpers.handleLogout();
+    }
+  });
 
 //------------------PAYLOAD----------------------------
 
-	Scheduleme.Init = function () {
-		Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+  Scheduleme.Init = function () {
+    Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
-		Scheduleme.AppView = new Scheduleme.classes.views.AppView();
+    Scheduleme.AppView = new Scheduleme.classes.views.AppView();
 
-		//Router takes care of this
-		Scheduleme.ScheduleListView	= new Scheduleme.classes.views.ScheduleListView({collection: Scheduleme.Schedules});
-		Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
-		Scheduleme.LoginView = new Scheduleme.classes.views.LoginView();
-		//AJAX Setup
-		$.ajaxSetup({
-			dataType: 'json' //AJAX responses will all be treated as json dispite content-type
-		});
-		//Add global $.ajaxError handlers
-	
-		//Note that the router is started in fetchBotstrap()
-		Scheduleme.helpers.fetchBootstrap();
+    //Router takes care of this
+    Scheduleme.ScheduleListView  = new Scheduleme.classes.views.ScheduleListView({collection: Scheduleme.Schedules});
+    Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
+    Scheduleme.LoginView = new Scheduleme.classes.views.LoginView();
+    //AJAX Setup
+    $.ajaxSetup({
+      dataType: 'json' //AJAX responses will all be treated as json dispite content-type
+    });
+    //Add global $.ajaxError handlers
+  
+    //Note that the router is started in fetchBotstrap()
+    Scheduleme.helpers.fetchBootstrap();
 
-		Handlebars.registerHelper('outputDate', Scheduleme.helpers.titleDate);
+    Handlebars.registerHelper('outputDate', Scheduleme.helpers.titleDate);
 
-		/*$(window).touchwipe({
-			min_move_x: 50,
-			min_move_y: 50,
-	        wipeLeft: function() {
-	          // Close
-	          window.history.back();
+    /*$(window).touchwipe({
+      min_move_x: 50,
+      min_move_y: 50,
+          wipeLeft: function() {
+            // Close
+            window.history.back();
 
-	        },
-	        wipeRight: function() {
-	          // Open
-	          console.log('Right Swipe');
+          },
+          wipeRight: function() {
+            // Open
+            console.log('Right Swipe');
 
-	        },
-	        preventDefaultEvents: false,
-	        preventDefaultEventsX: false
-	    });*/
+          },
+          preventDefaultEvents: false,
+          preventDefaultEventsX: false
+      });*/
 
-	    new FastClick(document.body);
+      new FastClick(document.body);
 
-	};
+  };
 
-	$(document).ready(function () {
-		Scheduleme.Init();
-	});
+  $(document).ready(function () {
+    Scheduleme.Init();
+  });
 
 //});
