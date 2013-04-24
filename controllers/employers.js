@@ -68,13 +68,13 @@ exports.processSignup = function (req, res) {
   // This uses the basic salt and doesn't save it to the DB. I need to fix this
     // Pass unhashed passed work to model, model makes salt and then hashes passsword
   var obj = {
-    name         : req.body.name,
-    email         : req.body.email,
-    username       : req.body.username,
-    password       : Scheduleme.Helpers.Helpers.calcHash(req.body.password),
-    contact_email    : req.body.contact.email,
-    contact_phone    : req.body.contact.phone,
-    contact_address   : req.body.contact.address
+    name            : req.body.name,
+    email           : req.body.email,
+    username        : req.body.username,
+    password        : req.body.password,
+    contact_email   : req.body.contact.email,
+    contact_phone   : req.body.contact.phone,
+    contact_address : req.body.contact.address
   }
 
   Scheduleme.Models.Employer.create(obj, function (err, result) {
@@ -121,9 +121,9 @@ exports.addEmployee = function (req, res) {
   // Validate body
 
   var obj = {
-    email     : req.body.email,
-    username   : req.body.username,
-    password   : Scheduleme.Helpers.Helpers.calcHash(req.body.password),
+    email       : req.body.email,
+    username    : req.body.username,
+    password    : req.body.password,
     first_name  : req.body.first_name,
     last_name   : req.body.last_name,
     employer_id : req.session.employer_id

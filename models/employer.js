@@ -94,15 +94,17 @@ exports.new = function (object) {
 }
 
 exports.create = function (obj, cb) {
-	name 		= obj.name;
+	salt      = Scheduleme.Helpers.Helpers.generateSalt();
+
+	name 		  = obj.name;
 	email 		= obj.email;
 	username 	= obj.username;
-	pass 		= obj.password;
+	pass 		  = Scheduleme.Helpers.Helpers.calcHash(obj.password, salt);
 	c_email 	= obj.contact_email;
 	c_phone 	= obj.contact_phone;
 	c_add 		= obj.contact_address;
 
-	db.query(Scheduleme.Queries.insertEmployer, [name, email, username, pass, c_email, c_phone, c_add], cb)
+	db.query(Scheduleme.Queries.insertEmployer, [name, email, username, pass, salt, c_email, c_phone, c_add], cb)
 };
 //Export static methods
 //I should not do two callbacks here... I should leave this up to the controller to handle

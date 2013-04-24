@@ -92,15 +92,16 @@ exports.new = function (object) {
   return Object.create(Employee);
 };
 exports.create = function (obj, cb) {
-  
+  salt      = Scheduleme.Helpers.Helpers.generateSalt();
+
   email     = obj.email;
-  username   = obj.username;
-  pass     = obj.password;
+  username  = obj.username;
+  pass      = Scheduleme.Helpers.Helpers.calcHash(obj.password, salt);
   fname     = obj.first_name
   lname     = obj.last_name;
   employer  = obj.employer_id;
 
-  db.query(Scheduleme.Queries.insertEmployee, [email, username, pass, fname, lname, employer], cb)
+  db.query(Scheduleme.Queries.insertEmployee, [email, username, pass, salt, fname, lname, employer], cb)
 };
 //Export static methods
 exports.fetch = function (obj, cb, cb2) {
@@ -116,7 +117,7 @@ exports.fetch = function (obj, cb, cb2) {
 
   id = obj.id;
 
-  db.query(Scheduleme.Queries.selectEmployer, [id], function (err, row) {
+  db.query(Scheduleme.Queries.selectEmployee, [id], function (err, row) {
     
     response = {};
 

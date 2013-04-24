@@ -8,7 +8,17 @@ var Scheduleme = require('../helpers/global');
 
 var crypto = require('crypto')
   ;
-  
+
+exports.generateSalt = function () {
+  var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 40; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 exports.calcHash = function (val, suppliedSalt) {
   var shasum = crypto.createHash('sha1');
   var salt = typeof suppliedSalt != 'undefined' ? suppliedSalt : 'schedule12101991';

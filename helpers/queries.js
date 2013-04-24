@@ -27,8 +27,8 @@ module.exports = queries = {
   'trackLogin'         : 'INSERT INTO track_logins (user_type, id, time, ip, statusCode) VALUES (?,?,?,?,?)',
 
 
-  'insertEmployer'      : 'INSERT INTO employers (name, email, username, password, contact_email, contact_phone, contact_address, reg_time) VALUES (?,?,?,?,?,?,?,NOW())',
-  'insertEmployee'      : 'INSERT INTO employees (email, username, password, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,NOW())',
+  'insertEmployer'      : 'INSERT INTO employers (name, email, username, password, salt, contact_email, contact_phone, contact_address, reg_time) VALUES (?,?,?,?,?,?,?,?,NOW())',
+  'insertEmployee'      : 'INSERT INTO employees (email, username, password, salt, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,?,NOW())',
 
 
   'insertShift'        : 'INSERT INTO shifts (schedule_id, start, end, position_id, employee_id, creation_time) VALUES (?,?,?,?,?,NOW())',

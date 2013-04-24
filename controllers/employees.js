@@ -24,7 +24,7 @@ exports.bootstrap = function(req, res){
       } else if ( typeof result == 'undefined' ) {
         var obj = {
           statusCode : 404,
-          message : 'The employer does not seem to exist, or could not be found'
+          message : 'The employee does not seem to exist, or could not be found'
         }
         Scheduleme.Helpers.Render.code(req.xhr, res, obj);
       } else {
