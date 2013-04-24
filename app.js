@@ -5,14 +5,15 @@
 */
 
 
-var express = require('express')
-  , http = require('http')
-  , https = require('https')
-  , path = require('path')
-  , fs = require('fs')
-  , crypto = require('crypto')
-  , RedisStore = require('connect-redis')(express)
-  , authenticate = require('./middleware/authenticate')
+var express       = require('express')
+  , http          = require('http')
+  , https         = require('https')
+  , path          = require('path')
+  , fs            = require('fs')
+  , crypto        = require('crypto')
+  , RedisStore    = require('connect-redis')(express)
+  , authenticate  = require('./middleware/authenticate')
+  , device        = require('express-device')
   ;
 
 var Scheduleme = require('./helpers/global');
@@ -57,6 +58,9 @@ app.configure(function(){
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(authenticate());
+
+  app.use(device.capture());
+
   app.use(function (req, res, next) {
     //Initialize shortcuts for checking employee/employer
     employee = (typeof req.session.employee_id != 'undefined');

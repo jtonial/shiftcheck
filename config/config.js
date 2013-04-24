@@ -22,30 +22,30 @@ mongo_config = {
 }
 mysql_config = {
   local   : {
-    "user"      : 'root',
-    "password"   : 'password',
-    "db"     : 'scheduleme',
+    "user"     : 'root',
+    "password" : 'password',
+    "db"       : 'scheduleme',
     "host"     : 'localhost',
     "port"     : 3306
   },
   cleardb : {
-    "user"      : process.env.CLEARDB_DATABASE_USER,
-    "password"   : process.env.CLEARDB_DATABASE_PASSWORD,
-    "db"     : process.env.CLEARDB_DATABASE_DB,
+    "user"     : process.env.CLEARDB_DATABASE_USER,
+    "password" : process.env.CLEARDB_DATABASE_PASSWORD,
+    "db"       : process.env.CLEARDB_DATABASE_DB,
     "host"     : process.env.CLEARDB_DATABASE_HOST,
     "port"     : process.env.CLEARDB_DATABASE_PORT || 3306
   },
   rds   : {
     "user"     : process.env.RDS_USER,
-    "password"   : process.env.RDS_PASSWORD,
-    "db"     : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
+    "password" : process.env.RDS_PASSWORD,
+    "db"       : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
     "host"     : process.env.RDS_HOST,
     "port"     : 3306
   },
   test  : {
-    "user"      : 'root',
-    "password"   : 'password',
-    "db"     : 'shiftcheck_test',
+    "user"     : 'root',
+    "password" : 'password',
+    "db"       : 'shiftcheck_test',
     "host"     : 'localhost',
     "port"     : 3306
   }

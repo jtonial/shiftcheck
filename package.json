@@ -16,7 +16,8 @@
     "redis": "*",
     "url": "*",
     "connect-redis": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "express-device": "~0.3.6"
   },
   "engines": {
     "node": "0.8.x",

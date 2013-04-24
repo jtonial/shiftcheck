@@ -20,7 +20,11 @@ exports.index = function(req, res){
   console.log(req.session);
 
   if (typeof req.session.employee_id != 'undefined') {
-    res.render('newdash', { title: 'Schedule.me', user: req.session });
+    if (req.device.type == 'phone' || req.device.type == 'tablet') {
+      res.render('jquerymobile', { });
+    } else {
+      res.render('newdash', { title: 'Schedule.me', user: req.session });
+    }
   } else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
     res.render('newdash', { title: 'Schedule.me', user: req.session });
   } else {
