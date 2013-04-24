@@ -89,6 +89,8 @@ CREATE TABLE schedules (
 
   published BOOLEAN NOT NULL DEFAULT false,
 
+  g_spreadsheet_key varchar(50) NULL,
+  
   CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id) ON DELETE CASCADE
 
 ) ENGINE=innodb;

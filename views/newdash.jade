@@ -2,12 +2,14 @@ extends newlayout
 
 block append scripts
   - if ( user.employer_id )
+    script(src='/js/vendor/jquery.timepicker.min.js')
     script(src='/js/admin-application.js')
   - else 
     script(src='/js/dash-application.js')
 
 block append styles
-
+  - if ( user.employer_id )
+    link(href='/css/jquery.timepicker.css', rel='stylesheet')
 
 block sidebar-header
   #logo.open.pull-left ShiftCheck

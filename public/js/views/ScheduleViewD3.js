@@ -799,6 +799,34 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       _this.resizeGraph(Math.min($(window).width(), $(_this.el).parent().width()));
     });
 
+    $('#new_shift_employee').typeahead({
+      source: _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; })
+    });
+
+    $('#new_shift_position').typeahead({
+      source: _.pluck(Scheduleme.data.positions, 'position')
+    });
+
+    $('#new_shift_start_time').timepicker({
+      'step': 15 ,
+      'selectOnBlur': true ,
+      'closeOnWindowScroll' : false ,
+      'minTime' : '6:00am'
+    });
+    $('#new_shift_end_time').timepicker({
+      'step': 15 ,
+      'selectOnBlur': true ,
+      'closeOnWindowScroll' : false ,
+      'minTime' : '6:00am'
+    });
+
+    $('#new_shift_start_time').change( function () {
+      var minTime = $(this).val() || '6:00am';
+
+      $('#new_shift_end_time').timepicker('option', 'minTime', minTime);
+    });
+
+
     $(this.el).on("modifiedShifts", function (e) {
       console.log('Caught modifedShift event');
     });

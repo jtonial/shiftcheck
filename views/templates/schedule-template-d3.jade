@@ -4,3 +4,18 @@
   include edit-shift-template
 
 #d3Target
+
+#add-shift-area.well
+  h5 Add Shift
+  .row-fluid
+    .span3
+      input#new_shift_employee.input-block-level(type="text", placeholder="Employee")
+    .span3
+      input#new_shift_position.input-block-level(type="text", placeholder="Position")
+    .span3
+      input#new_shift_start_time.input-block-level(type="text", placeholder="Start Time")
+    .span3
+      input#new_shift_end_time.input-block-level(type="text", placeholder="End Time")
+  .row-fluid
+    .span3.offset9
+      button#add_shift_trigger.btn.btn-primary.btn-block Add
