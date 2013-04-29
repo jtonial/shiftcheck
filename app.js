@@ -165,9 +165,9 @@ app.get('/testPaste', function (req, res) {
 })
 
 
-app.configure('development', function() {
+//app.configure('development', function() {
   app.use(express.errorHandler());
-});
+//});
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('HTTP server listening on %s', app.get('port'));

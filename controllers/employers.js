@@ -30,7 +30,7 @@ exports.bootstrap = function(req, res){
 
         _.extend(response.data, result);
 
-        Scheduleme.Models.Schedule.getByEmployer( { id : req.session.employer_id }, function (err, result) {
+        Scheduleme.Models.Schedule.getByEmployer( { id : req.session.employer_id }, function (err, result2) {
           if (err) {
             var obj = {
               statusCode : 500,
@@ -39,7 +39,7 @@ exports.bootstrap = function(req, res){
             Scheduleme.Helpers.Render.code(req.xhr, res, obj)
           } else {
 
-            _.extend(response.data, result);
+            _.extend(response.data, result2);
 
             response.statusCode = 200;
 
@@ -81,7 +81,8 @@ exports.processSignup = function (req, res) {
     var response = {};
     if (err) {
       response.statusCode = 500;
-      response.message = err.code;
+      response.message = err;
+      console.log('Error: '+err);
       Scheduleme.Helpers.Render.code(req.xhr, res, response);
     } else {
       //log the user in; I could probably jsut set session stuff here
@@ -148,7 +149,6 @@ exports.addEmployee = function (req, res) {
 };
 //This will load all employees for the given employer
 exports.getEmployees = function (req, res) {
-  console.log('Load Employees');
 
   //Passed in case I add search functionality in the API later (instead of just client side)
   var obj = {
@@ -204,7 +204,7 @@ exports.create = function(req, res){
       //Insert positions
       res.statusCode = 201;
     } else {
-      console.log('Error: employer: insert: '+err.code);
+      console.log('Error: employer: insert: '+err);
       response.statusCode = 400;
       response.message = err.code;
       Scheduleme.Helpers.Render.code(req.xhr, res, response);

@@ -150,15 +150,16 @@ var Schedule = {
         if (!err) {
           //not method forEach of undefined
           var counter = _this.data.shifts.length;
+          var failedFlag = false;
           if (counter) {
             _this.data.shifts.forEach( function (shift) {
               db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
                 if (err) {
-                  Scheduleme.Helpers.Render.code( req.xhr, res, { statusCode:500 } );
-                  console.log('Error: '+err);
+                  failedFlag = true;
+                  cb(err, null);
                 }
                 counter--;
-                if (counter == 0) {
+                if (counter == 0 && !failedFlag) {
                   cb(err, result);
                 }
               });
@@ -229,14 +230,16 @@ exports.verifyUpload = function (id, cb) {
 exports.getByEmployer = function (obj, cb) {
 
   id       = obj.id;
-  response   = {};
 
-  response.schedules = [];
+  var response = {
+    schedules: []
+  };
 
   _this = Schedule;
 
   //var today = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
   db.query(Scheduleme.Queries.getSchedulesByEmployerFuture, [id, (new Date()).toISOString()], function (err, rows) {
+
     if (err) {
       Scheduleme.Logger.error(err);
       cb(err, null);
@@ -253,22 +256,23 @@ exports.getByEmployer = function (obj, cb) {
               console.log(err);
               error = err;
             } else {
-              row.shifts = [];
+              var newRow = row;
+              newRow.shifts = [];
               shiftRows.forEach(function (shiftRow) {
                 shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
                 shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
-                row.shifts.push(shiftRow);
+                newRow.shifts.push(shiftRow);
               })
-              if (row.shifts.length) {
-                row.type = "shifted";
-              } else if (row.json) {
-                row.json = JSON.parse(row.json);
+              if (newRow.shifts.length) {
+                newRow.type = "shifted";
+              } else if (newRow.json) {
+                newRow.json = JSON.parse(newRow.json);
               }
 
               try {
-                response.schedules.push(row);
+                response.schedules.push(newRow);
               } catch (e) {
-                Scheduleme.Logger.error(e);
+                Scheduleme.Logger.error('schedules.js - 275ish '+e);
               }
             }
 

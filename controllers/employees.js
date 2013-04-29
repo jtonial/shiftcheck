@@ -31,7 +31,7 @@ exports.bootstrap = function(req, res){
 
         _.extend(response.data, result);
 
-        Scheduleme.Models.Schedule.getByEmployer( { id: req.session.employer } , function (err, result) {
+        Scheduleme.Models.Schedule.getByEmployer( { id: req.session.employer } , function (err, result2) {
           if (err) {
             var obj = {
               statusCode : 500,

@@ -8,8 +8,8 @@ html(lang='en')
     meta(name='author', content='nrmitchi')
     // Le styles
     link(href='/css/bootstrap.css', rel='stylesheet')
-    script(src='/js/jquery.js')
-    script(src='/js/bootstrap.js')
+    script(src='/js/vendor/jquery.js')
+    script(src='/js/vendor/bootstrap.js')
     script(src='/js/ga.js')
 
     style
@@ -31,11 +31,11 @@ html(lang='en')
     .navbar.navbar-fixed-top
       .navbar-inner
         .container
-          a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+          button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.brand(href='./')= site_name_lower
+          a.brand(href='./') #{site_name_lower}
           .nav-collapse
             ul.nav.pull-right
               li

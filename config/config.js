@@ -24,7 +24,7 @@ mysql_config = {
   local   : {
     "user"     : 'root',
     "password" : 'password',
-    "db"       : 'scheduleme',
+    "db"       : 'shiftcheck',
     "host"     : 'localhost',
     "port"     : 3306
   },
@@ -61,5 +61,7 @@ if (process.env.RDS_USER) {
 } else {
   config.mysql = mysql_config.local;
 }
+
+config.mysql = mysql_config.local;
 
 module.exports = config;

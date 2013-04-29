@@ -71,17 +71,17 @@
       success: function (res) {
         //Removing loading div
 
-        $.each(res.data.schedules, function () {
-          Scheduleme.Schedules.add(this);
-        });
-
-        Scheduleme.ScheduleListView.reRenderTabs();
-
         $('#schedule-pane').removeClass('loading');
 
-        if (!res.data.schedules.length) {
+        if (!res.data.schedules || !res.data.schedules.length) {
           $('#schedule-pane').addClass('no-schedules');
         } else {
+
+          $.each(res.data.schedules, function () {
+            Scheduleme.Schedules.add(this);
+          });
+
+          Scheduleme.ScheduleListView.reRenderTabs();
           $('#schedule-pane').addClass('select-schedule');
         }
 

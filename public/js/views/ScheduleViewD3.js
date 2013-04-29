@@ -130,26 +130,28 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
   config: {
     hideUnmatchingOnClick  : 0,
     textColor        : '#000',
-    fadedTextColor      : '#999',
+    fadedTextColor   : '#999',
 
-    barHeight         : 14,
-    barPadding         : 2,
-    barRadius         : 5,
-    topPadding         : 20,
-    leftPadding       : 100
+    barHeight        : 14,
+    barPadding       : 2,
+    barRadius        : 5,
+    topPadding       : 20,
+    leftPadding      : 100
   },
   indexes: {
     shiftMeta        : {},
-    overlappingAmounts    : [],
-    horizontalAreaMapping  : {},
+    overlappingAmounts : [],
+    horizontalAreaMapping : {},
     shiftText        : {},
-    crossMapping       : [],
-    crossMappingId       : []
+    crossMapping     : [],
+    crossMappingId   : []
   },
 
   events: {
     "click rect.shift" : 'editShiftHandler',
-    "click #save-editted-shift" : "saveModifiedShift"
+    "click #save-editted-shift" : "saveModifiedShift",
+
+    "click #add_shift_trigger" : "addShift"
   },
 
   createD3: function (target, dataset) {
@@ -791,6 +793,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
   },
 
   postRender: function () {
+    var _this = this;
+
     console.log('post rendering');
     var contentTarget = document.getElementById('d3Target');
     this.createD3(contentTarget, this.model.get('shifts'));
@@ -833,5 +837,87 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     this.el.addEventListener("modifedShift", function (e) {
       console.log('Caught modifedShift event - non jquery');
     }, false);
+  },
+
+  addShift: function () {
+
+    /**
+      THIS SHOULD REALLY ALL BE DONE IN A BACKBONE MODEL/COLLECTION 
+    */
+    //Validate Shift
+    var employee = $('#new_shift_employee').val();
+    var position = $('#new_shift_position').val();
+    var start_time = $('#new_shift_start_time').val();
+    var end_time = $('#new_shift_end_time').val();
+
+    var timeRegex = '/^\d{1,}:(?:[0-5]\d)(am|pm)$/';
+
+    var errors = [];
+
+    if ( _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; }).indexOf(employee) < 0 ) {
+      errors.push('Employee invalid');
+    }
+    if ( _.pluck(Scheduleme.data.positions, 'position').indexOf(position) < 0 ) {
+      errors.push('Position invalid');
+    }
+    if ( !start_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
+      errors.push('Start Time invalid');
+    }
+    if ( !end_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
+      errors.push('End Time invalid');
+    }
+
+    if (errors.length) {
+      alert(errors.join('\n'));
+    } else {
+      var schedule_id = _this.model.id;
+      var employee_id = _.find(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name == employee; }).employee_id;
+      var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).position_id;
+
+      var hours = start_time.substr(0, start_time.indexOf(':'));
+      if (start_time.indexOf('p') > 0) {
+        hours += 12;
+      }
+      var minutes = start_time.substring(start_time.indexOf(':')+1, start_time.indexOf('m')-1)
+
+      start_time = new Date(_this.model.get('date'));
+      start_time.setHours(hours);
+      start_time.setMinutes(minutes);
+
+      var hours = end_time.substr(0, end_time.indexOf(':'));
+      if (end_time.indexOf('p') > 0) {
+        hours += 12;
+      }
+      var minutes = end_time.substring(end_time.indexOf(':')+1, end_time.indexOf('m')-1)
+
+      end_time = new Date(_this.model.get('date'));
+      end_time.setHours(hours);
+      end_time.setMinutes(minutes);
+
+      var payload = {
+        schedule_id : schedule_id,
+        employee_id : employee_id,
+        position_id : position_id,
+        start_time  : start_time,
+        end_time    : end_time
+      }
+
+      $.ajax({
+        url: '/shifts',
+        type: 'POST',
+        data: JSON.stringify(payload),
+        dataType: 'json',
+        beforeSend: function (request) {
+          request.setRequestHeader("Content-Type", 'application/json');
+        },
+        success: function (res) {
+          alert('SHIFT ADDED!');
+        },
+        error: function (jqxhr) {
+          alert('Something went wrong and the shift could not be added!');
+        }
+      })
+    }
   }
+
 });
