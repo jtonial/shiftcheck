@@ -414,6 +414,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
         var width = eMin - sMin;
 
+        //widthScale(10) is a hack until I switch over to using minutes instead of dates. (- minutes will be day before, > 60*24 means next day)
+          // This is because dates can get messed up due to timezones, however minutes will not, and can be shifted for timezones after-the-fact if necessary
         return width > 0 ? widthScale(width) : widthScale(10);
       })
       .attr("fill", function(d) {
