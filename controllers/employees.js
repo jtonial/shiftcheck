@@ -9,8 +9,8 @@ exports.bootstrap = function(req, res){
     response.data = {};
     
     var input = {
-      id       : req.session.employee_id,
-      employer   : req.session.employer
+      id        : req.session.employee_id,
+      employer  : req.session.employer
     }
 
     Scheduleme.Models.Employee.fetch( input , function (err, result) {
@@ -40,7 +40,7 @@ exports.bootstrap = function(req, res){
             Scheduleme.Helpers.Render.code(req.xhr, res, obj)
           } else {
 
-            _.extend(response.data, result);
+            _.extend(response.data, result2);
 
             response.statusCode = 200;
 
@@ -59,6 +59,7 @@ exports.bootstrap = function(req, res){
   }
 };
 exports.processLogin = function (req, res) {
+  console.log('WHAT THE FUCK');
   Scheduleme.Models.Employee.login(req, res);
 };
 exports.changePassword = function (req, res) {

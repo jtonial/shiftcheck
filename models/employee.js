@@ -35,6 +35,7 @@ var Employee = {
 
       var response = {};
       db.query(loginQuery, [email], function (err, row) {
+        console.log('here1');
         if (err) {
           //Handle error, and 'end' event will be emitted after this.
           response.statusCode = 500;
@@ -42,16 +43,21 @@ var Employee = {
           Scheduleme.Logger.error(err.code);
           Scheduleme.Helpers.Render.code(req.xhr, res, response);
         } else {
+          console.log('here2');
           if (row[0]) {
+            console.log('here3');
             if (Scheduleme.Helpers.Helpers.calcHash(password, row[0].salt) == row[0].password) {
               req.session.employee_id = row[0].employee_id;
-              req.session.email     = row[0].email;
-              req.session.username   = row[0].username;
-              req.session.first_name   = row[0].first_name;
+              req.session.email       = row[0].email;
+              req.session.username    = row[0].username;
+              req.session.first_name  = row[0].first_name;
               req.session.last_name   = row[0].last_name;
-              req.session.employer   = row[0].employer_id;
+              req.session.employer    = row[0].employer_id;
 
-              response.statusCode = 200;
+              response.statusCode     = 200;
+
+              console.log('LOGGED IN');
+
               Scheduleme.Helpers.Render.code(req.xhr, res, response);
 
               db.query(Scheduleme.Queries.updateEmployeeLogin, [req.session.employee_id], function (err, numAffected) {
@@ -74,15 +80,18 @@ var Employee = {
               Scheduleme.Helpers.Render.code(req.xhr, res, response);  
             }
           } else {
+            console.log('here5 - No rows returned');
             response.statusCode = 400;
             Scheduleme.Helpers.Render.code(req.xhr, res, response);
           }
         }
       });
     } else {
-      var response = Object();
-      response.statusCode = 400;
-      response.message = 'Email is missing or empty';
+      console.log('here7');
+      var response = {
+        statusCode : 400,
+        message    : 'Email is missing or empty'
+      }
       Scheduleme.Helpers.Render.code(req.xhr, res, response);
     }
   }
@@ -136,6 +145,8 @@ exports.getByEmployer = function (obj, cb) {
   if (typeof obj.employer == 'undefined') {
     Scheduleme.Logger.info('No employer passed');
     //Exit here or something
+    cb( { error: 'No employer passed to Employee::getByEmployer'}, {} );
+    return;
   }
 
   var employer   = obj.employer;

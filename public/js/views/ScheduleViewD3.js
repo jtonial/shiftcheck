@@ -160,7 +160,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
     if (!($(target).length)) throw new Error('');
 
-    var width = Math.min($(window).width(), $(target).parent().width());
+    //Use the window width if parent with comes back as 0 (hack for jquery mobile seeming to leave not fully visible pages with a width of 0)
+    var width = Math.min($(window).width(), $(target).parent().width()) || $(window).width() - 30; 
     var shiftInfoFontSize = _this.config.barHeight*(4/5);
 
     //var height = 500;
@@ -407,10 +408,13 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .attr("ry", _this.config.barRadius)
       .attr("height", _this.config.barHeight - _this.config.barPadding)
       .attr("width", function(d) {
+        console.log('wtf');
         var sMin = d3.select(this).property('sMin');
         var eMin = d3.select(this).property('eMin');
 
-        return widthScale(eMin - sMin);
+        var width = eMin - sMin;
+
+        return width > 0 ? widthScale(width) : widthScale(10);
       })
       .attr("fill", function(d) {
         return d3.select(this).property('transColor');
@@ -781,7 +785,9 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         var sMin = d3.select(this).property('sMin');
         var eMin = d3.select(this).property('eMin');
 
-        return widthScale(eMin - sMin);
+        var width = eMin - sMin;
+
+        return width > 0 ? widthScale(width) : widthScale(10);
       });
 
     svg2.selectAll("text.times")
@@ -797,39 +803,40 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
     console.log('post rendering');
     var contentTarget = document.getElementById('d3Target');
-    this.createD3(contentTarget, this.model.get('shifts'));
+    _this.createD3(contentTarget, this.model.get('shifts'));
 
     $(window).resize(function () {
       _this.resizeGraph(Math.min($(window).width(), $(_this.el).parent().width()));
     });
 
-    $('#new_shift_employee').typeahead({
-      source: _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; })
-    });
+    if (Scheduleme.meta.ADMIN) {
+      $('#new_shift_employee').typeahead({
+        source: _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; })
+      });
 
-    $('#new_shift_position').typeahead({
-      source: _.pluck(Scheduleme.data.positions, 'position')
-    });
+      $('#new_shift_position').typeahead({
+        source: _.pluck(Scheduleme.data.positions, 'position')
+      });
 
-    $('#new_shift_start_time').timepicker({
-      'step': 15 ,
-      'selectOnBlur': true ,
-      'closeOnWindowScroll' : false ,
-      'minTime' : '6:00am'
-    });
-    $('#new_shift_end_time').timepicker({
-      'step': 15 ,
-      'selectOnBlur': true ,
-      'closeOnWindowScroll' : false ,
-      'minTime' : '6:00am'
-    });
+      $('#new_shift_start_time').timepicker({
+        'step': 15 ,
+        'selectOnBlur': true ,
+        'closeOnWindowScroll' : false ,
+        'minTime' : '6:00am'
+      });
+      $('#new_shift_end_time').timepicker({
+        'step': 15 ,
+        'selectOnBlur': true ,
+        'closeOnWindowScroll' : false ,
+        'minTime' : '6:00am'
+      });
 
-    $('#new_shift_start_time').change( function () {
-      var minTime = $(this).val() || '6:00am';
+      $('#new_shift_start_time').change( function () {
+        var minTime = $(this).val() || '6:00am';
 
-      $('#new_shift_end_time').timepicker('option', 'minTime', minTime);
-    });
-
+        $('#new_shift_end_time').timepicker('option', 'minTime', minTime);
+      });
+    }
 
     $(this.el).on("modifiedShifts", function (e) {
       console.log('Caught modifedShift event');

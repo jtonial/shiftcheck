@@ -5,7 +5,7 @@ $(function () {
     console.log($(this).serialize());
 
     $.ajax({
-      url: window.location.pathname,
+      url: window.location.pathname+'?sendTime='+(new Date()).getTime(),
       type: 'POST',
       data: $(this).serialize(),
       success: function (response) {

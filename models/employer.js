@@ -138,6 +138,8 @@ exports.getPositions= function (obj, cb) {
 	if (typeof obj.employer == 'undefined') {
 		Scheduleme.Logger.info('No employer passed; Model.Employer.getPosition');
 		//Exit here or something
+		cb( { error: 'No employer passed to Employee::getByEmployer'}, {} );
+    return;
 	}
 
 	var employer 	= obj.employer;

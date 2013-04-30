@@ -8,10 +8,6 @@ exports.bootstrap = function(req, res){
     var response = {};
     response.data = {};
 
-    //Simply wrapped the old Bootstrap with getByEmployer, to include the employees in bootstrap response.
-      //This has been commmented out for now as employees aren't really needed on bootstrap right now
-    //Scheduleme.Models.Employee.getByEmployer ({ employer : req.session.employer_id }, function (err, result) {
-
     Scheduleme.Models.Employer.fetch({ id : req.session.employer_id }, function (err, result) {
 
       if (err) {
@@ -168,16 +164,25 @@ exports.addPosition = function (req, res) {
   }
 
   Scheduleme.Models.Employer.addPosition(obj, function (err, response) {
+    if (err) {
+      _.extend(response, err);
+      response.statusCode = 500;
+    }
     Scheduleme.Helpers.Render.code(req.xhr, res, response);
   })
 };
 exports.getPositions = function (req, res) {
+
   //Passed in case I add search functionality in the API later (instead of just client side)
   var obj = {
     employer : req.session.employer_id || req.session.employer
   }
 
   Scheduleme.Models.Employer.getPositions (obj, function (err, response) {
+    if (err) {
+      _.extend(response, err);
+      response.statusCode = 500;
+    }
     Scheduleme.Helpers.Render.code(req.xhr, res, response);
   })
 };

@@ -43,7 +43,7 @@ app.configure(function(){
     twitter_url: Scheduleme.Config.twitter_url
   });
   app.use(express.favicon());
-  //app.use(express.logger());//'dev'));
+  app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
@@ -100,7 +100,7 @@ app.get('/', Scheduleme.Helpers.Render.index);
 app.get('/schedule/*', Scheduleme.Helpers.Render.index)
 
 
-app.get('/jquerymobile', function (req, res) {
+app.get('/mobile', function (req, res) {
   res.render('jquerymobile', { });
 });
 
@@ -122,10 +122,12 @@ app.get('/manager-login', function (req, res) {
 
 app.post('/login', function (req, res) {
   if (!employee && !admin) {
+    console.log('omg');
     Scheduleme.Controllers.Employees.processLogin(req, res);
   } else {
+    console.log('wtf3');
     if (req.xhr) {
-      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 200 });
+      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }
@@ -136,7 +138,7 @@ app.post('/manager-login', function (req, res) {
     Scheduleme.Controllers.Employers.processLogin(req, res);
   } else {
     if (req.xhr) {
-      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 200 });
+      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }

@@ -20,8 +20,8 @@
 //   User: {},
 
 //   meta: {
-//     state: 'admin',
-//     ADMIN: 1,
+//     state: 'employee',
+//     ADMIN: 0,
 //     mobile: true,
 //     d3: true
 //   }
