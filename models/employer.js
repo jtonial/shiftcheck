@@ -116,7 +116,7 @@ exports.fetch = function (obj, cb) {
 		console.log('No id; Model.Employer.fetch');
 	}
 
-	id = obj.id;
+	var id = obj.id;
 
 	db.query(Scheduleme.Queries.selectEmployer, [id], function (err, row) {
 		
@@ -174,12 +174,12 @@ exports.addPosition= function (obj, cb) {
 		//Exit here or something
 	}
 
-	employer 	= obj.employer;
-	position 	= obj.position;
-	full_name 	= obj.full_name;
-	description = obj.description;
+	var employer 	= obj.employer;
+	var position 	= obj.position;
+	var full_name 	= obj.full_name;
+	var description = obj.description;
 
-	response 	= typeof obj.response != 'undefined' ? obj.response : {};
+	var response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
 	db.query(Scheduleme.Queries.insertPosition, [employer, position, full_name, description], function (err, result) {
 		if (err) {

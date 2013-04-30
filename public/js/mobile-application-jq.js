@@ -1,31 +1,31 @@
-window.Scheduleme = window.Scheduleme || {//new Object();
-  classes: {
-    models: {},
-    collections: {},
-    views: {
-      ScheduleView: {},
-    },
-  },
-  helpers: {},
+// window.Scheduleme = window.Scheduleme || {//new Object();
+//   classes: {
+//     models: {},
+//     collections: {},
+//     views: {
+//       ScheduleView: {},
+//     },
+//   },
+//   helpers: {},
 
-  data: {},
+//   data: {},
 
-  Schedules: {},
+//   Schedules: {},
 
-  Init: function () {},
+//   Init: function () {},
 
-  CurrentView: {},
-  Router: {},
+//   CurrentView: {},
+//   Router: {},
 
-  User: {},
+//   User: {},
 
-  meta: {
-    state: 'admin',
-    ADMIN: 1,
-    mobile: true,
-    d3: true
-  }
-};
+//   meta: {
+//     state: 'admin',
+//     ADMIN: 1,
+//     mobile: true,
+//     d3: true
+//   }
+// };
 
 window.isPhonegap = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 

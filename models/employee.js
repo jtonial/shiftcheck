@@ -138,8 +138,8 @@ exports.getByEmployer = function (obj, cb) {
     //Exit here or something
   }
 
-  employer   = obj.employer;
-  response   = typeof obj.response != 'undefined' ? obj.response : {};
+  var employer   = obj.employer;
+  var response   = typeof obj.response != 'undefined' ? obj.response : {};
 
   db.query(Scheduleme.Queries.selectEmployees, [employer], function (err, rows) {
     if (err) {

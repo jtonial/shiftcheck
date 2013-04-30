@@ -14,14 +14,11 @@ var express       = require('express')
   , RedisStore    = require('connect-redis')(express)
   , authenticate  = require('./middleware/authenticate')
   , device        = require('express-device')
+  , Scheduleme    = require('./helpers/global')
+  , db            = Scheduleme.db
+  , app           = express()
   ;
 
-var Scheduleme = require('./helpers/global');
-var db = Scheduleme.db;
-//console.log(Scheduleme);
-
-//MySQL
-var app = express();
 if (process.env.REDISTOGO_URL) {
   var rtg   = require("url").parse(process.env.REDISTOGO_URL);
   var redis = require("redis").createClient(rtg.port, rtg.hostname);
@@ -54,7 +51,7 @@ app.configure(function(){
     secret   :'asdfadsfasdfw4t3t53', 
     maxAge   : new Date( Date.now() + 1800000), // 30 minutes
     store   : new RedisStore({client: redis})
-    }));
+  }));
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(authenticate());

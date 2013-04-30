@@ -17,8 +17,6 @@ exports.renderSignup = function (req, res) {
 exports.index = function(req, res){
   res.setHeader('Content-Type','text/html');
 
-  console.log(req.session);
-
   if (typeof req.session.employee_id != 'undefined') {
     if (req.device.type == 'phone' || req.device.type == 'tablet') {
       res.render('jquerymobile', { });

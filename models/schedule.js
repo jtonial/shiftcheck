@@ -12,7 +12,7 @@ var connection = mysql.createConnection({});
 function CSVToArray( strData, strDelimiter ){
   // Check to see if the delimiter is defined. If not,
   // then default to comma.
-  strDelimiter = (strDelimiter || ",");
+  var strDelimiter = (strDelimiter || ",");
 
   // Create a regular expression to parse the CSV values.
   var objPattern = new RegExp(
@@ -137,7 +137,7 @@ var Schedule = {
   save : function (cb) {
     if (Scheduleme.Config.debug) Scheduleme.Logger.info('Saving Schedule');
 
-    _this = this;
+    var _this = this;
 
     if (typeof this.id == 'undefined') { //Create
       _this = this;
@@ -229,7 +229,7 @@ exports.verifyUpload = function (id, cb) {
 }
 exports.getByEmployer = function (obj, cb) {
 
-  id       = obj.id;
+  var id       = obj.id;
 
   var response = {
     schedules: []

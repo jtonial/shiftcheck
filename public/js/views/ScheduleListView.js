@@ -120,7 +120,7 @@ function uploadObject () {
 Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
   //This renders directly into the el element; no need to append
     //Replaces everything in it; and no need to postRender()
-  el: $('#sidebar-content'),
+  el: $('#schedules-list'),
 
   template: Handlebars.compile($('#schedule-list-template').html()),
 
