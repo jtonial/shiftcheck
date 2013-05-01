@@ -38,8 +38,8 @@ window.generateShifts = function (num, positions, names) {
   var names = typeof names != 'undefined' ? names : ['Nick','Jack','John','Jack','Kathy','Josephine','Jordy','Tina'];
 
   for (var i = 0; i < num; i++) {
-    var position = positions[Math.floor(Math.random()*(positions.length))];
-    var name = names[Math.floor(Math.random()*(names.length))];
+    var position = Math.floor(Math.random()*6)+1;//positions[Math.floor(Math.random()*(positions.length))];
+    var name = Math.floor(Math.random()*3)+1;//names[Math.floor(Math.random()*(names.length))];
 
     var minutes = Math.floor(Math.random()*2) * 30;       //will return 0 or 30
     var hours = Math.floor(Math.random()*16) + 4;         // Return from 4 - 20
@@ -63,11 +63,11 @@ window.generateShifts = function (num, positions, names) {
     }
 
     var o = {
-      id      : i,
-      start    : start.toUTCString(),
-      end      : end.toUTCString(),
-      position  : position,
-      employee  : name
+      id       : i,
+      start    : start.getHours()*60 + start.getMinutes(),
+      end      : end.getHours()*60 + end.getMinutes(),
+      position : position,
+      employee : name
     }
 
     shifts.push(o);
@@ -173,15 +173,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
     // Sort schedules
     function compare(a,b) {
-      //var as = new Date(a.start);
-      //var bs = new Date(b.start);
+
       if (a.start < b.start)
         return -1;
       if (a.start > b.start)
         return 1;
-
-      //var ae = new Date(a.end);
-      //var be = new Date(b.end);
 
       if (a.end < b.end)
         return -1;
@@ -224,13 +220,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     dataset.forEach(function (shift) {
       _this.indexes.shiftMeta[shift.shift_id] = {}
         
-        var s = new Date(shift.start);
-        var sMin = s.getHours()*60+s.getMinutes();
+        var sMin = shift.start;
 
       _this.indexes.shiftMeta[shift.shift_id].sMin = sMin;
 
-        var e = new Date(shift.end);
-        var eMin = e.getHours()*60+e.getMinutes();
+        var eMin = shift.end;
 
       _this.indexes.shiftMeta[shift.shift_id].eMin = eMin;
 
@@ -238,16 +232,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
     //Note min will always the the first element. Max is not guaranteed to be the last
     var min = d3.min(dataset, function (d) {
-            var s = new Date(d.start);
-            var sMin = s.getHours()*60+s.getMinutes();
-
-            return sMin;
+            return d.start;
           });
     var max = d3.max(dataset, function(d) { 
-            var e = new Date(d.end);
-            var eMin = e.getHours()*60+e.getMinutes();
-
-            return eMin;
+            return d.end;
         });
 
     _this.config.min = min;
@@ -272,7 +260,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
               (dataset.length * _this.config.barHeight) + _this.config.topPadding, 
               _this.config.barHeight);
      
+    console.log('min: '+min+'; max: '+max);
+
     var xlineData = d3.range(min, max, 30);
+    console.log('xlinedata: '+xlineData);
 
     var shiftOverlapping = function (d) {
       //Use default dataset if nothing else is provided
@@ -306,10 +297,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .attr("x2", function(d){return xScale(d);})
       .attr("y2", height)
       .style("stroke", function (d) {
-
         //I should really precalculate this and save it into the model
         var s = new Date(d.start);
         var sMin = s.getHours()*60+s.getMinutes();
+        //var sMin = d.start;
 
         //console.log ('mod: '+s.getMinutes());
         if (sMin % 60 == 0) {
@@ -343,7 +334,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .style("stroke", "rgb(200,200,200)")
       .style("stroke-width", 1);
 
-
     var gridVertAreas = svg2.append("g").selectAll(".verticalArea")
       .data(xlineData)
       .enter().append("svg:rect").attr("class", "verticalArea")
@@ -375,16 +365,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .enter()
       .append("rect").attr("class", "shift")
       .property("sMin", function (d, i) {
-        var s = new Date(d.start);
-        var sMin = s.getHours()*60+s.getMinutes();
-
-        return sMin;
+        return d.start;
       })
       .property("eMin", function (d, i) {
-        var e = new Date(d.end);
-        var eMin = e.getHours()*60+e.getMinutes();
-
-        return eMin;
+        return d.end;
       })
       .property('transColor', function (d, i) {
         return "rgba(0, 0, 150, 0.6)";
@@ -408,7 +392,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .attr("ry", _this.config.barRadius)
       .attr("height", _this.config.barHeight - _this.config.barPadding)
       .attr("width", function(d) {
-        console.log('wtf');
         var sMin = d3.select(this).property('sMin');
         var eMin = d3.select(this).property('eMin');
 
@@ -820,6 +803,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         source: _.pluck(Scheduleme.data.positions, 'position')
       });
 
+      /*
       $('#new_shift_start_time').timepicker({
         'step': 15 ,
         'selectOnBlur': true ,
@@ -832,11 +816,30 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         'closeOnWindowScroll' : false ,
         'minTime' : '6:00am'
       });
+      */
 
-      $('#new_shift_start_time').change( function () {
-        var minTime = $(this).val() || '6:00am';
+      $('#new_shift_start_time').timepicker({
+          minuteStep: 15
+      });
+      $('#new_shift_end_time').timepicker({
+          minuteStep: 15
+      });
 
-        $('#new_shift_end_time').timepicker('option', 'minTime', minTime);
+      $('#new_shift_start_time').timepicker().on('changeTime.timepicker', function(e) {
+        _this.new_shift_start_time = e.time;
+
+        console.log('The time is ' + e.time.value);
+    console.log('The hour is ' + e.time.hour);
+    console.log('The minute is ' + e.time.minute);
+    console.log('The meridian is ' + e.time.meridian);
+      });
+      $('#new_shift_end_time').timepicker().on('changeTime.timepicker', function(e) {
+        _this.new_shift_end_time = e.time;
+
+        console.log('The time is ' + e.time.value);
+    console.log('The hour is ' + e.time.hour);
+    console.log('The minute is ' + e.time.minute);
+    console.log('The meridian is ' + e.time.meridian);
       });
     }
 
@@ -846,10 +849,12 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     this.el.addEventListener("modifedShift", function (e) {
       console.log('Caught modifedShift event - non jquery');
     }, false);
+
   },
 
   addShift: function () {
 
+    var _this = this;
     /**
       THIS SHOULD REALLY ALL BE DONE IN A BACKBONE MODEL/COLLECTION 
     */
@@ -869,11 +874,37 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     if ( _.pluck(Scheduleme.data.positions, 'position').indexOf(position) < 0 ) {
       errors.push('Position invalid');
     }
-    if ( !start_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
+    /*if ( !start_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
       errors.push('Start Time invalid');
     }
     if ( !end_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
       errors.push('End Time invalid');
+    }*/
+    if ( !start_time ) {
+      errors.push('Start Time invalid');
+    }
+    if ( !end_time ) {
+      errors.push('End Time invalid');
+    } else {
+      var start_hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
+      if (start_time.indexOf('p') > 0) {
+        hours += 12;
+      }
+      var start_minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
+
+
+      var end_hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
+      if (end_time.indexOf('P') > 0) {
+        hours += 12;
+      }
+      var end_minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
+
+      if (end_hours < start_hours) {
+        errors.push('End Time invalid');
+      } else if (end_hours == start_hours && end_minutes <= start_minutes) {
+        errors.push('End Time invalid');
+      }
+
     }
 
     if (errors.length) {
@@ -883,25 +914,23 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var employee_id = _.find(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name == employee; }).employee_id;
       var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).position_id;
 
-      var hours = start_time.substr(0, start_time.indexOf(':'));
+      var hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
       if (start_time.indexOf('p') > 0) {
         hours += 12;
       }
-      var minutes = start_time.substring(start_time.indexOf(':')+1, start_time.indexOf('m')-1)
+      var minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
 
-      start_time = new Date(_this.model.get('date'));
-      start_time.setHours(hours);
-      start_time.setMinutes(minutes);
+      var start_time = (hours*60)+minutes;
 
-      var hours = end_time.substr(0, end_time.indexOf(':'));
-      if (end_time.indexOf('p') > 0) {
+
+      var hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
+      if (end_time.indexOf('P') > 0) {
         hours += 12;
       }
-      var minutes = end_time.substring(end_time.indexOf(':')+1, end_time.indexOf('m')-1)
+      var minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
 
-      end_time = new Date(_this.model.get('date'));
-      end_time.setHours(hours);
-      end_time.setMinutes(minutes);
+      var end_time = (hours*60)+minutes;
+
 
       var payload = {
         schedule_id : schedule_id,
@@ -910,6 +939,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         start_time  : start_time,
         end_time    : end_time
       }
+
+      alert(JSON.stringify(payload));
 
       $.ajax({
         url: '/shifts',
@@ -921,6 +952,16 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         },
         success: function (res) {
           alert('SHIFT ADDED!');
+          var newObject = {
+            employee_id: employee_id,
+            employee_name: employee,
+            end: end_time,
+            position: position,
+            position_id: position_id,
+            shift_id: res.shift_id,
+            start: start_time
+          }
+          _this.model.get('shifts').push(newObject);
         },
         error: function (jqxhr) {
           alert('Something went wrong and the shift could not be added!');

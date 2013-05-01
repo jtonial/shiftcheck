@@ -13,9 +13,15 @@
     .span3
       input#new_shift_position.input-block-level(type="text", placeholder="Position")
     .span3
-      input#new_shift_start_time.input-block-level(type="text", placeholder="Start Time")
+      .input-append.bootstrap-timepicker
+        input#new_shift_start_time.input-block-level(type="text", placeholder="Start Time")
+        span.add-on
+          .icon-time
     .span3
-      input#new_shift_end_time.input-block-level(type="text", placeholder="End Time")
+      .input-append.bootstrap-timepicker
+        input#new_shift_end_time.input-block-level(type="text", placeholder="End Time")
+        span.add-on
+          .icon-time
   .row-fluid
     .span3.offset9
       button#add_shift_trigger.btn.btn-primary.btn-block Add

@@ -153,7 +153,7 @@ var Schedule = {
           var failedFlag = false;
           if (counter) {
             _this.data.shifts.forEach( function (shift) {
-              db.query(Scheduleme.Queries.insertShift, [result.insertId, (new Date(shift.start)).toISOString(), (new Date(shift.end)).toISOString(), shift.position, shift.employee], function (err) {
+              db.query(Scheduleme.Queries.insertShift, [result.insertId, shift.start, shift.end, shift.position, shift.employee], function (err) {
                 if (err) {
                   failedFlag = true;
                   cb(err, null);
@@ -257,12 +257,12 @@ exports.getByEmployer = function (obj, cb) {
               error = err;
             } else {
               var newRow = row;
-              newRow.shifts = [];
-              shiftRows.forEach(function (shiftRow) {
-                shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toUTCString();
-                shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toUTCString();
+              newRow.shifts = shiftRows;
+              /*shiftRows.forEach(function (shiftRow) {
+                shiftRow.start = shiftRow.start))).toUTCString();
+                shiftRow.end = shiftRow.end))).toUTCString();
                 newRow.shifts.push(shiftRow);
-              })
+              })*/
               if (newRow.shifts.length) {
                 newRow.type = "shifted";
               } else if (newRow.json) {

@@ -100,8 +100,8 @@ CREATE TABLE shifts (
   schedule_id INT UNSIGNED NOT NULL,
 
   # These can probably be switch to TIME only
-  start DATETIME NOT NULL,
-  end DATETIME NOT NULL,
+  start INT NOT NULL,
+  end INT NOT NULL,
 
   creation_time DATETIME NOT NULL,
   position_id INT UNSIGNED,

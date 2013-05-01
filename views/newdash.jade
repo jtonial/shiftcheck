@@ -3,6 +3,7 @@ extends newlayout
 block append scripts
   - if ( user.employer_id )
     script(src='/js/vendor/jquery.timepicker.min.js')
+    script(src='/js/vendor/bootstrap-timepicker.min.js')
     script(src='/js/admin-application.js')
   - else 
     script(src='/js/dash-application.js')
@@ -10,6 +11,7 @@ block append scripts
 block append styles
   - if ( user.employer_id )
     link(href='/css/jquery.timepicker.css', rel='stylesheet')
+    link(href='/css/vendor/bootstrap-timepicker.min.css', rel='stylesheet')
 
 block sidebar-header
   #logo.open.pull-left ShiftCheck
@@ -17,6 +19,7 @@ block sidebar-header
 
 block sidebar-content
   #schedules-list
+  #positions-list
   #approval-request-list
 
 block sidebar-footer
