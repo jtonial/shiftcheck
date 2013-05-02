@@ -887,7 +887,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       errors.push('End Time invalid');
     } else {
       var start_hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
-      if (start_time.indexOf('p') > 0) {
+      if (start_time.indexOf('P') > 0) {
         hours += 12;
       }
       var start_minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
@@ -915,7 +915,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).position_id;
 
       var hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
-      if (start_time.indexOf('p') > 0) {
+      if (start_time.indexOf('P') > 0) {
         hours += 12;
       }
       var minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
@@ -940,7 +940,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         end_time    : end_time
       }
 
-      alert(JSON.stringify(payload));
 
       $.ajax({
         url: '/shifts',
