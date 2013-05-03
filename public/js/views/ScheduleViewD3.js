@@ -778,6 +778,22 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     svg2.selectAll("text.times")
       .transition()
       .duration(750)
+      .text(function(d) {
+        var tmp = new Date();
+        tmp.setHours(Math.floor(d / 60));
+        tmp.setMinutes(d % 60);
+        var hours = (Math.floor(d / 60)) % 12;
+        if (hours == 0) {
+          hours = 12;
+        }
+        minutes = ("0" + (d%60)).slice(-2);
+
+        if (minutes % 60 == 0) {
+          return hours+':'+minutes;
+        }
+
+        return '';
+      })
       .attr("x", function(d) {
         return xScale(d)-12;
       })
@@ -791,7 +807,9 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     _this.createD3(contentTarget, this.model.get('shifts'));
 
     $(window).resize(function () {
-      _this.resizeGraph(Math.min($(window).width(), $(_this.el).parent().width()));
+      var width = Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30; 
+
+      _this.resizeGraph(width);
     });
 
     if (Scheduleme.meta.ADMIN) {
@@ -827,19 +845,9 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
       $('#new_shift_start_time').timepicker().on('changeTime.timepicker', function(e) {
         _this.new_shift_start_time = e.time;
-
-        console.log('The time is ' + e.time.value);
-    console.log('The hour is ' + e.time.hour);
-    console.log('The minute is ' + e.time.minute);
-    console.log('The meridian is ' + e.time.meridian);
       });
       $('#new_shift_end_time').timepicker().on('changeTime.timepicker', function(e) {
         _this.new_shift_end_time = e.time;
-
-        console.log('The time is ' + e.time.value);
-    console.log('The hour is ' + e.time.hour);
-    console.log('The minute is ' + e.time.minute);
-    console.log('The meridian is ' + e.time.meridian);
       });
     }
 
