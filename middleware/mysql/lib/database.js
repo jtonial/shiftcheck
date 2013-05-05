@@ -42,7 +42,7 @@ exports.init = function(config) {
   pool = mysql.createPool(config);
 };
 
-// The following has been borrowed from the mysql-pool library
+// The following has been borrowed from the mysql-simple library
 
 /**
  * Execute a query that is expected to return zero or more rows.
