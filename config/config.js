@@ -17,37 +17,41 @@ mongo_config = {
   local   : {
     "host"     : "localhost",
     "port"     : 27017,
-    "db"     : "schedule"
+    "database" : "schedule"
   }
 }
 mysql_config = {
   local   : {
     "user"     : 'root',
     "password" : 'password',
-    "db"       : 'shiftcheck',
+    "database" : 'shiftcheck',
     "host"     : 'localhost',
-    "port"     : 3306
+    "port"     : 3306,
+    "connectionLimit" : 100
   },
   cleardb : {
     "user"     : process.env.CLEARDB_DATABASE_USER,
     "password" : process.env.CLEARDB_DATABASE_PASSWORD,
-    "db"       : process.env.CLEARDB_DATABASE_DB,
+    "database" : process.env.CLEARDB_DATABASE_DB,
     "host"     : process.env.CLEARDB_DATABASE_HOST,
-    "port"     : process.env.CLEARDB_DATABASE_PORT || 3306
+    "port"     : process.env.CLEARDB_DATABASE_PORT || 3306,
+    "connectionLimit" : 30
   },
   rds   : {
     "user"     : process.env.RDS_USER,
     "password" : process.env.RDS_PASSWORD,
-    "db"       : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
+    "database" : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
     "host"     : process.env.RDS_HOST,
-    "port"     : 3306
+    "port"     : 3306,
+    "connectionLimit" : 30
   },
   test  : {
     "user"     : 'root',
     "password" : 'password',
-    "db"       : 'shiftcheck_test',
+    "database" : 'shiftcheck_test',
     "host"     : 'localhost',
-    "port"     : 3306
+    "port"     : 3306,
+    "connectionLimit" : 100
   }
 }
 
