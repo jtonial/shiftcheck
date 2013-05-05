@@ -799,6 +799,13 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       })
   },
 
+  reRender: function () {
+    console.log('rerendering');
+    var contentTarget = document.getElementById('d3Target');
+    $(contentTarget).html('');
+    _this.createD3(contentTarget, this.model.get('shifts'));
+  },
+
   postRender: function () {
     var _this = this;
 
@@ -820,21 +827,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       $('#new_shift_position').typeahead({
         source: _.pluck(Scheduleme.data.positions, 'position')
       });
-
-      /*
-      $('#new_shift_start_time').timepicker({
-        'step': 15 ,
-        'selectOnBlur': true ,
-        'closeOnWindowScroll' : false ,
-        'minTime' : '6:00am'
-      });
-      $('#new_shift_end_time').timepicker({
-        'step': 15 ,
-        'selectOnBlur': true ,
-        'closeOnWindowScroll' : false ,
-        'minTime' : '6:00am'
-      });
-      */
 
       $('#new_shift_start_time').timepicker({
           minuteStep: 15
@@ -894,23 +886,26 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     if ( !end_time ) {
       errors.push('End Time invalid');
     } else {
+      console.log('start time: '+start_time);
+      console.log('end time: '+end_time);
+
       var start_hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
       if (start_time.indexOf('P') > 0) {
-        hours += 12;
+        start_time += 12;
       }
       var start_minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
 
 
       var end_hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
       if (end_time.indexOf('P') > 0) {
-        hours += 12;
+        end_hours += 12;
       }
       var end_minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
 
       if (end_hours < start_hours) {
-        errors.push('End Time invalid');
+        errors.push('End Time invalid: '+end_hours+' '+start_hours);
       } else if (end_hours == start_hours && end_minutes <= start_minutes) {
-        errors.push('End Time invalid');
+        errors.push('End Time invalid: '+end_minutes+' '+start_minutes);
       }
 
     }
@@ -958,7 +953,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
           request.setRequestHeader("Content-Type", 'application/json');
         },
         success: function (res) {
-          alert('SHIFT ADDED!');
           var newObject = {
             employee_id: employee_id,
             employee_name: employee,
@@ -969,12 +963,20 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
             start: start_time
           }
           _this.model.get('shifts').push(newObject);
+          _this.reRender();
+          _this.resetAddFields();
         },
         error: function (jqxhr) {
           alert('Something went wrong and the shift could not be added!');
         }
       })
     }
+  },
+  resetAddFields: function () {
+    $('#new_shift_employee').val('');
+    $('#new_shift_position').val('');
+    $('#new_shift_start_time').val('');
+    $('#new_shift_end_time').val('');
   }
 
 });

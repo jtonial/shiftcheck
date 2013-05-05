@@ -55,7 +55,6 @@
     Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
     //Router takes care of this
-    //Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
     Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
 
     Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });

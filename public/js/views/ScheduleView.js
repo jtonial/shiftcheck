@@ -9,6 +9,9 @@ Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
     console.log('Schedule View Initialized');
 
+    //Shifts should be a proper Backbone collection so that I can bind to it's add event (as well as delete, etc)
+    // TODO : Shifts should be collection; I can then reRender on any change to the collection
+      //Even if I cant get d3 views to work, it would still be easier to manage
     this.render();
   },
 

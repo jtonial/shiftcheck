@@ -110,8 +110,11 @@ function uploadObject () {
         that.id = res.id;
         that.uploadFile(res);
       },
-      error: function(res, status, error) {
-        console.log('received an error');
+      error: function(jqxhr) {
+        var res = JSON.parse(jqxhr.responseText);
+        alert('Upload failed for the following reason: '+res.message || 'unknown');
+        console.log('received an error: '+res);
+        that.cb();
       }
     });
   }
@@ -288,7 +291,6 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
     $('.schedule-tab').remove();
     _.each(this.collection.models, function(schedule) {
-      console.log('type '+schedule.get('type'));
       var d = new Date(schedule.get('datenum'));
       //console.log('Day1: '+d);
       d = Scheduleme.helpers.fromUTC(d);
@@ -355,8 +357,8 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
             // Unfortunately the dstring always has MM month, whereas the id will not. If I remove the 0s from month/day it should work
           $('#dates.nav.nav-tabs li:nth-child(2) a').click();
 
-        }, error: function (xhr) {
-          console.log('DENIED!!');
+        }, error: function (jqxhr) {
+          alert('There doesn\'t seem to be a schedule for that date.');
         }, complete: function () {
           $('#sched-date').val('');
         }

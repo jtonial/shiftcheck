@@ -17,20 +17,18 @@ exports.loadDate = function(req, res){
       date   : req.params.date
     }
 
-    Scheduleme.Models.Schedule.getByEmployerDate(input, function (obj) {
-
-      err     = obj.err;
-      row     = obj.row;
-      response   = typeof obj.response != 'undefined' ? obj.response : {};
+    Scheduleme.Models.Schedule.getByEmployerDate(input, function (err, result) {
+      
+      var response = {};
 
       if (err) {
         response.statusCode = 500;
         response.message = err.code;
         console.log(err.code);
       } else {
-        if (row) {
+        if (result) {
           response.statusCode = 200;
-          response.data = row;
+          response.data = result;
         } else {
           response.statusCode = 404;
           response.message = 'No schedule found for that date';
@@ -141,6 +139,10 @@ exports.clientUpload = function(req, res) {
       console.log('New Schedule created: id: '+result.insertId);
       sendCreds(result.insertId, file_name);
     } else { //There was an error
+      if (err.error == 'CONFLICT') {
+        Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
+        return;
+      } 
       console.log('There was an error creating a schedule: '+err);
       Scheduleme.Helpers.Render.code500(req,res);
     }
@@ -179,10 +181,8 @@ exports.verifyUpload = function (req, res) {
   }
 };
 //This seems to work for uploading a pdf and adding a schedule to a database
-exports.upload = function(req,res){ //Used to process a file containing a schedule
-  console.log('in upload');
-  console.log(req.body.json);
-  console.log(typeof req.body.json);
+exports.upload = function(req, res){ //Used to process a file containing a schedule
+
   if (typeof req.session.employer_id != 'undefined') {
     //Determine the type of file
     //Parse the file based on the given type
@@ -230,6 +230,10 @@ exports.upload = function(req,res){ //Used to process a file containing a schedu
           console.log('New Schedule created: id: '+result.insertId);
           Scheduleme.Helpers.Render.code( req.xhr, res, {statusCode: 200, schedule_id: result.insertId } );
         } else { //There was an error
+          if (err.error == 'CONFLICT') {
+            Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
+            return;
+          } 
           console.log('There was an error creating a schedule: '+err);
           Scheduleme.Helpers.Render.code500(req,res);
         }

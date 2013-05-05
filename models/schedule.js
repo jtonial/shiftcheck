@@ -4,8 +4,6 @@ var db = require('../db/dbconnection');
 var mysql = require('mysql');
 var connection = mysql.createConnection({});
 
-//Note: Dates are UTCified going into db, and unUTFified when fetching for schedules created from local and served to staging/prod
-
 // This will parse a delimited string into an array of
 // arrays. The default delimiter is the comma, but this
 // can be overriden in the second argument.
@@ -140,37 +138,55 @@ var Schedule = {
     var _this = this;
 
     if (typeof this.id == 'undefined') { //Create
-      _this = this;
-
-      var obj = this.generateInsertQuery();
-
-      if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
-
-      db.query(obj.queryString, obj.values, function (err, result) {
-        if (!err) {
-          //not method forEach of undefined
-          var counter = _this.data.shifts.length;
-          var failedFlag = false;
-          if (counter) {
-            _this.data.shifts.forEach( function (shift) {
-              db.query(Scheduleme.Queries.insertShift, [result.insertId, shift.start, shift.end, shift.position, shift.employee], function (err) {
-                if (err) {
-                  failedFlag = true;
-                  cb(err, null);
-                }
-                counter--;
-                if (counter == 0 && !failedFlag) {
-                  cb(err, result);
-                }
-              });
-            })
-          } else {
-            cb(err, result);
-          }
+      console.log('creating schedule');
+      // Check for conflicting schedules
+      var tmp = new Date(_this.data.date);
+      var month = (1+parseInt(tmp.getMonth())) < 10 ? '0'+(1+parseInt(tmp.getMonth())) : (1+parseInt(tmp.getMonth()))
+      var dateFormatted = tmp.getFullYear()+'-'+month+'-'+tmp.getDate();
+      
+      db.query(Scheduleme.Queries.getScheduleByEmployerDate, [_this.data.employer_id, dateFormatted], function (err, row) {
+        console.log('checked for date: '+_this.data.employer_id+' '+dateFormatted);
+        console.log(row);
+        if (err) {
+          cb(err, null);
         } else {
-          cb(err, result);
+          if (row.length) {
+            cb( { error: 'CONFLICT', message: 'You cannot have multiple schedules for the same date. The conflicting schedule has id '+row[0].id }, null);
+            return;
+          }
+          //No conflicting schedule exists, inserting
+          var obj = _this.generateInsertQuery();
+
+          if (Scheduleme.Config.debug) Scheduleme.Logger.info('Query object: '+JSON.stringify(obj));
+
+          db.query(obj.queryString, obj.values, function (err, result) {
+            if (!err) {
+              //not method forEach of undefined
+              var counter = _this.data.shifts.length;
+              var failedFlag = false;
+              if (counter) {
+                _this.data.shifts.forEach( function (shift) {
+                  db.query(Scheduleme.Queries.insertShift, [result.insertId, shift.start, shift.end, shift.position, shift.employee], function (err) {
+                    if (err) {
+                      failedFlag = true;
+                      cb(err, null);
+                    }
+                    counter--;
+                    if (counter == 0 && !failedFlag) {
+                      cb(err, result);
+                    }
+                  });
+                })
+              } else {
+                cb(err, result);
+              }
+            } else {
+              cb(err, result);
+            }
+          });
         }
-      });
+      })
+      
     } else { //Update
       var obj = this.generateUpdateQuery();
 
@@ -293,19 +309,15 @@ exports.getByEmployer = function (obj, cb) {
 exports.getByEmployerDate = function (obj, cb) {
   var id       = obj.id;
   var date     = obj.date;
-  var response   = typeof obj.response != 'undefined' ? obj.response : {};
+  var response = {};
 
   db.query(Scheduleme.Queries.getScheduleByEmployerDate, [id,date], function (err, row) {
 
     if (row[0]) {
 
       db.query(Scheduleme.Queries.getShiftsBySchedule, [row[0].id], function (err, shiftRows) {
-        row[0].shifts = [];
-        shiftRows.forEach(function (shiftRow) {
-          shiftRow.start = (_this.unUTCify(new Date(shiftRow.start))).toISOString();
-          shiftRow.end = (_this.unUTCify(new Date(shiftRow.end))).toISOString();
-          row[0].shifts.push(shiftRow);
-        })
+
+        row[0].shifts = shiftRows;
 
         if (row[0].shifts.length) {
           row[0].type = "shifted";
@@ -314,24 +326,11 @@ exports.getByEmployerDate = function (obj, cb) {
           row[0].json = JSON.parse(row[0].json);
         }
 
-        var obj = {
-          err     : err,
-          row     : row[0],
-          response   : response
-        }
-
-        cb(obj);
+        cb(err, row[0]);
 
       })
     } else {
-
-      var obj = {
-        err     : err,
-        row     : row[0],
-        response   : response
-      }
-
-      cb(obj);
+      cb(err, null);
     }
   });
 }
