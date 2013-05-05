@@ -7,12 +7,24 @@ Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
   initialize: function () {
 
+    this.view = null;
+
     console.log('Schedule View Initialized');
 
     //Shifts should be a proper Backbone collection so that I can bind to it's add event (as well as delete, etc)
     // TODO : Shifts should be collection; I can then reRender on any change to the collection
       //Even if I cant get d3 views to work, it would still be easier to manage
+    if (this.model.get('type') == 'shifted' && Scheduleme.meta.d3) {
+      if (Scheduleme.meta.debug) console.log('is shifted; will listen to Shift events and rerender');
+      this.listenTo(this.model.Shifts, 'all', this.reRenderSubview);
+    }
+
     this.render();
+  },
+
+  reRenderSubview: function () {
+    console.log('the shift collection was modified... reRendering');
+    this.view.reRender();
   },
 
   render: function () {
@@ -22,29 +34,29 @@ Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
     var schedule = this.model;
 
     if ( typeof schedule.get('g_spreadsheet_key') != 'undefined' && schedule.get('g_spreadsheet_key') ) {
-      var view = new Scheduleme.classes.views.ScheduleView.spreadsheet ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.spreadsheet ({ model: this.model });
     } else if ( typeof schedule.get('json') != 'undefined' && schedule.get('json') ) {
-      var view = new Scheduleme.classes.views.ScheduleView.table ({ model: this.model });
+      this.iew = new Scheduleme.classes.views.ScheduleView.table ({ model: this.model });
     } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
       requiresPostRender = true;
-      var view = new Scheduleme.classes.views.ScheduleView.d3 ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.d3 ({ model: this.model });
     } else if (schedule.get('type') == 'month') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
     } else if (schedule.get('type') == 'week') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
     } else if (schedule.get('type') == 'twoweek') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
     } else { //Defaults to daily schedule
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
     }
 
-    view.render();
+    this.view.render();
 
     if (requiresPostRender) {
-      view.postRender();
+      this.view.postRender();
     }
 
-    return $(view.el);
+    return $(this.view.el);
     
   }
 

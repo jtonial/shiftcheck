@@ -127,9 +127,12 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
   template: Handlebars.compile($('#schedule-list-template').html()),
 
+  // FIXME : For some reason this view seems to be getting initialized twice, and is therefore listening for events twice
+    // This may explain the odd 'undefined' schedule id problem that occurs sometimes
+
   initialize: function () {
 
-    console.log('initialized');
+    console.log('ScheduleListView - initialized');
 
     //Callback incase I forget to pass reference to collection
     this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
@@ -178,7 +181,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
   },
   postRender: function () {
 
-    console.log('post render');
+    console.log('ScheduleListView - post render');
 
     $('#sched-date').datepicker({
       showOtherMonths: true,
@@ -202,7 +205,6 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
   },
   //Adds one schedule to the Schedules page.
   addOneSchedule: function (schedule) {
-    console.log('add one schedule '+schedule.get('type'));
     var Days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     var Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];

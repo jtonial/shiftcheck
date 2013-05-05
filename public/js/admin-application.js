@@ -20,6 +20,7 @@
     Router: {},
 
     meta: {
+      debug: 0,
       state: 'admin',
       ADMIN: 1,
       mobile: false,

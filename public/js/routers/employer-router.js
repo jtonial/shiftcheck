@@ -27,7 +27,7 @@ window.AppRouter = Backbone.Router.extend({
 
     if (model) {
       // Set the title
-      console.log(model.get('datestring'));
+      if (Scheduleme.meta.debug) console.log(model.get('datestring'));
       $('#content-view-title').html(model.get('titledatestring'));
       // Create and render view
       $('[data-id]').parent().removeClass('active');

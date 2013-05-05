@@ -218,15 +218,15 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     //dataset.sort(compare);
 
     dataset.forEach(function (shift) {
-      _this.indexes.shiftMeta[shift.shift_id] = {}
+      _this.indexes.shiftMeta[shift.id] = {}
         
         var sMin = shift.start;
 
-      _this.indexes.shiftMeta[shift.shift_id].sMin = sMin;
+      _this.indexes.shiftMeta[shift.id].sMin = sMin;
 
         var eMin = shift.end;
 
-      _this.indexes.shiftMeta[shift.shift_id].eMin = eMin;
+      _this.indexes.shiftMeta[shift.id].eMin = eMin;
 
     });
 
@@ -260,10 +260,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
               (dataset.length * _this.config.barHeight) + _this.config.topPadding, 
               _this.config.barHeight);
      
-    console.log('min: '+min+'; max: '+max);
-
     var xlineData = d3.range(min, max, 30);
-    console.log('xlinedata: '+xlineData);
 
     var shiftOverlapping = function (d) {
       //Use default dataset if nothing else is provided
@@ -272,11 +269,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var overlapArray = [];
 
       d.forEach(function (x) {
-        var sx = _this.indexes.shiftMeta[x.shift_id];
-        overlapArray[x.shift_id] = [];
+        var sx = _this.indexes.shiftMeta[x.id];
+        overlapArray[x.id] = [];
         d.forEach(function(y) {
-          var sy = _this.indexes.shiftMeta[y.shift_id];
-          overlapArray[x.shift_id][y.shift_id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
+          var sy = _this.indexes.shiftMeta[y.id];
+          overlapArray[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
         })
       })
 
@@ -380,7 +377,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         return "rgba(0, 0, 150, 0.9)";
       })
       .attr("id", function (d) {
-        return d.shift_id;
+        return d.id;
       })
       .attr("y", function(d, i) {
         return (i * _this.config.barHeight) + _this.config.topPadding;
@@ -414,7 +411,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         //Maybe I could highlight shifts with a different colour based on the number of hours the shift shares with the selected one.
         for (var key in _this.indexes.crossMapping) {
           if (key >= start && key <= end) {
-            _this.highlightShifts('select', key, d.shift_id);
+            _this.highlightShifts('select', key, d.id);
           }
         }
 
@@ -434,12 +431,12 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         //d3.select(this).attr("fill", d3.select(this).property('transColor'));
       })
       .on('click', function (d) {
-        //document.dispatchEvent(Scheduleme.events.editShift(d.shift_id, d3.event.x, d3.event.y));
-        if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.shift_id);
+        //document.dispatchEvent(Scheduleme.events.editShift(d.id, d3.event.x, d3.event.y));
+        if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
       });
 
     dataset.forEach( function (d) {
-      _this.indexes.shiftText[d.shift_id] = {};
+      _this.indexes.shiftText[d.id] = {};
     })
 
     // Names
@@ -448,7 +445,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .enter()
       .append("text").attr("class", "employeeName")
       .text(function(d) {
-        _this.indexes.shiftText[d.shift_id].employeeName = this;
+        _this.indexes.shiftText[d.id].employeeName = this;
         return d.employee_name;
       })
       .attr("text-anchor", "start")
@@ -467,7 +464,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .append("text").attr("class", "shiftPositions")
       .text(function(d) {
         //Associate text to shift here... I should probably do it in its own function but I'm not sure how
-        _this.indexes.shiftText[d.shift_id].position = this;
+        _this.indexes.shiftText[d.id].position = this;
         return d.position;
       })
       .attr("text-anchor", "end")
@@ -521,11 +518,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var a = [];
       var b = [];
       d3Objects.each(function (s) {
-        var shift = _this.indexes.shiftMeta[s.shift_id];
+        var shift = _this.indexes.shiftMeta[s.id];
         //console.log('overlap('+x+','+(x+30)+','+shift.sMin+','+shift.eMin+')');
         if (_this.overlapping(x, x+30, shift.sMin, shift.eMin)) {
           a.push(this);
-          b.push(s.shift_id);
+          b.push(s.id);
         }
       })
       _this.indexes.crossMapping[x]=a;
@@ -534,29 +531,14 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
   },
   editShiftHandler: function (e) {
     if (Scheduleme.meta.ADMIN) {
-      _this = this;
-
-      e.detail = {};
+      var _this = this;
 
       var id = e.currentTarget.getAttribute('id');
 
       var mouseX = e.clientX;
       var mouseY = e.clientY;
 
-      //Get shift information
-      var shift = null;
-      //If all the shifts can be saved as references (even after modification) I should make a shift index the first time a shift is being editted.
-      if (typeof Scheduleme.Shifts == 'undefined') {
-        Scheduleme.Shifts = {};
-
-        Scheduleme.Schedules.forEach( function (schedule) {
-          schedule.get('shifts').forEach( function (schedShift) {
-            Scheduleme.Shifts[schedShift.shift_id] = schedShift;
-          });
-        });
-      }
-
-      shift = Scheduleme.Shifts[id];
+      var shift = this.model.Shifts.get(id);
 
       this.$('#edit-area').show();
 
@@ -574,11 +556,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       });
       this.$('#position-edit').html(output.join(''));
 
-      this.$('#shift-id-display').html(shift.shift_id);
-      this.$('#employee-edit').val(shift.employee_id);
-      this.$('#position-edit').val(shift.position_id);
-      this.$('#start-time-edit').val(shift.start);
-      this.$('#end-time-edit').val(shift.end);
+      this.$('#shift-id-display').html(shift.id);
+      this.$('#employee-edit').val(shift.get('employee_id'));
+      this.$('#position-edit').val(shift.get('position_id'));
+      this.$('#start-time-edit').val(shift.get('start'));
+      this.$('#end-time-edit').val(shift.get('end'));
 
       var rightDiff = $(window).width() - mouseX;
       var topDiff   = mouseY + $(document).scrollTop() - 40;
@@ -687,7 +669,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         t.attr("fill", function (d) {
           //I'll need to pass the id of the hovered shift for the comparative colouring.
           //if (typeof hoveredId != 'undefined') {
-          //  return 'rgba(0, 0, 150, '+_this.indexes.overlappingAmounts[hoveredId][d.shift_id]+')';
+          //  return 'rgba(0, 0, 150, '+_this.indexes.overlappingAmounts[hoveredId][d.id]+')';
           //}
           return t.property('baseColor');
         })
@@ -710,7 +692,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       .transition()
       .duration(250)
       .attr("height", function(d) {
-        if (id == '-1' || _this.indexes.overlappingAmounts[id][d.shift_id] != 0) {
+        if (id == '-1' || _this.indexes.overlappingAmounts[id][d.id] != 0) {
           return this.config.barHeight - this.config.barPadding;
         } else {
           return 0;
@@ -801,17 +783,28 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
   reRender: function () {
     console.log('rerendering');
+
+    // Wipe old indexes
+    this.indexes = {
+      shiftMeta        : {},
+      overlappingAmounts : [],
+      horizontalAreaMapping : {},
+      shiftText        : {},
+      crossMapping     : [],
+      crossMappingId   : []
+    };
+
     var contentTarget = document.getElementById('d3Target');
     $(contentTarget).html('');
-    _this.createD3(contentTarget, this.model.get('shifts'));
+    _this.createD3(contentTarget, this.model.Shifts.toJSON());
   },
 
   postRender: function () {
     var _this = this;
 
-    console.log('post rendering');
+    if (Scheduleme.meta.debug) console.log('post rendering');
     var contentTarget = document.getElementById('d3Target');
-    _this.createD3(contentTarget, this.model.get('shifts'));
+    _this.createD3(contentTarget, this.model.Shifts.toJSON());
 
     $(window).resize(function () {
       var width = Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30; 
@@ -886,15 +879,11 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     if ( !end_time ) {
       errors.push('End Time invalid');
     } else {
-      console.log('start time: '+start_time);
-      console.log('end time: '+end_time);
-
       var start_hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
       if (start_time.indexOf('P') > 0) {
         start_time += 12;
       }
       var start_minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
-
 
       var end_hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
       if (end_time.indexOf('P') > 0) {
@@ -903,9 +892,9 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var end_minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
 
       if (end_hours < start_hours) {
-        errors.push('End Time invalid: '+end_hours+' '+start_hours);
+        errors.push('End Time invalid: '+start_hours+' '+end_hours);
       } else if (end_hours == start_hours && end_minutes <= start_minutes) {
-        errors.push('End Time invalid: '+end_minutes+' '+start_minutes);
+        errors.push('End Time invalid: '+start_minutes+' '+end_minutes);
       }
 
     }
@@ -923,7 +912,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       }
       var minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
 
-      var start_time = (hours*60)+minutes;
+      var start = (hours*60)+minutes;
 
 
       var hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
@@ -932,44 +921,30 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       }
       var minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
 
-      var end_time = (hours*60)+minutes;
+      var end = (hours*60)+minutes;
 
-
-      var payload = {
-        schedule_id : schedule_id,
-        employee_id : employee_id,
-        position_id : position_id,
-        start_time  : start_time,
-        end_time    : end_time
-      }
-
-
-      $.ajax({
-        url: '/shifts',
-        type: 'POST',
-        data: JSON.stringify(payload),
-        dataType: 'json',
+      _this.model.Shifts.create({
+        schedule_id   : schedule_id,
+        employee_id   : employee_id,
+        employee_name : employee,
+        position_id   : position_id,
+        position      : position,
+        start         : start,
+        end           : end
+      }, { 
+        wait: true,
         beforeSend: function (request) {
-          request.setRequestHeader("Content-Type", 'application/json');
+          console.log('beforeSend');
+          $('#add_shift_trigger').attr('disabled', true);
         },
         success: function (res) {
-          var newObject = {
-            employee_id: employee_id,
-            employee_name: employee,
-            end: end_time,
-            position: position,
-            position_id: position_id,
-            shift_id: res.shift_id,
-            start: start_time
-          }
-          _this.model.get('shifts').push(newObject);
-          _this.reRender();
           _this.resetAddFields();
         },
-        error: function (jqxhr) {
-          alert('Something went wrong and the shift could not be added!');
+        complete: function () {
+          $('#add_shift_trigger').removeAttr('disabled');
         }
-      })
+      });
+
     }
   },
   resetAddFields: function () {

@@ -33,7 +33,7 @@ module.exports = queries = {
 
   'insertShift'             : 'INSERT INTO shifts (schedule_id, start, end, position_id, employee_id, creation_time) VALUES (?,?,?,?,?,NOW())',
   'updateShift'             : 'UPDATE shifts SET employee_id=?, start_time=?, end_time=? WHERE shift_id=?',
-  'getShiftsBySchedule'     : 'SELECT s.shift_id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
+  'getShiftsBySchedule'     : 'SELECT s.shift_id as id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
 
   'insertPosition'          : 'INSERT INTO positions (employer_id, position, full_name, description) VALUES (?,?,?,?)',
   'selectPositions'         : 'SELECT position_id, position, full_name, description FROM positions WHERE employer_id=?',
