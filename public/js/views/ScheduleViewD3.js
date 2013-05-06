@@ -533,10 +533,16 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     if (Scheduleme.meta.ADMIN) {
       var _this = this;
 
+      var sidebarWidth = 240;
+      var headerHeight = 60;
+
       var id = e.currentTarget.getAttribute('id');
 
-      var mouseX = e.clientX;
-      var mouseY = e.clientY;
+      var d3OffsetX = $(this.el).position().left;
+      var d3OffsetY = $(this.el).position().top;
+
+      var mouseX = e.clientX - sidebarWidth;
+      var mouseY = e.clientY - headerHeight + $('#content-content').scrollTop();
 
       var shift = this.model.Shifts.get(id);
 
@@ -570,7 +576,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       var boxWidth  = this.$('#edit-shift-popover').width();
       var boxHeight = this.$('#edit-shift-popover').height();
 
-      var position = 'right';
+      var position  = 'right';
 
       /*
       console.log('Right diff: '+rightDiff);
