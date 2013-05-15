@@ -184,14 +184,16 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     console.log('ScheduleListView - post render');
 
     $('#sched-date').datepicker({
-      showOtherMonths: true,
-      dateFormat: 'yy-mm-dd',
-      maxDate: "+0D"
+      showOtherMonths : true,
+      format          : 'yyyy-mm-dd',
+      endDate         : "+0D",
+      autoclose       : true
     });
     $('#upload-schedule-date').datepicker({
-      showOtherMonths: true,
-      dateFormat: 'yy-mm-dd',
-      minDate: "+0D"
+      showOtherMonths : true,
+      format          : 'yyyy-mm-dd',
+      startDate       : "+0D",
+      autoclose       : true
     });
     /*$('#test-hidden').datepicker({
       showOtherMonths: true,

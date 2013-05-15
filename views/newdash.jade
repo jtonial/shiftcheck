@@ -20,10 +20,14 @@ block append scripts
   - else 
     script(src='/js/dash-application.js')
 
+  script(src='/js/vendor/bootstrap-datepicker/bootstrap-datepicker.js')
+
 block append styles
   - if ( user.employer_id )
     link(href='/css/jquery.timepicker.css', rel='stylesheet')
     link(href='/css/vendor/bootstrap-timepicker.min.css', rel='stylesheet')
+
+  link(href='/css/vendor/bootstrap-datepicker/bootstrap-datepicker.css', rel='stylesheet')
 
 block sidebar-header
   #logo.open.pull-left ShiftCheck

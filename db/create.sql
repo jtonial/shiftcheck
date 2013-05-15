@@ -55,6 +55,7 @@ CREATE TABLE positions (
   position_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   employer_id INT UNSIGNED NOT NULL,
   position varchar(5) NOT NULL,
+  order int NOT NULL,
 
   full_name varchar(20),
   description varchar(150),

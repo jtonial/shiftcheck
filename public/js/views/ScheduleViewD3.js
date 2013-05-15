@@ -494,7 +494,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         minutes = ("0" + (d%60)).slice(-2);
 
         if (minutes % 60 == 0) {
-          return hours+':'+minutes;
+          return hours;//+':'+minutes;
         }
 
         return '';
@@ -504,7 +504,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         return _this.config.topPadding - 10;
       })
       .attr("x", function(d) {
-        return xScale(d)-12;
+        return xScale(d)-3;//12;
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "9px")
@@ -533,9 +533,13 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
     if (Scheduleme.meta.ADMIN) {
       var _this = this;
 
-      var sidebarWidth = 240;
-      var headerHeight = 60;
+      var sidebarLeft  = $('#sidebar').css('left');
+      if (sidebarLeft == 'auto') sidebarLeft = '0';
+      var sidebarLeft = parseInt(sidebarLeft);
+      var sidebarWidth = $('#sidebar').width() + sidebarLeft;
+      var headerHeight = $('#content-header').height();
 
+      console.log
       var id = e.currentTarget.getAttribute('id');
 
       var d3OffsetX = $(this.el).position().left;
@@ -777,13 +781,13 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
         minutes = ("0" + (d%60)).slice(-2);
 
         if (minutes % 60 == 0) {
-          return hours+':'+minutes;
+          return hours;//+':'+minutes;
         }
 
         return '';
       })
       .attr("x", function(d) {
-        return xScale(d)-12;
+        return xScale(d)-3;//12;
       })
   },
 
