@@ -88,6 +88,8 @@ block templates
     include templates/edit-shift-template
   script(id='schedule-list-template', type='text/x-handlebars-template')
     include templates/schedule-list-template
+  script(id='shift-template', type='text/x-handlebars-template')
+    include templates/edit-shift-template
         
 block end-scripts
   script(src='/js/models/EmployeeModel.js')
@@ -100,6 +102,8 @@ block end-scripts
 
   script(src='/js/views/AccountView.js')
   script(src='/js/views/EmployeeView.js')
+
+  script(src='/js/views/ShiftView.js')
 
   script(src='/js/views/ScheduleView.js')
   script(src='/js/views/ScheduleBaseView.js')
