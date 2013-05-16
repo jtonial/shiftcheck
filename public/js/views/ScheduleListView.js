@@ -143,15 +143,16 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
   },
 
   events: {
-    "change #sched-date" : "loadByDate",
+    "change #sched-date"          : "loadByDate",
     "click .upload-modal-trigger" : "openUploadModel",
-    "click .fetch-date-trigger" : "activateLoadDatepicker",
+    "click .fetch-date-trigger"   : "activateLoadDatepicker",
 
-    "click #upload_submit" : "createUploadObject",
-    "paste #file-text" : "pasted",
-    "change #file-text" : "pasted",
+    "click #upload_submit"        : "createUploadObject",
+    "paste #file-text"            : "pasted",
+    "change #file-text"           : "pasted",
 
-    "click .schedule-link" : "navToSchedule"
+    "click .schedule-link"        : "navToSchedule",
+    "click #new-empty-schedule-button" : "newEmptySchedule"
   },
   /**
    *
@@ -195,6 +196,10 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
       startDate       : "+0D",
       autoclose       : true
     });
+
+    //Should turn on scrolling, however has a problem that I havn't fixed yet
+    //$('.antiscroll-wrap').antiscroll();
+
     /*$('#test-hidden').datepicker({
       showOtherMonths: true,
       dateFormat: 'yy-mm-dd',
@@ -482,5 +487,9 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
         }
       }
     })
+  },
+  newEmptySchedule: function (event) {
+    event.preventDefault();
+    alert('Creating new empty shifted schedule with date '+$('#upload-schedule-date').val())
   }
 });

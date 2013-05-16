@@ -6,6 +6,12 @@
       
       .form-horizontal
         .control-group
+          label.control-label(for='date') Date
+          .controls
+            input#upload-schedule-date.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
+            span.help-block For multi-day schedules, select the first day
+        hr
+        .control-group
           label.control-label(for='file') Schedule
           .controls
             input#file(type='file', name='file', placeholder='file')
@@ -18,11 +24,6 @@
             textarea#file-text(name='file-text', placeholder='Copy your schedule from a spreadsheet and paste it here!', rows="5")
         hr
         .control-group
-          label.control-label(for='date') Date
-          .controls
-            input#upload-schedule-date.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
-            span.help-block For multi-day schedules, select the first day
-        .control-group
           label.control-label(for='type') Length
           .controls
             select#upload-schedule-type.upload-schedule-info(name='type')
@@ -33,6 +34,13 @@
         .control-group
           .controls
             img#ajax-loader.hidden(src="/img/ajax-loader.gif")
+
+        hr
+        .control-group
+          .controls OR
+        .control-group
+          .controls
+            button#new-empty-schedule-button.btn.btn-primary.btn-block(name='dontsubmit') Empty Schedule
     .modal-footer
       button.btn(data-dismiss='modal') Cancel
       button.btn.btn-success#upload_submit(name='submit2') Upload

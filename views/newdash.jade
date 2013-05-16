@@ -4,6 +4,7 @@ block append scripts
   - if ( user.employer_id )
     script(src='/js/vendor/jquery.timepicker.min.js')
     script(src='/js/vendor/bootstrap-timepicker.min.js')
+    script(src='/js/vendor/antiscroll.js')
     script(src='/js/admin-application.js')
     script
       $(document).ready(function() {
@@ -28,6 +29,7 @@ block append styles
     link(href='/css/vendor/bootstrap-timepicker.min.css', rel='stylesheet')
 
   link(href='/css/vendor/bootstrap-datepicker/bootstrap-datepicker.css', rel='stylesheet')
+  link(href='/css/vendor/antiscroll.css', rel='stylesheet')
 
 block sidebar-header
   #logo.open.pull-left ShiftCheck

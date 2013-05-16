@@ -48,7 +48,6 @@ body {
   top: 60px;
   bottom: 30px;
   background-color: rgba(0, 0, 0, 0.2);
-  overflow-y: scroll;
 }
 #sidebar #sidebar-content a {
   cursor: pointer;
