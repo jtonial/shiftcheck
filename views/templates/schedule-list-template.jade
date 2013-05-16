@@ -1,13 +1,9 @@
   //- i#sched-date.icon-calendar.icon-2x.pull-right
-.box-wrap.antiscroll-wrap(style="width:100%")
-  .box
-    .antiscroll-inner
-      .box-inner
-        ul#dates.nav.nav-list
-          li.nav-header Current Schedules
-          li#prependHere
-        #top-buttons.clearfix.admin-only
-          i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
-          i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
-          input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
-        include ../includes/upload-schedule-modal
+ul#dates.nav.nav-list
+  li.nav-header Current Schedules
+  li#prependHere
+#top-buttons.clearfix.admin-only
+  i#add_schedule.upload-modal-trigger.icon-plus.icon-2x.pull-right
+  i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
+  input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
+include ../includes/upload-schedule-modal

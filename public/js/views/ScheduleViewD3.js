@@ -550,6 +550,10 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
 
       var shift = this.model.Shifts.get(id);
 
+
+      //----------------------------------------------------
+      // This should be replaced with a view
+
       this.$('#edit-area').show();
 
       //This should be redone to use jquery (which will html escape the values)
@@ -572,6 +576,8 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       this.$('#start-time-edit').val(shift.get('start'));
       this.$('#end-time-edit').val(shift.get('end'));
 
+      //----------------------------------------------------
+
       var rightDiff = $(window).width() - mouseX;
       var topDiff   = mouseY + $(document).scrollTop() - 40;
       var leftDiff  = mouseX;
@@ -590,6 +596,7 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       console.log('Box Width: '+boxWidth);
       console.log('box height: '+boxHeight);
       */
+      
       if ( rightDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
         position = 'right';
       } else if ( topDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {

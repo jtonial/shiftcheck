@@ -10,10 +10,6 @@ block append scripts
       $(document).ready(function() {
         //This should instead pluck the names of all employees
 
-        var data = ["Andrew","Brandon","Connor","David","Julie","Michelle","Janice","Jackson","Nicole","Samanth","Evan","Nick","Johnathan","Matt"];
-
-        $('.employee-typeahead').typeahead({source: data});
-
         $('#add-employee-modal-trigger').click(function () {
           $('#add-employee-modal').modal('show');
         })
@@ -36,9 +32,16 @@ block sidebar-header
   i#toggle-sidebar-trigger.icon-chevron-right.icon-2x.pull-right
 
 block sidebar-content
-  #schedules-list
-  #positions-list
-  #approval-request-list
+  .box-wrap.antiscroll-wrap(style="width:100%")
+    .box
+      .antiscroll-inner
+        .box-inner
+          #schedules-list
+          #positions-list
+            ul#positionss.nav.nav-list
+              li.nav-header Positions
+              li Positions
+          #approval-request-list
 
 block sidebar-footer
   a(href="/about") About

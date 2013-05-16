@@ -24,10 +24,10 @@ if (process.env.REDISTOGO_URL) {
   var redis = require("redis").createClient(rtg.port, rtg.hostname);
 
   redis.auth(rtg.auth.split(":")[1]); 
-  console.log('Connecting to existing Redis client');
+  console.log('Loading existing Redis client');
 } else {
   var redis = require("redis").createClient();
-  console.log('Creating new Redis client');
+  console.log('Loading new Redis client');
 }
 
 app.configure(function(){

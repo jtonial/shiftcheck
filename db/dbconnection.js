@@ -1,4 +1,4 @@
-console.log('including db connection...');
+console.log('Loading db connection...');
 
 var Scheduleme = require('../helpers/global');
 
