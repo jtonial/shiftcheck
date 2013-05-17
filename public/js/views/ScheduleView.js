@@ -9,6 +9,7 @@ Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
 
     this.view = null;
     this.viewType = 'schedule';
+    this.viewPane = 'main';
 
     console.log('Schedule View Initialized');
 

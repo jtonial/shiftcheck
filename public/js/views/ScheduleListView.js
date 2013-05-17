@@ -167,9 +167,9 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
     //Reset click states on links
     //$('.schedule-tab').removeClass('active');
-    $('#sidebar-content li').removeClass('active');
+    //$('#sidebar-content li').removeClass('active');
     //Manually set the clicked to active
-    $(e.target).parent().addClass('active');
+    //$(e.target).parent().addClass('active');
 
     console.log('Navigating to schedule/'+id);
     Scheduleme.Router.navigate('schedule/'+id, { trigger: true });

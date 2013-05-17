@@ -41,9 +41,12 @@ block sidebar-content
               ul#positionss.nav.nav-list
                 li.nav-header Manager Options
                 li
+                  a#employees-link Employees
+                li
                   a#positions-link Positions
                 li
                   a#requests-link Change Requests
+
 
 block sidebar-footer
   a(href="/about") About
@@ -101,6 +104,13 @@ block templates
     include templates/schedule-list-template
   script(id='shift-template', type='text/x-handlebars-template')
     include templates/edit-shift-template
+
+  script(id='employees-template', type='text/x-handlebars-template')
+    include templates/employees-template
+  script(id='positions-template', type='text/x-handlebars-template')
+    include templates/positions-template
+  script(id='change-requests-template', type='text/x-handlebars-template')
+    include templates/change-requests-template
         
 block end-scripts
   script(src='/js/models/EmployeeModel.js')
@@ -127,17 +137,19 @@ block end-scripts
   script(src='/js/views/ScheduleViewTable.js')
   script(src='/js/views/ScheduleViewSpreadsheet.js')
 
-  script(src='/js/routers/employer-router.js')
+  script(src='/js/views/PositionsView.js')
+  script(src='/js/views/EmployeesView.js')
+  script(src='/js/views/ChangeRequestsView.js')
 
-  script
-    $('#positions-link').click( function () {
-      console.log('here');
-      $('#sidebar-content li').removeClass('active');
-      $(this).parent().addClass('active');
-      Scheduleme.Router.navigate('position-list', { trigger: true });
-    });
-    $('#requests-link').click( function () {
-      $('#sidebar-content li').removeClass('active');
-      $(this).parent().addClass('active');
-      Scheduleme.Router.navigate('request-list', { trigger: true });
-    });
+  script(src='/js/routers/employer-router.js')
+  - if ( user.employer_id )
+    script
+      $('#employees-link').click( function () {
+        Scheduleme.Router.navigate('employee-list', { trigger: true });
+      });
+      $('#positions-link').click( function () {
+        Scheduleme.Router.navigate('position-list', { trigger: true });
+      });
+      $('#requests-link').click( function () {
+        Scheduleme.Router.navigate('request-list', { trigger: true });
+      });

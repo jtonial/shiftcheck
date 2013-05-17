@@ -1,12 +1,12 @@
-Scheduleme.classes.views.PositionsView = Backbone.View.extend({
+Scheduleme.classes.views.EmployeesView = Backbone.View.extend({
   
   el: $('#schedule-pane'),
 
-  template: Handlebars.compile($('#positions-template').html()),
+  template: Handlebars.compile($('#employees-template').html()),
 
   //Create the frame
   initialize: function () {
-    this.viewType = 'positions';
+    this.viewType = 'employees';
     this.viewPane = 'main';
 
     this.render();

@@ -1,4 +1,4 @@
-window.Scheduleme = window.Scheduleme || {//new Object();
+window.Scheduleme = window.Scheduleme || {
   classes: {
     models: {},
     collections: {},
@@ -18,15 +18,18 @@ window.Scheduleme = window.Scheduleme || {//new Object();
   Router: {},
 
   meta: {
+    debug: 1,
     state: 'admin',
-    ADMIN: 1,
+    ADMIN: 0,
     mobile: true,
     d3: true
   }
 };
 
 //$(function() {
-
+  window.log = function (s) {
+    if (Scheduleme.meta.debug) console.log(s);
+  };
   Scheduleme.helpers.addMinutes = function(date, adding) {
     return new Date(date.getTime() + minutes*60000);
   };

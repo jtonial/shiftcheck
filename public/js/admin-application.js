@@ -1,6 +1,6 @@
 //$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
 
-  window.Scheduleme = window.Scheduleme || {//new Object();
+  window.Scheduleme = window.Scheduleme || {
     classes: {
       models: {},
       collections: {},
@@ -22,7 +22,7 @@
     Router: {},
 
     meta: {
-      debug: 0,
+      debug: 1,
       state: 'admin',
       ADMIN: 1,
       mobile: false,
@@ -30,6 +30,9 @@
     }
   };
 
+  window.log = function (s) {
+    if (Scheduleme.meta.debug) console.log(s);
+  };
   Scheduleme.helpers.addMinutes = function(date, adding) {
     return new Date(date.getTime() + minutes*60000);
   };
@@ -106,7 +109,7 @@
         //Remove loading div
         $('#schedule-pane').removeClass('loading').addClass('loading-error');
 
-        console.log('An error occured');
+        log('An error occured');
         //alert('We seem to be having some technical difficulties');
       }, complete: function () {
         Scheduleme.Router = new AppRouter;
@@ -129,7 +132,7 @@
 
     //#toggle-sidebar-trigger
     $('#sidebar.closed #sidebar-header').click( function () {
-      console.log('toggling sidebar state');
+      log('toggling sidebar state');
       var newState = $('#sidebar').hasClass('closed') ? 'open' : 'closed';
       $('#sidebar').removeClass('open closed').addClass(newState);
     });
@@ -155,12 +158,12 @@
       min_move_y: 50,
       wipeLeft: function() {
         // Close
-        console.log('Left Swipe');
+        log('Left Swipe');
 
       },
       wipeRight: function() {
         // Open
-        console.log('Right Swipe');
+        log('Right Swipe');
 
       },
       preventDefaultEvents: false,
@@ -173,14 +176,14 @@
 
     _consolelog = function (x) {
       //$('#console-output').append(x+'<br/>');
-      //console.log(x);
+      //log(x);
     }
 
   };
 
   $(document).ready(function () {
-    console.log('ready');
-    
+    log('ready');
+
     //Hack because $(document).ready seems to be firing twice
     if (!Scheduleme.initialized) {
       Scheduleme.initialized = 1;

@@ -1,6 +1,6 @@
 //$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
 
-  window.Scheduleme = window.Scheduleme || {//new Object();
+  window.Scheduleme = window.Scheduleme || {
     classes: {
       models: {},
       collections: {},
@@ -20,6 +20,7 @@
     Router: {},
 
     meta: {
+      debug: 1,
       state: 'employee',
       ADMIN: 0,
       mobile: false,
@@ -27,6 +28,9 @@
     }
   };
 
+  window.log = function (s) {
+    if (Scheduleme.meta.debug) console.log(s);
+  };
   Scheduleme.helpers.addMinutes = function(date, adding) {
     return new Date(date.getTime() + minutes*60000);
   };

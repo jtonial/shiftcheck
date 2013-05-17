@@ -16,9 +16,24 @@ window.AppRouter = Backbone.Router.extend({
       return _gaq.push(['_trackPageview',"/employer/" + url]);
   //  }
   },
+  switchMainView: function (title, newLink, newview) {
+    // Set title
+    $('#content-view-title').html(title);
+
+    // Set sidebar link
+    $('#sidebar-content li').removeClass('active');
+    newLink.addClass('active');
+
+    //Undelegate old view
+    if (Scheduleme.CurrentView.viewPane == 'main') Scheduleme.CurrentView._undelegateEvents();
+
+    //Set current view to new view
+    Scheduleme.CurrentView = newview;
+  },
   routes: {
     //'account':'account',
     'schedule/:id'  : 'schedule',
+    'employee-list' : 'employees',
     'position-list' : 'positions',
     'request-list'  : 'requests',
     ''              : 'schedules'
@@ -28,17 +43,12 @@ window.AppRouter = Backbone.Router.extend({
     var model = Scheduleme.Schedules.get(id);
 
     if (model) {
-      // Set the title
-      if (Scheduleme.meta.debug) console.log(model.get('datestring'));
-      $('#content-view-title').html(model.get('titledatestring'));
-      // Create and render view
-      $('[data-id]').parent().removeClass('active');
-      $('[data-id="'+id+'"]').parent().addClass('active');
-      //console.log('current view');
-      //console.log(Scheduleme.CurrentView);
-      if (Scheduleme.CurrentView.viewType == 'schedule') Scheduleme.CurrentView._undelegateEvents();
 
-      Scheduleme.CurrentView = new Scheduleme.classes.views.ScheduleView({ model: model });
+      var title = model.get('titledatestring');
+      var $newLink = $('[data-id="'+id+'"]').parent();
+      var newView = new Scheduleme.classes.views.ScheduleView({ model: model });
+
+      this.switchMainView(title, $newLink, newView);
     } else {
       console.log('ID passed does not seem to match a schedule');
     }
@@ -58,10 +68,35 @@ window.AppRouter = Backbone.Router.extend({
     //console.log('Opening AccountView');
     //$('#account-modal').modal('show');
   },
+  employees: function () {
+
+    log('EMPLOYEES');
+
+    var title = 'Employees';
+    var $newLink = $('#employees-link').parent();
+    var newView = new Scheduleme.classes.views.EmployeesView({ collection: {} });;
+
+    this.switchMainView(title, $newLink, newView);
+
+  },
   positions: function () {
-    console.log('POSITIONS');
+
+    log('POSITIONS');
+
+    var title = 'Positions';
+    var $newLink = $('#positions-link').parent();
+    var newView = new Scheduleme.classes.views.PositionsView({ collection: {} });;
+
+    this.switchMainView(title, $newLink, newView);
   },
   requests: function () {
-    console.log('REQUESTS');
+
+    log('REQUESTS');
+
+    var title = 'Change Requests';
+    var $newLink = $('#requests-link').parent();
+    var newView = new Scheduleme.classes.views.ChangeRequestsView({ collection: {} });;
+
+    this.switchMainView(title, $newLink, newView);
   }
 });
