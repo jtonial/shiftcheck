@@ -14,6 +14,8 @@
 
     Schedules: {},
 
+    initialized: 0,
+
     Init: function () {},
 
     CurrentView: {},
@@ -48,7 +50,6 @@
   //------------------PAYLOAD----------------------------
 
   Scheduleme.Init = function () {
-
 
     $('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
 
@@ -94,16 +95,11 @@
           $('#no-notifications').show();
         }
         
-        // Instead of the prompt to select a schedule, I could auto select the first one
-
-        //  Scheduleme.CurrentView.reRenderTabs();
-        //  $('#dates.nav.nav-tabs li:nth-child(2) a').click();
-
         //Add data into global object
         Scheduleme.data.email = res.data.email;
-        if (Scheduleme.CurrentView.viewType !='undefined') {
-          $('#email').val(Scheduleme.data.email);
-        }
+
+        $('#email').val(Scheduleme.data.email);
+
         Scheduleme.data.name = res.data.name;
         Scheduleme.data.username = res.data.username;
       }, error: function () {
@@ -157,35 +153,40 @@
     /*$(window).touchwipe({
       min_move_x: 50,
       min_move_y: 50,
-          wipeLeft: function() {
-            // Close
-            console.log('Left Swipe');
+      wipeLeft: function() {
+        // Close
+        console.log('Left Swipe');
 
-          },
-          wipeRight: function() {
-            // Open
-            console.log('Right Swipe');
+      },
+      wipeRight: function() {
+        // Open
+        console.log('Right Swipe');
 
-          },
-          preventDefaultEvents: false,
-          preventDefaultEventsX: false
-      });*/
+      },
+      preventDefaultEvents: false,
+      preventDefaultEventsX: false
+    });*/
 
-      new FastClick(document.body);
+    new FastClick(document.body);
 
-      //$('body').append('<div id="console-output"></div>');
+    //$('body').append('<div id="console-output"></div>');
 
-      _consolelog = function (x) {
-        //$('#console-output').append(x+'<br/>');
-        //console.log(x);
-      }
-
-      nTouch();
+    _consolelog = function (x) {
+      //$('#console-output').append(x+'<br/>');
+      //console.log(x);
+    }
 
   };
 
   $(document).ready(function () {
-    Scheduleme.Init();
+    console.log('ready');
+    
+    //Hack because $(document).ready seems to be firing twice
+    if (!Scheduleme.initialized) {
+      Scheduleme.initialized = 1;
+
+      Scheduleme.Init();
+    }
   });
 
 //});

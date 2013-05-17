@@ -37,11 +37,13 @@ block sidebar-content
       .antiscroll-inner
         .box-inner
           #schedules-list
-          #positions-list
-            ul#positionss.nav.nav-list
-              li.nav-header Positions
-              li Positions
-          #approval-request-list
+          - if ( user.employer_id )
+              ul#positionss.nav.nav-list
+                li.nav-header Manager Options
+                li
+                  a#positions-link Positions
+                li
+                  a#requests-link Change Requests
 
 block sidebar-footer
   a(href="/about") About
@@ -126,3 +128,16 @@ block end-scripts
   script(src='/js/views/ScheduleViewSpreadsheet.js')
 
   script(src='/js/routers/employer-router.js')
+
+  script
+    $('#positions-link').click( function () {
+      console.log('here');
+      $('#sidebar-content li').removeClass('active');
+      $(this).parent().addClass('active');
+      Scheduleme.Router.navigate('position-list', { trigger: true });
+    });
+    $('#requests-link').click( function () {
+      $('#sidebar-content li').removeClass('active');
+      $(this).parent().addClass('active');
+      Scheduleme.Router.navigate('request-list', { trigger: true });
+    });

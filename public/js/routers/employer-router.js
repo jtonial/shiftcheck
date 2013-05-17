@@ -18,8 +18,10 @@ window.AppRouter = Backbone.Router.extend({
   },
   routes: {
     //'account':'account',
-    'schedule/:id': 'schedule',
-    '':'schedules'
+    'schedule/:id'  : 'schedule',
+    'position-list' : 'positions',
+    'request-list'  : 'requests',
+    ''              : 'schedules'
   },
 
   schedule: function (id) {
@@ -32,6 +34,10 @@ window.AppRouter = Backbone.Router.extend({
       // Create and render view
       $('[data-id]').parent().removeClass('active');
       $('[data-id="'+id+'"]').parent().addClass('active');
+      //console.log('current view');
+      //console.log(Scheduleme.CurrentView);
+      if (Scheduleme.CurrentView.viewType == 'schedule') Scheduleme.CurrentView._undelegateEvents();
+
       Scheduleme.CurrentView = new Scheduleme.classes.views.ScheduleView({ model: model });
     } else {
       console.log('ID passed does not seem to match a schedule');
@@ -51,5 +57,11 @@ window.AppRouter = Backbone.Router.extend({
   account: function () {
     //console.log('Opening AccountView');
     //$('#account-modal').modal('show');
+  },
+  positions: function () {
+    console.log('POSITIONS');
+  },
+  requests: function () {
+    console.log('REQUESTS');
   }
 });

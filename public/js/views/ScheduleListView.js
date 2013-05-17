@@ -166,7 +166,8 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     var id = $(e.target).attr('data-id');
 
     //Reset click states on links
-    $('.schedule-tab').removeClass('active');
+    //$('.schedule-tab').removeClass('active');
+    $('#sidebar-content li').removeClass('active');
     //Manually set the clicked to active
     $(e.target).parent().addClass('active');
 
@@ -489,7 +490,34 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     })
   },
   newEmptySchedule: function (event) {
+    console.log('wtf');
+    var _this = this;
     event.preventDefault();
-    alert('Creating new empty shifted schedule with date '+$('#upload-schedule-date').val())
+
+    var dateToFetch = $('#upload-schedule-date').val();
+
+    var payload = {
+      date: dateToFetch, // this should be validated as valid
+      type: 'day',
+      timezone: (new Date()).getTimezoneOffset(),
+      shifts: []
+    }
+
+    $.ajax({
+      url     : '/uploadshifts',
+      type    : 'POST',
+      data    : payload,
+      success : function (res) {
+
+        //This should not load it, it should just add it. but for now whatever. It needs to be put into proper models anyways
+        _this.loadByDate(dateToFetch);
+      },
+      error   : function (jqxrh) {
+        console.log('newEmptySchedule received Error');
+      },
+      complete: function () {
+        console.log('newEmptySchedule call complete');
+      }
+    })
   }
 });

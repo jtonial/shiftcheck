@@ -94,11 +94,6 @@
           $('#no-notifications').show();
         }
         
-        // Instead of the prompt to select a schedule, I could auto select the first one
-
-        //  Scheduleme.CurrentView.reRenderTabs();
-        //  $('#dates.nav.nav-tabs li:nth-child(2) a').click();
-
         //Add data into global object
         Scheduleme.data.email = res.data.email;
         if (Scheduleme.CurrentView.viewType !='undefined') {

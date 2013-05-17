@@ -192,7 +192,9 @@ exports.upload = function(req, res){ //Used to process a file containing a sched
       // TODO: validate the upload file
 
     
-    if (typeof req.body.shifts != 'undefined' || typeof req.body.json != 'undefined') {
+    //if (typeof req.body.shifts != 'undefined' || typeof req.body.json != 'undefined') {
+    //Allow a schedule with no shifts to be uploaded so it can be added to
+    //if (typeof req.body.json != 'undefined') {
 
       console.log('Uploading new schedule: Day: '+req.body.date+' Type: '+req.body.type);
 
@@ -239,10 +241,10 @@ exports.upload = function(req, res){ //Used to process a file containing a sched
         }
       });
 
-    } else {
+    /*} else {
       res.statusCode = 400;
       res.end('No schedule provided');
-    }
+    }*/
   } else {
     response = {
       statusCode: 403

@@ -43,7 +43,7 @@ mysql_config = {
     "database" : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
     "host"     : process.env.RDS_HOST,
     "port"     : 3306,
-    "connectionLimit" : 30
+    "connectionLimit" : 10
   },
   test  : {
     "user"     : 'root',

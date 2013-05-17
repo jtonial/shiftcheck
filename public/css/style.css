@@ -136,7 +136,6 @@ body {
 }
 #main-app #content-content #content {
   padding: 0;
-  overflow-x: scroll;
 }
 #main-app #content-content .large-message-div {
   display: none;

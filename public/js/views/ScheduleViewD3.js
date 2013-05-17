@@ -951,7 +951,6 @@ Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBase
       }, { 
         wait: true,
         beforeSend: function (request) {
-          console.log('beforeSend');
           $('#add_shift_trigger').attr('disabled', true);
         },
         success: function (res) {
