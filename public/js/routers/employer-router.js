@@ -61,7 +61,7 @@ window.AppRouter = Backbone.Router.extend({
 
     // Remove any schedule views and display a 'Select A Schedule' default view
 
-    console.log('not doing anything right now');
+    log('not doing anything right now');
     //console.log('Opening SchedulesView')
   },
   account: function () {
@@ -69,8 +69,6 @@ window.AppRouter = Backbone.Router.extend({
     //$('#account-modal').modal('show');
   },
   employees: function () {
-
-    log('EMPLOYEES');
 
     var title = 'Employees';
     var $newLink = $('#employees-link').parent();
@@ -81,8 +79,6 @@ window.AppRouter = Backbone.Router.extend({
   },
   positions: function () {
 
-    log('POSITIONS');
-
     var title = 'Positions';
     var $newLink = $('#positions-link').parent();
     var newView = new Scheduleme.classes.views.PositionsView({ collection: {} });;
@@ -90,8 +86,6 @@ window.AppRouter = Backbone.Router.extend({
     this.switchMainView(title, $newLink, newView);
   },
   requests: function () {
-
-    log('REQUESTS');
 
     var title = 'Change Requests';
     var $newLink = $('#requests-link').parent();

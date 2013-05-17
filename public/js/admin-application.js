@@ -153,6 +153,12 @@
       }
     })
 
+    Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
+    Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
+
+    Scheduleme.Employees.fetch();
+    Scheduleme.Positions.fetch();
+    
     /*$(window).touchwipe({
       min_move_x: 50,
       min_move_y: 50,

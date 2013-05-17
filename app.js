@@ -98,6 +98,9 @@ app.configure(function(){
 app.get('/', Scheduleme.Helpers.Render.index);
 // In order to accomodate push-state
 app.get('/schedule/*', Scheduleme.Helpers.Render.index)
+app.get('/employee-list', Scheduleme.Helpers.Render.index)
+app.get('/position-list', Scheduleme.Helpers.Render.index)
+app.get('/request-list', Scheduleme.Helpers.Render.index)
 
 
 app.get('/mobile', function (req, res) {

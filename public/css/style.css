@@ -44,6 +44,7 @@ body {
 }
 #sidebar #sidebar-content {
   position: absolute;
+  padding-top: 20px;
   width: 100%;
   top: 60px;
   bottom: 30px;
@@ -74,6 +75,7 @@ body {
   bottom: 0;
   line-height: 30px;
   padding-left: 7px;
+  overflow: hidden;
 }
 #sidebar #sidebar-footer a {
   font-size: 11px;
