@@ -144,15 +144,10 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
   events: {
     "change #sched-date"          : "loadByDate",
-    "click .upload-modal-trigger" : "openUploadModel",
+
     "click .fetch-date-trigger"   : "activateLoadDatepicker",
 
-    "click #upload_submit"        : "createUploadObject",
-    "paste #file-text"            : "pasted",
-    "change #file-text"           : "pasted",
-
-    "click .schedule-link"        : "navToSchedule",
-    "click #new-empty-schedule-button" : "newEmptySchedule"
+    "click .schedule-link"        : "navToSchedule"
   },
   /**
    *
@@ -189,12 +184,6 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
       showOtherMonths : true,
       format          : 'yyyy-mm-dd',
       endDate         : "+0D",
-      autoclose       : true
-    });
-    $('#upload-schedule-date').datepicker({
-      showOtherMonths : true,
-      format          : 'yyyy-mm-dd',
-      startDate       : "+0D",
       autoclose       : true
     });
 
@@ -374,150 +363,5 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
         }
       });
     }
-  },
-  openUploadModel: function () {
-    console.log('here');
-    $('#upload-modal').modal('show');
-  },
-  createUploadObject: function ( event ) {
-
-    var _this = this;
-
-    event.preventDefault();
-    //This works (delegating the task to the helper object)
-    if ($('#file').val()) {
-
-      $('.modal-footer button').attr('disabled', true);
-      $('#ajax-loader').removeClass('hidden');
-
-      obj = new uploadObject();
-      obj.setCallback(function () {
-        $('.modal-footer button').attr('disabled', false);
-        $('#ajax-loader').addClass('hidden');
-        $('#file').val('');
-        $('#upload-schedule-date').val('');
-      });
-      obj.requestCredentials();
-    } else if ($('#file-text').val()) {
-      //It's a CSV/Excel Paste
-      console.log('Will be parsing the text...');
-
-      var date = new Date($('#upload-schedule-date').val());
-      date = Scheduleme.helpers.UTCify(date);
-      console.log('Date: '+date.toISOString());
-
-      var data = {
-        date: date,
-        type: $('#upload-schedule-type').val(),
-        json: $('#file-text').val(),
-        timezone: date.getTimezoneOffset()
-      }
-
-      console.log('Data: '+data);
-
-      var dateToFetch = $('#upload-schedule-date').val();
-
-      $.ajax({
-        url: '/upload',
-        type: 'POST',
-        data: JSON.stringify(data),
-        beforeSend: function (request) {
-          $('.modal-footer button').attr('disabled', true);
-          $('#ajax-loader').removeClass('hidden');
-
-          request.setRequestHeader("Content-Type", 'application/json');
-        }, success: function () {
-          console.log('received success');
-          $('#file-text').val('');
-          $('#upload-schedule-date').val('');
-          _this.loadByDate(dateToFetch);
-        }, error: function () {
-          console.log('received error');
-        }, complete: function () {
-          $('.modal-footer button').attr('disabled', false);
-          $('#ajax-loader').addClass('hidden');
-        }
-      })
-      
-
-    } else {
-      alert('No schedule information found');
-    }
-  },
-  pasted: function () {
-    var _this = $('#file-text');
-    _.defer(function () {
-
-      var st = $(_this).val();
-
-      if (st != '') {
-        var Rows = st.split("\n");
-        var numrows = Rows.length; 
-
-        console.log(Rows);
-        console.log('rows: '+numrows);
-
-        var obj = [];
-
-        var type = 'spreadsheet'; // Or pasted
-        var delimiter = (type == 'spreadsheet') ? '\t' : ',';
-
-        Rows.forEach( function (row) {
-          var Arr = row.split(delimiter);
-          obj.push(Arr);
-        })
-
-        // Verify that it is valid (ie, N x N)
-        var length = null;
-        var valid = true;
-        obj.forEach (function (subArray) {
-          console.log('length: '+length);
-          if (length == null) {
-            length = subArray.length;
-          } else if ( subArray.length != length ) {
-            valid = false;
-          }
-        });
-
-        if (valid) {
-          console.log(obj);
-          $(_this).val(JSON.stringify(obj));
-        } else {
-          $(_this).val('');
-          _.defer(alert('The pasted data is not valid. The cells copied must be a rectangle, and merged cells are not supported at this time'));
-        }
-      }
-    })
-  },
-  newEmptySchedule: function (event) {
-    console.log('wtf');
-    var _this = this;
-    event.preventDefault();
-
-    var dateToFetch = $('#upload-schedule-date').val();
-
-    var payload = {
-      date: dateToFetch, // this should be validated as valid
-      type: 'day',
-      timezone: (new Date()).getTimezoneOffset(),
-      shifts: []
-    }
-
-    $.ajax({
-      url     : '/uploadshifts',
-      type    : 'POST',
-      data    : payload,
-      success : function (res) {
-
-        //This should not load it, it should just add it. but for now whatever. It needs to be put into proper models anyways
-        _this.loadByDate(dateToFetch);
-      },
-      error   : function (jqxrh) {
-        console.log('newEmptySchedule received Error');
-      },
-      complete: function () {
-        console.log('newEmptySchedule call complete');
-      }
-    })
   }
 });

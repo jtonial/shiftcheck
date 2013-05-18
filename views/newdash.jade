@@ -56,7 +56,7 @@ block content-header
   h3#content-view-title.pull-left
   #header-icons.pull-right
     - if ( user.employer_id )
-      i#add-employee-modal-trigger.icon-plus.icon-2x(title="Add Employee")
+      i#upload-modal-trigger.icon-plus.icon-2x(title="Add Employee")
       i#settings-trigger.icon-cogs.icon-2x(title="Settings")
     - else
 
@@ -76,6 +76,7 @@ block content-content
     #loading-error.large-message-div
       .icon-remove.icon-4x
       h5 An Error Occured! We apologize
+  include includes/upload-schedule-modal
 
 block templates
 
@@ -147,9 +148,14 @@ block end-scripts
   script(src='/js/views/EmployeesView.js')
   script(src='/js/views/ChangeRequestsView.js')
 
+  script(src='/js/views/UploadScheduleModalView.js')
+
   script(src='/js/routers/employer-router.js')
   - if ( user.employer_id )
     script
+      $('#upload-modal-trigger').click( function () {
+        $('#upload-modal').modal('show');
+      });
       $('#employees-link').click( function () {
         Scheduleme.Router.navigate('employee-list', { trigger: true });
       });

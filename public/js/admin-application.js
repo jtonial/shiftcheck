@@ -64,6 +64,8 @@
 
     Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
+    Scheduleme.UploadScheduleModalView = new Scheduleme.classes.views.UploadScheduleModalView();
+    
     //AJAX Setup
     $.ajaxSetup({
       dataType: 'json' //AJAX responses will all be treated as json dispite content-type
