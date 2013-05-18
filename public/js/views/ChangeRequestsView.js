@@ -16,6 +16,18 @@ Scheduleme.classes.views.ChangeRequestsView = Backbone.View.extend({
     $(this.el).html(this.template());
     return $(this.el);
   },
+  addAllRequests: function () {
+    var _this = this;
+
+    _.each(this.collection.models, function (model) {
+      _this.addOneEmployee(model);
+    });
+  },
+  addOneRequest: function (model) {
+    var view = new Scheduleme.classes.views.ChangeRequestView({ model: model });
+
+    this.$('tbody').append(view.render().el);
+  },
   _remove: function () {
     //Remove all subviews
     this.remove();

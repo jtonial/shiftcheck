@@ -78,11 +78,6 @@ block content-content
       h5 An Error Occured! We apologize
 
 block templates
-  script#employee-template(type='text/x-handlebars-template')
-    <div class="well">
-    <h1 class="name"><%= name =></h1>
-    <p class="number"><$= enumber =></p>
-    </div>
 
   script(id='login-template', type='text/x-handlebars-template')
     include templates/login-template
@@ -111,6 +106,13 @@ block templates
     include templates/positions-template
   script(id='change-requests-template', type='text/x-handlebars-template')
     include templates/change-requests-template
+
+  script(id='employee-template', type='text/x-handlebars-template')
+    include templates/employee-template
+  script(id='position-template', type='text/x-handlebars-template')
+    include templates/position-template
+  script(id='change-request-template', type='text/x-handlebars-template')
+    include templates/change-request-template
         
 block end-scripts
   script(src='/js/models/EmployeeModel.js')
@@ -125,6 +127,8 @@ block end-scripts
 
   script(src='/js/views/AccountView.js')
   script(src='/js/views/EmployeeView.js')
+  script(src='/js/views/PositionView.js')
+  script(src='/js/views/ChangeRequestView.js')
 
   script(src='/js/views/ShiftView.js')
 

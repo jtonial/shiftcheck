@@ -72,7 +72,7 @@ window.AppRouter = Backbone.Router.extend({
 
     var title = 'Employees';
     var $newLink = $('#employees-link').parent();
-    var newView = new Scheduleme.classes.views.EmployeesView({ collection: {} });;
+    var newView = new Scheduleme.classes.views.EmployeesView({ collection: Scheduleme.Employees });;
 
     this.switchMainView(title, $newLink, newView);
 
@@ -81,7 +81,7 @@ window.AppRouter = Backbone.Router.extend({
 
     var title = 'Positions';
     var $newLink = $('#positions-link').parent();
-    var newView = new Scheduleme.classes.views.PositionsView({ collection: {} });;
+    var newView = new Scheduleme.classes.views.PositionsView({ collection: Scheduleme.Positions });;
 
     this.switchMainView(title, $newLink, newView);
   },

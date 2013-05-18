@@ -30,6 +30,8 @@
 window.isPhonegap = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 
 Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.com' : '';
+
+
 //$(function() {
 
   Scheduleme.helpers.addMinutes = function(date, adding) {
@@ -165,7 +167,7 @@ Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.
 
     events: {
       'click .back-to-list'     : 'back',
-      'click .account-trigger'   : 'openAccountView',
+      'click .account-trigger'  : 'openAccountView',
       'click .logout-trigger'   : 'logout'
     },
     back: function () {
@@ -205,7 +207,7 @@ Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.
 
     $.mobile.defaultPageTransition = 'slide';
 
-      new FastClick(document.body);
+    new FastClick(document.body);
 
   };
 
