@@ -116,7 +116,6 @@ exports.addEmployee = function (req, res) {
   console.log(req.body);
 
   // Validate body
-
   var obj = {
     email       : req.body.email,
     username    : req.body.username,
@@ -125,6 +124,7 @@ exports.addEmployee = function (req, res) {
     last_name   : req.body.last_name,
     employer_id : req.session.employer_id
   };
+
   Scheduleme.Models.Employee.create(obj, function (err, result) {
     var response = {};
     if (err) {
@@ -138,6 +138,26 @@ exports.addEmployee = function (req, res) {
       //for now...
       response.statusCode = 200;
       response.newEmployeeId = result.insertId;
+
+      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    }
+  });
+};
+exports.deleteEmployee = function (req, res) {
+
+  var obj = {
+    employee_id : req.params.id,
+    employer_id : req.session.employer_id
+  };
+
+  Scheduleme.Models.Employee.delete(obj, function (err, result) {
+    var response = {};
+    if (err) {
+      response.statusCode = 500;
+      response.message = err.code;
+      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    } else {
+      response.statusCode = 200;
 
       Scheduleme.Helpers.Render.code(req.xhr, res, response);
     }

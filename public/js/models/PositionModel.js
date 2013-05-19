@@ -1,5 +1,7 @@
 Scheduleme.classes.models.Position = Backbone.Model.extend({
 
-  url: '/positions'
-
+  url: function () {
+    return this.isNew() ? '/positions' : '/positions/'+this.id;
+  }
+  
 });

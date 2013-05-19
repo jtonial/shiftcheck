@@ -8,3 +8,28 @@ table.table.table-striped.table-hover
 
 .well
   h3 Add Employee Options
+
+  form#add-employee-form.form-horizontal
+    .control-group
+      label.control-label First Name
+      .controls
+        input#first_name(type='text', name='first_name', placeholder='First Name')
+    .control-group
+      label.control-label Last Name
+      .controls
+        input#last_name(type='text', name='last_name', placeholder='Last Name')
+    .control-group
+      label.control-label Email
+      .controls
+        input#email(type='text', name='email', placeholder='Email')
+    .control-group
+      label.control-label Username
+      .controls
+        input#username(type='text', name='username', placeholder='Username')
+    .control-group
+      label.control-label Password
+      .controls
+        input#password(type='password', name='password', placeholder='Password')
+    .control-group
+      .controls
+        button#add-employee-submit.btn.btn-primary Add Employee

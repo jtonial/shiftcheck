@@ -47,6 +47,8 @@ CREATE TABLE employees (
 
   salt varchar(40) NOT NULL,
 
+  active BOOLEAN NOT NULL DEFAULT 1,
+  
   CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
 
 ) ENGINE=innodb;

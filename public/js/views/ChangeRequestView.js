@@ -1,4 +1,4 @@
-Scheduleme.classes.views.EmployeeView = Backbone.View.extend({
+Scheduleme.classes.views.ChangeRequestView = Backbone.View.extend({
 
   tagName: 'tr',
 
