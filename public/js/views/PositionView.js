@@ -1,26 +1,31 @@
-Scheduleme.classes.views.PositionView = Backbone.View.extend({
+(function () {
+  
+  "use strict"
 
-  tagName: 'tr',
+  Scheduleme.classes.views.PositionView = Backbone.View.extend({
 
-  template: Handlebars.compile($('#position-template').html()),
+    tagName: 'tr',
 
-  initialize: function () {
-    this.listenTo(this.model, 'change', this.render);
-    this.listenTo(this.model, 'destroy', this.remove);
-  },
+    template: Handlebars.compile($('#position-template').html()),
 
-  events: {
-    "click .remove-trigger" : "confirmRemove"
-  },
+    initialize: function () {
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'destroy', this.remove);
+    },
 
-  render: function () {
-    $(this.el).html(this.template(this.model.toJSON()));
-    return this;
-  },
+    events: {
+      "click .remove-trigger" : "confirmRemove"
+    },
 
-  confirmRemove: function () {
-    if (confirm('Are you sure you wish to remove this position')) {
-      this.model.destroy({ wait: true });
+    render: function () {
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    },
+
+    confirmRemove: function () {
+      if (confirm('Are you sure you wish to remove this position')) {
+        this.model.destroy({ wait: true });
+      }
     }
-  }
-});
+  });
+})();

@@ -1,34 +1,39 @@
-Scheduleme.classes.views.SchedulesViewItemView = Backbone.View.extend({
+(function () {
   
-  tagName: 'td',
+  "use strict"
 
-  template: Handlebars.compile($('#schedules-template').html()),
+  Scheduleme.classes.views.SchedulesViewItemView = Backbone.View.extend({
+    
+    tagName: 'td',
 
-  events: {
+    template: Handlebars.compile($('#schedules-template').html()),
 
-  },
-  //Create the frame
-  initialize: function () {
+    events: {
 
-  },
-  render: function () {
-    $(this.el).html(this.template(this.model.toJSON()));
-    return $(this.el);
-  }
-});
+    },
+    //Create the frame
+    initialize: function () {
 
-Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
-  
-  el: $('#schedule-pane'),
+    },
+    render: function () {
+      $(this.el).html(this.template(this.model.toJSON()));
+      return $(this.el);
+    }
+  });
 
-  template: Handlebars.compile($('#schedule-template').html()),
+  Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
+    
+    el: $('#schedule-pane'),
 
-  //Create the frame
-  initialize: function () {
-    this.render();
-  },
-  render: function () {
-    $(this.el).html(this.template(this.collection.toJSON()));
-    return $(this.el);
-  }
-});
+    template: Handlebars.compile($('#schedule-template').html()),
+
+    //Create the frame
+    initialize: function () {
+      this.render();
+    },
+    render: function () {
+      $(this.el).html(this.template(this.collection.toJSON()));
+      return $(this.el);
+    }
+  });
+})();
