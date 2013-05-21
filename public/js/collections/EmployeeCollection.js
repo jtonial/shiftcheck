@@ -1,16 +1,21 @@
-Scheduleme.classes.collections.Employees = Backbone.Collection.extend({
+(function () {
 
-  url: '/employees',
-      
-  model: Scheduleme.classes.models.Employee,
+  "use strict"
+  
+  Scheduleme.classes.collections.Employees = Backbone.Collection.extend({
 
-  // How do I want to sort this... or should I provide multiple options? Mhmm... decisions decisions
-  comparator: function (model) {
-    return model.get('last_name');
-  },
+    url: '/employees',
+        
+    model: Scheduleme.classes.models.Employee,
 
-  parse: function (response, options) {
-    return response.data.employees;
-  }
+    // How do I want to sort this... or should I provide multiple options? Mhmm... decisions decisions
+    comparator: function (model) {
+      return model.get('last_name');
+    },
 
-});
+    parse: function (response, options) {
+      return response.data.employees;
+    }
+
+  });
+})();

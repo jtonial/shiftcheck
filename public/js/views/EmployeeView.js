@@ -1,26 +1,31 @@
-Scheduleme.classes.views.EmployeeView = Backbone.View.extend({
+(function () {
 
-  tagName: 'tr',
+  "use strict"
 
-  template: Handlebars.compile($('#employee-template').html()),
+  Scheduleme.classes.views.EmployeeView = Backbone.View.extend({
 
-  initialize: function () {
-    this.listenTo(this.model, 'change', this.render);
-    this.listenTo(this.model, 'destroy', this.remove);
-  },
+    tagName: 'tr',
 
-  events: {
-    "click .remove-trigger" : "confirmRemove"
-  },
+    template: Handlebars.compile($('#employee-template').html()),
 
-  render: function () {
-    $(this.el).html(this.template(this.model.toJSON()));
-    return this;
-  },
+    initialize: function () {
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'destroy', this.remove);
+    },
 
-  confirmRemove: function () {
-    if (confirm('Are you sure you wish to remove this employee')) {
-      this.model.destroy({ wait: true });
+    events: {
+      "click .remove-trigger" : "confirmRemove"
+    },
+
+    render: function () {
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    },
+
+    confirmRemove: function () {
+      if (confirm('Are you sure you wish to remove this employee')) {
+        this.model.destroy({ wait: true });
+      }
     }
-  }
-});
+  });
+})();

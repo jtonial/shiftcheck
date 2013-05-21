@@ -1,9 +1,15 @@
-Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
-  url: '/shifts',
+(function () {
 
-  model: Scheduleme.classes.models.Shift,
+  "use strict"
 
-  parse: function (data) {
-    return data.data;
-  }
-});
+  Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
+    
+    url: '/shifts',
+
+    model: Scheduleme.classes.models.Shift,
+
+    parse: function (data) {
+      return data.data;
+    }
+  });
+})();

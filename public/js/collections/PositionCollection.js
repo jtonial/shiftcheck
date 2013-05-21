@@ -1,21 +1,26 @@
-Scheduleme.classes.collections.Positions = Backbone.Collection.extend({
+(function () {
 
-  url: '/positions',
-      
-  model: Scheduleme.classes.models.Position,
+  "use strict"
 
-  initialize: function () {
+  Scheduleme.classes.collections.Positions = Backbone.Collection.extend({
 
-  },
+    url: '/positions',
+        
+    model: Scheduleme.classes.models.Position,
 
-  parse: function (response, options) {
-    return response.data.positions;
-  },
-  comparator: function (position) {
-    return position.get('order_val');
-  },
-  newOrderValue: function () {
-    return _.max(this, function (position) { return position.order })+1;
-  }
+    initialize: function () {
 
-});
+    },
+
+    parse: function (response, options) {
+      return response.data.positions;
+    },
+    comparator: function (position) {
+      return position.get('order_val');
+    },
+    newOrderValue: function () {
+      return _.max(this, function (position) { return position.order })+1;
+    }
+
+  });
+})();

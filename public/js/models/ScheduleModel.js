@@ -1,13 +1,18 @@
-Scheduleme.classes.models.Schedule = Backbone.Model.extend({
+(function () {
 
-  initialize: function () {
-    var _this = this;
+  "use strict"
 
-    // Create Shifts subcollection if the schedule contains shifts
-    //if (this.get('shifts').length) {
-      this.Shifts = new Scheduleme.classes.collections.Shifts({});
-      this.Shifts.reset(this.get('shifts'));
-    //}
-  }
+  Scheduleme.classes.models.Schedule = Backbone.Model.extend({
 
-});
+    initialize: function () {
+      var _this = this;
+
+      // Create Shifts subcollection if the schedule contains shifts
+      //if (this.get('shifts').length) {
+        this.Shifts = new Scheduleme.classes.collections.Shifts({});
+        this.Shifts.reset(this.get('shifts'));
+      //}
+    }
+
+  });
+})();

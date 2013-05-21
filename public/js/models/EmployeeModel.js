@@ -1,7 +1,12 @@
-Scheduleme.classes.models.Employee = Backbone.Model.extend({
+(function () {
+  
+  "use strict"
 
-  url: function () {
-    return this.isNew() ? '/employees' : '/employees/'+this.id;
-  }
+  Scheduleme.classes.models.Employee = Backbone.Model.extend({
 
-});
+    url: function () {
+      return this.isNew() ? '/employees' : '/employees/'+this.id;
+    }
+
+  });
+})();
