@@ -1,4 +1,7 @@
-$(function () {
+(function () {
+  
+  "use strict"
+
   $('#signup-form').submit(function (e) {
     e.preventDefault(); //Prevent default submission
 
@@ -12,5 +15,6 @@ $(function () {
         alert ('something went wrong!');
       }
     });  
-  })
-});
+  });
+
+})();

@@ -1,6 +1,7 @@
 (function () {
   
-  "use strict"
+  // Using strict mode seems to be causing some weird error in this file that I dont want to deal with right now
+  //"use strict"
 
   //NOTE: This is wrapped in a function (used as an object) to enabled multiple uploads
   function uploadObject () {
@@ -303,15 +304,12 @@
         } else if (schedule.get('type') == 'week') {
           var nd = new Date(schedule.get('ndatestring'));
           this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
-          delete nd;
         } else if (schedule.get('type') == 'twoweek') {
           var nd = new Date(schedule.get('ndatestring'));
           this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup> - <br/>'+schedule.get('ndatestring')+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>');
-          delete nd;
         } else { //Defaults to daily schedule
           this.$('#dates #prependHere').before('<li class="schedule-tab"><a data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>');
         }
-        delete d; //Remove the reference to D; it can not be garbage collected
       });
     },
 

@@ -1,4 +1,7 @@
-$(function () {
+(function () {
+  
+  "use strict"
+
   $('#login-form').submit(function (e) {
     console.log('test');
     e.preventDefault(); //Prevent default submission
@@ -14,5 +17,6 @@ $(function () {
         alert ('Username and password do not match. Please try again');
       }
     });  
-  })
-});
+  });
+
+})();

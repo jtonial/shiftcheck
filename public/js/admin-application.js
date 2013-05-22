@@ -1,4 +1,6 @@
-//$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
+(function () {
+  
+  "use strict"
 
   window.Scheduleme = window.Scheduleme || {
     classes: {
@@ -182,7 +184,7 @@
 
     //$('body').append('<div id="console-output"></div>');
 
-    _consolelog = function (x) {
+    var _consolelog = function (x) {
       //$('#console-output').append(x+'<br/>');
       //log(x);
     }
@@ -200,17 +202,17 @@
     }
   });
 
-//});
+  function openSidebar () {
+    if ($(window).width() <= 800) {
+      $('#sidebar').removeClass('open closed').addClass('open');
+      $('#sidebar-slide-handle').removeClass('open closed').addClass('open');
+    }
+  }
+  function closeSidebar () {
+    if ($(window).width() <= 800) {
+      $('#sidebar').removeClass('open closed').addClass('closed');
+      $('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
+    }
+  }
 
-function openSidebar () {
-  if ($(window).width() <= 800) {
-    $('#sidebar').removeClass('open closed').addClass('open');
-    $('#sidebar-slide-handle').removeClass('open closed').addClass('open');
-  }
-}
-function closeSidebar () {
-  if ($(window).width() <= 800) {
-    $('#sidebar').removeClass('open closed').addClass('closed');
-    $('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
-  }
-}
+})();

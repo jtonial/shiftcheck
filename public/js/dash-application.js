@@ -1,4 +1,6 @@
-//$(function() { //This can be added back in when I use require.js, or soemthing to manage the includes
+(function () {
+  
+  "use strict"
 
   window.Scheduleme = window.Scheduleme || {
     classes: {
@@ -179,61 +181,17 @@
     Scheduleme.Init();
   });
 
-//});
-
-function openSidebar () {
-  if ($(window).width() <= 800) {
-    $('#sidebar').removeClass('open closed').addClass('open');
-    $('#sidebar-slide-handle').removeClass('open closed').addClass('open');
-  }
-}
-function closeSidebar () {
-  if ($(window).width() <= 800) {
-    $('#sidebar').removeClass('open closed').addClass('closed');
-    $('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
-  }
-}
-
-function nTouch () {
-  window.nTouch = {};
-
-  window.nTouch.shortEventLength = $(window).width() / 3;
-
-  window.addEventListener('touchstart', function (e) {
-    window.nTouch.startX = e.touches[0].pageX;
-    window.nTouch.startY = e.touches[0].pageY;
-    window.nTouch.shortEvent = false;
-    _consolelog('StartX: '+nTouch.startX);
-    _consolelog('StartY: '+nTouch.startY);
-  }, false)
-  window.addEventListener('touchmove', function (e) {
-    var x = e.touches[0].pageX;
-    var y = e.touches[0].pageY;
-    var dx = x - nTouch.startX;
-    var dy = y - nTouch.startY;
-    _consolelog('X: '+x);
-    _consolelog('Y: '+y);
-    _consolelog('dX: '+dx);
-    _consolelog('dY: '+dx);
-
-    if (!nTouch.shortEvent) {
-      if ( dx > nTouch.shortEventLength ) {
-        nTouch.shortEvent = true;
-        openSidebar();
-      } else if ( dx < -nTouch.shortEventLength ) {
-        nTouch.shortEvent = true;
-        closeSidebar();        
-      }
+  function openSidebar () {
+    if ($(window).width() <= 800) {
+      $('#sidebar').removeClass('open closed').addClass('open');
+      $('#sidebar-slide-handle').removeClass('open closed').addClass('open');
     }
-  }, false)
-  window.addEventListener('touchend', function (e) {
-    var x = e.changedTouches[0].pageX;
-    var y = e.changedTouches[0].pageY;
-    var dx = x - nTouch.startX;
-    var dy = y - nTouch.startY;
-    _consolelog('EndX: '+x);
-    _consolelog('EndY: '+y);
-    _consolelog('End dX: '+dx);
-    _consolelog('End dY: '+dy);
-    }, false)
-}
+  }
+  function closeSidebar () {
+    if ($(window).width() <= 800) {
+      $('#sidebar').removeClass('open closed').addClass('closed');
+      $('#sidebar-slide-handle').removeClass('open closed').addClass('closed');
+    }
+  }
+  
+})();
