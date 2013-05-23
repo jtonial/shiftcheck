@@ -180,6 +180,7 @@ exports.addPosition = function (req, res) {
     position   : req.body.position,
     full_name  : req.body.full_name,
     description : req.body.description,
+    order      : req.body.order_val,
     employer   : req.session.employer_id
   }
 

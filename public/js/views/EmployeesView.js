@@ -79,19 +79,6 @@
           $('#add-employee-submit').removeAttr('disabled');
         }
       });
-
-      /*$.ajax({
-        url: '/employees',
-        type: 'POST',
-        data: form.serialize(),
-        success: function (response) {
-          alert('Employee created!')
-          form.find("input[type=text], input[type=password], textarea").val("");
-        }, error: function (response) {
-          alert ('something went wrong!');
-        }
-      }); */
-
     }
   });
 })();

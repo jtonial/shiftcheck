@@ -159,7 +159,7 @@
 
     createD3: function (target, dataset) {
 
-      _this = this;
+      var _this = this;
 
       if (!($(target).length)) throw new Error('');
 
@@ -494,7 +494,7 @@
           if (hours == 0) {
             hours = 12;
           }
-          minutes = ("0" + (d%60)).slice(-2);
+          var minutes = ("0" + (d%60)).slice(-2);
 
           if (minutes % 60 == 0) {
             return hours;//+':'+minutes;
@@ -636,7 +636,7 @@
     },
     saveModifiedShift: function (e) {
       e.preventDefault();
-      _this = this;
+      var _this = this;
       console.log('detected yeah.');
       $.ajax({
         url: '/shift/',
@@ -672,6 +672,9 @@
       return 0;
     },
     highlightShifts: function (highlight, t, hoveredId) {
+
+      var _this = this;
+
       _this.indexes.crossMapping[t].forEach(function (s) {
         var t = d3.select(s);
         var id = t.attr("id");

@@ -19,7 +19,7 @@
       return position.get('order_val');
     },
     newOrderValue: function () {
-      return _.max(this, function (position) { return position.order })+1;
+      return _.max(this.models, function (position) { return position.get('order_val') }).get('order_val')+1;
     }
 
   });

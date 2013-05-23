@@ -176,14 +176,15 @@ exports.addPosition= function (obj, cb) {
 		//Exit here or something
 	}
 
-	var employer 	= obj.employer;
-	var position 	= obj.position;
+	var employer 		= obj.employer;
+	var position 		= obj.position;
 	var full_name 	= obj.full_name;
 	var description = obj.description;
+	var order 			= obj.order;
 
 	var response 	= typeof obj.response != 'undefined' ? obj.response : {};
 
-	db.query(Scheduleme.Queries.insertPosition, [employer, position, full_name, description], function (err, result) {
+	db.query(Scheduleme.Queries.insertPosition, [employer, position, full_name, description, order], function (err, result) {
 		if (err) {
 			response.statusCode = 500;
 			response.message = err;
@@ -191,7 +192,7 @@ exports.addPosition= function (obj, cb) {
 			cb(err, response);
 		} else {
 			response.statusCode = 201;
-			response.position_id = result.insertId;
+			response.id = result.insertId;
 
 			cb(err, response);
 		}

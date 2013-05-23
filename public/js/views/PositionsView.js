@@ -13,13 +13,14 @@
       this.viewType = 'positions';
       this.viewPane = 'main';
 
-      this.listenTo(this.collection, 'add', this.addOneModels);
+      // Re-rendering all models on add to maintain order
+      this.listenTo(this.collection, 'add', this.addAllModels);
       this.listenTo(this.collection, 'reset', this.addAllModels);
 
       this.render();
     },
     events: {
-
+      "submit #add-position-form" : "addPositionHandler"
     },
     render: function () {
       //$(this.el).html(this.template(this.collection.toJSON()));
@@ -51,6 +52,33 @@
     _undelegateEvents: function () {
       //Undelegate from all subviews
       this.undelegateEvents();
+    },
+
+    addPositionHandler: function (event) {
+      event.preventDefault();
+
+      var form = $('#add-position-form');
+
+      // This should totally be done by adding to the Scheduleme.Employees collection...
+      Scheduleme.Positions.create({
+        position    : form.find("input[name='position']").val(),
+        full_name   : form.find("input[name='full_name']").val(),
+        description : form.find("textarea[name='description']").val(),
+        order_val   : Scheduleme.Positions.newOrderValue()
+      }, { 
+        wait: true,
+        beforeSend: function (request) {
+          $('#add-position-submit').attr('disabled', true);
+        },
+        success: function (res) {
+          form.find("input[type=text], input[type=password], textarea").val("");
+          form.find("input[name='full_name']").focus();
+        },
+        complete: function () {
+          $('#add-position-submit').removeAttr('disabled');
+        }
+      });
     }
+
   });
 })();
