@@ -66,6 +66,6 @@ if (process.env.RDS_USER) {
   config.mysql = mysql_config.local;
 }
 
-config.mysql = mysql_config.local;
+//config.mysql = mysql_config.local;
 
 module.exports = config;
