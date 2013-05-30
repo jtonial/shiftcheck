@@ -14,8 +14,8 @@ var express       = require('express')
   , RedisStore    = require('connect-redis')(express)
   , authenticate  = require('./middleware/authenticate')
   , device        = require('express-device')
-  , Scheduleme    = require('./helpers/global')
-  , db            = Scheduleme.db
+  , Main          = require('./helpers/global')
+  , db            = Main.db
   , app           = express()
   ;
 
@@ -31,16 +31,18 @@ if (process.env.REDISTOGO_URL) {
 }
 
 app.configure(function(){
-  app.set('port', process.env.PORT || Scheduleme.Config.port );
-  app.set('ssl_port', process.env.PORT || Scheduleme.Config.ssl_port );
+  app.set('port', process.env.PORT || Main.Config.port );
+  app.set('ssl_port', process.env.PORT || Main.Config.ssl_port );
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.locals({
-    site_name: Scheduleme.Config.name,
-    site_name_lower: Scheduleme.Config.name_lower,
+    site_name: Main.Config.name,
+    site_name_lower: Main.Config.name_lower,
 
-    facebook_url: Scheduleme.Config.facebook_url,
-    twitter_url: Scheduleme.Config.twitter_url
+    title: Main.Config.name,
+
+    facebook_url: Main.Config.facebook_url,
+    twitter_url: Main.Config.twitter_url
   });
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -50,7 +52,7 @@ app.configure(function(){
   app.use(express.session({
     secret   :'asdfadsfasdfw4t3t53', 
     maxAge   : new Date( Date.now() + 1800000), // 30 minutes
-    store   : new RedisStore({client: redis})
+    store    : new RedisStore({client: redis})
   }));
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
@@ -60,8 +62,8 @@ app.configure(function(){
 
   app.use(function (req, res, next) {
     //Initialize shortcuts for checking employee/employer
-    employee = (typeof req.session.employee_id != 'undefined');
-    admin = (typeof req.session.employer_id != 'undefined');
+    employee  = (typeof req.session.employee_id != 'undefined');
+    admin     = (typeof req.session.employer_id != 'undefined');
 
     next();
   });
@@ -74,33 +76,33 @@ app.configure(function(){
   var shifts     = require('./lib/shifts');
 
   app.use('/about', about);
-  app.use('/', schedules);
+  app.use('/schedules', schedules);
   app.use('/', me);
-  app.use('/', positions);
+  app.use('/positions', positions);
   app.use('/employees', employees);
-  app.use('/', shifts);
+  app.use('/shifts', shifts);
 
   app.use(function (req, res, next) {
 
-    Scheduleme.Tracking.trackRequest(req);
+    Main.Tracking.trackRequest(req);
 
     next();
   });
   //app.use(express.csrf()); //Generate Cross Site Request Forgery keys
   app.use(app.router);
   app.use(function (req, res) {
-    Scheduleme.Helpers.Render.code404(req, res);
+    Main.Helpers.Render.code404(req, res);
   });
 
 });
 
 
-app.get('/', Scheduleme.Helpers.Render.index);
+app.get('/', Main.Helpers.Render.index);
 // In order to accomodate push-state
-app.get('/schedule/*', Scheduleme.Helpers.Render.index)
-app.get('/employee-list', Scheduleme.Helpers.Render.index)
-app.get('/position-list', Scheduleme.Helpers.Render.index)
-app.get('/request-list', Scheduleme.Helpers.Render.index)
+app.get('/schedule/*', Main.Helpers.Render.index)
+app.get('/employee-list', Main.Helpers.Render.index)
+app.get('/position-list', Main.Helpers.Render.index)
+app.get('/request-list', Main.Helpers.Render.index)
 
 
 app.get('/mobile', function (req, res) {
@@ -110,14 +112,14 @@ app.get('/mobile', function (req, res) {
 
 app.get('/login', function (req, res) {
   if (!employee && !admin) {
-    Scheduleme.Helpers.Render.renderLoginPage(req, res);
+    Main.Helpers.Render.renderLoginPage(req, res);
   } else {
     res.redirect('/');
   }
 });
 app.get('/manager-login', function (req, res) {
   if (!employee && !admin) {
-    Scheduleme.Helpers.Render.renderAdminloginPage(req, res);
+    Main.Helpers.Render.renderAdminloginPage(req, res);
   } else {
     res.redirect('/');
   }
@@ -125,12 +127,10 @@ app.get('/manager-login', function (req, res) {
 
 app.post('/login', function (req, res) {
   if (!employee && !admin) {
-    console.log('omg');
-    Scheduleme.Controllers.Employees.processLogin(req, res);
+    Main.Controllers.Employees.processLogin(req, res);
   } else {
-    console.log('wtf3');
     if (req.xhr) {
-      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
+      Main.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }
@@ -138,32 +138,32 @@ app.post('/login', function (req, res) {
 });
 app.post('/manager-login', function (req, res) {
   if (!employee && !admin) {
-    Scheduleme.Controllers.Employers.processLogin(req, res);
+    Main.Controllers.Employers.processLogin(req, res);
   } else {
     if (req.xhr) {
-      Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
+      Main.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }
   }
 });
 
-app.get('/logout', Scheduleme.Helpers.Helpers.logout);
+app.get('/logout', Main.Helpers.Helpers.logout);
 
 app.get('/signup', function (req, res) {
   if (!employee && !admin) {
-    Scheduleme.Helpers.Render.renderSignup(req, res);
+    Main.Helpers.Render.renderSignup(req, res);
   } else {
     res.redirect('/');
   }
 });
 app.post('/signup', function (req, res) {
-  Scheduleme.Controllers.Employers.processSignup(req, res);
+  Main.Controllers.Employers.processSignup(req, res);
 });
 
 
 app.get('/testPaste', function (req, res) {
-  res.render('testPaste', { title: Scheduleme.Config.name });
+  res.render('testPaste', { title: Main.Config.name });
 })
 
 

@@ -91,7 +91,7 @@ exports.clientUpload = function(req, res) {
       s3PolicyBase64: s3PolicyBase64,
       s3Signature: crypto.createHmac( 'sha1', process.env.AWS_SECRET_ACCESS_KEY || 'I1wqnnTDmK3KyfevxK7y4DD053gcLgGGh/kPTvBr' ).update( s3PolicyBase64 ).digest( 'base64' ),
       s3Key: process.env.AWS_ACCESS_KEY_ID || 'AKIAIKTL23OZ4ILD5TWQ',
-      s3Redirect: "http://schedule-me.herokuapp.com/verifyUpload?x="+id, 
+      s3Redirect: "http://schedule-me.herokuapp.com/schedules/verifyUpload?x="+id, 
       s3Policy: s3Policy,
       id: id
     };

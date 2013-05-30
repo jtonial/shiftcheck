@@ -1,17 +1,17 @@
 console.log('Loading render helpers...');
 
-var Scheduleme = require('../helpers/global');
+var Main = require('../helpers/global');
 
 exports.renderLoginPage = function (req, res) {
-  res.render('login', { title: 'Schedule.me' });
+  res.render('login', { title: Main.Config.name });
 };
 
 exports.renderAdminloginPage = function (req, res) {
-  res.render('manager-login', { title: 'Schedule.me' });
+  res.render('manager-login', { title: Main.Config.name });
 };
 
 exports.renderSignup = function (req, res) {
-  res.render('signup', { title: 'Schedule.me' });
+  res.render('signup', { title: Main.Config.name });
 };
 
 exports.index = function(req, res){
@@ -21,12 +21,12 @@ exports.index = function(req, res){
     if (req.device.type == 'phone' || req.device.type == 'tablet') {
       res.render('jquerymobile', { });
     } else {
-      res.render('newdash', { title: 'Schedule.me', user: req.session });
+      res.render('newdash', { title: Main.Config.name, user: req.session });
     }
   } else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
-    res.render('newdash', { title: 'Schedule.me', user: req.session });
+    res.render('newdash', { title: Main.Config.name, user: req.session });
   } else {
-    res.render('landing', { title: 'Schedule.me', user: req.session });
+    res.render('landing', { title: Main.Config.name, user: req.session });
   }
 
 };
@@ -56,16 +56,16 @@ exports.code = function (xhr, res, obj) {
         res.end(JSON.stringify(obj));
         break;
       case 401:
-        res.render('401', { title: 'Schedule.me' });
+        res.render('401', { title: Main.Config.name });
         break;
       case 403:
-        res.render('403', { title: 'Schedule.me' });
+        res.render('403', { title: Main.Config.name });
         break;
       case 404:
-        res.render('404', { title: 'Schedule.me' });
+        res.render('404', { title: Main.Config.name });
         break;
       case 500:
-        res.render('500', { title: 'Schedule.me' });
+        res.render('500', { title: Main.Config.name });
         break;
     }
   }*/
@@ -75,7 +75,7 @@ exports.code401 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('401', { title: 'Schedule.me' });
+    res.render('401', { title: Main.Config.name });
   }
 };
 exports.code403 = function (req, res) {
@@ -83,7 +83,7 @@ exports.code403 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('403', { title: 'Schedule.me' });
+    res.render('403', { title: Main.Config.name });
   }
 };
 exports.code404 = function (req, res) {
@@ -91,7 +91,7 @@ exports.code404 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('404', { title: 'Schedule.me' });
+    res.render('404', { title: Main.Config.name });
   }
 };
 exports.code500 = function (req, res) {
@@ -99,6 +99,6 @@ exports.code500 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('500', { title: 'Schedule.me' });
+    res.render('500', { title: Main.Config.name });
   }
 };

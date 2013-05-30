@@ -58,7 +58,7 @@
       console.log('Upload complete! Id: ' + that.id );
 
       $.ajax({
-        url     : '/verifyUpload',
+        url     : '/schedules/verifyUpload',
         type     : 'POST',
         data     : 'x='+that.id,
         success   : function (res) {
@@ -102,7 +102,7 @@
       that.date = $('#upload-schedule-date').val();
 
       $.ajax({
-        url: '/client-upload',
+        url: '/schedules/client-upload',
         type: 'POST',
         data: JSON.stringify(data),
         beforeSend: function (request) {
@@ -193,7 +193,7 @@
         var dateToFetch = $('#upload-schedule-date').val();
 
         $.ajax({
-          url: '/upload',
+          url: '/schedules/upload',
           type: 'POST',
           data: JSON.stringify(data),
           beforeSend: function (request) {
@@ -278,7 +278,7 @@
       }
 
       $.ajax({
-        url     : '/uploadshifts',
+        url     : '/schedules/uploadshifts',
         type    : 'POST',
         data    : payload,
         success : function (res) {
