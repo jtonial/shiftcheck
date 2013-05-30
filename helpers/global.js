@@ -10,7 +10,7 @@ exports.db          = require('../db/dbconnection');
 exports.Controllers = {
   Employees : require('../controllers/employees'),
   Employers : require('../controllers/employers'),
-  Schedules : require('../controllers/schedules'),
+  Schedules : require('../controllers/schedules')
 };
 exports.Models      = {
   Employee : require('../models/employee'),
