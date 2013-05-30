@@ -91,18 +91,18 @@ app.configure(function(){
   //app.use(express.csrf()); //Generate Cross Site Request Forgery keys
   app.use(app.router);
   app.use(function (req, res) {
-    Main.Helpers.Render.code404(req, res);
+    Main.Render.code404(req, res);
   });
 
 });
 
 
-app.get('/', Main.Helpers.Render.index);
+app.get('/', Main.Render.index);
 // In order to accomodate push-state
-app.get('/schedule/*', Main.Helpers.Render.index)
-app.get('/employee-list', Main.Helpers.Render.index)
-app.get('/position-list', Main.Helpers.Render.index)
-app.get('/request-list', Main.Helpers.Render.index)
+app.get('/schedule/*', Main.Render.index)
+app.get('/employee-list', Main.Render.index)
+app.get('/position-list', Main.Render.index)
+app.get('/request-list', Main.Render.index)
 
 
 app.get('/mobile', function (req, res) {
@@ -112,14 +112,14 @@ app.get('/mobile', function (req, res) {
 
 app.get('/login', function (req, res) {
   if (!employee && !admin) {
-    Main.Helpers.Render.renderLoginPage(req, res);
+    Main.Render.renderLoginPage(req, res);
   } else {
     res.redirect('/');
   }
 });
 app.get('/manager-login', function (req, res) {
   if (!employee && !admin) {
-    Main.Helpers.Render.renderAdminloginPage(req, res);
+    Main.Render.renderAdminloginPage(req, res);
   } else {
     res.redirect('/');
   }
@@ -130,7 +130,7 @@ app.post('/login', function (req, res) {
     Main.Controllers.Employees.processLogin(req, res);
   } else {
     if (req.xhr) {
-      Main.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
+      Main.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }
@@ -141,18 +141,18 @@ app.post('/manager-login', function (req, res) {
     Main.Controllers.Employers.processLogin(req, res);
   } else {
     if (req.xhr) {
-      Main.Helpers.Render.code(req.xhr, res, { statusCode : 400 });
+      Main.Render.code(req.xhr, res, { statusCode : 400 });
     } else {
       res.redirect('/');
     }
   }
 });
 
-app.get('/logout', Main.Helpers.Helpers.logout);
+app.get('/logout', Main.Helpers.logout);
 
 app.get('/signup', function (req, res) {
   if (!employee && !admin) {
-    Main.Helpers.Render.renderSignup(req, res);
+    Main.Render.renderSignup(req, res);
   } else {
     res.redirect('/');
   }

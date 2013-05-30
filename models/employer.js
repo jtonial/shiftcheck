@@ -27,7 +27,7 @@ var Employer = {
 			//Search object for account lookup
 			var where = new Object();
 			var loginQuery='';
-			if (Scheduleme.Helpers.Helpers.is_email(email)) {
+			if (Scheduleme.Helpers.is_email(email)) {
 				console.log('is an email');
 				loginQuery = 'SELECT employer_id, password, salt, name, email, username, contact_email, contact_phone, contact_address FROM employers WHERE email=? LIMIT 1';
 				where.email = email;
@@ -44,17 +44,17 @@ var Employer = {
 					response.statusCode = 500;
 					response.message = err.code;
 					console.log(err.code);
-					Scheduleme.Helpers.Render.code(req.xhr, res, response);
+					Scheduleme.Render.code(req.xhr, res, response);
 				} else {
 					if (row[0]) {
 
-						if ( Scheduleme.Helpers.Helpers.calcHash(password, row[0].salt) == row[0].password ) {
+						if ( Scheduleme.Helpers.calcHash(password, row[0].salt) == row[0].password ) {
 							req.session.employer_id = row[0].employer_id;
 							req.session.email 		= row[0].email;
 							req.session.username 	= row[0].username;
 
 							response.statusCode = 200;
-							Scheduleme.Helpers.Render.code(req.xhr, res, response);
+							Scheduleme.Render.code(req.xhr, res, response);
 
 							db.query(Scheduleme.Queries.updateEmployerLogin, [req.session.employer_id], function (err, result) {
 								if (err) {
@@ -65,18 +65,18 @@ var Employer = {
 							var trackingInput = {
 								type 		: 'employer',
 								id 			: row[0].employer_id,
-								ip 			: Scheduleme.Helpers.Helpers.getClientIp(req),
+								ip 			: Scheduleme.Helpers.getClientIp(req),
 								statusCode	: response.statusCode
 							};
 							Scheduleme.Tracking.trackLogin(trackingInput);
 						} else {
 							Scheduleme.Logger.info("Failed login attempt for employer "+row[0].employer_id)
 							response.statusCode = 400;
-							Scheduleme.Helpers.Render.code(req.xhr, res, response);	
+							Scheduleme.Render.code(req.xhr, res, response);	
 						}
 					} else {
 						response.statusCode = 400;
-						Scheduleme.Helpers.Render.code(req.xhr, res, response);
+						Scheduleme.Render.code(req.xhr, res, response);
 					}
 				}
 			});
@@ -84,7 +84,7 @@ var Employer = {
 			var response = Object();
 			response.statusCode = 400;
 			response.message = 'Email is missing or empty';
-			Scheduleme.Helpers.Render.code(req.xhr, res, response);
+			Scheduleme.Render.code(req.xhr, res, response);
 		}
 	}
 };
@@ -94,12 +94,12 @@ exports.new = function (object) {
 }
 
 exports.create = function (obj, cb) {
-	salt      = Scheduleme.Helpers.Helpers.generateSalt();
+	salt      = Scheduleme.Helpers.generateSalt();
 
 	name 		  = obj.name;
 	email 		= obj.email;
 	username 	= obj.username;
-	pass 		  = Scheduleme.Helpers.Helpers.calcHash(obj.password, salt);
+	pass 		  = Scheduleme.Helpers.calcHash(obj.password, salt);
 	c_email 	= obj.contact_email;
 	c_phone 	= obj.contact_phone;
 	c_add 		= obj.contact_address;
@@ -112,7 +112,7 @@ exports.fetch = function (obj, cb) {
 	//Note: this is queries['selectEmployer']; I need to globalize this
 
 	if (typeof obj.id == 'undefined') {
-		//Scheduleme.Helpers.Render.code(req)
+		//Scheduleme.Render.code(req)
 		console.log('No id; Model.Employer.fetch');
 	}
 

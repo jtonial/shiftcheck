@@ -25,7 +25,7 @@ var Employee = {
       //Search object for account lookup
       var where = new Object();
       var loginQuery='';
-      if (Scheduleme.Helpers.Helpers.is_email(email)) {
+      if (Scheduleme.Helpers.is_email(email)) {
         loginQuery = 'SELECT employee_id, password, salt, email, username, first_name, last_name, employer_id FROM employees WHERE email=? LIMIT 1';
         where.email = email;
       } else { //is username
@@ -41,12 +41,12 @@ var Employee = {
           response.statusCode = 500;
           response.message = err.code;
           Scheduleme.Logger.error(err.code);
-          Scheduleme.Helpers.Render.code(req.xhr, res, response);
+          Scheduleme.Render.code(req.xhr, res, response);
         } else {
           console.log('here2');
           if (row[0]) {
             console.log('here3');
-            if (Scheduleme.Helpers.Helpers.calcHash(password, row[0].salt) == row[0].password) {
+            if (Scheduleme.Helpers.calcHash(password, row[0].salt) == row[0].password) {
               req.session.employee_id = row[0].employee_id;
               req.session.email       = row[0].email;
               req.session.username    = row[0].username;
@@ -58,7 +58,7 @@ var Employee = {
 
               console.log('LOGGED IN');
 
-              Scheduleme.Helpers.Render.code(req.xhr, res, response);
+              Scheduleme.Render.code(req.xhr, res, response);
 
               db.query(Scheduleme.Queries.updateEmployeeLogin, [req.session.employee_id], function (err, numAffected) {
                 if (err) {
@@ -69,7 +69,7 @@ var Employee = {
               var trackingInput = {
                 type     : 'employee',
                 id       : row[0].employee_id,
-                ip       : Scheduleme.Helpers.Helpers.getClientIp(req),
+                ip       : Scheduleme.Helpers.getClientIp(req),
                 statusCode  : response.statusCode
               };
 
@@ -77,12 +77,12 @@ var Employee = {
             } else {
               Scheduleme.Logger.info("Failed login attempt for employer "+row[0].employee_id)
               response.statusCode = 400;
-              Scheduleme.Helpers.Render.code(req.xhr, res, response);  
+              Scheduleme.Render.code(req.xhr, res, response);  
             }
           } else {
             console.log('here5 - No rows returned');
             response.statusCode = 400;
-            Scheduleme.Helpers.Render.code(req.xhr, res, response);
+            Scheduleme.Render.code(req.xhr, res, response);
           }
         }
       });
@@ -92,7 +92,7 @@ var Employee = {
         statusCode : 400,
         message    : 'Email is missing or empty'
       }
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     }
   }
 };
@@ -101,11 +101,11 @@ exports.new = function (object) {
   return Object.create(Employee);
 };
 exports.create = function (obj, cb) {
-  salt      = Scheduleme.Helpers.Helpers.generateSalt();
+  salt      = Scheduleme.Helpers.generateSalt();
 
   email     = obj.email;
   username  = obj.username;
-  pass      = Scheduleme.Helpers.Helpers.calcHash(obj.password, salt);
+  pass      = Scheduleme.Helpers.calcHash(obj.password, salt);
   fname     = obj.first_name
   lname     = obj.last_name;
   employer  = obj.employer_id;

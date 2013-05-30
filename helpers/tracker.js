@@ -24,7 +24,7 @@ exports.trackRequest = function (req) {
   var method  = req.method.toUpperCase();
   var url     = req.url;
   var time    = new Date();
-  var ip      = Scheduleme.Helpers.Helpers.getClientIp(req);
+  var ip      = Scheduleme.Helpers.getClientIp(req);
 
   db.query(Scheduleme.Queries.trackRequest, [user_type, id, method, url, time, ip], function (err, result) {
     if (err) {

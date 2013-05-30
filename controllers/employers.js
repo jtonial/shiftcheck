@@ -15,13 +15,13 @@ exports.bootstrap = function(req, res){
           statusCode : 500,
           message : err.code
         }
-        Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+        Scheduleme.Render.code(req.xhr, res, obj);
       } else if ( typeof result == 'undefined' ) {
         var obj = {
           statusCode : 404,
           message : 'The employer does not seem to exist, or could not be found'
         }
-        Scheduleme.Helpers.Render.code(req.xhr, res, obj);
+        Scheduleme.Render.code(req.xhr, res, obj);
       } else {
 
         _.extend(response.data, result);
@@ -32,14 +32,14 @@ exports.bootstrap = function(req, res){
               statusCode : 500,
               message : err.code
             }
-            Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+            Scheduleme.Render.code(req.xhr, res, obj)
           } else {
 
             _.extend(response.data, result2);
 
             response.statusCode = 200;
 
-            Scheduleme.Helpers.Render.code(req.xhr, res, response);
+            Scheduleme.Render.code(req.xhr, res, response);
           }
         });
       }
@@ -50,7 +50,7 @@ exports.bootstrap = function(req, res){
     response = {
       statusCode: 403
     };
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
     console.log('Unauthorized access attempt: employer bootstrap');
   }
 };
@@ -79,7 +79,7 @@ exports.processSignup = function (req, res) {
       response.statusCode = 500;
       response.message = err;
       console.log('Error: '+err);
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     } else {
       //log the user in; I could probably jsut set session stuff here
         //but doing a real log in will keep it consisten if stuff is changed
@@ -89,11 +89,11 @@ exports.processSignup = function (req, res) {
 };
 exports.changePassword = function (req, res) {
 
-  if (Scheduleme.Helpers.helpers.validatePassword(req.body.newpassword)) {
+  if (Scheduleme.Helpers.validatePassword(req.body.newpassword)) {
     var input = {
       id       : req.session.employee_id,
-      oldpassword : Scheduleme.Helpers.Helpers.calcHash(req.body.oldpassword),
-      newpassword : Scheduleme.Helpers.Helpers.calcHash(req.body.newpassword),
+      oldpassword : Scheduleme.Helpers.calcHash(req.body.oldpassword),
+      newpassword : Scheduleme.Helpers.calcHash(req.body.newpassword),
     };
     Scheduleme.Models.Employee.changePassword(input, function (err) {
       response = {};
@@ -102,14 +102,14 @@ exports.changePassword = function (req, res) {
       } else {
         response.statusCode = 200;
       }
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     });
   } else {
     response = {
       statusCode   : 400,
       message   : 'Invalid password'
     }
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   }
 };
 exports.addEmployee = function (req, res) {
@@ -130,7 +130,7 @@ exports.addEmployee = function (req, res) {
     if (err) {
       response.statusCode = 500;
       response.message = err.code;
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     } else {
       // I should probably return the id of the new employee so it can be fetched later
         // or return the full employee and the client can deal with it
@@ -139,7 +139,7 @@ exports.addEmployee = function (req, res) {
       response.statusCode = 200;
       response.newEmployeeId = result.insertId;
 
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     }
   });
 };
@@ -155,11 +155,11 @@ exports.deleteEmployee = function (req, res) {
     if (err) {
       response.statusCode = 500;
       response.message = err.code;
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     } else {
       response.statusCode = 200;
 
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     }
   });
 };
@@ -172,7 +172,7 @@ exports.getEmployees = function (req, res) {
   }
 
   Scheduleme.Models.Employee.getByEmployer (obj, function (err, response) {
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   })
 };
 exports.addPosition = function (req, res) {
@@ -189,7 +189,7 @@ exports.addPosition = function (req, res) {
       _.extend(response, err);
       response.statusCode = 500;
     }
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   })
 };
 exports.getPositions = function (req, res) {
@@ -204,7 +204,7 @@ exports.getPositions = function (req, res) {
       _.extend(response, err);
       response.statusCode = 500;
     }
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   })
 };
 
@@ -233,7 +233,7 @@ exports.create = function(req, res){
       console.log('Error: employer: insert: '+err);
       response.statusCode = 400;
       response.message = err.code;
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     }
   });
 };
@@ -387,14 +387,14 @@ exports.changePassword = function(req,res){
             res.end();
           }
         } else { //An error
-          Scheduleme.Helpers.Render.code500(req, res);
+          Scheduleme.Render.code500(req, res);
         }
       });
     } else {
-      Scheduleme.Helpers.Render.code400(req, res);
+      Scheduleme.Render.code400(req, res);
     }
   } else {
-    Scheduleme.Helpers.Render.code403(req, res);
+    Scheduleme.Render.code403(req, res);
     console.log('Unauthorized access attempt: create employee');
   }
 };
@@ -404,7 +404,7 @@ exports.deleteEmployer = function(req, res) {
     console.log('Delete EmployerID: '+req.params.id);
     res.end("Employer - delete: Inactive at current time");
   } else {
-    Scheduleme.Helpers.Render.code403(req, res);
+    Scheduleme.Render.code403(req, res);
     console.log('Unauthorized access attempt: delete employee');
   }
 };

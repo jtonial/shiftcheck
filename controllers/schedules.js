@@ -34,10 +34,10 @@ exports.loadDate = function(req, res){
           response.message = 'No schedule found for that date';
         }
       }
-      Scheduleme.Helpers.Render.code(req.xhr, res, response);
+      Scheduleme.Render.code(req.xhr, res, response);
     });
   } else {
-    Scheduleme.Helpers.Render.code403(req,res);
+    Scheduleme.Render.code403(req,res);
     console.log('Unauthorized access attempt: loadDate schedule');
   }
 };
@@ -53,14 +53,14 @@ exports.load = function (req, res) {
 
     Scheduleme.Models.Schedule.getByEmployer(input, 
       function (obj) {
-        Scheduleme.Helpers.Render.code(req.xhr, res, obj)
+        Scheduleme.Render.code(req.xhr, res, obj)
       });
   } else {
     response = {
       statusCode : 403
     }
 
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
 
     console.log('Unauthorized access attempt: load schedules');
   }
@@ -140,11 +140,11 @@ exports.clientUpload = function(req, res) {
       sendCreds(result.insertId, file_name);
     } else { //There was an error
       if (err.error == 'CONFLICT') {
-        Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
+        Scheduleme.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
         return;
       } 
       console.log('There was an error creating a schedule: '+err);
-      Scheduleme.Helpers.Render.code500(req,res);
+      Scheduleme.Render.code500(req,res);
     }
   });
 };
@@ -164,20 +164,20 @@ exports.verifyUpload = function (req, res) {
       console.log('update complete of schedule: '+id);
       if (err) {
         console.log('Error updating awaiting upload status: '+err);
-        Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 500 } );
+        Scheduleme.Render.code ( req.xhr, res, { statusCode: 500 } );
       } else {
         if (result.affectedRows) {
-          //Scheduleme.Helpers.Render.uploadVerified(req, res);
+          //Scheduleme.Render.uploadVerified(req, res);
         } else {
           //Nothing changed... for now just do the same
         }
-        Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 200 } );
+        Scheduleme.Render.code ( req.xhr, res, { statusCode: 200 } );
       }
     });
   } else {
     //Do nothing, no parameter supplied
     console.log('No id provided');
-    Scheduleme.Helpers.Render.code ( req.xhr, res, { statusCode: 400 } );
+    Scheduleme.Render.code ( req.xhr, res, { statusCode: 400 } );
   }
 };
 //This seems to work for uploading a pdf and adding a schedule to a database
@@ -230,14 +230,14 @@ exports.upload = function(req, res){ //Used to process a file containing a sched
       schedule.save(function (err, result) {
         if (!err) {
           console.log('New Schedule created: id: '+result.insertId);
-          Scheduleme.Helpers.Render.code( req.xhr, res, {statusCode: 200, schedule_id: result.insertId } );
+          Scheduleme.Render.code( req.xhr, res, {statusCode: 200, schedule_id: result.insertId } );
         } else { //There was an error
           if (err.error == 'CONFLICT') {
-            Scheduleme.Helpers.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
+            Scheduleme.Render.code(req.xhr, res, { statusCode : 400, message: err.message });
             return;
           } 
           console.log('There was an error creating a schedule: '+err);
-          Scheduleme.Helpers.Render.code500(req,res);
+          Scheduleme.Render.code500(req,res);
         }
       });
 
@@ -249,7 +249,7 @@ exports.upload = function(req, res){ //Used to process a file containing a sched
     response = {
       statusCode: 403
     }
-    Scheduleme.Helpers.Render.code( req.xhr, res, response);
+    Scheduleme.Render.code( req.xhr, res, response);
   }
 };
 
@@ -264,7 +264,7 @@ exports.updateShift = function (req, res) {
     console.log('well my dummy method says i have permission... yay');
   } else {
   }
-  Scheduleme.Helpers.Render.code(req.xhr, res, {statusCode: 450, message: 'Not implemented'});
+  Scheduleme.Render.code(req.xhr, res, {statusCode: 450, message: 'Not implemented'});
 
   /*var obj = {
     shift_id    = req.params.id,
@@ -284,7 +284,7 @@ exports.publish = function (req, res) {
   }
 
   Scheduleme.Models.Schedule.publish(obj, function (err, response) {
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   })
 };
 
@@ -295,6 +295,6 @@ exports.unpublish = function (req, res) {
   }
 
   Scheduleme.Models.Schedule.unpublish(obj, function (err, response) {
-    Scheduleme.Helpers.Render.code(req.xhr, res, response);
+    Scheduleme.Render.code(req.xhr, res, response);
   })
 };
