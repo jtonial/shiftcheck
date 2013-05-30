@@ -724,7 +724,7 @@
     },
     resizeGraph: function (w) {
 
-      _this = this;
+      var _this = this;
 
       var xScale = d3.scale.linear()
         .domain([ _this.config.min , _this.config.max ])
@@ -791,7 +791,7 @@
           if (hours == 0) {
             hours = 12;
           }
-          minutes = ("0" + (d%60)).slice(-2);
+          var minutes = ("0" + (d%60)).slice(-2);
 
           if (minutes % 60 == 0) {
             return hours;//+':'+minutes;
