@@ -16,10 +16,10 @@
       return response.data.positions;
     },
     comparator: function (position) {
-      return position.get('order_val');
+      return position.get('order');
     },
     newOrderValue: function () {
-      return _.max(this.models, function (position) { return position.get('order_val') }).get('order_val')+1;
+      return _.max(this.models, function (position) { return position.get('order') }).get('order')+1;
     }
 
   });

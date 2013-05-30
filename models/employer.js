@@ -40,14 +40,13 @@ var Employer = {
 			response.statusCode = 400; //This is set for the case when no records are returned
 			db.query(loginQuery, [email], function (err, row) {
 				if (err) {
-					//Handle error, and 'end' event will be emitted after this.
 					response.statusCode = 500;
 					response.message = err.code;
 					console.log(err.code);
 					Scheduleme.Render.code(req.xhr, res, response);
 				} else {
 					if (row[0]) {
-
+						console.log(Scheduleme.Helpers.calcHash(password, row[0].salt));
 						if ( Scheduleme.Helpers.calcHash(password, row[0].salt) == row[0].password ) {
 							req.session.employer_id = row[0].employer_id;
 							req.session.email 		= row[0].email;
@@ -132,72 +131,7 @@ exports.fetch = function (obj, cb) {
 		cb(err, response);
 	});
 }
-exports.getPositions= function (obj, cb) {
-	//Note: this is queries['selectEmployer']; I need to globalize this
 
-	if (typeof obj.employer == 'undefined') {
-		Scheduleme.Logger.info('No employer passed; Model.Employer.getPosition');
-		//Exit here or something
-		cb( { error: 'No employer passed to Employee::getByEmployer'}, {} );
-    return;
-	}
-
-	var employer 	= obj.employer;
-	var response 	= {};
-
-	db.query(Scheduleme.Queries.selectPositions, [employer], function (err, rows) {
-		if (err) {
-			response.statusCode = 500;
-			response.message = err.code;
-			Scheduleme.Logger.error(err.code);
-			cb(err, response);
-		} else {
-			response.statusCode = 200;
-			response.data = {};
-			response.data.positions = [];
-
-			rows.forEach (function (row) {
-				response.data.positions.push(row);
-			})
-
-			cb(err, response);
-		}
-	});
-}
-exports.addPosition= function (obj, cb) {
-	//Note: this is queries['selectEmployer']; I need to globalize this
-
-	if (typeof obj.employer == 'undefined') {
-		Scheduleme.Logger.info('No employer passed; Model.Employer.addPosition');
-		//Exit here or something
-	}
-	if (typeof obj.position == 'undefined') {
-		Scheduleme.Logger.info('No position passed; Model.Employer.addPosition');
-		//Exit here or something
-	}
-
-	var employer 		= obj.employer;
-	var position 		= obj.position;
-	var full_name 	= obj.full_name;
-	var description = obj.description;
-	var order 			= obj.order;
-
-	var response 	= typeof obj.response != 'undefined' ? obj.response : {};
-
-	db.query(Scheduleme.Queries.insertPosition, [employer, position, full_name, description, order], function (err, result) {
-		if (err) {
-			response.statusCode = 500;
-			response.message = err;
-			Scheduleme.Logger.error(err);
-			cb(err, response);
-		} else {
-			response.statusCode = 201;
-			response.id = result.insertId;
-
-			cb(err, response);
-		}
-	});
-}
 /*
 	input = {
 		id 			=> Employer id

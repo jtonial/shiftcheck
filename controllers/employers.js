@@ -143,6 +143,8 @@ exports.addEmployee = function (req, res) {
     }
   });
 };
+
+// This will require a check that the employee doesn't have any outstanding shifts before deactivating
 exports.deleteEmployee = function (req, res) {
 
   var obj = {
@@ -150,7 +152,7 @@ exports.deleteEmployee = function (req, res) {
     employer_id : req.session.employer_id
   };
 
-  Scheduleme.Models.Employee.delete(obj, function (err, result) {
+  Scheduleme.Models.Employee.deactivate(obj, function (err, result) {
     var response = {};
     if (err) {
       response.statusCode = 500;
@@ -175,38 +177,8 @@ exports.getEmployees = function (req, res) {
     Scheduleme.Render.code(req.xhr, res, response);
   })
 };
-exports.addPosition = function (req, res) {
-  var obj = {
-    position   : req.body.position,
-    full_name  : req.body.full_name,
-    description : req.body.description,
-    order      : req.body.order_val,
-    employer   : req.session.employer_id
-  }
 
-  Scheduleme.Models.Employer.addPosition(obj, function (err, response) {
-    if (err) {
-      _.extend(response, err);
-      response.statusCode = 500;
-    }
-    Scheduleme.Render.code(req.xhr, res, response);
-  })
-};
-exports.getPositions = function (req, res) {
-
-  //Passed in case I add search functionality in the API later (instead of just client side)
-  var obj = {
-    employer : req.session.employer_id || req.session.employer
-  }
-
-  Scheduleme.Models.Employer.getPositions (obj, function (err, response) {
-    if (err) {
-      _.extend(response, err);
-      response.statusCode = 500;
-    }
-    Scheduleme.Render.code(req.xhr, res, response);
-  })
-};
+// DELETED addPosition and getPositions, as they have been moved to positions lib
 
 exports.create = function(req, res){
   //TODO: Validation; same as client side

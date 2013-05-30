@@ -64,7 +64,7 @@
         position    : form.find("input[name='position']").val(),
         full_name   : form.find("input[name='full_name']").val(),
         description : form.find("textarea[name='description']").val(),
-        order_val   : Scheduleme.Positions.newOrderValue()
+        order       : Scheduleme.Positions.newOrderValue()
       }, { 
         wait: true,
         beforeSend: function (request) {

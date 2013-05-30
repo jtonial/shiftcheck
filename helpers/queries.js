@@ -29,17 +29,13 @@ module.exports = queries = {
   'insertEmployer'          : 'INSERT INTO employers (name, email, username, password, salt, contact_email, contact_phone, contact_address, reg_time) VALUES (?,?,?,?,?,?,?,?,NOW())',
   'insertEmployee'          : 'INSERT INTO employees (email, username, password, salt, first_name, last_name, employer_id, reg_time) VALUES (?,?,?,?,?,?,?,NOW())',
 
-  //Perhaps this should be a soft delete
-  'deleteEmployee'          : 'UPDATE employees SET active=0 WHERE employee_id=? AND employer_id=?',
+  'deactivateEmployee'      : 'UPDATE employees SET active=0 WHERE employee_id=? AND employer_id=?',
 
   'insertShift'             : 'INSERT INTO shifts (schedule_id, start, end, position_id, employee_id, creation_time) VALUES (?,?,?,?,?,NOW())',
   'updateShift'             : 'UPDATE shifts SET employee_id=?, start_time=?, end_time=? WHERE shift_id=?',
   'getShiftsBySchedule'     : 'SELECT s.shift_id as id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
 
-  //The '0' is only temporary and will be replaced with a placeholder when I update everything else
-  'insertPosition'          : 'INSERT INTO positions (employer_id, position, full_name, description, order_val) VALUES (?,?,?,?,?)',
-  'selectPositions'         : 'SELECT position_id as id, position, full_name, description, order_val FROM positions WHERE employer_id=?',
-
   'publishSchedule'         : 'UPDATE schedules SET published=1 WHERE schedule_id=? AND employer_id=?',
   'unpublishSchedule'       : 'UPDATE schedules SET published=0 WHERE schedule_id=? AND employer_id=?'
+
 }

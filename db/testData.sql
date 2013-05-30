@@ -1,4 +1,4 @@
-use scheduleme;
+use shiftcheck;
 
 INSERT INTO employers (`employer_id`, `name`, `email`, `username`, `password`, `salt`, `contact_email`, `contact_phone`, `contact_address`, `last_login`, `reg_time`)
   VALUES   (1, 'McDonalds', 'mcds@nritchi.ca', 'mcds', 'ce3e810d5a1c96a77e55d5a2d79fc73dc5a5e6db', 'schedule10122012', 'mcds@nrmitchi.ca', '123-456-7890', '6410 Millcreek Drive', NOW(), NOW()),

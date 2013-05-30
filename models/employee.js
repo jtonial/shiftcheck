@@ -112,8 +112,8 @@ exports.create = function (obj, cb) {
 
   db.query(Scheduleme.Queries.insertEmployee, [email, username, pass, salt, fname, lname, employer], cb)
 };
-exports.delete = function (obj, cb) {
-  db.query(Scheduleme.Queries.deleteEmployee, [obj.employee_id, obj.employer_id], cb)
+exports.deactivate = function (obj, cb) {
+  db.query(Scheduleme.Queries.deactivateEmployee, [obj.employee_id, obj.employer_id], cb)
 };
 //Export static methods
 exports.fetch = function (obj, cb, cb2) {

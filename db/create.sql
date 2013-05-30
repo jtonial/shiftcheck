@@ -57,10 +57,12 @@ CREATE TABLE positions (
   position_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   employer_id INT UNSIGNED NOT NULL,
   position varchar(5) NOT NULL,
-  order int NOT NULL,
+  `order` int NOT NULL,
 
   full_name varchar(20),
   description varchar(150),
+
+  active BOOLEAN NOT NULL DEFAULT 1,
 
   CONSTRAINT UNIQUE (employer_id, position),
   CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
