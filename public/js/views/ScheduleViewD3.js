@@ -819,7 +819,9 @@
 
       var contentTarget = document.getElementById('d3Target');
       $(contentTarget).html('');
-      _this.createD3(contentTarget, this.model.Shifts.toJSON());
+
+      this.createD3(contentTarget, this.model.Shifts.toJSON());
+
     },
 
     postRender: function () {
@@ -926,8 +928,8 @@
         alert(errors.join('\n'));
       } else {
         var schedule_id = _this.model.id;
-        var employee_id = _.find(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name == employee; }).employee_id;
-        var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).position_id;
+        var employee_id = _.find(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name == employee; }).id;
+        var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).id;
 
         var hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
         if (start_time.indexOf('P') > 0) {
