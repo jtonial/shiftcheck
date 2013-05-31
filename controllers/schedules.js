@@ -261,7 +261,7 @@ exports.updateShift = function (req, res) {
     session: req.session,
     action: 'update'
   }
-  if ( Main.Permissions ( permissionObject ) ) {
+  if ( Main.Permissions.check ( permissionObject ) ) {
     console.log('well my dummy method says i have permission... yay');
   } else {
   }
@@ -271,7 +271,7 @@ exports.updateShift = function (req, res) {
     shift_id    = req.params.id,
     employee_id = req.body.employee_id,
     start_time  = req.body.start_time,
-    end_time  = req.body.end_time
+    end_time    = req.body.end_time
   }
   Main.Models.Schedule.updateShift (obj, function () {
 
