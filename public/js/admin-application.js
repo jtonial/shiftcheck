@@ -141,22 +141,6 @@
       $('#sidebar').removeClass('open closed').addClass(newState);
     });
 
-    $.ajax({
-      url: '/positions',
-      type: 'GET',
-      success: function (res) {
-        Scheduleme.data.positions = res.data.positions;
-      }
-    })
-    //This may already be fetched by the bootstrap but im not sure and it doesnt really matter rightnow
-    $.ajax({
-      url: '/employees',
-      type: 'GET',
-      success: function (res) {
-        Scheduleme.data.employees = res.data.employees;
-      }
-    })
-
     Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
     Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
 

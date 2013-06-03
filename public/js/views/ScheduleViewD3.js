@@ -34,98 +34,6 @@
     return e;
   }
 
-  window.generateShifts = function (num, positions, names) {
-    var shifts = []
-
-    var positions = typeof positions != 'undefined' ? positions : ['MGR','WN','DT','BK','MT','MB'];
-    var names = typeof names != 'undefined' ? names : ['Nick','Jack','John','Jack','Kathy','Josephine','Jordy','Tina'];
-
-    for (var i = 0; i < num; i++) {
-      var position = Math.floor(Math.random()*6)+1;//positions[Math.floor(Math.random()*(positions.length))];
-      var name = Math.floor(Math.random()*3)+1;//names[Math.floor(Math.random()*(names.length))];
-
-      var minutes = Math.floor(Math.random()*2) * 30;       //will return 0 or 30
-      var hours = Math.floor(Math.random()*16) + 4;         // Return from 4 - 20
-      var length = (Math.floor(Math.random()*4) + 6) / 2;  //Can return lengths from 3 - 8 hours in half hour intervals
-
-      var endHours = Math.min(hours + Math.floor(length), 24);
-      var endMinutes = (length*60) % 60;
-
-      var start = new Date();
-      start.setHours(hours);
-      start.setMinutes(minutes);
-
-      var end = new Date();
-      end.setHours(endHours);
-      end.setMinutes(endMinutes);
-      if (endHours == 24) {
-        end.setHours(23)
-        if (endMinutes == 0) {
-          end.setMinutes(59);
-        }
-      }
-
-      var o = {
-        id       : i,
-        start    : start.getHours()*60 + start.getMinutes(),
-        end      : end.getHours()*60 + end.getMinutes(),
-        position : position,
-        employee : name
-      }
-
-      shifts.push(o);
-    }
-    return shifts;
-  };
-  window.onlyPositions = function (obj) {
-    var tmp = [];
-    obj.forEach( function (pos) {
-      tmp.push(pos.position);
-    })
-    return tmp;
-  };
-  window.onlyNames = function (obj) {
-    var tmp = [];
-    obj.forEach( function (emp) {
-      tmp.push(emp.first_name+' '+emp.last_name);
-    })
-    return tmp;
-  };
-  window.posToReference = function (obj, pos) {
-    var id = undefined;
-    obj.forEach( function (obj_pos) {
-      if (pos.trim() == obj_pos.position.trim()) {
-        id = obj_pos.position_id;
-      }
-    });
-    return id;
-
-  };
-  window.nameToReference = function (obj,name) {
-    var id = undefined;
-    obj.forEach( function (emp) {
-      if (name.trim() == (emp.first_name+' '+emp.last_name).trim()) {
-        id = emp.employee_id;
-      }
-    });
-    return id;
-  };
-  window.shiftsByReference = function (num) {
-    var shifts = window.generateShifts(num, onlyPositions(Scheduleme.data.positions), onlyNames(Scheduleme.data.employees));
-
-    shifts.forEach( function (shift) {
-      shift.position = posToReference(Scheduleme.data.positions, shift.position);
-      shift.employee = nameToReference(Scheduleme.data.employees, shift.employee);
-      var s = new Date(shift.start);
-      var e = new Date(shift.end);
-      shift.start = s.getHours()*60+s.getMinutes();
-      shift.end = e.getHours()*60+e.getMinutes();
-    })
-
-    return shifts;
-
-  };
-
   Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBaseView.extend({
 
     template: Handlebars.compile($('#schedule-template-d3').html()),
@@ -139,7 +47,9 @@
       barPadding       : 2,
       barRadius        : 5,
       topPadding       : 20,
-      leftPadding      : 100
+      leftPadding      : 100,
+
+      name_length      : 11
     },
     indexes: {
       shiftMeta        : {},
@@ -155,6 +65,14 @@
       "click #save-editted-shift" : "saveModifiedShift",
 
       "click #add_shift_trigger" : "addShift"
+    },
+
+    truncate: function (s) {
+      if ( s.length <= this.config.name_length ) {
+        return s;
+      } else {
+        return s.substring(0, this.config.name_length - 3)+'...';
+      }
     },
 
     createD3: function (target, dataset) {
@@ -189,19 +107,10 @@
         return 0;
       }
 
-      //Sort the positions. Right now it effectively does nothing, but I will implement ordering of positions in schedules and then this will order by that.
-      Scheduleme.data.positions.sort(function (a, b) {
-        if (a.position_id < b.position_id) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-
       //Seperate by shift, then sort. This is not efficient, and should probably be redone.
       var tmp = {};
-      Scheduleme.data.positions.forEach( function (pos) {
-        var position = pos.position;
+      Scheduleme.Positions.forEach( function (pos) {
+        var position = pos.get('position');
         tmp[position] = [];
         dataset.forEach( function (d) {
           if (d.position == position) {
@@ -449,7 +358,7 @@
         .append("text").attr("class", "employeeName")
         .text(function(d) {
           _this.indexes.shiftText[d.id].employeeName = this;
-          return d.employee_name;
+          return _this.truncate(d.employee_name);
         })
         .attr("text-anchor", "start")
         .attr("y", function(d, i) {
@@ -562,14 +471,14 @@
         //This should be redone to use jquery (which will html escape the values)
 
         var output = [];
-        Scheduleme.data.employees.forEach( function(employee) {
-          output.push('<option value="'+employee.employee_id+'">'+employee.first_name+' '+employee.last_name+'</option>');
+        Scheduleme.Employees.forEach( function(employee) {
+          output.push('<option value="'+employee.get('id')+'">'+employee.get('first_name')+' '+employee.get('last_name')+'</option>');
         });
         this.$('#employee-edit').html(output.join(''));
 
         output = [];
-        Scheduleme.data.positions.forEach( function(position) {
-          output.push('<option value="'+position.position_id+'">'+position.position+'</option>');
+        Scheduleme.Positions.forEach( function(position) {
+          output.push('<option value="'+position.get('position_id')+'">'+position.get('position')+'</option>');
         });
         this.$('#position-edit').html(output.join(''));
 
@@ -839,11 +748,11 @@
 
       if (Scheduleme.meta.ADMIN) {
         $('#new_shift_employee').typeahead({
-          source: _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; })
+          source: Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); })
         });
 
         $('#new_shift_position').typeahead({
-          source: _.pluck(Scheduleme.data.positions, 'position')
+          source: Scheduleme.Positions.pluck('position')
         });
 
         $('#new_shift_start_time').timepicker({
@@ -886,10 +795,10 @@
 
       var errors = [];
 
-      if ( _.map(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name; }).indexOf(employee) < 0 ) {
+      if ( Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); }).indexOf(employee) < 0 ) {
         errors.push('Employee invalid');
       }
-      if ( _.pluck(Scheduleme.data.positions, 'position').indexOf(position) < 0 ) {
+      if ( Scheduleme.Positions.pluck('position').indexOf(position) < 0 ) {
         errors.push('Position invalid');
       }
       /*if ( !start_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
@@ -928,8 +837,8 @@
         alert(errors.join('\n'));
       } else {
         var schedule_id = _this.model.id;
-        var employee_id = _.find(Scheduleme.data.employees, function (e) { return e.first_name+' '+e.last_name == employee; }).id;
-        var position_id = _.find(Scheduleme.data.positions, function (p) { return p.position == position; }).id;
+        var employee_id = Scheduleme.Employees.find(function (e) { return e.get('first_name')+' '+e.get('last_name') == employee; }).id;
+        var position_id = Scheduleme.Positions.find(function (p) { return p.get('position') == position; }).id;
 
         var hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
         if (start_time.indexOf('P') > 0) {

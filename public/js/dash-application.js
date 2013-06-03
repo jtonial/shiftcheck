@@ -139,14 +139,6 @@
       $('#sidebar').removeClass('open closed').addClass(newState);
     });
 
-    $.ajax({
-      url: '/positions',
-      type: 'GET',
-      success: function (res) {
-        Scheduleme.data.positions = res.data.positions;
-      }
-    })
-
     /*$(window).touchwipe({
       min_move_x: 50,
       min_move_y: 50,

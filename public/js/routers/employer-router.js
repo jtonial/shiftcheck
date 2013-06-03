@@ -54,6 +54,7 @@
 
         this.switchMainView(title, $newLink, newView);
       } else {
+        // Make AJAX call to try to get the schedule with that id incase it is old and wasn't fetched on bootstrap
         console.log('ID passed does not seem to match a schedule');
       }
     },

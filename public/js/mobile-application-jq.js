@@ -132,13 +132,7 @@ Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.
         }
       }
     });
-    $.ajax({
-      url: Scheduleme.meta.url+'/positions',
-      type: 'GET',
-      success: function (res) {
-        Scheduleme.data.positions = res.data.positions;
-      }
-    })
+
   };
   Scheduleme.helpers.handleLogout = function () {
     //Destory session;

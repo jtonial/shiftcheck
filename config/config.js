@@ -9,7 +9,9 @@ config = {
   "debug": true,
 
   "facebook_url" : '',
-  "twitter_url" : ''
+  "twitter_url" : '',
+
+  "session_secret" : "asdfadsfasdfw4t3t53"
 }
 
 //Note that process.env.shiftcheck_mode will be either 'development' or 'production' and will match the db suffix
@@ -66,6 +68,6 @@ if (process.env.RDS_USER) {
   config.mysql = mysql_config.local;
 }
 
-config.mysql = mysql_config.local;
+//config.mysql = mysql_config.local;
 
 module.exports = config;

@@ -50,7 +50,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
   app.use(express.session({
-    secret   :'asdfadsfasdfw4t3t53', 
+    secret   : Main.Config.session_secret, 
     maxAge   : new Date( Date.now() + 1800000), // 30 minutes
     store    : new RedisStore({client: redis})
   }));

@@ -345,7 +345,7 @@
         console.log('Date: '+dstring);
 
         $.ajax({
-          url: '/schedules/'+dstring,
+          url: '/schedules/date/'+dstring,
           type: 'get',
           success: function (response) {
             console.log('adding schedule date: '+dstring);
