@@ -3,7 +3,7 @@ console.log('Loading global.js');
 exports.Helpers     = require('../helpers/helpers')
 exports.Render      = require('../helpers/render');
 
-exports.Config      = require('../config/config');
+exports.Config      = require('../config');
 
 exports.db          = require('../db/dbconnection');
 
