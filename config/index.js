@@ -1,20 +1,14 @@
-config = {
+var _ = require('underscore');
 
-  "name" : "Shift-check",
-  "name_lower": "shift-check",
+var config = {};
 
-  "port" : 3100,
-  "ssl_port" : 3101,
+// Perhaps this shouldn't be extended, and should instead be like 'config.server = require('./server'); this will require all the usages throughout the code to change
+_.extend(config, require('./server'));
+_.extend(config, require('./views'));
 
-  "debug": true,
+config.views = require('./views');
 
-  "facebook_url" : '',
-  "twitter_url" : '',
-
-  "session_secret" : "asdfadsfasdfw4t3t53"
-}
-
-config.mongo = require('./mongo')
+config.mongo = require('./mongo');
 config.mysql = require('./mysql');
 
 module.exports = config;

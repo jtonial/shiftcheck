@@ -35,6 +35,10 @@ app.configure(function(){
   app.set('ssl_port', process.env.PORT || Main.Config.ssl_port );
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+
+  //For some reason this doesn't seem to work here.... it seems like a weird race condition or something
+  //app.locals(Main.Config.views);
+
   app.locals({
     site_name: Main.Config.name,
     site_name_lower: Main.Config.name_lower,
@@ -44,6 +48,7 @@ app.configure(function(){
     facebook_url: Main.Config.facebook_url,
     twitter_url: Main.Config.twitter_url
   });
+
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -164,7 +169,7 @@ app.post('/signup', function (req, res) {
 
 
 app.get('/testPaste', function (req, res) {
-  res.render('testPaste', { title: Main.Config.name });
+  res.render('testPaste', { } );
 })
 
 
