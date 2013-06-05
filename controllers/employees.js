@@ -1,4 +1,4 @@
-var Scheduleme = require('../helpers/global');
+var Main = require('../helpers/global');
 
 var _ = require('underscore');
 
@@ -13,38 +13,38 @@ exports.bootstrap = function(req, res){
       employer  : req.session.employer
     }
 
-    Scheduleme.Models.Employee.fetch( input , function (err, result) {
+    Main.Models.Employee.fetch( input , function (err, result) {
 
       if (err) {
         var obj = {
           statusCode : 500,
           message : err.code
         }
-        Scheduleme.Render.code(req.xhr, res, obj);
+        Main.Render.code(req.xhr, res, obj);
       } else if ( typeof result == 'undefined' ) {
         var obj = {
           statusCode : 404,
           message : 'The employee does not seem to exist, or could not be found'
         }
-        Scheduleme.Render.code(req.xhr, res, obj);
+        Main.Render.code(req.xhr, res, obj);
       } else {
 
         _.extend(response.data, result);
 
-        Scheduleme.Models.Schedule.getByEmployer( { id: req.session.employer } , function (err, result2) {
+        Main.Models.Schedule.getByEmployer( { id: req.session.employer } , function (err, result2) {
           if (err) {
             var obj = {
               statusCode : 500,
               message : err.code
             }
-            Scheduleme.Render.code(req.xhr, res, obj)
+            Main.Render.code(req.xhr, res, obj)
           } else {
 
             _.extend(response.data, result2);
 
             response.statusCode = 200;
 
-            Scheduleme.Render.code(req.xhr, res, response);
+            Main.Render.code(req.xhr, res, response);
           }
         });
       }
@@ -54,37 +54,36 @@ exports.bootstrap = function(req, res){
     var response = {
       statusCode: 403
     };
-    Scheduleme.Render.code(req.xhr, res, response);
+    Main.Render.code(req.xhr, res, response);
     console.log('Unauthorized access attempt: employee bootstrap');
   }
 };
 exports.processLogin = function (req, res) {
-  console.log('WHAT THE FUCK');
-  Scheduleme.Models.Employee.login(req, res);
+  Main.Models.Employee.login(req, res);
 };
 exports.changePassword = function (req, res) {
 
-  if (Scheduleme.Helpers.helpers.validatePassword(req.body.newpassword)) {
+  if (Main.Helpers.helpers.validatePassword(req.body.newpassword)) {
     var input = {
       id       : req.session.employee_id,
-      oldpassword : Scheduleme.Helpers.helpers.calcHash(req.body.oldpassword),
-      newpassword : Scheduleme.Helpers.helpers.calcHash(req.body.newpassword),
+      oldpassword : Main.Helpers.helpers.calcHash(req.body.oldpassword),
+      newpassword : Main.Helpers.helpers.calcHash(req.body.newpassword),
     };
-    Scheduleme.Models.Employee.changePassword(input, function (err) {
+    Main.Models.Employee.changePassword(input, function (err) {
       response = {};
       if (err) {
         response.statusCode = 400;
       } else {
         response.statusCode = 200;
       }
-      Scheduleme.Render.code(req.xhr, res, response);
+      Main.Render.code(req.xhr, res, response);
     });
   } else {
     response = {
       statusCode   : 400,
       message   : 'Invalid password'
     }
-    Scheduleme.Render.code(req.xhr, res, response);
+    Main.Render.code(req.xhr, res, response);
   }
 };
 
@@ -104,10 +103,10 @@ exports.changePassword = function (req, res) {
         console.log('Error fetching Project: '+err);
         response.statusCode = 500;
       }
-      Scheduleme.Render.code(req.xhr, res, response);
+      Main.Render.code(req.xhr, res, response);
     });
   } else {
-    Scheduleme.Render.code401(req, res);
+    Main.Render.code401(req, res);
     console.log('Unauthorized access attempt: loadOne employee');
   }
 };
@@ -172,7 +171,7 @@ exports.create = function(req, res){
       res.end('Employee - create');
     });
   } else {
-    Scheduleme.Render.code403(req, res);
+    Main.Render.code403(req, res);
     console.log('Unauthorized access attempt: create employee');
   }
 };
@@ -212,14 +211,14 @@ exports.changePassword = function(req,res){
           res.statusCode = 200;
           res.end("Password Updated");
         } else { //An error
-          Scheduleme.Render.code500(req, res);
+          Main.Render.code500(req, res);
         }
       });
     } else {
-      Scheduleme.Render.code400(req, res);
+      Main.Render.code400(req, res);
     }
   } else {
-    Scheduleme.Render.code403(req, res);
+    Main.Render.code403(req, res);
     console.log('Unauthorized access attempt: create employee');
   }
 };
@@ -229,7 +228,7 @@ exports.deleteEmployee = function(req, res) {
     console.log('Delete  ID: '+req.params.id);
     res.send("projects - delete");
   } else {
-    Scheduleme.Render.code403(req, res);
+    Main.Render.code403(req, res);
     console.log('Unauthorized access attempt: create employee');
   }
 };

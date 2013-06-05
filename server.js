@@ -36,18 +36,8 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
 
-  //For some reason this doesn't seem to work here.... it seems like a weird race condition or something
-  //app.locals(Main.Config.views);
+  app.locals(Main.Config.views);
 
-  app.locals({
-    site_name: Main.Config.name,
-    site_name_lower: Main.Config.name_lower,
-
-    title: Main.Config.name,
-
-    facebook_url: Main.Config.facebook_url,
-    twitter_url: Main.Config.twitter_url
-  });
 
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -80,13 +70,16 @@ app.configure(function(){
   var me         = require('./lib/me');
   var positions  = require('./lib/positions');
   var shifts     = require('./lib/shifts');
+  var auth       = require('./lib/auth');
 
-  app.use('/about', about);
+  app.use('/about',     about);
   app.use('/schedules', schedules);
-  app.use('/', me);
+  app.use('/',          me);
   app.use('/positions', positions);
   app.use('/employees', employees);
-  app.use('/shifts', shifts);
+  app.use('/shifts',    shifts);
+
+  app.use('/',          auth)
 
   app.use(function (req, res, next) {
 
@@ -113,58 +106,6 @@ app.get('/request-list', Main.Render.index)
 
 app.get('/mobile', function (req, res) {
   res.render('jquerymobile', { });
-});
-
-
-app.get('/login', function (req, res) {
-  if (!employee && !admin) {
-    Main.Render.renderLoginPage(req, res);
-  } else {
-    res.redirect('/');
-  }
-});
-app.get('/manager-login', function (req, res) {
-  if (!employee && !admin) {
-    Main.Render.renderAdminloginPage(req, res);
-  } else {
-    res.redirect('/');
-  }
-});
-
-app.post('/login', function (req, res) {
-  if (!employee && !admin) {
-    Main.Controllers.Employees.processLogin(req, res);
-  } else {
-    if (req.xhr) {
-      Main.Render.code(req.xhr, res, { statusCode : 400 });
-    } else {
-      res.redirect('/');
-    }
-  }
-});
-app.post('/manager-login', function (req, res) {
-  if (!employee && !admin) {
-    Main.Controllers.Employers.processLogin(req, res);
-  } else {
-    if (req.xhr) {
-      Main.Render.code(req.xhr, res, { statusCode : 400 });
-    } else {
-      res.redirect('/');
-    }
-  }
-});
-
-app.get('/logout', Main.Helpers.logout);
-
-app.get('/signup', function (req, res) {
-  if (!employee && !admin) {
-    Main.Render.renderSignup(req, res);
-  } else {
-    res.redirect('/');
-  }
-});
-app.post('/signup', function (req, res) {
-  Main.Controllers.Employers.processSignup(req, res);
 });
 
 

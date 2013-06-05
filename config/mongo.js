@@ -4,9 +4,9 @@ var mongo;
 
 mongo_config = {
   local   : {
-    "host"     : "localhost",
-    "port"     : 27017,
-    "database" : "schedule"
+    host       : "localhost",
+    port       : 27017,
+    database   : "schedule"
   }
 }
 

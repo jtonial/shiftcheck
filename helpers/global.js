@@ -9,13 +9,12 @@ exports.db          = require('../db/dbconnection');
 
 exports.Controllers = {
   Employees : require('../controllers/employees'),
-  Employers : require('../controllers/employers'),
-  Schedules : require('../controllers/schedules')
+  Employers : require('../controllers/employers')
 };
 exports.Models      = {
   Employee : require('../models/employee'),
   Employer : require('../models/employer'),
-  Schedule : require('../models/schedule')
+  Schedule : require('../lib/schedules/model')
 };
 exports.Tracking    = require('../helpers/tracker');
 exports.Cache       = require('../helpers/cache');

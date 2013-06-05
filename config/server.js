@@ -2,11 +2,11 @@ console.log('Loading server config...');
 
 module.exports = config = {
 
-  "port" : 3100,
-  "ssl_port" : 3101,
+  port         : 3100,
+  ssl_port     : 3101,
 
-  "debug": true,
+  debug        : true,
   
-  "session_secret" : "asdfadsfasdfw4t3t53"
+  session_secret : "asdfadsfasdfw4t3t53"
   
 }
