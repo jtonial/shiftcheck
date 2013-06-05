@@ -109,11 +109,6 @@ app.get('/mobile', function (req, res) {
 });
 
 
-app.get('/testPaste', function (req, res) {
-  res.render('testPaste', { } );
-})
-
-
 //app.configure('development', function() {
   app.use(express.errorHandler());
 //});

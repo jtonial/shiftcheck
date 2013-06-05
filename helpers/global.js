@@ -8,12 +8,12 @@ exports.Config      = require('../config');
 exports.db          = require('../db/dbconnection');
 
 exports.Controllers = {
-  Employees : require('../controllers/employees'),
-  Employers : require('../controllers/employers')
+  Employees : require('../lib/employees/controller'),
+  Employers : require('../lib/employers/controller')
 };
 exports.Models      = {
-  Employee : require('../models/employee'),
-  Employer : require('../models/employer'),
+  Employee : require('../lib/employees/model'),
+  Employer : require('../lib/employers/model'),
   Schedule : require('../lib/schedules/model')
 };
 exports.Tracking    = require('../helpers/tracker');
