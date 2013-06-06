@@ -74,6 +74,94 @@
         return s.substring(0, this.config.name_length - 3)+'...';
       }
     },
+    generateShiftMeta: function (dataset) {
+
+      var _this = this;
+
+      _this.indexes.shiftMeta = {};
+
+      dataset.forEach(function (shift) {
+        _this.indexes.shiftMeta[shift.id] = {}
+          
+          var sMin = shift.start;
+
+        _this.indexes.shiftMeta[shift.id].sMin = sMin;
+
+          var eMin = shift.end;
+
+        _this.indexes.shiftMeta[shift.id].eMin = eMin;
+
+      });
+    },
+    overlapping: function (a1, a2, b1, b2) {
+
+      if (b1 < a1 && b2 <= a1)
+        return 0;
+      if (b1 >= a2 && b2 > a2)
+        return 0;
+
+      return 1;
+    },
+    amountOverlapping: function (s1, e1, s2, e2) {
+      if (this.overlapping(s1, e1, s2, e2)) {
+        if (s2 < e1) {// a is before a
+          return (e1 - Math.max(s1, s2)) / (e1 - s1);
+        } else { // b is before a
+          return (e2 - Math.max(s1, s2)) / (e1 - s1);
+        }
+      }
+      return 0;
+    },
+    generateOverlappingAmounts: function (dataset) {
+
+      var _this = this;
+
+      _this.indexes.overlappingAmounts = [];
+
+      dataset.forEach(function (x) {
+        var sx = _this.indexes.shiftMeta[x.id];
+        overlapArray[x.id] = [];
+        dataset.forEach(function(y) {
+          var sy = _this.indexes.shiftMeta[y.id];
+          overlapArray[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
+        })
+      });
+    },
+    generateHorizontalAreaMapping: function (dataset) {
+    },
+    generateShiftText: function (dataset) {
+    },
+    /*
+      Will generate crossMapping and crossMappingId
+    */
+    generateCrossMapping: function (d3Objects, xlineData) {
+      xlineData.forEach(function (x) {
+        var a = [];
+        var b = [];
+        d3Objects.each(function (s) {
+          var shift = _this.indexes.shiftMeta[s.id];
+          // The '30' is because that is the width of the vertical ranges, and should be a config instead of hard-coded here
+          if (_this.overlapping(x, x+30, shift.sMin, shift.eMin)) {
+            a.push(this);
+            b.push(s.id);
+          }
+        })
+        _this.indexes.crossMapping[x]=a;
+        _this.indexes.crossMappingId[x]=b;
+      });
+    },
+
+    generateIndexes: function (dataset, d3Objects, xlineData) {
+      this.generateShiftMeta(dataset);
+      this.generateOverlappingAmounts(dataset);
+      this.generateHorizontalAreaMapping(dataset);
+      this.generateShiftText(dataset);
+
+      // Currently crossMappings must be generated afterwards (because it depends on the shifts rendered)
+        // I should be able to change it to just use the shiftMeta instead of the d3 objects
+      //this.generateCrossMapping(d3Objects, xlineData);
+
+    },
 
     createD3: function (target, dataset) {
 
@@ -129,7 +217,8 @@
 
       //dataset.sort(compare);
 
-      dataset.forEach(function (shift) {
+      // IDEXES::: shiftMeta
+      /*dataset.forEach(function (shift) {
         _this.indexes.shiftMeta[shift.id] = {}
           
           var sMin = shift.start;
@@ -140,7 +229,8 @@
 
         _this.indexes.shiftMeta[shift.id].eMin = eMin;
 
-      });
+      });*/
+      _this.generateShiftMeta(dataset);
 
       //Note min will always the the first element. Max is not guaranteed to be the last
       var min = d3.min(dataset, function (d) {
@@ -174,7 +264,8 @@
        
       var xlineData = d3.range(min, max, 30);
 
-      var shiftOverlapping = function (d) {
+      // INDEXES::: overlappingAmounts
+      /*var shiftOverlapping = function (d) {
         //Use default dataset if nothing else is provided
         d = typeof d != 'undefined' ? d : dataset;
 
@@ -192,7 +283,9 @@
         return overlapArray;
       }
 
-      _this.indexes.overlappingAmounts = shiftOverlapping();
+      _this.indexes.overlappingAmounts = shiftOverlapping();*/
+
+      _this.generateOverlappingAmounts();
 
       //I could probably make this faster by only highlighting rows taht are displayed in the current window (only applicable for very large schedules)
         //This would require rehighlighting on window scroll
@@ -347,6 +440,8 @@
           if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
         });
 
+      // INDEXES::: shiftText
+      // This one could probably be done in the shiftMeta loop
       dataset.forEach( function (d) {
         _this.indexes.shiftText[d.id] = {};
       })
@@ -423,10 +518,10 @@
         .attr("fill", "black");
 
 
-      //I think I'll end up saving the properties into a global object if I keep having trouble
+      // INDEXES::: crossMapping/crossMappingId
       var d3Objects = d3.selectAll(".shift");
 
-      xlineData.forEach(function (x) {
+      /*xlineData.forEach(function (x) {
         var a = [];
         var b = [];
         d3Objects.each(function (s) {
@@ -439,7 +534,9 @@
         })
         _this.indexes.crossMapping[x]=a;
         _this.indexes.crossMappingId[x]=b;
-      })
+      })*/
+      _this.generateCrossMapping(d3Objects, xlineData);
+
     },
     editShiftHandler: function (e) {
       if (Scheduleme.meta.ADMIN) {
@@ -582,25 +679,6 @@
         }
       })
     },
-    overlapping: function (a1, a2, b1, b2) {
-
-      if (b1 < a1 && b2 <= a1)
-        return 0;
-      if (b1 >= a2 && b2 > a2)
-        return 0;
-
-      return 1;
-    },
-    amountOverlapping: function (s1, e1, s2, e2) {
-      if (this.overlapping(s1, e1, s2, e2)) {
-        if (s2 < e1) {// a is before a
-          return (e1 - Math.max(s1, s2)) / (e1 - s1);
-        } else { // b is before a
-          return (e2 - Math.max(s1, s2)) / (e1 - s1);
-        }
-      }
-      return 0;
-    },
     highlightShifts: function (highlight, t, hoveredId) {
 
       var _this = this;
@@ -734,6 +812,8 @@
         })
     },
 
+    //I only seem to do this once (when a shift is added), so redrawing the whole thing isn't necessary
+      // I should only redraw it (I will still need to recalc the indexes, but I will seperate that into a different function for reuse)
     reRender: function () {
       console.log('rerendering');
 
