@@ -48,4 +48,6 @@ if (process.env.RDS_USER) {
   mysql = mysql_config.local;
 }
 
+  mysql = mysql_config.local;
+
 module.exports = mysql;

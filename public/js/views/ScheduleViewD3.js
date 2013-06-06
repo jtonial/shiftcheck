@@ -120,10 +120,10 @@
 
       dataset.forEach(function (x) {
         var sx = _this.indexes.shiftMeta[x.id];
-        overlapArray[x.id] = [];
+        _this.indexes.overlappingAmounts[x.id] = [];
         dataset.forEach(function(y) {
           var sy = _this.indexes.shiftMeta[y.id];
-          overlapArray[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
+          _this.indexes.overlappingAmounts[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
         })
       });
     },
@@ -135,6 +135,9 @@
       Will generate crossMapping and crossMappingId
     */
     generateCrossMapping: function (d3Objects, xlineData) {
+
+      var _this = this;
+
       xlineData.forEach(function (x) {
         var a = [];
         var b = [];
@@ -170,7 +173,7 @@
       if (!($(target).length)) throw new Error('');
 
       //Use the window width if parent with comes back as 0 (hack for jquery mobile seeming to leave not fully visible pages with a width of 0)
-      var width = Math.min($(window).width(), $(target).parent().width()) || $(window).width() - 30; 
+      var width = Math.min($(window).width(), $(target).parent().width()) || $(window).width() - 30;
       var shiftInfoFontSize = _this.config.barHeight*(4/5);
 
       //var height = 500;
@@ -215,21 +218,7 @@
          return n;
       });
 
-      //dataset.sort(compare);
-
       // IDEXES::: shiftMeta
-      /*dataset.forEach(function (shift) {
-        _this.indexes.shiftMeta[shift.id] = {}
-          
-          var sMin = shift.start;
-
-        _this.indexes.shiftMeta[shift.id].sMin = sMin;
-
-          var eMin = shift.end;
-
-        _this.indexes.shiftMeta[shift.id].eMin = eMin;
-
-      });*/
       _this.generateShiftMeta(dataset);
 
       //Note min will always the the first element. Max is not guaranteed to be the last
@@ -265,27 +254,8 @@
       var xlineData = d3.range(min, max, 30);
 
       // INDEXES::: overlappingAmounts
-      /*var shiftOverlapping = function (d) {
-        //Use default dataset if nothing else is provided
-        d = typeof d != 'undefined' ? d : dataset;
 
-        var overlapArray = [];
-
-        d.forEach(function (x) {
-          var sx = _this.indexes.shiftMeta[x.id];
-          overlapArray[x.id] = [];
-          d.forEach(function(y) {
-            var sy = _this.indexes.shiftMeta[y.id];
-            overlapArray[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
-          })
-        })
-
-        return overlapArray;
-      }
-
-      _this.indexes.overlappingAmounts = shiftOverlapping();*/
-
-      _this.generateOverlappingAmounts();
+      _this.generateOverlappingAmounts(dataset);
 
       //I could probably make this faster by only highlighting rows taht are displayed in the current window (only applicable for very large schedules)
         //This would require rehighlighting on window scroll
@@ -452,6 +422,7 @@
         .enter()
         .append("text").attr("class", "employeeName")
         .text(function(d) {
+          // This is a reference to the text itself, and thus can't be indexed before rendering
           _this.indexes.shiftText[d.id].employeeName = this;
           return _this.truncate(d.employee_name);
         })
@@ -734,6 +705,8 @@
 
       var _this = this;
 
+      w = typeof w != 'undefined' ? w : (Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30);
+
       var xScale = d3.scale.linear()
         .domain([ _this.config.min , _this.config.max ])
         .range([_this.config.leftPadding, w]);
@@ -777,11 +750,11 @@
         .transition()
         .duration(750)
         .attr("x", function(d) {
-          return xScale(d3.select(this).property('sMin'));
+          return xScale(_this.indexes.shiftMeta[d3.select(this).property('id')].sMin);
         })
         .attr("width", function(d) {
-          var sMin = d3.select(this).property('sMin');
-          var eMin = d3.select(this).property('eMin');
+          var sMin = _this.indexes.shiftMeta[d3.select(this).property('id')].sMin;
+          var eMin = _this.indexes.shiftMeta[d3.select(this).property('id')].eMin;
 
           var width = eMin - sMin;
 
@@ -842,9 +815,7 @@
       _this.createD3(contentTarget, this.model.Shifts.toJSON());
 
       $(window).resize(function () {
-        var width = Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30; 
-
-        _this.resizeGraph(width);
+        _this.resizeGraph();
       });
 
       if (Scheduleme.meta.ADMIN) {
