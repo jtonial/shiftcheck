@@ -166,7 +166,11 @@
 
     },
 
-    createD3: function (target, dataset) {
+    createD3: function (target, collection) {
+
+      var dataset = collection;//.toJSON();
+
+      window.test = this;
 
       var _this = this;
 
@@ -333,7 +337,7 @@
         });
 
       var shifts = svg2.append("g").selectAll(".shift")
-        .data(dataset)
+        .data(dataset, function(d) { return d.id; }) // Here I should bind to the id, not to the index
         .enter()
         .append("rect").attr("class", "shift")
         .property("sMin", function (d, i) {
@@ -418,7 +422,7 @@
 
       // Names
       var gridTextNames = svg2.append("g").selectAll(".employeeName")
-        .data(dataset)
+        .data(dataset, function(d) { return d.id; })
         .enter()
         .append("text").attr("class", "employeeName")
         .text(function(d) {
@@ -437,7 +441,7 @@
       //Associate left-text with shifts
 
       var gridTextPositions = svg2.append("g").selectAll(".shiftPositions")
-        .data(dataset)
+        .data(dataset, function(d) { return d.id; })
         .enter()
         .append("text").attr("class", "shiftPositions")
         .text(function(d) {
@@ -701,7 +705,9 @@
           }
         });
     },
-    resizeGraph: function (w) {
+    redraw: function (dataset, w) {
+
+      console.log('redrawing');
 
       var _this = this;
 
@@ -747,6 +753,7 @@
         .attr("width", function(d){return widthScale(30);})
 
       svg2.selectAll(".shift")
+        .data(dataset, function(d) { return d.id; })
         .transition()
         .duration(750)
         .attr("x", function(d) {
@@ -760,6 +767,8 @@
 
           return width > 0 ? widthScale(width) : widthScale(10);
         });
+      svg2.selectAll('.employeeName')
+        .data(dataset, function(d) { return d.id; })
 
       svg2.selectAll("text.times")
         .transition()
@@ -803,6 +812,7 @@
       var contentTarget = document.getElementById('d3Target');
       $(contentTarget).html('');
 
+      // Here I think I should pass this.model.Shifts, and take the toJSON inside the function
       this.createD3(contentTarget, this.model.Shifts.toJSON());
 
     },
@@ -812,10 +822,10 @@
 
       if (Scheduleme.meta.debug) console.log('post rendering');
       var contentTarget = document.getElementById('d3Target');
-      _this.createD3(contentTarget, this.model.Shifts.toJSON());
+      _this.createD3(contentTarget, _this.model.Shifts.toJSON());
 
       $(window).resize(function () {
-        _this.resizeGraph();
+        _this.redraw(_this.model.Shifts.toJSON());
       });
 
       if (Scheduleme.meta.ADMIN) {

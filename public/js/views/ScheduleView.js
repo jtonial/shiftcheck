@@ -29,8 +29,10 @@
     },
 
     reRenderSubview: function () {
-      console.log('the shift collection was modified... reRendering');
-      this.view.reRender();
+      // This seems to be called multiple times (multiple listeners)
+      console.log('the shift collection was modified... redrawing');
+      //this.view.reRender();
+      this.view.redraw();
     },
 
     render: function () {
