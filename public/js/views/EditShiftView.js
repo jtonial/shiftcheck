@@ -1,4 +1,4 @@
-Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
+Scheduleme.classes.views.EditShiftView = Backbone.View.extend({
   //This renders directly into the el element; no need to append
     //Replaces everything in it; and no need to postRender()
   el: $('#edit-area'),

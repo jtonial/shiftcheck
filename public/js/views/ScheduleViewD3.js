@@ -62,8 +62,8 @@
 
     events: {
       "click rect.shift" : 'editShiftHandler',
-      "click #save-editted-shift" : "saveModifiedShift",
-
+      "click #save-shift-trigger" : "saveModifiedShift",
+      "click #delete-shift-trigger" : "deleteShift",
       "click #add_shift_trigger" : "addShift"
     },
 
@@ -546,14 +546,35 @@
     saveModifiedShift: function (e) {
       e.preventDefault();
       var _this = this;
-      console.log('detected yeah.');
+      var id = $('#shift-id-display').html();
       $.ajax({
-        url: '/shift/',
+        url: '/shifts/'+id,
         type: 'PUT',
         data: $('#edit-shift-popover-form').serialize(),
         success: function (res) {
           console.log('success');
           _this.$('#edit-area').hide();
+
+          // I will have to update the d3 here
+        }, 
+        error: function (jqXHR) {
+          console.log('error');
+          _this.$('#edit-area').hide();
+        }
+      })
+    },
+    deleteShift: function (e) {
+      e.preventDefault();
+      var _this = this;
+      var id = $('#shift-id-display').html();
+      $.ajax({
+        url: '/shifts/'+id,
+        type: 'DELETE',
+        success: function (res) {
+          console.log('success');
+          _this.$('#edit-area').hide();
+
+          // I will have to update the d3 here
         }, 
         error: function (jqXHR) {
           console.log('error');
