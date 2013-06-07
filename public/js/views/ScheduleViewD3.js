@@ -135,7 +135,7 @@
       Will generate crossMapping and crossMappingId
     */
     generateCrossMapping: function (d3Objects, xlineData) {
-
+      console.log('generateCrossMapping');
       var _this = this;
 
       xlineData.forEach(function (x) {
@@ -166,13 +166,14 @@
 
     },
 
-    createD3: function (target, collection) {
-
-      var dataset = collection;//.toJSON();
-
-      window.test = this;
+    createD3: function (target) {
 
       var _this = this;
+
+      var dataset = _this.model.Shifts.toJSON();
+
+      window.test = _this;
+
 
       if (!($(target).length)) throw new Error('');
 
@@ -180,12 +181,33 @@
       var width = Math.min($(window).width(), $(target).parent().width()) || $(window).width() - 30;
       var shiftInfoFontSize = _this.config.barHeight*(4/5);
 
-      //var height = 500;
       var height = (dataset.length * _this.config.barHeight) + _this.config.topPadding;
 
-      var w = width;
-      var h = height;
-      var h2 = h - _this.config.topPadding;
+      _this.config.height = height;
+
+      // Create SVG element
+      var canvas = d3.select(target)
+            .append("svg")
+            .style("width", width)
+            .style("height", height);
+
+      _this.redraw();
+
+    },
+
+
+
+
+
+
+
+    redraw: function (dataset) {
+
+      console.log('redrawing');
+
+      var _this = this;
+
+      var dataset = _this.model.Shifts.toJSON();
 
       // Sort schedules
       function compare(a,b) {
@@ -214,305 +236,419 @@
         });
       });
 
-      for (var key in tmp) {
-        tmp[key].sort(compare);
-      }
+      for (var key in tmp) { tmp[key].sort(compare); }
 
-      dataset = $.map( tmp, function(n){
-         return n;
-      });
+      dataset = $.map( tmp, function(n){ return n; });
 
-      // IDEXES::: shiftMeta
-      _this.generateShiftMeta(dataset);
+
 
       //Note min will always the the first element. Max is not guaranteed to be the last
-      var min = d3.min(dataset, function (d) {
-              return d.start;
-            });
-      var max = d3.max(dataset, function(d) { 
-              return d.end;
-          });
+      var min = d3.min(dataset, function (d) { return d.start; });
+      var max = d3.max(dataset, function(d) { return d.end; });
 
       _this.config.min = min;
       _this.config.max = max;
 
-      var xScale = d3.scale.linear()
-          .domain([ min , max ])
-          .range([_this.config.leftPadding, w]);
 
-      var widthScale = d3.scale.linear()
-          .domain([ 0 , max - min ])
-          .range([0, w-_this.config.leftPadding]);
+      var width = Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30;
+      var height = (dataset.length * _this.config.barHeight) + _this.config.topPadding; // _this.config.height;
 
-      // Create SVG element
-      var svg2 = d3.select(target)
-            .append("svg")
-            .style("width", w)
-            .style("height", h);
+
+      var shiftInfoFontSize = _this.config.barHeight*(4/5);
 
 
       var ylineData = d3.range(_this.config.topPadding - 1 + _this.config.barHeight, 
                 (dataset.length * _this.config.barHeight) + _this.config.topPadding, 
-                _this.config.barHeight);
-       
+                _this.config.barHeight); 
       var xlineData = d3.range(min, max, 30);
 
-      // INDEXES::: overlappingAmounts
+      var xScale = d3.scale.linear()
+        .domain([ _this.config.min , _this.config.max ])
+        .range([_this.config.leftPadding, width]);
 
+      var widthScale = d3.scale.linear()
+        .domain([ 0 , _this.config.max - _this.config.min ])
+        .range([0, width-_this.config.leftPadding]);
+
+
+
+
+      // IDEXES::: shiftMeta, overlappingAmounts
+      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; })
+
+      _this.generateShiftMeta(dataset);
       _this.generateOverlappingAmounts(dataset);
 
-      //I could probably make this faster by only highlighting rows taht are displayed in the current window (only applicable for very large schedules)
-        //This would require rehighlighting on window scroll
-      
-      // Using the xaxiscoorddata to generate vertical lines.
-      var gridVert = svg2.append("g").selectAll(".vertical")
-        .data(xlineData)
-        .enter().append("svg:line").attr("class", "vertical")
-        .attr("x1", function(d){return xScale(d);})
-        .attr("y1", _this.config.topPadding - 5)
-        .attr("x2", function(d){return xScale(d);})
-        .attr("y2", height)
-        .style("stroke", function (d) {
-          //I should really precalculate this and save it into the model
-          var s = new Date(d.start);
-          var sMin = s.getHours()*60+s.getMinutes();
-          //var sMin = d.start;
 
-          //console.log ('mod: '+s.getMinutes());
-          if (sMin % 60 == 0) {
-            return "rgb(200,200,200)";
-          } else {
-            return "rgba(200,200,200,0.5)"; 
-          }
-        })
-        .style("stroke-width", 1);
+      //  CANVAS---------------------------------------------------
+      var canvas = d3.select(_this.el)
+        .select("svg");
+        // Update
+        canvas.transition()
+          .duration(750)
+          .style("width", width)
+          .style("height", height);
 
-      var gridHorAreas = svg2.append("g").selectAll(".horizontalArea")
-        .data(ylineData)
-        .enter().append("svg:rect").attr("class", "horizontalArea")
-        .attr("x", _this.config.leftPadding)
-        .attr("y", function(d){
-          _this.indexes.horizontalAreaMapping[d-_this.config.barHeight] = this;
-          return d-_this.config.barHeight;
-        })
-        .attr("width", width)
-        .attr("height", _this.config.barHeight)
-        .attr("fill", "rgba(180,180,180,0)");
+      //  VERTICAL LINES--------------------------------------------
+      var verticalLines = canvas.selectAll("line.vertical")
+        .data(xlineData);
+        // Enter
+        verticalLines.enter()
+          .append("svg:line").attr("class", "vertical")
+          .attr("x1", function(d){return xScale(d);})
+          .attr("y1", _this.config.topPadding - 5)
+          .attr("x2", function(d){return xScale(d);})
+          .attr("y2", height)
+          .style("stroke", function (d) {
+            //I should really precalculate this and save it into the model
+            var s = new Date(d.start);
+            var sMin = s.getHours()*60+s.getMinutes();
+            //var sMin = d.start;
 
-      // Using the yaxiscoorddata to generate horizontal lines.       
-      var gridHor = svg2.append("g").selectAll("line.horizontal")
-        .data(ylineData)
-        .enter().append("svg:line").attr("class", "horizontal")
-        .attr("x1", _this.config.leftPadding)
-        .attr("y1", function(d){return d;})
-        .attr("x2", width)
-        .attr("y2", function(d){return d;})
-        .style("stroke", "rgb(200,200,200)")
-        .style("stroke-width", 1);
-
-      var gridVertAreas = svg2.append("g").selectAll(".verticalArea")
-        .data(xlineData)
-        .enter().append("svg:rect").attr("class", "verticalArea")
-        .attr("x", function(d){return xScale(d);})
-        .attr("y", _this.config.topPadding - 5)
-        .attr("width", function(d){return widthScale(30);})
-        .attr("height", h)
-        .attr("fill", "rgba(180,180,180,0.1)")
-        .on('mouseover', function (d) {
-          //Highlight matching shifts
-          d3.select(this).style("fill", "rgba(180,180,180,0.5)");
-
-          _this.highlightShifts('select', d);
-
-        })
-        .on('mouseout', function (d) {
-          d3.select(this).style("fill", "rgba(180,180,180,0.1)");
-          
-          _this.highlightShifts('unselect', d);
-
-        })
-        .on('click', function (d) {
-          _this.$('#edit-area').hide();
-          if (_this.config.hideUnmatchingOnClick) hideUnmatching(-1);
-        });
-
-      var shifts = svg2.append("g").selectAll(".shift")
-        .data(dataset, function(d) { return d.id; }) // Here I should bind to the id, not to the index
-        .enter()
-        .append("rect").attr("class", "shift")
-        .property("sMin", function (d, i) {
-          return d.start;
-        })
-        .property("eMin", function (d, i) {
-          return d.end;
-        })
-        .property('transColor', function (d, i) {
-          return "rgba(0, 0, 150, 0.6)";
-        })
-        .property('baseColor', function (d, i) {
-          var sMin = d3.select(this).property('sMin');
-          var eMin = d3.select(this).property('eMin');
-
-          return "rgba(0, 0, 150, 0.9)";
-        })
-        .attr("id", function (d) {
-          return d.id;
-        })
-        .attr("y", function(d, i) {
-          return (i * _this.config.barHeight) + _this.config.topPadding;
-        })
-        .attr("x", function(d) {
-          return xScale(d3.select(this).property('sMin'));
-        })
-        .attr("rx", _this.config.barRadius)
-        .attr("ry", _this.config.barRadius)
-        .attr("height", _this.config.barHeight - _this.config.barPadding)
-        .attr("width", function(d) {
-          var sMin = d3.select(this).property('sMin');
-          var eMin = d3.select(this).property('eMin');
-
-          var width = eMin - sMin;
-
-          //widthScale(10) is a hack until I switch over to using minutes instead of dates. (- minutes will be day before, > 60*24 means next day)
-            // This is because dates can get messed up due to timezones, however minutes will not, and can be shifted for timezones after-the-fact if necessary
-          return width > 0 ? widthScale(width) : widthScale(10);
-        })
-        .attr("fill", function(d) {
-          return d3.select(this).property('transColor');
-        })
-        .on('mouseover', function (d) {
-          // Note: I can use attr or style, but mixing them is bad. Style seems to superceed attr
-          var that = d3.select(this);
-
-          var start = that.property('sMin') - (that.property('sMin') % 30);
-          var end = that.property('eMin') + (that.property('eMin') % 30);
-
-          //Maybe I could highlight shifts with a different colour based on the number of hours the shift shares with the selected one.
-          for (var key in _this.indexes.crossMapping) {
-            if (key >= start && key <= end) {
-              _this.highlightShifts('select', key, d.id);
+            //console.log ('mod: '+s.getMinutes());
+            if (sMin % 60 == 0) {
+              return "rgb(200,200,200)";
+            } else {
+              return "rgba(200,200,200,0.5)"; 
             }
-          }
+          })
+          .style("stroke-width", 1);
+        // Update
+        verticalLines.transition()
+          .duration(750)
+          .attr("x1", function(d){return xScale(d);})
+          .attr("x2", function(d){return xScale(d);})
+          .attr("y2", height);
+        // Delete
+        verticalLines.exit()
+          .remove();
 
-          //d3.select(this).attr("fill", d3.select(this).property('baseColor'));
-        })
-        .on('mouseout', function (d) {
-          var that = d3.select(this);
+      //  HORIZONTAL AREAS--------------------------------------------
+      var horizontalAreas = canvas.selectAll(".horizontalArea")
+        .data(ylineData);
+        // Enter
+        horizontalAreas.enter()
+          .append("svg:rect").attr("class", "horizontalArea")
+          .attr("x", _this.config.leftPadding)
+          .attr("y", function(d){
+            _this.indexes.horizontalAreaMapping[d-_this.config.barHeight] = this;
+            return d-_this.config.barHeight;
+          })
+          .attr("width", width)
+          .attr("height", _this.config.barHeight)
+          .attr("fill", "rgba(180,180,180,0)");
+        // Update
+        horizontalAreas.transition()
+          .duration(750)
+          .attr("x", _this.config.leftPadding)
+          .attr("y", function(d){
+            _this.indexes.horizontalAreaMapping[d-_this.config.barHeight] = this;
+            return d-_this.config.barHeight;
+          })
+          .attr("width", width)
+          .attr("height", _this.config.barHeight)
+          .attr("fill", "rgba(180,180,180,0)");
+        // Delete
+        horizontalAreas.exit()
+          .remove();
 
-          var start = that.property('sMin') - (that.property('sMin') % 30);
-          var end = that.property('eMin') + (that.property('eMin') % 30);
+      //  HORIZONTAL LINES--------------------------------------------
+      var horizontalLines = canvas.selectAll("line.horizontal")
+        .data(ylineData);
+        // Enter
+        horizontalLines.enter()
+          .append("svg:line").attr("class", "horizontal")
+          .attr("x1", _this.config.leftPadding)
+          .attr("y1", function(d){return d;})
+          .attr("x2", width)
+          .attr("y2", function(d){return d;})
+          .style("stroke", "rgb(200,200,200)")
+          .style("stroke-width", 1);
+        // Update
+        horizontalLines.transition()
+          .duration(750)
+          .attr("x2", function(d){ return width; });
+        // Delete
+        horizontalLines.exit()
+          .remove();
 
-          for (var key in _this.indexes.crossMapping) {
-            if (key >= start && key <= end) {
-              _this.highlightShifts('unselect', key);
+      //  VERTICAL AREAS--------------------------------------------
+      var verticalAreas = canvas.selectAll(".verticalArea")
+        .data(xlineData);
+        // Enter
+        verticalAreas.enter()
+          .append("svg:rect").attr("class", "verticalArea")
+          .attr("x", function(d){return xScale(d);})
+          .attr("y", _this.config.topPadding - 5)
+          .attr("width", function(d){return widthScale(30);})
+          .attr("height", height)
+          .attr("fill", "rgba(180,180,180,0.1)")
+          .on('mouseover', function (d) {
+            //Highlight matching shifts
+            d3.select(this).style("fill", "rgba(180,180,180,0.5)");
+
+            _this.highlightShifts('select', d);
+
+          })
+          .on('mouseout', function (d) {
+            d3.select(this).style("fill", "rgba(180,180,180,0.1)");
+            
+            _this.highlightShifts('unselect', d);
+
+          })
+          .on('click', function (d) {
+            _this.$('#edit-area').hide();
+            if (_this.config.hideUnmatchingOnClick) hideUnmatching(-1);
+          });
+        // Update
+        verticalAreas.transition()
+          .duration(750)
+          .attr("x", function(d){return xScale(d);})
+          .attr("width", function(d){return widthScale(30);})
+          .attr("height", height);
+        // Delete
+        verticalAreas.exit()
+          .remove();
+
+      //  SHIFTS----------------------------------------------------
+      var shifts = canvas.selectAll(".shift")
+        .data(dataset, function(d) { return d.id; });
+        // Enter
+        shifts.enter()
+          .append("rect").attr("class", "shift")
+          .property("sMin", function (d, i) {
+            return d.start;
+          })
+          .property("eMin", function (d, i) {
+            return d.end;
+          })
+          .property('transColor', function (d, i) {
+            return "rgba(0, 0, 150, 0.6)";
+          })
+          .property('baseColor', function (d, i) {
+            var sMin = d3.select(this).property('sMin');
+            var eMin = d3.select(this).property('eMin');
+
+            return "rgba(0, 0, 150, 0.9)";
+          })
+          .attr("id", function (d) {
+            return d.id;
+          })
+          .attr("y", function(d, i) {
+            return (i * _this.config.barHeight) + _this.config.topPadding;
+          })
+          .attr("x", function(d) {
+            return xScale(d3.select(this).property('sMin'));
+          })
+          .attr("rx", _this.config.barRadius)
+          .attr("ry", _this.config.barRadius)
+          .attr("height", _this.config.barHeight - _this.config.barPadding)
+          .attr("width", function(d) {
+            var sMin = d3.select(this).property('sMin');
+            var eMin = d3.select(this).property('eMin');
+
+            var width = eMin - sMin;
+            return width > 0 ? widthScale(width) : widthScale(10);
+          })
+          .attr("fill", function(d) {
+            return d3.select(this).property('transColor');
+          })
+          .on('mouseover', function (d) {
+            // Note: I can use attr or style, but mixing them is bad. Style seems to superceed attr
+            var that = d3.select(this);
+
+            var start = that.property('sMin') - (that.property('sMin') % 30);
+            var end = that.property('eMin') + (that.property('eMin') % 30);
+
+            //Maybe I could highlight shifts with a different colour based on the number of hours the shift shares with the selected one.
+            for (var key in _this.indexes.crossMapping) {
+              if (key >= start && key <= end) {
+                _this.highlightShifts('select', key, d.id);
+              }
             }
-          }
-          //d3.select(this).attr("fill", d3.select(this).property('transColor'));
-        })
-        .on('click', function (d) {
-          //document.dispatchEvent(Scheduleme.events.editShift(d.id, d3.event.x, d3.event.y));
-          if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
-        });
+          })
+          .on('mouseout', function (d) {
+            var that = d3.select(this);
 
-      // INDEXES::: shiftText
-      // This one could probably be done in the shiftMeta loop
-      dataset.forEach( function (d) {
-        _this.indexes.shiftText[d.id] = {};
-      })
+            var start = that.property('sMin') - (that.property('sMin') % 30);
+            var end = that.property('eMin') + (that.property('eMin') % 30);
 
-      // Names
-      var gridTextNames = svg2.append("g").selectAll(".employeeName")
-        .data(dataset, function(d) { return d.id; })
-        .enter()
-        .append("text").attr("class", "employeeName")
-        .text(function(d) {
-          // This is a reference to the text itself, and thus can't be indexed before rendering
-          _this.indexes.shiftText[d.id].employeeName = this;
-          return _this.truncate(d.employee_name);
-        })
-        .attr("text-anchor", "start")
-        .attr("y", function(d, i) {
-          return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
-        })
-        .attr("font-family", "sans-serif")
-        .attr("font-size", shiftInfoFontSize+"px")
-        .attr("fill", _this.config.fadedTextColor);
+            for (var key in _this.indexes.crossMapping) {
+              if (key >= start && key <= end) {
+                _this.highlightShifts('unselect', key);
+              }
+            }
+          })
+          .on('click', function (d) {
+            //document.dispatchEvent(Scheduleme.events.editShift(d.id, d3.event.x, d3.event.y));
+            if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
+          });
+        // Update
+        shifts.transition()
+          .duration(750)
+          .attr("x", function(d) {
+            return xScale(_this.indexes.shiftMeta[d3.select(this).property('id')].sMin);
+          })
+          .attr("y", function(d, i) {
+            return (i * _this.config.barHeight) + _this.config.topPadding;
+          })
+          .attr("width", function(d) {
+            var sMin = _this.indexes.shiftMeta[d3.select(this).property('id')].sMin;
+            var eMin = _this.indexes.shiftMeta[d3.select(this).property('id')].eMin;
 
-      //Associate left-text with shifts
+            var width = eMin - sMin;
 
-      var gridTextPositions = svg2.append("g").selectAll(".shiftPositions")
-        .data(dataset, function(d) { return d.id; })
-        .enter()
-        .append("text").attr("class", "shiftPositions")
-        .text(function(d) {
-          //Associate text to shift here... I should probably do it in its own function but I'm not sure how
-          _this.indexes.shiftText[d.id].position = this;
-          return d.position;
-        })
-        .attr("text-anchor", "end")
-        .attr("y", function(d, i) {
-          return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
-        })
-        .attr("x", function(d) {
-          return _this.config.leftPadding-5;
-        })
-        .attr("font-family", "sans-serif")
-        .attr("font-size", shiftInfoFontSize+"px")
-        .attr("fill", _this.config.fadedTextColor);
+            return width > 0 ? widthScale(width) : widthScale(10);
+          });
+        // Delete
+        shifts.exit()
+          .remove();
 
-      //Times
-      var gridTimes = svg2.append("g").selectAll("text.times")
-        .data(xlineData)
-        .enter()
-        .append("text").attr("class", "times")
-        .text(function(d) {
-          var tmp = new Date();
-          tmp.setHours(Math.floor(d / 60));
-          tmp.setMinutes(d % 60);
-          var hours = (Math.floor(d / 60)) % 12;
-          if (hours == 0) {
-            hours = 12;
-          }
-          var minutes = ("0" + (d%60)).slice(-2);
+      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; })
 
-          if (minutes % 60 == 0) {
-            return hours;//+':'+minutes;
-          }
+      //  EMPLOYEE NAMES------------------------------------------------
+      var employeeNames = canvas.selectAll('.employeeName')
+        .data(dataset, function(d) { return d.id; });
+        // Enter
+        employeeNames.enter()
+          .append("text").attr("class", "employeeName")
+          .text(function(d) {
+            // This is a reference to the text itself, and thus can't be indexed before rendering
+            _this.indexes.shiftText[d.id].employeeName = this;
+            return _this.truncate(d.employee_name);
+          })
+          .attr("text-anchor", "start")
+          .attr("y", function(d, i) {
+            return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
+          })
+          .attr("font-family", "sans-serif")
+          .attr("font-size", shiftInfoFontSize+"px")
+          .attr("fill", _this.config.fadedTextColor);
+        // Update
+        employeeNames.transition()
+          .duration(750)
+          .text(function(d) {
+            // This is a reference to the text itself, and thus can't be indexed before rendering
+            _this.indexes.shiftText[d.id].employeeName = this;
+            return _this.truncate(d.employee_name);
+          })
+          .attr("y", function(d, i) {
+            return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
+          });
+        // Delete
+        employeeNames.exit()
+          .remove();
 
-          return '';
-        })
-        //.attr("text-anchor", "right")
-        .attr("y", function(d, i) {
-          return _this.config.topPadding - 10;
-        })
-        .attr("x", function(d) {
-          return xScale(d)-3;//12;
-        })
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "9px")
-        .attr("fill", "black");
+      // SHIFT POSITIONS-------------------------------------------------
+      var shiftPositions = canvas.selectAll(".shiftPositions")
+        .data(dataset, function(d) { return d.id; });
+        // ENTER
+        shiftPositions.enter()
+          .append("text").attr("class", "shiftPositions")
+          .text(function(d) {
+            //Associate text to shift here... I should probably do it in its own function but I'm not sure how
+            _this.indexes.shiftText[d.id].position = this;
+            return d.position;
+          })
+          .attr("text-anchor", "end")
+          .attr("x", function(d) {
+            return _this.config.leftPadding-5;
+          })
+          .attr("y", function(d, i) {
+            return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
+          })
+          .attr("font-family", "sans-serif")
+          .attr("font-size", shiftInfoFontSize+"px")
+          .attr("fill", _this.config.fadedTextColor);
+        // UPDATE
+        shiftPositions.transition()
+          .duration(750)
+          .text(function(d) {
+            //Associate text to shift here... I should probably do it in its own function but I'm not sure how
+            _this.indexes.shiftText[d.id].position = this;
+            return d.position;
+          })
+          .attr("y", function(d, i) {
+            return i * _this.config.barHeight + 3 + _this.config.topPadding + (height / dataset.length - _this.config.barPadding) / 2;
+          });
+        // DELETE
+        shiftPositions.exit()
+          .remove();
+
+      // GRID TIMES----------------------------------------------------
+      var gridTimes = canvas.selectAll("text.times")
+        .data(xlineData);
+        // ENTER
+        gridTimes.enter()
+          .append("text").attr("class", "times")
+          .text(function(d) {
+            var tmp = new Date();
+            tmp.setHours(Math.floor(d / 60));
+            tmp.setMinutes(d % 60);
+            var hours = (Math.floor(d / 60)) % 12;
+            if (hours == 0) {
+              hours = 12;
+            }
+            var minutes = ("0" + (d%60)).slice(-2);
+
+            if (minutes % 60 == 0) {
+              return hours;//+':'+minutes;
+            }
+
+            return '';
+          })
+          //.attr("text-anchor", "right")
+          .attr("y", function(d, i) {
+            return _this.config.topPadding - 10;
+          })
+          .attr("x", function(d) {
+            return xScale(d)-3;//12;
+          })
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "9px")
+          .attr("fill", "black");
+        // UPDATE
+        gridTimes.transition()
+          .duration(750)
+          .text(function(d) {
+            var tmp = new Date();
+            tmp.setHours(Math.floor(d / 60));
+            tmp.setMinutes(d % 60);
+            var hours = (Math.floor(d / 60)) % 12;
+            if (hours == 0) {
+              hours = 12;
+            }
+            var minutes = ("0" + (d%60)).slice(-2);
+
+            if (minutes % 60 == 0) {
+              return hours;//+':'+minutes;
+            }
+
+            return '';
+          })
+          .attr("x", function(d) {
+            return xScale(d)-3;//12;
+          })
+        // DELETE
+        gridTimes.exit()
+          .remove();
 
 
       // INDEXES::: crossMapping/crossMappingId
-      var d3Objects = d3.selectAll(".shift");
-
-      /*xlineData.forEach(function (x) {
-        var a = [];
-        var b = [];
-        d3Objects.each(function (s) {
-          var shift = _this.indexes.shiftMeta[s.id];
-          //console.log('overlap('+x+','+(x+30)+','+shift.sMin+','+shift.eMin+')');
-          if (_this.overlapping(x, x+30, shift.sMin, shift.eMin)) {
-            a.push(this);
-            b.push(s.id);
-          }
-        })
-        _this.indexes.crossMapping[x]=a;
-        _this.indexes.crossMappingId[x]=b;
-      })*/
-      _this.generateCrossMapping(d3Objects, xlineData);
+      _this.generateCrossMapping(d3.selectAll(".shift"), xlineData);
 
     },
+
+
+
+
+
+
+
+
+
+
+
     editShiftHandler: function (e) {
       if (Scheduleme.meta.ADMIN) {
         var _this = this;
@@ -550,7 +686,7 @@
 
         output = [];
         Scheduleme.Positions.forEach( function(position) {
-          output.push('<option value="'+position.get('position_id')+'">'+position.get('position')+'</option>');
+          output.push('<option value="'+position.get('id')+'">'+position.get('position')+'</option>');
         });
         this.$('#position-edit').html(output.join(''));
 
@@ -619,46 +755,46 @@
       e.preventDefault();
       var _this = this;
       var id = $('#shift-id-display').html();
-      $.ajax({
-        url: '/shifts/'+id,
-        type: 'PUT',
-        data: $('#edit-shift-popover-form').serialize(),
-        success: function (res) {
-          console.log('success');
-          _this.$('#edit-area').hide();
+      var shift = _this.model.Shifts.get(id);
 
-          // I will have to update the d3 here
-        }, 
-        error: function (jqXHR) {
-          console.log('error');
-          _this.$('#edit-area').hide();
-        }
-      })
+      var employee_id = $('#employee-edit').val();
+      var position_id = $('#position-edit').val();
+      var start    = $('#start-time-edit').val();
+      var end      = $('#end-time-edit').val();
+
+      var employee = Scheduleme.Employees.get(employee_id);
+      var position = Scheduleme.Positions.get(position_id);
+
+      shift.set({
+        employee_name : employee.get('first_name')+' '+employee.get('last_name'),
+        position      : position.position
+      });
+
+      shift.save({
+        employee_id : employee_id,
+        position_id : position_id,
+        start       : start,
+        end         : end
+      }, { wait: true });
+
+      _this.$('#edit-area').hide();
+
     },
     deleteShift: function (e) {
       e.preventDefault();
       var _this = this;
       var id = $('#shift-id-display').html();
-      $.ajax({
-        url: '/shifts/'+id,
-        type: 'DELETE',
-        success: function (res) {
-          console.log('success');
-          _this.$('#edit-area').hide();
 
-          // I will have to update the d3 here
-        }, 
-        error: function (jqXHR) {
-          console.log('error');
-          _this.$('#edit-area').hide();
-        }
-      })
+      _this.model.Shifts.get(id).destroy({ wait: true });
+
+      _this.$('#edit-area').hide();
+
     },
-    highlightShifts: function (highlight, t, hoveredId) {
+    highlightShifts: function (highlight, i, hoveredId) {
 
       var _this = this;
 
-      _this.indexes.crossMapping[t].forEach(function (s) {
+      _this.indexes.crossMapping[i].forEach(function (s) {
         var t = d3.select(s);
         var id = t.attr("id");
         var y = t.attr("y") -1; //Not sure why this has to be -1
@@ -705,94 +841,6 @@
           }
         });
     },
-    redraw: function (dataset, w) {
-
-      console.log('redrawing');
-
-      var _this = this;
-
-      w = typeof w != 'undefined' ? w : (Math.min($(window).width(), _this.$el.width()) || $(window).width() - 30);
-
-      var xScale = d3.scale.linear()
-        .domain([ _this.config.min , _this.config.max ])
-        .range([_this.config.leftPadding, w]);
-
-      var widthScale = d3.scale.linear()
-        .domain([ 0 , _this.config.max - _this.config.min ])
-        .range([0, w-_this.config.leftPadding]);
-
-      var svg2 = d3.select(_this.el)
-            .select("svg")
-            .transition()
-            .duration(750)
-            .style("width", w);
-
-      svg2 = d3.select(_this.el)
-          .select("svg");
-
-      svg2.selectAll("line.vertical")
-        .transition()
-        .duration(750)
-        .attr("x1", function(d){return xScale(d);})
-        .attr("x2", function(d){return xScale(d);});
-
-      svg2.selectAll(".horizontalArea")
-        .transition()
-        .duration(750)
-        .attr("width", w - this.config.leftPadding);
-
-      svg2.selectAll("line.horizontal")
-        .transition()
-        .duration(750)
-        .attr("x2", function(d){return w;});
-
-      svg2.selectAll(".verticalArea")
-        .transition()
-        .duration(750)
-        .attr("x", function(d){return xScale(d);})
-        .attr("width", function(d){return widthScale(30);})
-
-      svg2.selectAll(".shift")
-        .data(dataset, function(d) { return d.id; })
-        .transition()
-        .duration(750)
-        .attr("x", function(d) {
-          return xScale(_this.indexes.shiftMeta[d3.select(this).property('id')].sMin);
-        })
-        .attr("width", function(d) {
-          var sMin = _this.indexes.shiftMeta[d3.select(this).property('id')].sMin;
-          var eMin = _this.indexes.shiftMeta[d3.select(this).property('id')].eMin;
-
-          var width = eMin - sMin;
-
-          return width > 0 ? widthScale(width) : widthScale(10);
-        });
-      svg2.selectAll('.employeeName')
-        .data(dataset, function(d) { return d.id; })
-
-      svg2.selectAll("text.times")
-        .transition()
-        .duration(750)
-        .text(function(d) {
-          var tmp = new Date();
-          tmp.setHours(Math.floor(d / 60));
-          tmp.setMinutes(d % 60);
-          var hours = (Math.floor(d / 60)) % 12;
-          if (hours == 0) {
-            hours = 12;
-          }
-          var minutes = ("0" + (d%60)).slice(-2);
-
-          if (minutes % 60 == 0) {
-            return hours;//+':'+minutes;
-          }
-
-          return '';
-        })
-        .attr("x", function(d) {
-          return xScale(d)-3;//12;
-        })
-    },
 
     //I only seem to do this once (when a shift is added), so redrawing the whole thing isn't necessary
       // I should only redraw it (I will still need to recalc the indexes, but I will seperate that into a different function for reuse)
@@ -813,7 +861,7 @@
       $(contentTarget).html('');
 
       // Here I think I should pass this.model.Shifts, and take the toJSON inside the function
-      this.createD3(contentTarget, this.model.Shifts.toJSON());
+      this.createD3(contentTarget);
 
     },
 
@@ -822,10 +870,10 @@
 
       if (Scheduleme.meta.debug) console.log('post rendering');
       var contentTarget = document.getElementById('d3Target');
-      _this.createD3(contentTarget, _this.model.Shifts.toJSON());
+      _this.createD3(contentTarget);
 
       $(window).resize(function () {
-        _this.redraw(_this.model.Shifts.toJSON());
+        _this.redraw();
       });
 
       if (Scheduleme.meta.ADMIN) {
