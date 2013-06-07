@@ -37,15 +37,21 @@ block sidebar-content
       .antiscroll-inner
         .box-inner
           #schedules-list
-          - if ( user.employer_id )
-              ul#positionss.nav.nav-list
-                li.nav-header Manager Options
-                li
-                  a#employees-link Employees
-                li
-                  a#positions-link Positions
-                li
-                  a#requests-link Change Requests
+          - if ( user.employer_id ) // This NEEDS to be added into a view so that the dash stays constant (or split into two dashes; employer/employee)
+            ul#manager-options.nav.nav-list
+              li.nav-header Manager Options
+              li
+                a#employees-link Employees
+              li
+                a#positions-link Positions
+              li
+                a#requests-link Change Requests
+          - else
+            ul#employee-options.nav.nav-list
+              li.nav-header Employee Options
+              li
+                a#requests-link Change Requests
+
 
 
 block sidebar-footer
