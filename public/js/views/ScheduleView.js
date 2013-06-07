@@ -22,13 +22,20 @@
         //Even if I cant get d3 views to work, it would still be easier to manage
       if (this.model.get('type') == 'shifted' && Scheduleme.meta.d3) {
         if (Scheduleme.meta.debug) console.log('is shifted; will listen to Shift events and rerender');
-        this.listenTo(this.model.Shifts, 'all', this.reRenderSubview);
+        console.log('adding shift collection listener');
+        // Using 'all' was triggering FAR to often
+         // I wonder if I can do something like:
+         // this.listenTo(this.model.Shifts, ['change', 'all', 'destroy', 'reset'], this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'change', this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'add', this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'destroy', this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'reset', this.redrawSubview);
       }
 
       this.render();
     },
 
-    reRenderSubview: function () {
+    redrawSubview: function () {
       // This seems to be called multiple times (multiple listeners)
       console.log('the shift collection was modified... redrawing');
       //this.view.reRender();
