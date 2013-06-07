@@ -201,7 +201,7 @@
 
 
 
-    redraw: function (dataset) {
+    redraw: function () {
 
       console.log('redrawing');
 
@@ -456,7 +456,7 @@
           .on('mouseover', function (d) {
             // Note: I can use attr or style, but mixing them is bad. Style seems to superceed attr
             var that = d3.select(this);
-
+            console.log(d);
             var start = that.property('sMin') - (that.property('sMin') % 30);
             var end = that.property('eMin') + (that.property('eMin') % 30);
 
@@ -767,7 +767,7 @@
 
       shift.set({
         employee_name : employee.get('first_name')+' '+employee.get('last_name'),
-        position      : position.position
+        position      : position.get('position')
       });
 
       shift.save({
@@ -793,7 +793,6 @@
     highlightShifts: function (highlight, i, hoveredId) {
 
       var _this = this;
-
       _this.indexes.crossMapping[i].forEach(function (s) {
         var t = d3.select(s);
         var id = t.attr("id");
@@ -813,6 +812,7 @@
             //if (typeof hoveredId != 'undefined') {
             //  return 'rgba(0, 0, 150, '+_this.indexes.overlappingAmounts[hoveredId][d.id]+')';
             //}
+            console.log(d);
             return t.property('baseColor');
           })
         } else if (highlight == 'unselect') {
