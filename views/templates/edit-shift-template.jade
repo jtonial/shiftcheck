@@ -9,8 +9,16 @@
       label Position
       select#position-edit
       label Start Time
-      input#start-time-edit(type="text",placeholder="Type something…")
+      .input-append.bootstrap-timepicker
+        input#start-time-edit.input-medium(type="text")
+        span.add-on
+          .icon-time
+      //input#start-time-edit(type="text")
       label End Time
-      input#end-time-edit(type="text",placeholder="Type something…")
+      .input-append.bootstrap-timepicker
+        input#end-time-edit.input-medium(type="text")
+        span.add-on
+          .icon-time
+      //input#end-time-edit(type="text")
       button#save-shift-trigger.btn.btn-success.btn-block Save Changes
       button#delete-shift-trigger.btn.btn-danger.btn-block Delete Shift

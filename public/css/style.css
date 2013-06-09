@@ -125,6 +125,10 @@ body {
   color: #222;
   text-decoration: none;
 }
+#main-app #content-header #header-icons i#ajax-indicator {
+  cursor: default;
+  color: #999;
+}
 #main-app #content-content {
   position: absolute;
   top: 60px;

@@ -22,23 +22,27 @@
         //Even if I cant get d3 views to work, it would still be easier to manage
       if (this.model.get('type') == 'shifted' && Scheduleme.meta.d3) {
         if (Scheduleme.meta.debug) console.log('is shifted; will listen to Shift events and rerender');
-        console.log('adding shift collection listener');
         // Using 'all' was triggering FAR to often
          // I wonder if I can do something like:
          // this.listenTo(this.model.Shifts, ['change', 'all', 'destroy', 'reset'], this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'change', this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'add', this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'change',  this.redrawSubview);
+
+        // It occurs to me that doing a full reRender when a shift is added may
+          // fix the highlighting problem
+        this.listenTo(this.model.Shifts, 'add',     this.redrawSubview);
         this.listenTo(this.model.Shifts, 'destroy', this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'reset', this.redrawSubview);
+        this.listenTo(this.model.Shifts, 'reset',   this.redrawSubview);
+
+        // Namespace the resize to the specific schedule model
+        $(window).bind("resize.app"+this.model.id, _.bind(this.redrawSubview, this));
+
       }
 
       this.render();
     },
 
-    redrawSubview: function () {
-      // This seems to be called multiple times (multiple listeners)
-      console.log('the shift collection was modified... redrawing');
-      //this.view.reRender();
+    redrawSubview: function (e) {
+      console.log('rendering a subview');
       this.view.redraw();
     },
 
@@ -72,10 +76,16 @@
       
     },
     _remove: function () {
+
       this.view.remove();
       this.remove();
     },
     _undelegateEvents: function () {
+
+      $(window).unbind("resize.app"+this.model.id);
+
+      this.stopListening();
+
       this.view.undelegateEvents();
       this.undelegateEvents();
     }

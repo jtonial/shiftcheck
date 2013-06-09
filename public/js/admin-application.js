@@ -72,6 +72,15 @@
     $.ajaxSetup({
       dataType: 'json' //AJAX responses will all be treated as json dispite content-type
     });
+
+    $(document).ajaxStart ( function () {
+      console.log('Showing AJAX icon');
+      $('#ajax-indicator').show();
+    });
+    $(document).ajaxStop ( function () {
+      console.log('Hiding AJAX icon');
+      $('#ajax-indicator').hide();
+    });
     //Add global $.ajaxError handlers
 
     $.ajax({

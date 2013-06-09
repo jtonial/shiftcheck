@@ -28,7 +28,7 @@
       $('#sidebar-content li').removeClass('active');
       newLink.addClass('active');
 
-      //Undelegate old view
+      //Undelegate old view; I 'undelegate' instead of remove because remove removes the #content div, which all views try to bind to
       if (Scheduleme.CurrentView.viewPane == 'main') Scheduleme.CurrentView._undelegateEvents();
 
       //Set current view to new view

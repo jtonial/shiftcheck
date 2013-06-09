@@ -34,6 +34,36 @@
     return e;
   }
 
+  function _getMinutes (string) {
+    var hours = parseInt(string.substr(0, string.indexOf(':')));
+    if (string.indexOf('P') > 0 && hours != 12) {
+      hours += 12;
+    }
+    var minutes = parseInt(string.substring(string.indexOf(':')+1, string.indexOf(':')+3));
+
+    return (hours*60)+minutes;
+  }
+  function _getTimestring (minutes) {
+    var hours = Math.floor(minutes / 60);
+    var minutes = minutes % 60;
+
+    var ampm = hours < 12 ? 'AM' : 'PM';
+
+    if (hours == 12 && ampm == 'AM') {
+      console.log('here');
+      hours = 12;
+    }
+
+    hours = hours % 12;
+
+    if (hours < 10) hours = '0'+hours;
+    if (minutes < 10) minutes = '0'+minutes;
+
+    var string = ''+hours+':'+minutes+' '+ampm;
+
+    return string;
+  }
+
   Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBaseView.extend({
 
     template: Handlebars.compile($('#schedule-template-d3').html()),
@@ -135,8 +165,10 @@
       Will generate crossMapping and crossMappingId
     */
     generateCrossMapping: function (d3Objects, xlineData) {
-      console.log('generateCrossMapping');
+
       var _this = this;
+
+      var dataset = _this.model.Shifts.toJSON();
 
       xlineData.forEach(function (x) {
         var a = [];
@@ -144,11 +176,13 @@
         d3Objects.each(function (s) {
           var shift = _this.indexes.shiftMeta[s.id];
           // The '30' is because that is the width of the vertical ranges, and should be a config instead of hard-coded here
-          if (_this.overlapping(x, x+30, shift.sMin, shift.eMin)) {
+          // Check that the shift exists; this is because when deleting the d3Object will still be fading, thus exist for a bit after the model is destroyed
+          if (shift && _this.overlapping(x, x+30, shift.sMin, shift.eMin)) {
             a.push(this);
             b.push(s.id);
           }
         })
+
         _this.indexes.crossMapping[x]=a;
         _this.indexes.crossMappingId[x]=b;
       });
@@ -179,8 +213,6 @@
 
       //Use the window width if parent with comes back as 0 (hack for jquery mobile seeming to leave not fully visible pages with a width of 0)
       var width = Math.min($(window).width(), $(target).parent().width()) || $(window).width() - 30;
-      var shiftInfoFontSize = _this.config.barHeight*(4/5);
-
       var height = (dataset.length * _this.config.barHeight) + _this.config.topPadding;
 
       _this.config.height = height;
@@ -202,8 +234,6 @@
 
 
     redraw: function () {
-
-      console.log('redrawing');
 
       var _this = this;
 
@@ -456,7 +486,7 @@
           .on('mouseover', function (d) {
             // Note: I can use attr or style, but mixing them is bad. Style seems to superceed attr
             var that = d3.select(this);
-            console.log(d);
+
             var start = that.property('sMin') - (that.property('sMin') % 30);
             var end = that.property('eMin') + (that.property('eMin') % 30);
 
@@ -502,6 +532,9 @@
           });
         // Delete
         shifts.exit()
+          .transition()
+          .duration(750)
+          .attr("height", 0)
           .remove();
 
       dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; })
@@ -537,6 +570,9 @@
           });
         // Delete
         employeeNames.exit()
+          .transition()
+            .duration(750)
+            .attr("font-size", "0px")
           .remove();
 
       // SHIFT POSITIONS-------------------------------------------------
@@ -573,6 +609,9 @@
           });
         // DELETE
         shiftPositions.exit()
+          .transition()
+            .duration(750)
+            .attr("font-size", "0px")
           .remove();
 
       // GRID TIMES----------------------------------------------------
@@ -645,10 +684,6 @@
 
 
 
-
-
-
-
     editShiftHandler: function (e) {
       if (Scheduleme.meta.ADMIN) {
         var _this = this;
@@ -659,14 +694,15 @@
         var sidebarWidth = $('#sidebar').width() + sidebarLeft;
         var headerHeight = $('#content-header').height();
 
-        console.log
         var id = e.currentTarget.getAttribute('id');
 
         var d3OffsetX = $(this.el).position().left;
         var d3OffsetY = $(this.el).position().top;
 
         var mouseX = e.clientX - sidebarWidth;
-        var mouseY = e.clientY - headerHeight + $('#content-content').scrollTop();
+        var mouseY = e.clientY - headerHeight + $('#content-content').scrollTop() + 1;
+
+        var buffer = 10;
 
         var shift = this.model.Shifts.get(id);
 
@@ -693,15 +729,16 @@
         this.$('#shift-id-display').html(shift.id);
         this.$('#employee-edit').val(shift.get('employee_id'));
         this.$('#position-edit').val(shift.get('position_id'));
-        this.$('#start-time-edit').val(shift.get('start'));
-        this.$('#end-time-edit').val(shift.get('end'));
+
+        this.$('#start-time-edit').timepicker('setTime', _getTimestring(shift.get('start')));
+        this.$('#end-time-edit').timepicker('setTime', _getTimestring(shift.get('end')));
 
         //----------------------------------------------------
 
-        var rightDiff = $(window).width() - mouseX;
-        var topDiff   = mouseY + $(document).scrollTop() - 40;
+        var rightDiff = $('#content-content').width() - mouseX;
+        var topDiff   = mouseY + $('#content-content').scrollTop() - 40;
         var leftDiff  = mouseX;
-        var botDiff   = $(document).height() - (mouseY + $(document).scrollTop());
+        var botDiff   = $(document).height() - 40 - (mouseY + $('#content-content').scrollTop());
 
         var boxWidth  = this.$('#edit-shift-popover').width();
         var boxHeight = this.$('#edit-shift-popover').height();
@@ -709,21 +746,21 @@
         var position  = 'right';
 
         /*
-        console.log('Right diff: '+rightDiff);
-        console.log('top diff: '+topDiff);
-        console.log('left diff: '+leftDiff);
+        console.log('Right diff:  '+rightDiff);
+        console.log('top diff:    '+topDiff);
+        console.log('left diff:   '+leftDiff);
         console.log('bottom diff: '+botDiff);
-        console.log('Box Width: '+boxWidth);
-        console.log('box height: '+boxHeight);
+        console.log('Box Width:   '+boxWidth);
+        console.log('box height:  '+boxHeight);
         */
-        
-        if ( rightDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
+
+        if ( rightDiff > boxWidth-buffer && topDiff > boxHeight/2-buffer && botDiff > boxHeight/2-buffer) {
           position = 'right';
-        } else if ( topDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
+        } else if ( topDiff > boxHeight-buffer && leftDiff > boxWidth/2-buffer && rightDiff > boxWidth/2-buffer) {
           position = 'top';
-        } else if ( botDiff > boxHeight && leftDiff > boxWidth/2 && rightDiff > boxWidth/2) {
+        } else if ( botDiff > boxHeight-buffer && leftDiff > boxWidth/2-buffer && rightDiff > boxWidth/2-buffer) {
           position = 'bottom';
-        } else if ( leftDiff > boxWidth && topDiff > boxHeight/2 && botDiff > boxHeight/2) {
+        } else if ( leftDiff > boxWidth-buffer && topDiff < boxHeight/2+buffer && botDiff > boxHeight/2-buffer) {
           position = 'left';
         } else {
           position = 'right';
@@ -749,6 +786,7 @@
         }
 
         //Based on x and y, determine if popover needs to be right, left, top, bottom. Default is right
+
       }
     },
     saveModifiedShift: function (e) {
@@ -759,23 +797,27 @@
 
       var employee_id = $('#employee-edit').val();
       var position_id = $('#position-edit').val();
-      var start    = $('#start-time-edit').val();
-      var end      = $('#end-time-edit').val();
+
+      var start       = _getMinutes($('#start-time-edit').val());
+      var end         = _getMinutes($('#end-time-edit').val());
 
       var employee = Scheduleme.Employees.get(employee_id);
       var position = Scheduleme.Positions.get(position_id);
-
-      shift.set({
-        employee_name : employee.get('first_name')+' '+employee.get('last_name'),
-        position      : position.get('position')
-      });
 
       shift.save({
         employee_id : employee_id,
         position_id : position_id,
         start       : start,
         end         : end
-      }, { wait: true });
+      }, { 
+        wait: true, 
+        success: function () {
+          shift.set({
+            employee_name : employee.get('first_name')+' '+employee.get('last_name'),
+            position      : position.get('position')
+          });
+        }
+      });
 
       _this.$('#edit-area').hide();
 
@@ -790,14 +832,21 @@
       _this.$('#edit-area').hide();
 
     },
-    highlightShifts: function (highlight, i, hoveredId) {
+
+    highlightShift: function (highlight, s, hoveredId) {
 
       var _this = this;
-      _this.indexes.crossMapping[i].forEach(function (s) {
-        var t = d3.select(s);
-        var id = t.attr("id");
-        var y = t.attr("y") -1; //Not sure why this has to be -1
-        if (highlight == 'select') {
+
+      var t = d3.select(s);
+      var id = t.attr("id");
+      var y = t.attr("y") -1; //Not sure why this has to be -1
+      if (highlight == 'select') {
+        var overlap = 1;
+        if (typeof hoveredId != 'undefined') {
+          overlap = _this.indexes.overlappingAmounts[hoveredId][id];
+        }
+
+        if (overlap) {
           d3.select(_this.indexes.shiftText[id].employeeName)
             .attr("fill", _this.config.textColor)
             .attr("font-weight", "bold");
@@ -806,29 +855,51 @@
             .attr("font-weight", "bold");
           d3.select(_this.indexes.horizontalAreaMapping[y])
             .attr("fill","rgba(180,180,180,0.5)");
-
-          t.attr("fill", function (d) {
-            //I'll need to pass the id of the hovered shift for the comparative colouring.
-            //if (typeof hoveredId != 'undefined') {
-            //  return 'rgba(0, 0, 150, '+_this.indexes.overlappingAmounts[hoveredId][d.id]+')';
-            //}
-            console.log(d);
-            return t.property('baseColor');
-          })
-        } else if (highlight == 'unselect') {
-          d3.select(_this.indexes.shiftText[id].employeeName)
-            .attr("fill", _this.config.fadedTextColor)
-            .attr("font-weight", "normal");
-          d3.select(_this.indexes.shiftText[id].position)
-            .attr("fill", _this.config.fadedTextColor)
-            .attr("font-weight", "normal");
-          d3.select(_this.indexes.horizontalAreaMapping[y])
-            .attr("fill","rgba(180,180,180,0)");
-
-          t.attr("fill", t.property('transColor'));
         }
-      })
+
+        t.attr("fill", function (d) {
+          //I'll need to pass the id of the hovered shift for the comparative colouring.
+          if (typeof hoveredId != 'undefined') {
+            console.log(hoveredId);
+            return 'rgba(0, 0, 150, '+overlap+')';
+          }
+          return t.property('baseColor');
+        })
+      } else if (highlight == 'unselect') {
+        d3.select(_this.indexes.shiftText[id].employeeName)
+          .attr("fill", _this.config.fadedTextColor)
+          .attr("font-weight", "normal");
+        d3.select(_this.indexes.shiftText[id].position)
+          .attr("fill", _this.config.fadedTextColor)
+          .attr("font-weight", "normal");
+        d3.select(_this.indexes.horizontalAreaMapping[y])
+          .attr("fill","rgba(180,180,180,0)");
+
+        t.attr("fill", t.property('transColor'));
+      }
     },
+    highlightShifts: function (highlight, i, hoveredId) {
+
+      var _this = this;
+
+      if (highlight == 'select') {
+        if (typeof hoveredId != 'undefined') {
+          //_this.indexes.crossMapping[i].forEach(function (s) {
+          d3.selectAll(".shift")[0].forEach(function (s) {
+            _this.highlightShift(highlight, s, hoveredId);
+          });
+        } else {
+          _this.indexes.crossMapping[i].forEach(function (s) {
+            _this.highlightShift(highlight, s);
+          });
+        }
+      } else {
+        d3.selectAll(".shift")[0].forEach(function (s) {
+          _this.highlightShift(highlight, s, hoveredId);
+        });
+      }
+    },
+
     hideUnmatching: function (id) {
       d3.selectAll(".shift")
         .transition()
@@ -872,10 +943,6 @@
       var contentTarget = document.getElementById('d3Target');
       _this.createD3(contentTarget);
 
-      $(window).resize(function () {
-        _this.redraw();
-      });
-
       if (Scheduleme.meta.ADMIN) {
         $('#new_shift_employee').typeahead({
           source: Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); })
@@ -898,6 +965,14 @@
         $('#new_shift_end_time').timepicker().on('changeTime.timepicker', function(e) {
           _this.new_shift_end_time = e.time;
         });
+
+        $('#start-time-edit').timepicker({
+            minuteStep: 15
+        });
+        $('#end-time-edit').timepicker({
+            minuteStep: 15
+        });
+
       }
 
       $(this.el).on("modifiedShifts", function (e) {
@@ -943,24 +1018,11 @@
       if ( !end_time ) {
         errors.push('End Time invalid');
       } else {
-        var start_hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
-        if (start_time.indexOf('P') > 0) {
-          start_time += 12;
+        var start       = _getMinutes(start_time);
+        var end         = _getMinutes(end_time);
+        if (end <= start) {
+          errors.push('Invalid: End time must be greater than start time');
         }
-        var start_minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
-
-        var end_hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
-        if (end_time.indexOf('P') > 0) {
-          end_hours += 12;
-        }
-        var end_minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
-
-        if (end_hours < start_hours) {
-          errors.push('End Time invalid: '+start_hours+' '+end_hours);
-        } else if (end_hours == start_hours && end_minutes <= start_minutes) {
-          errors.push('End Time invalid: '+start_minutes+' '+end_minutes);
-        }
-
       }
 
       if (errors.length) {
@@ -970,22 +1032,8 @@
         var employee_id = Scheduleme.Employees.find(function (e) { return e.get('first_name')+' '+e.get('last_name') == employee; }).id;
         var position_id = Scheduleme.Positions.find(function (p) { return p.get('position') == position; }).id;
 
-        var hours = parseInt(start_time.substr(0, start_time.indexOf(':')));
-        if (start_time.indexOf('P') > 0) {
-          hours += 12;
-        }
-        var minutes = parseInt(start_time.substring(start_time.indexOf(':')+1, start_time.indexOf(':')+3));
-
-        var start = (hours*60)+minutes;
-
-
-        var hours = parseInt(end_time.substr(0, end_time.indexOf(':')));
-        if (end_time.indexOf('P') > 0) {
-          hours += 12;
-        }
-        var minutes = parseInt(end_time.substring(end_time.indexOf(':')+1, end_time.indexOf(':')+3));
-
-        var end = (hours*60)+minutes;
+        var start       = _getMinutes(start_time);
+        var end         = _getMinutes(end_time);
 
         _this.model.Shifts.create({
           schedule_id   : schedule_id,

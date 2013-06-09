@@ -2,6 +2,19 @@
 var mysql = require('mysql') ,
     pool;
 
+function customFormat(connection) {
+  /*
+  connection.config.queryFormat = function (query, values) {
+    if (!values) return query;
+    return query.replace(/\:(\w+)/g, function (txt, key) {
+      if (values.hasOwnProperty(key)) {
+        return this.escape(values[key]);
+      }
+      return txt;
+    }.bind(this));
+  };
+  */
+}
 function handleDisconnect(connection) {
   connection.on('error', function(err) {
     if (!err.fatal) {
@@ -15,7 +28,10 @@ function handleDisconnect(connection) {
     console.log('Re-connecting lost connection: ' + err.stack);
 
     connection = mysql.createConnection(connection.config);
+
+    customFormat(connection);
     handleDisconnect(connection);
+
     connection.connect();
   });
 }
@@ -33,7 +49,7 @@ exports.init = function(config) {
     var connection = mysql.createConnection(options);
 
     //Any custom formatting here
-    
+    customFormat(connection);
     handleDisconnect(connection);
 
     return connection;
