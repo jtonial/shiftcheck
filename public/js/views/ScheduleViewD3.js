@@ -79,7 +79,10 @@
       topPadding       : 20,
       leftPadding      : 100,
 
-      name_length      : 11
+      name_length      : 11,
+
+      shadeToOverlapping : true
+
     },
     indexes: {
       shiftMeta        : {},
@@ -133,11 +136,20 @@
       return 1;
     },
     amountOverlapping: function (s1, e1, s2, e2) {
+      var l1 = e1 - s1;
+      var l2 = e2 - s1;
+
       if (this.overlapping(s1, e1, s2, e2)) {
-        if (s2 < e1) {// a is before a
-          return (e1 - Math.max(s1, s2)) / (e1 - s1);
-        } else { // b is before a
-          return (e2 - Math.max(s1, s2)) / (e1 - s1);
+        if (s1 == s2 && e1 == e2) {
+          return 1; // The shifts are the same
+        } else if (s1 <= s2 && e1 <= e2) {// a is before a
+          return (e1 - s2) / (e1 - s1);
+        } else if (s1 >= s2 && e1 <= e2) {
+          return (e1 - s1) / (e1 - s1);
+        } else if (s1 >= s2 && e1 >= e2) { // b is before a
+          return (e2 - s1) / (e1 - s1);
+        } else if (s1 <= s2 && e1 >= e2) {
+          return (e2 - s2) / (e1 - s1);
         }
       }
       return 0;
@@ -860,7 +872,6 @@
         t.attr("fill", function (d) {
           //I'll need to pass the id of the hovered shift for the comparative colouring.
           if (typeof hoveredId != 'undefined') {
-            console.log(hoveredId);
             return 'rgba(0, 0, 150, '+overlap+')';
           }
           return t.property('baseColor');
@@ -883,7 +894,7 @@
       var _this = this;
 
       if (highlight == 'select') {
-        if (typeof hoveredId != 'undefined') {
+        if (typeof hoveredId != 'undefined' && _this.config.shadeToOverlapping ) {
           //_this.indexes.crossMapping[i].forEach(function (s) {
           d3.selectAll(".shift")[0].forEach(function (s) {
             _this.highlightShift(highlight, s, hoveredId);
