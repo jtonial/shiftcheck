@@ -1,7 +1,10 @@
   //- i#sched-date.icon-calendar.icon-2x.pull-right
 ul#dates.nav.nav-list
-  li.nav-header Current Schedules
+  li.nav-header 
+    | Current Schedules
+    i#fetch_schedule.fetch-date-trigger.icon-search.pull-right(style="margin-top:3px;")
+    input#sched-date.pull-right(type="text", style="visibility:hidden;width:1px;height:1px;")
   li#prependHere
 #top-buttons.clearfix.admin-only
-  i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
-  input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")
+  //i#fetch_schedule.fetch-date-trigger.icon-search.icon-2x.pull-right
+  //input#sched-date(type="text", style="visibility:hidden;width:1px;height:1px;")

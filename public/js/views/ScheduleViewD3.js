@@ -63,6 +63,9 @@
 
     return string;
   }
+  function _makeRGBa (rgb, trans) {
+    return 'rgba('+rgb.r+','+rgb.g+','+rgb.b+','+trans+')';
+  }
 
   Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBaseView.extend({
 
@@ -81,7 +84,13 @@
 
       name_length      : 11,
 
-      shadeToOverlapping : true
+      shadeToOverlapping : false,
+
+      baseShiftColor   : {
+        r : 0,
+        g : 0,
+        b : 150
+      }
 
     },
     indexes: {
@@ -231,9 +240,9 @@
 
       // Create SVG element
       var canvas = d3.select(target)
-            .append("svg")
-            .style("width", width)
-            .style("height", height);
+        .append("svg")
+        .style("width", width)
+        .style("height", height);
 
       _this.redraw();
 
@@ -458,6 +467,8 @@
         // Enter
         shifts.enter()
           .append("rect").attr("class", "shift")
+          // These probably don't actually have to be set anymore, but I'll
+            // deal with this later
           .property("sMin", function (d, i) {
             return d.start;
           })
@@ -465,13 +476,10 @@
             return d.end;
           })
           .property('transColor', function (d, i) {
-            return "rgba(0, 0, 150, 0.6)";
+            return _makeRGBa(_this.config.baseShiftColor, 0.6);
           })
           .property('baseColor', function (d, i) {
-            var sMin = d3.select(this).property('sMin');
-            var eMin = d3.select(this).property('eMin');
-
-            return "rgba(0, 0, 150, 0.9)";
+            return _makeRGBa(_this.config.baseShiftColor, 0.9);
           })
           .attr("id", function (d) {
             return d.id;
@@ -524,6 +532,9 @@
           .on('click', function (d) {
             //document.dispatchEvent(Scheduleme.events.editShift(d.id, d3.event.x, d3.event.y));
             if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
+          })
+          .on('dblclick', function (d) {
+            console.log('double click on id='+d.id);
           });
         // Update
         shifts.transition()
@@ -767,14 +778,19 @@
         */
 
         if ( rightDiff > boxWidth-buffer && topDiff > boxHeight/2-buffer && botDiff > boxHeight/2-buffer) {
+          mouseX++;
           position = 'right';
         } else if ( topDiff > boxHeight-buffer && leftDiff > boxWidth/2-buffer && rightDiff > boxWidth/2-buffer) {
+          mouseY--;
           position = 'top';
         } else if ( botDiff > boxHeight-buffer && leftDiff > boxWidth/2-buffer && rightDiff > boxWidth/2-buffer) {
+          mouseY+=8
           position = 'bottom';
         } else if ( leftDiff > boxWidth-buffer && topDiff < boxHeight/2+buffer && botDiff > boxHeight/2-buffer) {
+          mouseX-=4;
           position = 'left';
         } else {
+          mouseX++;
           position = 'right';
         }
 
@@ -872,7 +888,7 @@
         t.attr("fill", function (d) {
           //I'll need to pass the id of the hovered shift for the comparative colouring.
           if (typeof hoveredId != 'undefined') {
-            return 'rgba(0, 0, 150, '+overlap+')';
+            return _makeRGBa(_this.config.baseShiftColor, overlap);
           }
           return t.property('baseColor');
         })

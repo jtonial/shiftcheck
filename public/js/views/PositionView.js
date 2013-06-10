@@ -23,9 +23,23 @@
     },
 
     confirmRemove: function () {
-      if (confirm('Are you sure you wish to remove this position')) {
-        this.model.destroy({ wait: true });
-      }
+
+      var _this = this;
+
+      bootbox.confirm('Are you sure you wish to remove this position?', function (result) {
+        if (result) {
+          _this.model.destroy({ 
+            wait: true,
+            error: function (model, jqxhr) {
+              var res = jqxhr.responseText;
+
+              res = (typeof res == 'object') ? res : JSON.parse(res);
+
+              bootbox.alert(res.message || 'Operation failed, however the reason is unknown right now' );
+            }
+          });
+        }
+      });
     }
   });
 })();
