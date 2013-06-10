@@ -6,7 +6,7 @@ block append scripts
     script(src='/js/vendor/bootstrap-timepicker.min.js')
     script(src='/js/vendor/antiscroll.js')
     script(src='/js/admin-application.js')
-    script
+    script.
       $(document).ready(function() {
         //This should instead pluck the names of all employees
 
@@ -159,7 +159,7 @@ block end-scripts
 
   script(src='/js/routers/employer-router.js')
   - if ( user.employer_id )
-    script
+    script.
       $('#upload-modal-trigger').click( function () {
         $('#upload-modal').modal('show');
       });

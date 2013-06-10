@@ -64,8 +64,6 @@ exports.validatePassword = function (password) {
 exports.logout = function (req, res) {
   var message = 'Logged out';
   req.session.destroy();
-  console.log(message);
-  console.log(req.headers);
   if (req.headers['accept'] == 'application/json') {
     res.end();
   } else {

@@ -5,8 +5,6 @@ var db = require('../db/dbconnection');
 
 exports.trackRequest = function (req) {
   
-  console.log(req.session);
-
   if (Scheduleme.Config.debug) Scheduleme.Logger.info('Tracking Request');
 
   var user_type = '';
