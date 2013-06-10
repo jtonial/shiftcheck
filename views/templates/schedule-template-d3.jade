@@ -5,23 +5,33 @@
 
 #d3Target
 
-#add-shift-area.well.admin-only
-  h5 Add Shift
-  .row-fluid
-    .span3
-      input#new_shift_employee.input-block-level(type="text", placeholder="Employee")
-    .span3
-      input#new_shift_position.input-block-level(type="text", placeholder="Position")
-    .span3
-      .input-append.bootstrap-timepicker
-        input#new_shift_start_time.input-mini(type="text", placeholder="Start Time")
-        span.add-on
-          .icon-time
-    .span3
-      .input-append.bootstrap-timepicker
-        input#new_shift_end_time.input-mini(type="text", placeholder="End Time")
-        span.add-on
-          .icon-time
-  .row-fluid
-    .span3.offset9
-      button#add_shift_trigger.btn.btn-primary.btn-block Add
+.well.admin-only
+  #add-shift-area
+    h5 Add Shift
+    .row-fluid
+      .span3
+        input#new_shift_employee.input-block-level(type="text", placeholder="Employee")
+      .span3
+        input#new_shift_position.input-block-level(type="text", placeholder="Position")
+      .span3
+        .input-append.bootstrap-timepicker
+          input#new_shift_start_time.input-mini(type="text", placeholder="Start Time")
+          span.add-on
+            .icon-time
+      .span3
+        .input-append.bootstrap-timepicker
+          input#new_shift_end_time.input-mini(type="text", placeholder="End Time")
+          span.add-on
+            .icon-time
+    .row-fluid
+      .span3.offset9
+        button#add_shift_trigger.btn.btn-primary.input-small.pull-right Add
+  #add-shift-area
+    h5 Edit Schedule
+    .form-horizontal
+      .control-group
+        label.control-label Timezone
+        .controls
+          input#timezone(type='text', name='schedule[timezone]')
+
+      button.btn.btn-primary.input-small.pull-right(type='submit') Save

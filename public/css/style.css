@@ -261,7 +261,7 @@ body {
 #account-modal .modal-body {
   padding: 0;
   max-height: 500px;
-  overflow-x: scroll;
+  overflow-x: hidden;
   background-color: #22262e;
 }
 #account-modal .modal-body .account-nav {

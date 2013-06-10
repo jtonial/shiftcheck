@@ -71,6 +71,10 @@
 
     template: Handlebars.compile($('#schedule-template-d3').html()),
     
+    initialize: function () {
+      _.bind(this.focusOnShift, this);
+    },
+
     config: {
       hideUnmatchingOnClick  : 0,
       textColor        : '#000',
@@ -85,7 +89,7 @@
       name_length      : 11,
 
       shadeToOverlapping : false,
-
+      focusOnShift     : false,
       baseShiftColor   : {
         r : 0,
         g : 0,
@@ -103,10 +107,13 @@
     },
 
     events: {
-      "click rect.shift" : 'editShiftHandler',
       "click #save-shift-trigger" : "saveModifiedShift",
       "click #delete-shift-trigger" : "deleteShift",
-      "click #add_shift_trigger" : "addShift"
+      "click #add_shift_trigger" : "addShift",
+
+      "click rect.shift" : 'editShiftHandler',
+
+      "click #unfocus-trigger" : "unfocus"
     },
 
     truncate: function (s) {
@@ -254,11 +261,13 @@
 
 
 
-    redraw: function () {
+    redraw: function (dataset) {
 
       var _this = this;
 
-      var dataset = _this.model.Shifts.toJSON();
+      dataset = dataset || _this.model.Shifts.toJSON();
+
+      console.log(dataset);
 
       // Sort schedules
       function compare(a,b) {
@@ -534,8 +543,18 @@
             if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
           })
           .on('dblclick', function (d) {
-            console.log('double click on id='+d.id);
+            if (_this.config.focusOnShift) {
+              var id = d.id;
+
+              var tmp = _this.model.Shifts.filter( function (s) { return _this.indexes.overlappingAmounts[d.id][s.id]; });
+
+              _this.$('#edit-area').hide();
+
+              // The parse(stringify()) is necessary (well, the easiest way) to get the proper object
+              _this.redraw(JSON.parse(JSON.stringify(tmp)));
+            }
           });
+
         // Update
         shifts.transition()
           .duration(750)
@@ -705,7 +724,27 @@
 
 
 
+    focus: function (e) {
+      var id = e.currentTarget.getAttribute('id');
+      
+      this.focusOnShift(id);
 
+    },
+
+    focusOnShift: function (id) {
+      if (this.config.focusOnShift) {
+        var tmp = this.model.Shifts.filter( function (d) { return this.indexes.overlappingAmounts[36][id]; });
+
+        this.$('#edit-area').hide();
+
+        // The parse(stringify()) is necessary (well, the easiest way) to get the proper object
+        this.redraw(JSON.parse(JSON.stringify(tmp)));
+      }
+    },
+
+    unfocus: function () {
+      this.redraw();
+    },
 
     editShiftHandler: function (e) {
       if (Scheduleme.meta.ADMIN) {
