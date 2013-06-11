@@ -74,11 +74,11 @@
     });
 
     $(document).ajaxStart ( function () {
-      console.log('Showing AJAX icon');
+      //console.log('Showing AJAX icon');
       $('#ajax-indicator').show();
     });
     $(document).ajaxStop ( function () {
-      console.log('Hiding AJAX icon');
+      //console.log('Hiding AJAX icon');
       $('#ajax-indicator').hide();
     });
     //Add global $.ajaxError handlers

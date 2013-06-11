@@ -32,6 +32,6 @@
       .control-group
         label.control-label Timezone
         .controls
-          input#timezone(type='text', name='schedule[timezone]')
+          input#timezone(type='text', name='schedule[timezone]', value='{{timezone}}')
 
-      button.btn.btn-primary.input-small.pull-right(type='submit') Save
+      button#save-schedule.btn.btn-primary.input-small.pull-right(type='submit') Save

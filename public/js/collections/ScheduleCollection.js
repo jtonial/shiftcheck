@@ -15,4 +15,5 @@
       return (new Date(schedule.get('date'))).getTime();
     }
   });
+
 })();

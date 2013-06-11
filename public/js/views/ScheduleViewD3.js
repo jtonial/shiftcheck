@@ -113,7 +113,9 @@
 
       "click rect.shift" : 'editShiftHandler',
 
-      "click #unfocus-trigger" : "unfocus"
+      "click #unfocus-trigger" : "unfocus",
+
+      "click #save-schedule" : "saveSchedule"
     },
 
     truncate: function (s) {
@@ -266,8 +268,6 @@
       var _this = this;
 
       dataset = dataset || _this.model.Shifts.toJSON();
-
-      console.log(dataset);
 
       // Sort schedules
       function compare(a,b) {
@@ -888,6 +888,19 @@
 
       _this.$('#edit-area').hide();
 
+    },
+
+    saveSchedule: function (e) {
+
+      var newTimezone = $('#timezone').val();
+
+      // I need to write in some client-side validation here
+
+      this.model.save({
+        timezone : newTimezone
+      }, {
+        wait: true
+      })
     },
     deleteShift: function (e) {
       e.preventDefault();

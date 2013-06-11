@@ -42,7 +42,6 @@
     },
 
     redrawSubview: function (e) {
-      console.log('rendering a subview');
       this.view.redraw();
     },
 
