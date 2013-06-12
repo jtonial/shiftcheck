@@ -96,12 +96,12 @@ app.configure(function(){
 });
 
 
-app.get('/', Main.Render.index);
+app.get('/',              Main.Render.index);
 // In order to accomodate push-state
-app.get('/schedule/*', Main.Render.index)
+app.get('/schedule/*',    Main.Render.index)
 app.get('/employee-list', Main.Render.index)
 app.get('/position-list', Main.Render.index)
-app.get('/request-list', Main.Render.index)
+app.get('/request-list',  Main.Render.index)
 
 
 app.get('/mobile', function (req, res) {
@@ -109,9 +109,9 @@ app.get('/mobile', function (req, res) {
 });
 
 
-//app.configure('development', function() {
+app.configure('development', function() {
   app.use(express.errorHandler());
-//});
+});
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('HTTP server listening on %s', app.get('port'));
