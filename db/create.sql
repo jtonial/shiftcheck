@@ -88,7 +88,7 @@ CREATE TABLE schedules (
   timezone INT NOT NULL DEFAULT 0, #Minute difference from UTC
   type ENUM('day','week','twoweek','month') NOT NULL,
   creation_time DATETIME NOT NULL,
-  image_loc varchar(45) NOT NULL,
+  image_loc varchar(45),
   json text,
   awaitingupload BOOLEAN NOT NULL DEFAULT true,
 
