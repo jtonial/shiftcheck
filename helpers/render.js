@@ -32,7 +32,7 @@ exports.index = function(req, res){
 };
 
 //Codes
-exports.code = function (xhr, res, obj) {
+exports.code = function (req, res, obj) {
   // I should put certain attributes into their own objects here (meta?)
     // statusCode
     // message
@@ -41,8 +41,9 @@ exports.code = function (xhr, res, obj) {
     // duration
 
   res.statusCode = obj.statusCode;
+  delete obj.statusCode;
 
-  //if (xhr) {
+  //if (req.xhr) {
     res.header('Content-Type', 'application/json');
     res.end(JSON.stringify(obj));
   /*} else {
@@ -55,18 +56,10 @@ exports.code = function (xhr, res, obj) {
         res.header('Content-Type', 'application/json');
         res.end(JSON.stringify(obj));
         break;
-      case 401:
-        res.render('401', { } );
+      default:
+        res.render(res.statusCode, { } );
         break;
-      case 403:
-        res.render('403', { } );
-        break;
-      case 404:
-        res.render('404', { } );
-        break;
-      case 500:
-        res.render('500', { } );
-        break;
+
     }
   }*/
 };

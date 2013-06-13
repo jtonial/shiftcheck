@@ -17,7 +17,9 @@
     "url": "*",
     "connect-redis": "*",
     "mysql": "*",
-    "express-device": "~0.3.6"
+    "express-device": "~0.3.6",
+    "backbone":"*",
+    "underscore":"*"
   },
   "engines": {
     "node": "0.8.x",
