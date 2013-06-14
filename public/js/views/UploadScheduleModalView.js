@@ -165,7 +165,7 @@
         $('.modal-footer button').attr('disabled', true);
         $('#ajax-loader').removeClass('hidden');
 
-        obj = new uploadObject();
+        var obj = new uploadObject();
         obj.setCallback(function () {
           $('.modal-footer button').attr('disabled', false);
           $('#ajax-loader').addClass('hidden');
@@ -269,11 +269,13 @@
       event.preventDefault();
 
       var dateToFetch = $('#upload-schedule-date').val();
+      var dateObj = new Date(dateToFetch);
+      dateObj = Scheduleme.helpers.UTCify(dateObj);
 
       var payload = {
-        date: dateToFetch, // this should be validated as valid
+        date: dateObj.toString(), // this should be validated as valid
         type: 'day',
-        timezone: (new Date()).getTimezoneOffset(),
+        timezone: dateObj.getTimezoneOffset(),
         shifts: []
       }
 
