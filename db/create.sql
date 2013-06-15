@@ -63,7 +63,8 @@ CREATE TABLE positions (
   description varchar(150),
 
   active BOOLEAN NOT NULL DEFAULT 1,
-
+  deleted BOOLEAN NOT NULL DEFAULT 0,
+  
   CONSTRAINT UNIQUE (employer_id, position),
   CONSTRAINT FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
 
