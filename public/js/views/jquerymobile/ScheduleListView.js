@@ -97,7 +97,11 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
     this.$('#dates').append(htmlText);
 
-    $('#dates').listview('refresh');
+    try {
+      $('#dates').listview('refresh');
+    } catch (e) {
+      console.log(e);
+    }
     
   },
   //Used after the view has been destroyed then created again to add back schedule views
@@ -107,19 +111,21 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
       self.addOneSchedule(schedule);
     });
 
-    $('#dates').listview('refresh');
-
+    try {
+      $('#dates').listview('refresh');
+    } catch (e) {
+      console.log(e);
+    }
   },
   reRenderTabs: function () { //This works
     var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
     $('.schedule-tab').remove();
     _.each(this.collection.models, function(schedule) {
-      console.log('type '+schedule.get('type'));
+      
       var d = new Date(schedule.get('datenum'));
-      //console.log('Day1: '+d);
       d = Scheduleme.helpers.fromUTC(d);
-      //console.log('Day2: '+d);
+
       if (schedule.get('type') == 'month') {
         this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');
       } else if (schedule.get('type') == 'week') {
@@ -136,7 +142,11 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
       delete d; //Remove the reference to D; it can not be garbage collected
     });
 
-    $('#dates').listview('refresh');
+    try {
+      $('#dates').listview('refresh');
+    } catch (e) {
+      console.log(e);
+    }
 
   }
 

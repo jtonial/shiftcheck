@@ -1,53 +1,79 @@
-Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
-  //This renders directly into the el element; no need to append
-    //Replaces everything in it; and no need to postRender()
-  el: $('#sidebar-content'),
+(function () {
+  
+  "use strict"
 
-  template: Handlebars.compile($('#schedule-list-template').html()),
+  Scheduleme.classes.views.ScheduleView = Backbone.View.extend({
+    //This renders directly into the el element; no need to append
+      //Replaces everything in it; and no need to postRender()
+    el: $('#sidebar-content'),
 
-  initialize: function () {
+    template: Handlebars.compile($('#schedule-list-template').html()),
 
-    console.log('Schedule View Initialized');
+    initialize: function () {
 
-    this.render();
-  },
+      this.view = null;
 
-  render: function () {
+      console.log('Schedule View Initialized');
+      if (this.model.get('type') == 'shifted' && Scheduleme.meta.d3) {
+        if (Scheduleme.meta.debug) console.log('is shifted; will listen to Shift events and rerender');
 
-    var requiresPostRender = false;
+        // Namespace the resize to the specific schedule model
+        $(window).bind("resize.app"+this.model.id, _.bind(this.redrawSubview, this));
 
-    var schedule = this.model;
+      }
+      this.render();
+    },
 
-    if ( typeof schedule.get('g_spreadsheet_key') != 'undefined' && schedule.get('g_spreadsheet_key') ) {
-      var view = new Scheduleme.classes.views.ScheduleView.spreadsheet ({ model: this.model });
-    } else if ( typeof schedule.get('json') != 'undefined' && schedule.get('json') ) {
-      var view = new Scheduleme.classes.views.ScheduleView.table ({ model: this.model });
-    } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
-      requiresPostRender = true;
-      var view = new Scheduleme.classes.views.ScheduleView.d3 ({ model: this.model });
-    } else if (schedule.get('type') == 'month') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
-    } else if (schedule.get('type') == 'week') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
-    } else if (schedule.get('type') == 'twoweek') {
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
-    } else { //Defaults to daily schedule
-      var view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+    redrawSubview: function (e) {
+      this.view.redraw();
+    },
+
+    render: function () {
+
+      var requiresPostRender = false;
+
+      var schedule = this.model;
+
+      if ( typeof schedule.get('g_spreadsheet_key') != 'undefined' && schedule.get('g_spreadsheet_key') ) {
+        this.view = new Scheduleme.classes.views.ScheduleView.spreadsheet ({ model: this.model });
+      } else if ( typeof schedule.get('json') != 'undefined' && schedule.get('json') ) {
+        this.view = new Scheduleme.classes.views.ScheduleView.table ({ model: this.model });
+      } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+        requiresPostRender = true;
+        this.view = new Scheduleme.classes.views.ScheduleView.d3 ({ model: this.model });
+      } else if (schedule.get('type') == 'month') {
+        this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      } else if (schedule.get('type') == 'week') {
+        this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      } else if (schedule.get('type') == 'twoweek') {
+        this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      } else { //Defaults to daily schedule
+        this.view = new Scheduleme.classes.views.ScheduleView.pdf ({ model: this.model });
+      }
+
+      this.view.render();
+
+      if (requiresPostRender) {
+        this.view.postRender();
+      }
+
+      return $(this.view.el);
+      
+    },
+    _remove: function () {
+
+      this.view.remove();
+      this.remove();
+    },
+    _undelegateEvents: function () {
+
+      $(window).unbind("resize.app"+this.model.id);
+
+      this.stopListening();
+
+      this.view.undelegateEvents();
+      this.undelegateEvents();
     }
 
-    /*view.render();
-    view.requiresPostRender = requiresPostRender;
-
-    return view;*/
-
-    view.render();
-
-    if (requiresPostRender) {
-      view.postRender();
-    }
-
-    return $(view.el);
-    
-  }
-
-});
+  });
+})();

@@ -105,7 +105,7 @@ app.get('/request-list',  Main.Render.index)
 
 
 app.get('/mobile', function (req, res) {
-  res.render('jquerymobile', { });
+  res.render('mobile', { });
 });
 
 

@@ -63,7 +63,6 @@
 
     //Router takes care of this
     Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
-
     Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
     Scheduleme.UploadScheduleModalView = new Scheduleme.classes.views.UploadScheduleModalView();
@@ -156,31 +155,7 @@
     Scheduleme.Employees.fetch();
     Scheduleme.Positions.fetch();
     
-    /*$(window).touchwipe({
-      min_move_x: 50,
-      min_move_y: 50,
-      wipeLeft: function() {
-        // Close
-        log('Left Swipe');
-
-      },
-      wipeRight: function() {
-        // Open
-        log('Right Swipe');
-
-      },
-      preventDefaultEvents: false,
-      preventDefaultEventsX: false
-    });*/
-
     new FastClick(document.body);
-
-    //$('body').append('<div id="console-output"></div>');
-
-    var _consolelog = function (x) {
-      //$('#console-output').append(x+'<br/>');
-      //log(x);
-    }
 
   };
 

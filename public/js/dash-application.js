@@ -16,6 +16,8 @@
 
     Schedules: {},
 
+    initialized: 0,
+
     Init: function () {},
 
     CurrentView: {},
@@ -61,33 +63,39 @@
     Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
     //Router takes care of this
-    //Scheduleme.SchedulesView = new Scheduleme.classes.views.SchedulesView({ collection: Scheduleme.Schedules });
     Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
-
     Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
 
     //AJAX Setup
     $.ajaxSetup({
       dataType: 'json' //AJAX responses will all be treated as json dispite content-type
     });
-    //Add global $.ajaxError handlers
+
+    $(document).ajaxStart ( function () {
+      //console.log('Showing AJAX icon');
+      $('#ajax-indicator').show();
+    });
+    $(document).ajaxStop ( function () {
+      //console.log('Hiding AJAX icon');
+      $('#ajax-indicator').hide();
+    });
 
     $.ajax({
       url: '/bootstrap',
       success: function (res) {
         //Removing loading div
 
-        $.each(res.data.schedules, function () {
-          Scheduleme.Schedules.add(this);
-        });
-
-        Scheduleme.ScheduleListView.reRenderTabs();
-
         $('#schedule-pane').removeClass('loading');
 
-        if (!res.data.schedules.length) {
+        if (!res.data.schedules || !res.data.schedules.length) {
           $('#schedule-pane').addClass('no-schedules');
         } else {
+
+          $.each(res.data.schedules, function () {
+            Scheduleme.Schedules.add(this);
+          });
+
+          Scheduleme.ScheduleListView.reRenderTabs();
           $('#schedule-pane').addClass('select-schedule');
         }
 
@@ -102,16 +110,16 @@
         
         //Add data into global object
         Scheduleme.data.email = res.data.email;
-        if (Scheduleme.CurrentView.viewType !='undefined') {
-          $('#email').val(Scheduleme.data.email);
-        }
+
+        $('#email').val(Scheduleme.data.email);
+
         Scheduleme.data.name = res.data.name;
         Scheduleme.data.username = res.data.username;
       }, error: function () {
         //Remove loading div
         $('#schedule-pane').removeClass('loading').addClass('loading-error');
 
-        console.log('An error occured');
+        log('An error occured');
         //alert('We seem to be having some technical difficulties');
       }, complete: function () {
         Scheduleme.Router = new AppRouter;
@@ -139,38 +147,25 @@
       $('#sidebar').removeClass('open closed').addClass(newState);
     });
 
-    /*$(window).touchwipe({
-      min_move_x: 50,
-      min_move_y: 50,
-          wipeLeft: function() {
-            // Close
-            console.log('Left Swipe');
+    Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
+    Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
 
-          },
-          wipeRight: function() {
-            // Open
-            console.log('Right Swipe');
+    Scheduleme.Employees.fetch();
+    Scheduleme.Positions.fetch();
 
-          },
-          preventDefaultEvents: false,
-          preventDefaultEventsX: false
-      });*/
-
-      new FastClick(document.body);
-
-      //$('body').append('<div id="console-output"></div>');
-
-      _consolelog = function (x) {
-        //$('#console-output').append(x+'<br/>');
-        //console.log(x);
-      }
-
-      nTouch();
+    new FastClick(document.body);
 
   };
 
   $(document).ready(function () {
-    Scheduleme.Init();
+    log('ready');
+
+    //Hack because $(document).ready seems to be firing twice
+    if (!Scheduleme.initialized) {
+      Scheduleme.initialized = 1;
+
+      Scheduleme.Init();
+    }
   });
 
   function openSidebar () {
