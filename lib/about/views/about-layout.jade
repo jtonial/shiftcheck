@@ -8,6 +8,10 @@ block append styles
     margin-bottom:20px;
     }
 
+block sidebar-header
+  a(href='/')
+    #logo.open.pull-left #{ site_name }
+
 block sidebar-content
   ul.nav.nav-list(style="margin-top:60px;")
     - var c = ( page == 'About' ? ' active' : '' )

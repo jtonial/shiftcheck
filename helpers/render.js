@@ -19,7 +19,7 @@ exports.index = function(req, res){
 
   if (typeof req.session.employee_id != 'undefined') {
     if (req.device.type == 'phone' || req.device.type == 'tablet') {
-      res.render('jquerymobile', { } );
+      res.render('mobile', { } );
     } else {
       res.render('newdash', { user: req.session });
     }
