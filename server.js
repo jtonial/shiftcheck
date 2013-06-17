@@ -4,6 +4,9 @@
   This allows for a user to be admin of multiple employers, and an employer to have multiple admins
 */
 
+// Set a global reference to the base directory (mostly used for referencing views/includes)
+global.__basedir = __dirname;
+console.log('Executing with base dir: '+__basedir);
 
 var express       = require('express')
   , http          = require('http')

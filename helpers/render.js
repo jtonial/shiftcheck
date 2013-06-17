@@ -68,7 +68,7 @@ exports.code401 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('401', { } );
+    res.render(__basedir+'/views/401', { } );
   }
 };
 exports.code403 = function (req, res) {
@@ -76,7 +76,7 @@ exports.code403 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('403', { } );
+    res.render(__basedir+'/views/403', { } );
   }
 };
 exports.code404 = function (req, res) {
@@ -84,7 +84,7 @@ exports.code404 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('404', { } );
+    res.render(__basedir+'/views/404', { } );
   }
 };
 exports.code500 = function (req, res) {
@@ -92,6 +92,6 @@ exports.code500 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render('500', { } );
+    res.render(__basedir+'/views/500', { } );
   }
 };
