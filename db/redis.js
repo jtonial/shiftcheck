@@ -8,7 +8,7 @@ Main.Config = require('../config');
 var Redis = require('redis');
 var redis = Redis.createClient(Main.Config.redis.port, Main.Config.redis.hostname);
 
-if (redis.password) {
+if (Main.Config.redis.password) {
   redis.auth(Main.Config.redis.password);
 }
 
