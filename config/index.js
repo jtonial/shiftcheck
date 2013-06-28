@@ -6,9 +6,14 @@ var config = {};
 _.extend(config, require('./server'));
 _.extend(config, require('./views'));
 
-config.views = require('./views');
+_.extend(config, {
+  views : require('./views') ,
+  mongo : require('./mongo') ,
+  mysql : require('./mysql') ,
+  
+  redis : require('./redis') ,
+  memcached : require('./memcached')
+});
 
-config.mongo = require('./mongo');
-config.mysql = require('./mysql');
 
 module.exports = config;

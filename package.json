@@ -19,7 +19,8 @@
     "mysql": "*",
     "express-device": "~0.3.6",
     "backbone":"*",
-    "underscore":"*"
+    "underscore":"*",
+    "memcached": "*"
   },
   "engines": {
     "node": "0.8.x",
