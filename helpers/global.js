@@ -6,6 +6,8 @@ exports.Render      = require('../helpers/render');
 exports.Config      = require('../config');
 
 exports.db          = require('../db/dbconnection');
+exports.Redis       = require('../db/redis');
+//exports.Memcache    = require('../db/memcache');
 
 exports.Controllers = {
   Employees : require('../lib/employees/controller'),
