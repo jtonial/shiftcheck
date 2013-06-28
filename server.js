@@ -23,6 +23,7 @@ var express       = require('express')
   , app           = express()
   ;
 
+// I think it's a race condition which is preventing me from using Main.Redis
 if (process.env.REDISTOGO_URL) {
   var rtg   = require("url").parse(process.env.REDISTOGO_URL);
   var redis = require("redis").createClient(rtg.port, rtg.hostname);
