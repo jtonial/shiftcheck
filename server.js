@@ -18,10 +18,22 @@ var express       = require('express')
   , authenticate  = require('./middleware/authenticate')
   , device        = require('express-device')
   , Main          = require('./helpers/global')
-  , redis         = Main.redis
+  //, redis         = Main.redis
   , db            = Main.db
   , app           = express()
   ;
+
+// I think it's a race condition which is preventing me from using Main.Redis
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  var redis = require("redis").createClient(rtg.port, rtg.hostname);
+
+  redis.auth(rtg.auth.split(":")[1]);
+  console.log('Loading existing Redis client');
+} else {
+  var redis = require("redis").createClient();
+  console.log('Loading new Redis client');
+}
 
 app.configure(function(){
   app.set('port', process.env.PORT || Main.Config.port );

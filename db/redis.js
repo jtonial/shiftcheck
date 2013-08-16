@@ -12,4 +12,6 @@ if (Main.Config.redis.password) {
   redis.auth(Main.Config.redis.password);
 }
 
+//console.log(Main.Config.redis);
+
 module.exports = redis;
