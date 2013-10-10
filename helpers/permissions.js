@@ -6,7 +6,7 @@ console.log('Loading permission helpers...');
   check permissions after fetching it (but before fetching shifts)....
 */
 var Main  = require('../helpers/global') ,
-    db    = require('../db/dbconnection') ,
+    db    = require('../db/mysql') ,
     cache = require('../helpers/cache') ;
 
 // Permission to access a given schedule

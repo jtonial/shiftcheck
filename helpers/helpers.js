@@ -4,10 +4,10 @@
 
 console.log('Loading general helpers...');
 
-var Scheduleme = require('../helpers/global');
+var Main = require('../helpers/global') ;
 
-var crypto = require('crypto')
-  ;
+var crypto = require('crypto') ,
+    bcrypt = require('bcrypt') ;
 
 exports.generateSalt = function () {
   var text = "";
@@ -25,6 +25,16 @@ exports.calcHash = function (val, suppliedSalt) {
 
   return shasum.update(val+salt).digest('hex');
 };
+// bcrypt
+exports.hash = {
+  calc    : function (val, suppliedSalt) {
+    return  bcrypt.hashSync(val, Main.Config.password_rounds_bcrypt);
+  },
+  compare : function (val, hash) {
+    return bcrypt.compareSync(val, hash);
+  }
+}
+
 exports.is_email = function (email) {
   var reg_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return reg_email.test(email);
@@ -58,15 +68,3 @@ exports.validatePassword = function (password) {
 
   return true;
 }
-/*
-  Destroy all session data  
-*/
-exports.logout = function (req, res) {
-  var message = 'Logged out';
-  req.session.destroy();
-  if (req.headers['accept'] == 'application/json') {
-    res.end();
-  } else {
-    res.redirect('/');
-  }
-};

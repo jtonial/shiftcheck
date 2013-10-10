@@ -1,0 +1,29 @@
+
+extends layout
+
+block append scripts
+  script(src='./js/signup.js')
+block append styles
+  style.
+    .navbar-static-top {
+    margin-bottom:20px;
+    }
+block content
+  .container
+    .span8.offset2
+      .well
+        h1 Signup
+        form#signup-form.form-horizontal
+          .control-group
+            label.control-label Name
+            .controls
+              input#name(type='text', name='name', placeholder='Name')
+          .control-group
+            label.control-label Email
+            .controls
+              input#email(type='text', name='email', placeholder='Email')
+          .control-group
+            label.control-label Username
+            .controls
+              input#username(type='text', name='username', placeholder='Username')
+          button.btn.btn-primary.input-block-level(type='submit') Sign up!

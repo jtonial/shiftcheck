@@ -1,0 +1,69 @@
+mixin signin-modal
+  #signin-modal.modal.hide.fade
+    .modal-body
+      .clearfix
+        h3.pull-left Sign in
+        button.close.pull-right(data-dismiss="modal") &times;
+      form#signin-form
+        input#email.input-block-level(type='text', name='email', placeholder='Email', style="height:20px;padding:15px;padding-top:20px;padding-bottom:20px;")
+        input#password.input-block-level(type='password', name='password', placeholder='Password', style="padding:15px;padding-top:20px;padding-bottom:20px;")
+        button#signin-trigger.btn.btn-primary.input-block-level(type='submit', style="margin-top:10px;height:40px;") Login
+        div(style="text-align:center;margin-top:5px;font-size:12px")
+          a(href="#") Forgot Your Password?
+        div#error-block.alert.alert-error(style="display:none;text-align:center;margin-top:15px;")
+
+  script.
+    $(document).ready( function () {
+      $('#signin-modal').modal({
+        show : false,
+        keyboard : true
+      }).css({
+        'width': function () { 
+          //return ($(document).width() * .9) + 'px';  
+          return '400px';
+        },
+        'margin-left': function () { 
+          return -($(this).width() / 2); 
+        }
+      });
+      $('#signin-modal').on('show', function () {
+        $('#email').focus();
+      })
+
+      function validatePassword (password) {
+        if (password.length < 6) {
+          return false;
+        }
+
+        return true;
+      }
+
+      $(function () {
+        $('#signin-form').submit(function (e) {
+          e.preventDefault(); //Prevent default submission
+
+          if ( validatePassword($('#password').val()) ) {
+
+            $.ajax({
+              url: '/login',
+              type: 'POST',
+              data: $(this).serialize(),
+              beforeSend: function () {
+                $('#signin-trigger').attr('disabled', true).html('Logging in...');
+                $('#email').attr('disabled', true);
+                $('#password').attr('disabled', true);
+              }, success: function (response) {
+                window.location.reload();
+              }, error: function (response) {
+                $('#error-block').html('Username or password incorrect').show();
+                $('#signin-trigger').removeAttr('disabled').html('Login');
+                $('#email').removeAttr('disabled');
+                $('#password').removeAttr('disabled');
+              }
+            });
+          } else {
+            alert('The password entered is not valid. Not sending');
+          }
+        })
+      });
+    });

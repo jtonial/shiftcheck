@@ -49,6 +49,7 @@ if (process.env.RDS_USER) {
 }
 
 if (process.env.NODE_DB == 'local') {
+  console.log('Using local db');
   mysql = mysql_config.local;
 }
 

@@ -1,7 +1,7 @@
 extends newlayout
 
 block append scripts
-  - if ( user.employer_id )
+  - if ( user.admin )
     script(src='/js/vendor/jquery.timepicker.min.js')
     script(src='/js/vendor/bootstrap-timepicker.min.js')
     script(src='/js/vendor/antiscroll.js')
@@ -20,7 +20,7 @@ block append scripts
   script(src='/js/vendor/bootstrap-datepicker/bootstrap-datepicker.js')
 
 block append styles
-  - if ( user.employer_id )
+  - if ( user.admin )
     link(href='/css/jquery.timepicker.css', rel='stylesheet')
     link(href='/css/vendor/bootstrap-timepicker.min.css', rel='stylesheet')
 
@@ -37,7 +37,7 @@ block sidebar-content
       .antiscroll-inner
         .box-inner
           #schedules-list
-          - if ( user.employer_id ) // This NEEDS to be added into a view so that the dash stays constant (or split into two dashes; employer/employee)
+          - if ( user.admin ) // This NEEDS to be added into a view so that the dash stays constant (or split into two dashes; employer/employee)
             ul#manager-options.nav.nav-list
               li.nav-header Manager Options
               li
@@ -62,7 +62,7 @@ block content-header
   h3#content-view-title.pull-left
   #header-icons.pull-right
     i#ajax-indicator.icon-refresh.icon-spin.icon-2x(style="display:none;")
-    - if ( user.employer_id )
+    - if ( user.admin )
       i#upload-modal-trigger.icon-plus.icon-2x(title="Add Schedule")
       i#settings-trigger.icon-cogs.icon-2x(title="Settings")
     - else
@@ -83,7 +83,7 @@ block content-content
     #loading-error.large-message-div
       .icon-remove.icon-4x
       h5 An Error Occured! We apologize
-  include includes/upload-schedule-modal
+  include includes/upload-schedule-modal-only-d3
 
 block templates
 
@@ -159,7 +159,7 @@ block end-scripts
   script(src='/js/views/UploadScheduleModalView.js')
 
   script(src='/js/routers/employer-router.js')
-  - if ( user.employer_id )
+  - if ( user.admin )
     script.
       $('#upload-modal-trigger').click( function () {
         $('#upload-modal').modal('show');

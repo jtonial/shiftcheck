@@ -151,9 +151,14 @@
 
     Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
     Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
+    Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
     Scheduleme.Employees.fetch();
     Scheduleme.Positions.fetch();
+    Scheduleme.Schedules.fetch(function () {
+      Scheduleme.ScheduleListView.reRenderTabs();
+      $('#schedule-pane').addClass('select-schedule');
+    });
     
     new FastClick(document.body);
 

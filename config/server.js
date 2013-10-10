@@ -7,6 +7,9 @@ module.exports = config = {
 
   debug        : true,
   
-  session_secret : "asdfadsfasdfw4t3t53"
+  session_secret : "asdfadsfasdfw4t3t53",
   
+  cluster : false,
+  password_rounds_bcrypt : 10
+
 }

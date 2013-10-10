@@ -49,7 +49,7 @@ html(lang='en')
       #content-content
         .container-fluid#content
           block content-content
-    - if ( user.employer_id )
+    - if ( user.admin )
       include includes/account-settings-modal
     - else 
 

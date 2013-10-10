@@ -4,12 +4,12 @@
 
   Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
   
-    url: 'api/schedules',
+    url: '/schedules',
 
     model: Scheduleme.classes.models.Schedule,
 
-    parse: function (data) {
-      return data.data;
+    parse: function (response, options) {
+      return response.data.schedules;
     },
     comparator: function (schedule) {
       return (new Date(schedule.get('date'))).getTime();

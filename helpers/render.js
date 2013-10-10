@@ -17,18 +17,28 @@ exports.renderSignup = function (req, res) {
 exports.index = function(req, res){
   res.setHeader('Content-Type','text/html');
 
-  if (typeof req.session.employee_id != 'undefined') {
-    if (req.device.type == 'phone' || req.device.type == 'tablet') {
-      res.render('mobile', { } );
-    } else {
+  if (typeof req.user.user_id != 'undefined') {
+    if (req.user.admin) {
       res.render('newdash', { user: req.session });
+    } else {
+      if (req.device.type == 'phone' || req.device.type == 'tablet') {
+        res.render('mobile', { } );
+      } else {
+        res.render('newdash', { user: req.session });
+      }
     }
-  } else if (typeof req.session.employer_id != 'undefined') { //It is an employer signed in
-    res.render('newdash', { user: req.session });
   } else {
     res.render('landing', { user: req.session });
   }
 
+};
+
+exports.indexOr = function (req, res, obj) {
+  if (req.xhr) {
+    this.code(req.xhr, res, obj)
+  } else {
+    res.redirect('/');
+  }
 };
 
 //Codes
@@ -68,7 +78,7 @@ exports.code401 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/401', { } );
+    res.render(__basedir+'/views/401', { user: req.user } );
   }
 };
 exports.code403 = function (req, res) {
@@ -76,7 +86,7 @@ exports.code403 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/403', { } );
+    res.render(__basedir+'/views/403', { user: req.user } );
   }
 };
 exports.code404 = function (req, res) {
@@ -84,7 +94,7 @@ exports.code404 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/404', { } );
+    res.render(__basedir+'/views/404', { user: req.user } );
   }
 };
 exports.code500 = function (req, res) {
@@ -92,6 +102,6 @@ exports.code500 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/500', { } );
+    res.render(__basedir+'/views/500', { user: req.user } );
   }
 };

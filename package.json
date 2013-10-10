@@ -20,7 +20,9 @@
     "express-device": "~0.3.6",
     "backbone":"*",
     "underscore":"*",
-    "memcached": "*"
+    "memcached": "*",
+    "backbone-validation": "*",
+    "bcrypt": "*"
   },
   "engines": {
     "node": "0.8.x",

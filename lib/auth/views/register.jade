@@ -1,0 +1,44 @@
+extends layout
+
+block append scripts
+  script(src='/js/register.js')
+
+block content
+  .container
+    .span8.offset2
+      .well
+        h1 Register
+
+        form#register-form.form-horizontal
+          .control-group
+            label.control-label Company Name
+            .controls
+              input#s_company_name(type='text', name='employer[name]', placeholder='Company Name')
+          .control-group
+            label.control-label Company Phone
+            .controls
+              input#s_company_name(type='text', name='employer[phone]', placeholder='Company Phone')
+          hr
+          p Admin User
+          .control-group
+            label.control-label First Name
+            .controls
+              input#first_name(type='text', name='user[first_name]', placeholder='First Name')
+          .control-group
+            label.control-label Last Name
+            .controls
+              input#last_name(type='text', name='user[last_name]', placeholder='Last Name')              
+          .control-group
+            label.control-label Email
+            .controls
+              input#email(type='text', name='user[email]', placeholder='Email')
+          .control-group
+            label.control-label Password
+            .controls
+              input#password(type='password', name='user[password]', placeholder='Password')
+          .control-group
+            label.control-label Confirm Password
+            .controls
+              input#confirm_password(type='password', name='user[confirm_password]', placeholder='Confirm Password')
+
+          button.btn.btn-primary.input-block-level(type='submit') Register!
