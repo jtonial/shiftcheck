@@ -5,13 +5,14 @@
   Scheduleme.classes.models.Shift = Scheduleme.classes.models.BaseModel.extend({
 
     url: function () {
-      return this.isNew() ? '/shifts' : '/shifts/'+this.id;
+      return '/schedules/'+this.get('schedule_id')+'/shifts'+ (this.isNew() ? '' : '/'+this.id );
     },
     
     initialize: function () {  
       //console.log('adding shift: '+this.toJSON());
     },
 
+    // I should switch this to use backbone-validation (and find out how to bind it to the creation form)
     validate: function (attrs, options) {
       if (!attrs.start) {
         return 'Start time is required';

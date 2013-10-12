@@ -257,12 +257,6 @@
 
     },
 
-
-
-
-
-
-
     redraw: function (dataset) {
 
       var _this = this;
@@ -299,8 +293,6 @@
       for (var key in tmp) { tmp[key].sort(compare); }
 
       dataset = $.map( tmp, function(n){ return n; });
-
-
 
       //Note min will always the the first element. Max is not guaranteed to be the last
       var min = d3.min(dataset, function (d) { return d.start; });
@@ -507,6 +499,7 @@
             var eMin = d3.select(this).property('eMin');
 
             var width = eMin - sMin;
+
             return width > 0 ? widthScale(width) : widthScale(10);
           })
           .attr("fill", function(d) {
@@ -1018,8 +1011,8 @@
     postRender: function () {
       var _this = this;
 
-      if (Scheduleme.meta.debug) console.log('post rendering');
       var contentTarget = document.getElementById('d3Target');
+
       _this.createD3(contentTarget);
 
       if (Scheduleme.meta.ADMIN) {
@@ -1114,6 +1107,7 @@
         var start       = _getMinutes(start_time);
         var end         = _getMinutes(end_time);
 
+        // This should be done by creating it on the collection
         _this.model.Shifts.create({
           schedule_id   : schedule_id,
           employee_id   : employee_id,

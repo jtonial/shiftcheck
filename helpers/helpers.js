@@ -68,3 +68,13 @@ exports.validatePassword = function (password) {
 
   return true;
 }
+
+// Middleware helpers
+
+exports.signedInOnly = function (req, res, next) {
+  if (req.user.user_id) {
+    next()
+  } else {
+    Main.Render.code(req, res, { statusCode : 401 });
+  }
+}

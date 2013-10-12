@@ -16,8 +16,6 @@
 
     Schedules: {},
 
-    initialized: 0,
-
     Init: function () {},
 
     CurrentView: {},
@@ -82,58 +80,6 @@
     });
     //Add global $.ajaxError handlers
 
-    $.ajax({
-      url: '/bootstrap',
-      success: function (res) {
-        //Removing loading div
-
-        $('#schedule-pane').removeClass('loading');
-
-        if (!res.data.schedules || !res.data.schedules.length) {
-          $('#schedule-pane').addClass('no-schedules');
-        } else {
-
-          $.each(res.data.schedules, function () {
-            Scheduleme.Schedules.add(this);
-          });
-
-          Scheduleme.ScheduleListView.reRenderTabs();
-          $('#schedule-pane').addClass('select-schedule');
-        }
-
-        if ( !res.data.notifications ) {
-          $('#notifications-table').hide();
-          $('#create-notification-wrapper').hide();
-          $('#notification-loading-error').show();
-        } else if ( !res.data.notifications.length ) {
-          $('#notifications-table').hide();
-          $('#no-notifications').show();
-        }
-        
-        //Add data into global object
-        Scheduleme.data.email = res.data.email;
-
-        $('#email').val(Scheduleme.data.email);
-
-        Scheduleme.data.name = res.data.name;
-        Scheduleme.data.username = res.data.username;
-      }, error: function () {
-        //Remove loading div
-        $('#schedule-pane').removeClass('loading').addClass('loading-error');
-
-        log('An error occured');
-        //alert('We seem to be having some technical difficulties');
-      }, complete: function () {
-        Scheduleme.Router = new AppRouter;
-
-        Backbone.history.start({
-          pushState: true,
-          root: '/'
-        });
-        //configPushState();
-      }
-    });
-
     //This is here because I currently do not have a global view. If I do, it will be there
     $('#logout-trigger').click( function () {
       window.location.href = '/logout';
@@ -151,28 +97,42 @@
 
     Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
     Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
-    Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
 
     Scheduleme.Employees.fetch();
     Scheduleme.Positions.fetch();
-    Scheduleme.Schedules.fetch(function () {
-      Scheduleme.ScheduleListView.reRenderTabs();
-      $('#schedule-pane').addClass('select-schedule');
+    Scheduleme.Schedules.fetch({
+      success: function () {
+
+        Scheduleme.ScheduleListView.reRenderTabs();
+        $('#schedule-pane').addClass('select-schedule');
+      }, error: function () {
+        //Remove loading div
+        $('#schedule-pane').removeClass('loading').addClass('loading-error');
+
+        log('An error occured');
+        //alert('We seem to be having some technical difficulties');
+      }, complete: function () {
+
+        $('#schedule-pane').removeClass('loading');
+
+        // This is initialized in the callback so that routes for existing schedules will be matched (and not say that the shift doesnt exist)
+        Scheduleme.Router = new AppRouter;
+
+        Backbone.history.start({
+          pushState: true,
+          root: '/'
+        });
+        //configPushState();
+
+      }
     });
     
-    new FastClick(document.body);
-
   };
 
   $(document).ready(function () {
-    log('ready');
 
-    //Hack because $(document).ready seems to be firing twice
-    if (!Scheduleme.initialized) {
-      Scheduleme.initialized = 1;
+    _.once(Scheduleme.Init());
 
-      Scheduleme.Init();
-    }
   });
 
   function openSidebar () {

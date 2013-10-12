@@ -294,7 +294,9 @@
       var Sups = ['th','st','nd','rd','th','th','th','th','th','th'];
 
       $('.schedule-tab').remove();
+
       _.each(this.collection.models, function(schedule) {
+
         var d = new Date(schedule.get('datenum'));
         //console.log('Day1: '+d);
         d = Scheduleme.helpers.fromUTC(d);

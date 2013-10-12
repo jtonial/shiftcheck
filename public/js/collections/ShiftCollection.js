@@ -4,7 +4,13 @@
 
   Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
     
-    url: '/shifts',
+    url: function () {
+      if (!this.schedule_id) {
+        console.log('Shift Collection has no schedule id');
+        return '/shifts';
+      } 
+      return '/schedules/'+this.schedule_id+'/shifts';
+    },
 
     model: Scheduleme.classes.models.Shift,
 

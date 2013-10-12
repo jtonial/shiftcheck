@@ -15,28 +15,15 @@
       this.viewType = 'schedule';
       this.viewPane = 'main';
 
-      console.log('Schedule View Initialized');
+      this.listenTo(this.model.Shifts, 'change',  this.redrawSubview);
 
-      //Shifts should be a proper Backbone collection so that I can bind to it's add event (as well as delete, etc)
-      // TODO : Shifts should be collection; I can then reRender on any change to the collection
-        //Even if I cant get d3 views to work, it would still be easier to manage
-      if (this.model.get('type') == 'shifted' && Scheduleme.meta.d3) {
-        if (Scheduleme.meta.debug) console.log('is shifted; will listen to Shift events and rerender');
-        // Using 'all' was triggering FAR to often
-         // I wonder if I can do something like:
-         // this.listenTo(this.model.Shifts, ['change', 'all', 'destroy', 'reset'], this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'change',  this.redrawSubview);
+      this.listenTo(this.model.Shifts, 'add',     this.redrawSubview);
+      this.listenTo(this.model.Shifts, 'destroy', this.redrawSubview);
+      this.listenTo(this.model.Shifts, 'reset',   this.redrawSubview);
 
-        // It occurs to me that doing a full reRender when a shift is added may
-          // fix the highlighting problem
-        this.listenTo(this.model.Shifts, 'add',     this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'destroy', this.redrawSubview);
-        this.listenTo(this.model.Shifts, 'reset',   this.redrawSubview);
+      // Namespace the resize to the specific schedule model
+      $(window).bind("resize.app"+this.model.id, _.bind(this.redrawSubview, this));
 
-        // Namespace the resize to the specific schedule model
-        $(window).bind("resize.app"+this.model.id, _.bind(this.redrawSubview, this));
-
-      }
 
       this.render();
     },
