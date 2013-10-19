@@ -24,11 +24,12 @@
     "backbone-validation": "*",
     "bcrypt": "*",
     "moment": "~2.3.1",
+    "async": "*",
     "bower": "*"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm": "1.1.x"
+    "node": "0.10.x",
+    "npm": "1.x.x"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
