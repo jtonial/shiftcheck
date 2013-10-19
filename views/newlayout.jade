@@ -11,22 +11,20 @@ html(lang='en')
 
     block styles
       link(href='/css/bootstrap/bootstrap.css', rel='stylesheet')
-      link(href='/css/font-awesome.min.css', rel='stylesheet')
+      link(href='/components/font-awesome/css/font-awesome.min.css', rel='stylesheet')
       link(href='/css/style.css', rel='stylesheet')
 
     block scripts
-      script(src='/js/vendor/jquery.js')
-      script(src='/js/vendor/moment.js')
-      script(src='/js/vendor/handlebars-1.0.0.beta.6.js')
-      script(src='/js/vendor/underscore.js')
-      script(src='/js/vendor/backbone.js')
+      script(src="/components/jquery/jquery.min.js")
+      script(src='/components/momentjs/moment.js')
+      script(src='/components/handlebars.js/dist/handlebars.js')
+      script(src='/components/underscore/underscore-min.js')
+      script(src='/components/backbone/backbone-min.js')
+      script(src="/components/bootbox/bootbox.js")
+      script(src='/components/d3/d3.min.js')
       script(src='/js/backbone-pushstate-router.js')
-      script(src='/js/vendor/bootbox.min.js')
-
-      script(src='/js/vendor/fastclick.js')
 
       script(src='/js/ga.js')
-      script(src="/js/vendor/d3.v3.min.js")
 
       // Le HTML5 shim, for IE6-8 support of HTML5 elements
       //if lt IE 9

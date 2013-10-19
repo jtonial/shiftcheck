@@ -3,7 +3,7 @@ extends newlayout
 block append scripts
   - if ( user.admin )
     script(src='/js/vendor/jquery.timepicker.min.js')
-    script(src='/js/vendor/bootstrap-timepicker.min.js')
+    script(src='/components/bootstrap-timepicker/js/bootstrap-timepicker.min.js')
     script(src='/js/vendor/antiscroll.js')
     script(src='/js/admin-application.js')
     script.
@@ -17,14 +17,14 @@ block append scripts
   - else 
     script(src='/js/dash-application.js')
 
-  script(src='/js/vendor/bootstrap-datepicker/bootstrap-datepicker.js')
+  script(src='/components/bootstrap-datepicker/js/bootstrap-datepicker.js')
 
 block append styles
   - if ( user.admin )
     link(href='/css/jquery.timepicker.css', rel='stylesheet')
-    link(href='/css/vendor/bootstrap-timepicker.min.css', rel='stylesheet')
+    link(href='/components/bootstrap-timepicker/css/bootstrap-timepicker.min.css', rel='stylesheet')
 
-  link(href='/css/vendor/bootstrap-datepicker/bootstrap-datepicker.css', rel='stylesheet')
+  link(href='/components/bootstrap-datepicker/css/datepicker.css', rel='stylesheet')
   link(href='/css/vendor/antiscroll.css', rel='stylesheet')
 
 block sidebar-header

@@ -4,6 +4,8 @@
       "path": "/workspace/env/Scheduleme",
       "folder_exclude_patterns": [
         "node_modules",
+        "bower_components",
+        "public/components",
         "build"
       ],
       "file_exclude_patterns": [

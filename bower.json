@@ -1,0 +1,31 @@
+{
+  "name": "ShiftCheck",
+  "version": "0.0.0",
+  "authors": [
+    "Nick Mitchinson <nrmitchi@gmail.com>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.0.3",
+    "handlebars.js": "1.0.12",
+    "underscore": "1.5.2",
+    "backbone": "1.0.0",
+    "d3": "3.3.3",
+    "bootstrap": "2.3.2",
+    "lightbox2": "lokesh/lightbox2",
+    "angular": "~1.0.8",
+    "font-awesome": "~3.2.1",
+    "bootbox": "~4.1.0",
+    "backbone-validation": "~0.8.2",
+    "bootstrap-datepicker": "~1.2.0",
+    "bootstrap-timepicker": "~0.2.5",
+    "momentjs": "~2.3.1"
+  }
+}
