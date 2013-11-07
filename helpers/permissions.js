@@ -1,4 +1,5 @@
-console.log('Loading permission helpers...');
+
+require(__basedir+'/helpers/logger').info('Loading permission helpers...');
 
 /*
   I will have to give some thought to how I want to do this. I can easily make permissions for each object, but then object classes should need
@@ -26,12 +27,12 @@ exports.load  = function (req, res, next) {
   req.entity = {
     entity    : splitPath[1],
     entity_id : splitPath[2]
-  }
+  };
 
   Main.Logger.info('Entity: '+JSON.stringify(req.entity));
 
   next();
-}
+};
 exports.check = function (obj) {
 
   // TODO: Validate that object attributes exist
@@ -43,4 +44,4 @@ exports.check = function (obj) {
   */
 
   return true;
-}
+};

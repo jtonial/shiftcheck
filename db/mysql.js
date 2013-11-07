@@ -1,4 +1,5 @@
-console.log('Loading db connection...');
+
+require(__basedir+'/helpers/logger').info('Loading mysql connection...');
 
 var Main      = require('../helpers/global') ;
 

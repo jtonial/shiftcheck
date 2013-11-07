@@ -2,7 +2,7 @@
   Global helper methods. Can all be used blackbox
 */
 
-console.log('Loading general helpers...');
+require(__basedir+'/helpers/logger').info('Loading general helpers...');
 
 var Main = require('../helpers/global') ;
 
@@ -17,7 +17,7 @@ exports.generateSalt = function () {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
-}
+};
 
 exports.calcHash = function (val, suppliedSalt) {
   var shasum = crypto.createHash('sha1');
@@ -33,7 +33,7 @@ exports.hash = {
   compare : function (val, hash) {
     return bcrypt.compareSync(val, hash);
   }
-}
+};
 
 exports.is_email = function (email) {
   var reg_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -42,7 +42,7 @@ exports.is_email = function (email) {
 exports.getClientIp = function(req) {
   var ipAddress;
   // Amazon EC2 / Heroku workaround to get real client IP
-  var forwardedIpsStr = req.header('x-forwarded-for'); 
+  var forwardedIpsStr = req.header('x-forwarded-for');
   if (forwardedIpsStr) {
     // 'x-forwarded-for' header may return multiple IP addresses in
     // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
@@ -67,14 +67,14 @@ exports.validatePassword = function (password) {
   }
 
   return true;
-}
+};
 
 // Middleware helpers
 
 exports.signedInOnly = function (req, res, next) {
   if (req.user.user_id) {
-    next()
+    next();
   } else {
     Main.Render.code(req, res, { statusCode : 401 });
   }
-}
+};

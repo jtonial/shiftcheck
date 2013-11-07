@@ -2,7 +2,7 @@
   Docs: https://github.com/3rd-Eden/node-memcached
 */
 
-console.log('Loading redis config...');
+require(__basedir+'/helpers/logger').info('Loading redis engine...');
 
 var redis = {};
 
@@ -15,7 +15,7 @@ if (process.env.REDISTOGO_URL) {
 
 } else {
   redis.port      = 6379;
-  redis.hostname  = '127.0.0.1'
+  redis.hostname  = '127.0.0.1';
 }
 
 module.exports = redis;

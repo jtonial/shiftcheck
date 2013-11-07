@@ -1,4 +1,5 @@
-console.log('Loading render helpers...');
+
+require(__basedir+'/helpers/logger').info('Loading render helpers...');
 
 var Main = require('../helpers/global');
 
@@ -35,7 +36,7 @@ exports.index = function(req, res){
 
 exports.indexOr = function (req, res, obj) {
   if (req.xhr) {
-    this.code(req.xhr, res, obj)
+    this.code(req.xhr, res, obj);
   } else {
     res.redirect('/');
   }

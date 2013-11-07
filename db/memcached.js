@@ -1,4 +1,5 @@
-console.log('Loading memcached connection...');
+
+require(__basedir+'/helpers/logger').info('Loading memcached connection...');
 
 var Main = require('../helpers/global');
 

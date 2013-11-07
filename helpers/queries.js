@@ -1,4 +1,5 @@
-console.log('Loading queries...');
+
+require(__basedir+'/helpers/logger').info('Loading queries helpers...');
 
 module.exports = queries = {
 
@@ -18,4 +19,4 @@ module.exports = queries = {
   'updateShift'             : 'UPDATE shifts SET employee_id=?, start_time=?, end_time=? WHERE shift_id=?',
   'getShiftsBySchedule'     : 'SELECT s.shift_id as id, s.start, s.end, s.position_id, s.employee_id, p.position, CONCAT(e.first_name, " ", e.last_name) as employee_name FROM shifts as s JOIN positions as p USING (position_id) JOIN employees as e USING (employee_id) WHERE schedule_id = ?',
 
-}
+};

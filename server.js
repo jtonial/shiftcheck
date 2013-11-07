@@ -44,7 +44,7 @@ if (cluster.isMaster && Main.Config.cluster) {
     console.log('Loading existing Redis client');
   } else {
     var redis = require("redis").createClient();
-    console.log('Loading new Redis client');
+    Main.Logger.info('Loading new Redis client...');
   }
 
   app.configure(function(){
@@ -62,7 +62,7 @@ if (cluster.isMaster && Main.Config.cluster) {
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
     app.use(express.session({
-      secret   : Main.Config.session_secret, 
+      secret   : Main.Config.session_secret,
       maxAge   : new Date( Date.now() + 1800000), // 30 minutes
       store    : new RedisStore({client: redis})
     }));
@@ -92,7 +92,7 @@ if (cluster.isMaster && Main.Config.cluster) {
         available_shifts = require('./lib/available_shifts') ,
         change_requests  = require('./lib/change_requests') ;
 
-    app.use('/',          auth)
+    app.use('/',          auth);
     app.use('/',          me);
     app.use('/about',     about);
     app.use('/schedules', schedules);
@@ -113,10 +113,10 @@ if (cluster.isMaster && Main.Config.cluster) {
 
   app.get('/',              Main.Render.index);
   // In order to accomodate push-state
-  app.get('/schedule/*',    Main.Render.index)
-  app.get('/employee-list', Main.Render.index)
-  app.get('/position-list', Main.Render.index)
-  app.get('/request-list',  Main.Render.index)
+  app.get('/schedule/*',    Main.Render.index);
+  app.get('/employee-list', Main.Render.index);
+  app.get('/position-list', Main.Render.index);
+  app.get('/request-list',  Main.Render.index);
 
 
   app.get('/mobile', function (req, res) {
@@ -129,6 +129,6 @@ if (cluster.isMaster && Main.Config.cluster) {
   });
 
   http.createServer(app).listen(app.get('port'), function () {
-    console.log('HTTP server listening on %s', app.get('port'));
+    Main.Logger.info('HTTP server listening on %s', app.get('port'));
   });
 }

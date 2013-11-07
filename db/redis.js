@@ -1,4 +1,5 @@
-console.log('Loading redis connection...');
+
+require(__basedir+'/helpers/logger').info('Loading redis connection...');
 
 var Main = require('../helpers/global');
 

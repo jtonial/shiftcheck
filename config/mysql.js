@@ -1,8 +1,9 @@
-console.log('Loading mysql config...');
+
+require(__basedir+'/helpers/logger').info('Loading mysql engine...');
 
 var mysql;
 
-mysql_config = {
+var mysql_config = {
   local   : {
     user      : 'root',
     password  : 'password',
@@ -35,7 +36,7 @@ mysql_config = {
     port      : 3306,
     connectionLimit : 100
   }
-}
+};
 
 // TODO: Add Redis connection details
 

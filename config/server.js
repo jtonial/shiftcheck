@@ -1,4 +1,5 @@
-console.log('Loading server config...');
+
+require(__basedir+'/helpers/logger').info('Loading server engine...');
 
 module.exports = config = {
 
@@ -12,4 +13,4 @@ module.exports = config = {
   cluster : false,
   password_rounds_bcrypt : 10
 
-}
+};

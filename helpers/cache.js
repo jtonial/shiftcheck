@@ -1,5 +1,5 @@
-console.log('Loading cache helpers...');
 
+require(__basedir+'/helpers/logger').info('Loading cache helpers...');
 
 exports.placeholder = function () {
   console.log('Cache placeholder');

@@ -1,6 +1,8 @@
-console.log('Loading global.js');
 
-exports.Helpers     = require('../helpers/helpers')
+require(__basedir+'/helpers/logger').info('Loading global.js...');
+
+
+exports.Helpers     = require('../helpers/helpers');
 exports.Render      = require('../helpers/render');
 
 exports.Config      = require('../config');

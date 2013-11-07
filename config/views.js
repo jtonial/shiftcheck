@@ -1,4 +1,6 @@
-console.log('Loading views config...');
+
+require(__basedir+'/helpers/logger').info('Loading views engine...');
+
 
 module.exports = views = {
 
@@ -10,4 +12,4 @@ module.exports = views = {
   facebook_url : '',
   twitter_url  : ''
 
-}
+};
