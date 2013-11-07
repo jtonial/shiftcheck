@@ -39,7 +39,8 @@ block sidebar-content
           #schedules-list
           - if ( user.admin ) // This NEEDS to be added into a view so that the dash stays constant (or split into two dashes; employer/employee)
             ul#manager-options.nav.nav-list
-              li.nav-header Manager Options
+              li.nav-header
+                p Manager Options
               li
                 a#employees-link Employees
               li

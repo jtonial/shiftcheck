@@ -1016,13 +1016,14 @@
       _this.createD3(contentTarget);
 
       if (Scheduleme.meta.ADMIN) {
-        $('#new_shift_employee').typeahead({
-          source: Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); })
-        });
+        // Deactivated temporaraly as bs3 does not include a typeahead by default
+        // $('#new_shift_employee').typeahead({
+        //   source: Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); })
+        // });
 
-        $('#new_shift_position').typeahead({
-          source: Scheduleme.Positions.pluck('position')
-        });
+        // $('#new_shift_position').typeahead({
+        //   source: Scheduleme.Positions.pluck('position')
+        // });
 
         $('#new_shift_start_time').timepicker({
             minuteStep: 15

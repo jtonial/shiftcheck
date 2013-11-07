@@ -9,10 +9,10 @@ html(lang='en')
     meta(name='author', content='nrmitchi')
     // Le styles
     block styles
-      link(href='/css/bootstrap.css', rel='stylesheet')
+      link(href='/components/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
     block scripts
       script(src="/components/jquery/jquery.min.js")
-      script(src='/js/vendor/bootstrap.js')
+      script(src='/components/bootstrap/dist/js/bootstrap.js')
       script(src='/js/ga.js')
 
     // <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
@@ -20,12 +20,13 @@ html(lang='en')
     //if lt IE 9
       script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
   body
-    .navbar.navbar-top.navbar-inverse
-      .navbar-inner
-        .container-fluid
-          a.brand(href='/') #{ site_name }
+    nav.navbar.navbar-inverse(role="navigation")
+      .container
+        .navbar-header
+          a.navbar-brand(href='/') #{ site_name }
 
-          ul.nav.pull-right
+        nav
+          ul.nav.navbar-nav.navbar-right
             li.signin-trigger
               a(href='#signin-modal', data-toggle="modal") Sign In
     block content

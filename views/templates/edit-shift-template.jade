@@ -2,23 +2,31 @@
   .arrow
   h3.popover-title Edit Shift - 
     span#shift-id-display
-  .popover-content
-    form#edit-shift-popover-form
-      label Employee
-      select#employee-edit
-      label Position
-      select#position-edit
-      label Start Time
-      .input-append.bootstrap-timepicker
-        input#start-time-edit.input-medium(type="text")
-        span.add-on
-          .icon-time
-      //input#start-time-edit(type="text")
-      label End Time
-      .input-append.bootstrap-timepicker
-        input#end-time-edit.input-medium(type="text")
-        span.add-on
-          .icon-time
-      //input#end-time-edit(type="text")
-      button#save-shift-trigger.btn.btn-success.btn-block Save Changes
-      button#delete-shift-trigger.btn.btn-danger.btn-block Delete Shift
+  .popover-content.row(style="margin:0px")
+    form.form-horizontal#edit-shift-popover-form
+      .form-group
+        label.col-sm-4.control-label Employee
+        span.col-sm-8
+          select#employee-edit.form-control
+      .form-group
+        label.col-sm-4.control-label Position
+        span.col-sm-8
+          select#position-edit.form-control
+      .form-group
+        label.col-sm-4.control-label Start Time
+        .input-append.bootstrap-timepicker
+          span.col-sm-8
+            .input-group
+              input#start-time-edit.form-control(type="text", placeholder="End Time")
+              span.input-group-addon
+                .icon-time
+      .form-group
+        label.col-sm-4.control-label End Time
+        .input-append.bootstrap-timepicker
+          span.col-sm-8
+            .input-group
+              input#end-time-edit.form-control(type="text", placeholder="End Time")
+              span.input-group-addon
+                .icon-time
+    button#save-shift-trigger.btn.btn-success.btn-block Save Changes
+    button#delete-shift-trigger.btn.btn-danger.btn-block Delete Shift

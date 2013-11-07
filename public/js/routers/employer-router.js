@@ -1,6 +1,6 @@
 (function () {
   
-  "use strict"
+  "use strict";
 
   window.AppRouter = Backbone.Router.extend({
     //Note: I'm currently using tabs; another approach would be to make each tab

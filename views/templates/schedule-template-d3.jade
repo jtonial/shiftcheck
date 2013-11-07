@@ -8,30 +8,30 @@
 .well.admin-only
   #add-shift-area
     h5 Add Shift
-    .row-fluid
-      .span3
-        input#new_shift_employee.input-block-level(type="text", placeholder="Employee")
-      .span3
-        input#new_shift_position.input-block-level(type="text", placeholder="Position")
-      .span3
-        .input-append.bootstrap-timepicker
-          input#new_shift_start_time.input-mini(type="text", placeholder="Start Time")
-          span.add-on
+    .row
+      .col-sm-3
+        input#new_shift_employee.form-control(type="text", placeholder="Employee")
+      .col-sm-3
+        input#new_shift_position.form-control(type="text", placeholder="Position")
+      .col-sm-3
+        .input-group.bootstrap-timepicker
+          input#new_shift_start_time.form-control(type="text", placeholder="Start Time")
+          span.input-group-addon
             .icon-time
-      .span3
-        .input-append.bootstrap-timepicker
-          input#new_shift_end_time.input-mini(type="text", placeholder="End Time")
-          span.add-on
+      .col-sm-3
+        .input-group.bootstrap-timepicker
+          input#new_shift_end_time.form-control(type="text", placeholder="End Time")
+          span.input-group-addon
             .icon-time
-    .row-fluid
-      .span3.offset9
-        button#add_shift_trigger.btn.btn-primary.input-small.pull-right Add
-  #add-shift-area
+    .row
+      .col-sm-3.col-sm-offset-9
+        button#add_shift_trigger.btn.btn-primary.btn-block.pull-right Add
+  #edit-shift-area.clearfix
     h5 Edit Schedule
-    .form-horizontal.clearfix
-      .control-group
-        label.control-label Timezone
-        .controls
-          input#timezone(type='text', name='schedule[timezone]', value='{{timezone}}')
+    .form-horizontal.col-sm-6
+      .form-group
+        label.control-label.col-sm-2 Timezone
+        .col-sm-10
+          input#timezone.form-control(type='text', name='schedule[timezone]', value='{{timezone}}')
 
       button#save-schedule.btn.btn-primary.input-small.pull-right(type='submit') Save

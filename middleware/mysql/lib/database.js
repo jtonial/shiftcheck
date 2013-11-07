@@ -1,22 +1,13 @@
 
-var mysql = require('mysql') ,
-    pool;
+var Logger        = require(__basedir+'/helpers/logger') ,
+    mysql         = require('mysql') ,
+    pool, conCount = 0, queryCount = 0; //Query count used for logs only
 
-function customFormat(connection) {
-  /*
-  connection.config.queryFormat = function (query, values) {
-    if (!values) return query;
-    return query.replace(/\:(\w+)/g, function (txt, key) {
-      if (values.hasOwnProperty(key)) {
-        return this.escape(values[key]);
-      }
-      return txt;
-    }.bind(this));
-  };
-  */
-}
 function handleDisconnect(connection) {
-  connection.on('error', function(err) {
+  connection.on('error', function(err) { // Note that RDS disconnects do not seem to trigger this; and the timeout is rediculously long
+    Logger.info('MySQL : Connection Error Detected');
+    Logger.info('MySQL Connection Count = '+pool._allConnections.length);
+
     if (!err.fatal) {
       return;
     }
@@ -25,14 +16,18 @@ function handleDisconnect(connection) {
       throw err;
     }
 
-    console.log('Re-connecting lost connection: ' + err.stack);
+    // When using the pool, an error will remove the connection from the pool. Thus creating the connection again
+     // creates a connection to the DB, however the connection is still dropped from the pool.
 
-    connection = mysql.createConnection(connection.config);
+     // Causes the max_conns to the db to be hit really early (after max_conns - pool_size timeouts, max cons hit)
 
-    customFormat(connection);
-    handleDisconnect(connection);
+    //console.log('Re-connecting lost connection: ' + err.stack);
 
-    connection.connect();
+    //connection = mysql.createConnection(connection.config);
+    //handleDisconnect(connection);
+    //mysql_queues(connection, false); // true is DEBUG
+
+    //connection.connect();
   });
 }
 
@@ -47,9 +42,11 @@ exports.init = function(config) {
     // attaching error handling
   config.createConnection = function (options) {
     var connection = mysql.createConnection(options);
-
+    conCount++;
+    Logger.info('mysql :: new-connection-created :: count = '+conCount);
     //Any custom formatting here
-    customFormat(connection);
+
+    // Apply disconnect logic. While using the pool, this really doesnt do much.
     handleDisconnect(connection);
 
     return connection;
@@ -69,12 +66,19 @@ exports.init = function(config) {
  */
 exports.query = function(query, data, callback) {
   pool.getConnection( function(err, connection) {
+
     if (err) {
-      console.log ('ERROR: Error trying to get connection: '+err);
+      Logger.error('mysql :: error trying to get connection :: '+err);
     } else {
+      queryCount++;
+      var queryId = queryCount;
+      var sendTime = Date.now();
+      Logger.info('mysql :: query-sending  :: id = '+queryId);
       connection.query(query, data, function(err, results, fields) {
-        try { callback(err, results); }
-        finally { connection.end(); }
+        Logger.info('mysql :: query-received :: id = '+queryId+' :: duration = '+(Date.now()-sendTime));
+        //console.log('query returned...');
+        try { /*console.log('DB: Query complete');*/ callback(err, results, fields); }
+        finally { if (connection) connection.release(); }
       });
     }
   });
@@ -84,13 +88,19 @@ exports.query = function(query, data, callback) {
  * Execute a query that is expected to return zero or one rows.
  */
 exports.querySingle = function(query, data, callback) {
+  //console.log(':: CONNECTION :: COUNT : '+pool._allConnections.length);
   pool.getConnection( function(err, connection) {
     if (err) {
-      console.log ('ERROR: Error trying to get connection: '+err);
+      Logger.error('mysql :: error trying to get connection :: '+err);
     } else {
+      queryCount++;
+      var queryId = queryCount;
+      var sendTime = Date.now();
+      Logger.info('mysql :: query-sending  :: id = '+queryId);
       connection.query(query, data, function(err, results, fields) {
-        try { callback(err, (results && results.length > 0) ? results[0] : null); }
-        finally { connection.end(); }
+        Logger.info('mysql :: query-received :: id = '+queryId+' :: duration = '+(Date.now()-sendTime));
+        try { /*console.log('DB: Query complete');*/ callback(err, (results && results.length > 0) ? results[0] : null); }
+        finally { if (connection) connection.release(); }
       });
     }
   });
@@ -103,17 +113,23 @@ exports.querySingle = function(query, data, callback) {
 exports.queryMany = function(query, data, rowCallback, endCallback) {
   pool.getConnection( function(err, connection) {
     if (err) {
-      console.log ('ERROR: Error trying to get connection: '+err);
+      Logger.error('mysql :: error trying to get connection :: '+err);
     } else {
+      queryCount++;
+      var queryId = queryCount;
+      var sendTime = Date.now();
+      Logger.info('mysql :: query-sending  :: id = '+queryId);
       connection.query(query, data)
         .on('error', function(err) {
+          Logger.info('mysql :: query-received :: id = '+queryId+' :: duration = '+(Date.now()-sendTime));
           try { if (endCallback) endCallback(err); }
-          finally { connection.end(); }
+          finally { connection.release(); }
         })
         .on('row', rowCallback)
         .on('end', function() {
+          Logger.info('mysql :: query-received :: id = '+queryId+' :: duration = '+(Date.now()-sendTime));
           try { if (endCallback) endCallback(null); }
-          finally { connection.end(); }
+          finally { if (connection) connection.release(); }
         });
     }
   });
@@ -125,12 +141,37 @@ exports.queryMany = function(query, data, rowCallback, endCallback) {
 exports.nonQuery = function(query, data, callback) {
   pool.getConnection( function(err, connection) {
     if (err) {
-      console.log ('ERROR: Error trying to get connection: '+err);
+      Logger.error('mysql :: error trying to get connection :: '+err);
     } else {
+      queryCount++;
+      var queryId = queryCount;
+      var sendTime = Date.now();
+      Logger.info('mysql :: query-sending  :: id = '+queryId);
       connection.query(query, data, function(err, info) {
+        Logger.info('mysql :: query-received :: id = '+queryId+' :: duration = '+(Date.now()-sendTime));
         try { if (callback) callback(err, info); }
-        finally { connection.end(); }
+        finally { if (connection) connection.release(); }
       });
     }
   });
+};
+
+// DANGEROUS:
+ // NOTE : If this works, I can try making this startTransaction, and pass a trans to the cb
+   // right now I'm worried that it will close the connection early
+   // it is ending the connectino early
+exports.getConnection = function (cb) {
+  pool.getConnection( function(err, connection) {
+    if (err) {
+      Logger.error('mysql :: error trying to get connection :: '+err);
+    } else {
+      try { if (cb) cb(connection); }
+      finally { }
+      //finally { connection.end(); console.log('connection ended');}
+    }
+  });
+};
+
+exports._poolSize = function () {
+  return pool._allConnections.length; // NEVER USE THIS. For checking connectinos only
 };

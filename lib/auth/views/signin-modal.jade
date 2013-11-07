@@ -1,31 +1,32 @@
 mixin signin-modal
-  #signin-modal.modal.hide.fade
-    .modal-body
-      .clearfix
-        h3.pull-left Sign in
-        button.close.pull-right(data-dismiss="modal") &times;
-      form#signin-form
-        input#email.input-block-level(type='text', name='email', placeholder='Email', style="height:20px;padding:15px;padding-top:20px;padding-bottom:20px;")
-        input#password.input-block-level(type='password', name='password', placeholder='Password', style="padding:15px;padding-top:20px;padding-bottom:20px;")
-        button#signin-trigger.btn.btn-primary.input-block-level(type='submit', style="margin-top:10px;height:40px;") Login
-        div(style="text-align:center;margin-top:5px;font-size:12px")
-          a(href="#") Forgot Your Password?
-        div#error-block.alert.alert-error(style="display:none;text-align:center;margin-top:15px;")
+  #signin-modal.modal.fade
+    .modal-dialog(style="width:400px")
+      .modal-content
+        //- .modal-header
+        .modal-body
+          .clearfix
+            h3.pull-left Sign in
+            button.close.pull-right(data-dismiss="modal") &times;
+          form#signin-form(role="form")
+            .form-group
+              label.sr-only(for="email")
+              input#email.form-control(type='text', name='email', placeholder='Email')
+            .form-group
+              label.sr-only(for="password")
+              input#password.form-control(type='password', name='password', placeholder='Password')
+            button#signin-trigger.btn.btn-primary.btn-block(type='submit', style="margin-top:10px;height:40px;") Login
+            div(style="text-align:center;margin-top:5px;font-size:12px")
+              a(href="#") Forgot Your Password?
+            div#error-block.alert.alert-danger(style="display:none;text-align:center;margin-top:15px;")
+        //- .modal-footer
 
   script.
     $(document).ready( function () {
       $('#signin-modal').modal({
         show : false,
         keyboard : true
-      }).css({
-        'width': function () { 
-          //return ($(document).width() * .9) + 'px';  
-          return '400px';
-        },
-        'margin-left': function () { 
-          return -($(this).width() / 2); 
-        }
-      });
+      })
+ 
       $('#signin-modal').on('show', function () {
         $('#email').focus();
       })
