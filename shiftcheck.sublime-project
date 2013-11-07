@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "path": "/workspace/env/Scheduleme",
+      "path": ".",
       "folder_exclude_patterns": [
         "node_modules",
         "bower_components",
