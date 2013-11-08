@@ -1,58 +1,66 @@
-#account-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
-  .modal-header.clearfix
-    h3.pull-left Account Options
-    button.pull-right(type="button", class="close", data-dismiss="modal", aria-hidden="true") ×
-  .modal-body.clearfix
-    .account-nav
-      ul.nav.nav-list
-        li.nav-header Options
-        li.setting-link.account.active
-          a(setting-link-target='account')
-            i.icon-user
-            | My Account
-        li.setting-link.notifications
-          a(setting-link-target='notifications')
-            i.icon-comment
-            | Notifications
-    .setting-views.clearfix
-      .setting-view.account.active
-        h4 My Account
-        .form-horizontal
-          .control-group
-            label.control-label Email:
-            .controls.email-control
-              input#email.user-value(type='text', placeholder='Email', disabled='disabled')
-              button#email-toggle-edit.btn Edit
-              button#save-email.btn.btn-primary(style='display: none;') Save
-          .control-group
-            label.control-label Change Password:
-            .controls.change-password-control
-              input#oldpassword.input-large(type='password', placeholder='Current Password')
-              input#newpassword.input-large(type='password', placeholder='New Password')
-              input#newpassword1.input-large(type='password', placeholder='Confirm New Password')
-              button#changepassword.btn.input-large(type='button', style='margin-left: 0;') Change!
-      .setting-view.notifications
-        h4 Notifications  
-          i.icon-question-sign.muted(style="font-size:14px;")
-        table#notifications-table.table.table-condensed.table-striped
-          thead
-            tr
-              th Name
-              th Event
-              th Action
-              th Active
-              th.actions 
-          tbody#notification-list
-        #no-notifications.centered(style="display:none")
-          .icon-comment.icon-4x
-          h5 You have not registered any notifications
-        #notification-loading-error.centered(style="display:none")
-          .icon-remove.icon-4x
-          h5 An Error Occured! We apologize
-        #create-notification-wrapper
-          hr.dark
-          div.centered
-            button#add-notification-trigger.btn.btn-success Create Notification
+#account-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static')
+  .modal-dialog
+    .modal-content
+      .modal-header.clearfix
+        h3.pull-left Account Options
+        button.pull-right(type="button", class="close", data-dismiss="modal", aria-hidden="true") ×
+      .modal-body.clearfix
+        .account-nav
+          ul.nav.nav-list
+            li.nav-header Options
+            li.setting-link.account.active
+              a(setting-link-target='account')
+                i.icon-user
+                | My Account
+            li.setting-link.notifications
+              a(setting-link-target='notifications')
+                i.icon-comment
+                | Notifications
+        .setting-views.clearfix
+          .setting-view.account.active
+            h4 My Account
+            .form-horizontal
+              .form-group
+                label.control-label.col-sm-2 Email:
+                span.col-sm-8.email-control
+                  .input-group
+                    input#email.user-value.form-control(type='text', placeholder='Email', disabled='disabled')
+                    .input-group-btn
+                      button#email-toggle-edit.btn.btn-default Edit
+                      button#save-email.btn.btn-primary(style='display: none;') Save
+              .form-group
+                label.control-label.col-sm-2 Change Password:
+                .change-password-control.col-sm-8
+                  span.col-sm-12
+                    input#oldpassword.form-control(type='password', placeholder='Current Password')
+                  span.col-sm-12
+                    input#newpassword.form-control(type='password', placeholder='New Password')
+                  span.col-sm-12
+                    input#newpassword1.form-control(type='password', placeholder='Confirm New Password')
+                  span.col-sm-12
+                    button#changepassword.btn.btn-default.btn-block(type='button', style='margin-left: 0;') Change!
+          .setting-view.notifications
+            h4 Notifications  
+              i.icon-question-sign.muted(style="font-size:14px;")
+            table#notifications-table.table.table-condensed.table-striped
+              thead
+                tr
+                  th Name
+                  th Event
+                  th Action
+                  th Active
+                  th.actions 
+              tbody#notification-list
+            #no-notifications.centered(style="display:none")
+              .icon-comment.icon-4x
+              h5 You have not registered any notifications
+            #notification-loading-error.centered(style="display:none")
+              .icon-remove.icon-4x
+              h5 An Error Occured! We apologize
+            #create-notification-wrapper
+              hr.dark
+              div.centered
+                button#add-notification-trigger.btn.btn-success Create Notification
 script.
   $('[setting-link-target]').click( function () {
     var newTabName = $(this).attr('setting-link-target');

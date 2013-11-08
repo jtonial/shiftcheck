@@ -185,6 +185,8 @@
 
       console.log('ScheduleListView - post render');
 
+      console.log($('#sched-date').datepicker);
+
       $('#sched-date').datepicker({
         showOtherMonths : true,
         format          : 'yyyy-mm-dd',

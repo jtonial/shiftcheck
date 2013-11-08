@@ -10,26 +10,34 @@ table.table.table-striped.table-hover
   h3 Add Employee Options
 
   form#add-employee-form.form-horizontal
-    .control-group
-      label.control-label First Name
-      .controls
-        input#first_name(type='text', name='first_name', placeholder='First Name')
-    .control-group
-      label.control-label Last Name
-      .controls
-        input#last_name(type='text', name='last_name', placeholder='Last Name')
-    .control-group
-      label.control-label Email
-      .controls
-        input#email(type='text', name='email', placeholder='Email')
-    .control-group
-      label.control-label Username
-      .controls
-        input#username(type='text', name='username', placeholder='Username')
-    .control-group
-      label.control-label Password
-      .controls
-        input#password(type='password', name='password', placeholder='Password')
-    .control-group
-      .controls
-        button#add-employee-submit.btn.btn-primary Add Employee
+    .form-group
+      label.control-label.col-sm-2 First Name
+      span.col-sm-4
+        input#first_name.form-control(type='text', name='first_name', placeholder='First Name')
+    .form-group
+      label.control-label.col-sm-2 Last Name
+      span.col-sm-4
+        input#last_name.form-control(type='text', name='last_name', placeholder='Last Name')
+    .form-group
+      label.control-label.col-sm-2 Email
+      span.col-sm-4
+        input#email.form-control(type='text', name='email', placeholder='Email')
+    .form-group
+      label.control-label.col-sm-2 Username
+      span.col-sm-4
+        input#username.form-control(type='text', name='username', placeholder='Username')
+    .form-group
+      label.control-label.col-sm-2 Password
+      span.col-sm-4
+        input#password.form-control(type='password', name='password', placeholder='Password')
+    .form-group
+      span.col-sm-4.col-sm-offset-2
+        button#add-employee-submit.btn.btn-primary.btn-block Add Employee
+
+form.form-horizontal(action='', method='POST', role='form')
+  .form-group
+    legend Form title
+    | 
+  .form-group
+    .col-sm-10.col-sm-offset-2
+      button.btn.btn-primary(type='submit') Submit

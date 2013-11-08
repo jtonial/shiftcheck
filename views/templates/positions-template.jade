@@ -12,18 +12,18 @@ table.table.table-striped.table-hover
   h3 Add Position Options
 
   form#add-position-form.form-horizontal
-    .control-group
-      label.control-label Position
-      .controls
-        input#full_name(type='text', name='full_name', placeholder='Full Name')
-    .control-group
-      label.control-label Short Form
-      .controls
-        input#position(type='text', name='position', placeholder='Short Form')
-    .control-group
-      label.control-label Description
-      .controls
-        textarea#description(name='description', placeholder='Description')
-    .control-group
-      .controls
-        button#add-position-submit.btn.btn-primary Add Position
+    .form-group
+      label.control-label.col-sm-2 Position
+      span.col-sm-4
+        input#full_name.form-control(type='text', name='full_name', placeholder='Full Name')
+    .form-group
+      label.control-label.col-sm-2 Short Form
+      span.col-sm-4
+        input#position.form-control(type='text', name='position', placeholder='Short Form')
+    .form-group
+      label.control-label.col-sm-2 Description
+      span.col-sm-4
+        textarea#description.form-control(name='description', placeholder='Description')
+    .form-group
+      span.col-sm-4.col-sm-offset-2
+        button#add-position-submit.btn.btn-primary.btn-block Add Position

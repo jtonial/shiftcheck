@@ -8,17 +8,21 @@
 .well.admin-only
   #add-shift-area
     h5 Add Shift
-    .row
-      .col-sm-3
+    .row.form-inline
+      .col-sm-3.form-group
+        label.sr-only Employee Name
         input#new_shift_employee.form-control(type="text", placeholder="Employee")
-      .col-sm-3
+      .col-sm-3.form-group
+        label.sr-only Position
         input#new_shift_position.form-control(type="text", placeholder="Position")
-      .col-sm-3
+      .col-sm-3.form-group
+        label.sr-only Start Time
         .input-group.bootstrap-timepicker
           input#new_shift_start_time.form-control(type="text", placeholder="Start Time")
           span.input-group-addon
             .icon-time
-      .col-sm-3
+      .col-sm-3.form-group
+        label.sr-only End Time
         .input-group.bootstrap-timepicker
           input#new_shift_end_time.form-control(type="text", placeholder="End Time")
           span.input-group-addon
