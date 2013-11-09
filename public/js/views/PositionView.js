@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.PositionView = Backbone.View.extend({
+  Shiftcheck.classes.views.PositionView = Backbone.View.extend({
 
     tagName: 'tr',
 

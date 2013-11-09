@@ -2,11 +2,11 @@
 
   "use strict"
 
-  Scheduleme.classes.collections.Schedules = Backbone.Collection.extend({
+  Shiftcheck.classes.collections.Schedules = Backbone.Collection.extend({
   
     url: '/schedules',
 
-    model: Scheduleme.classes.models.Schedule,
+    model: Shiftcheck.classes.models.Schedule,
 
     parse: function (response, options) {
       return response.data.schedules;

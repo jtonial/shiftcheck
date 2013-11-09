@@ -1,4 +1,4 @@
-Scheduleme.classes.views.LoginView = Backbone.View.extend({
+Shiftcheck.classes.views.LoginView = Backbone.View.extend({
   tagName: 'div',
 
   template: Handlebars.compile($('#login-template').html()),
@@ -15,7 +15,7 @@ Scheduleme.classes.views.LoginView = Backbone.View.extend({
       data: $('#login-form').serialize(),
       success: function (response) {
         console.log('successful login');  
-        Scheduleme.helpers.fetchBootstrap();
+        Shiftcheck.helpers.fetchBootstrap();
       }, error: function (response) {
         alert('Username and password do not match. Please try again');
       }

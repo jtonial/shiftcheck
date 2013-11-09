@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.ScheduleBaseView = Backbone.View.extend({
+  Shiftcheck.classes.views.ScheduleBaseView = Backbone.View.extend({
     
     el: $('#schedule-pane'),
     

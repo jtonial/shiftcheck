@@ -1,4 +1,4 @@
-Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
+Shiftcheck.classes.views.ScheduleListView = Backbone.View.extend({
   //This renders directly into the el element; no need to append
     //Replaces everything in it; and no need to postRender()
   el: $('#list-page .content'),
@@ -10,7 +10,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     console.log('initialized');
 
     //Callback incase I forget to pass reference to collection
-    this.collection = typeof this.collection != 'undefined' ? this.collection : Scheduleme.Schedules;
+    this.collection = typeof this.collection != 'undefined' ? this.collection : Shiftcheck.Schedules;
 
     this.collection.bind('add',this.addOneSchedule, this);
 
@@ -23,7 +23,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
 
   render: function () {
     //The JSON passed in does nothing right now, but may in the future
-    //$(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+    //$(this.el).html(this.template(JSON.stringify(Shiftcheck.data)));
     return $(this.el);
   },
 
@@ -37,7 +37,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     var datenum=schedule.get('date');//'2012-01-01';//This will be the real date
     var d = new Date(datenum);
 
-    d = Scheduleme.helpers.UTCify(d);
+    d = Shiftcheck.helpers.UTCify(d);
 
     datenum = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate());
     var datestring = Days[d.getDay()]+', '+Months[d.getMonth()]+' '+(d.getDate()); //This will be the date string
@@ -56,43 +56,43 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
       var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'</a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.monthly ({model:schedule});
+      //var view = new Shiftcheck.classes.views.ScheduleView.monthly ({model:schedule});
     } else if (schedule.get('type') == 'week') {
-      var nd = Scheduleme.helpers.addDays(d, 6);
+      var nd = Shiftcheck.helpers.addDays(d, 6);
       var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
       schedule.set('ndatestring', ndatestring);
 
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.weekly ({model:schedule});
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Shiftcheck.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+      //var view = new Shiftcheck.classes.views.ScheduleView.weekly ({model:schedule});
     } else if (schedule.get('type') == 'twoweek') {
-      var nd = Scheduleme.helpers.addDays(d, 13);
+      var nd = Shiftcheck.helpers.addDays(d, 13);
       var ndatestring = Days[nd.getDay()]+', '+Months[nd.getMonth()]+' '+(nd.getDate()+1); //This will be the date string
       schedule.set('ndatestring', ndatestring);
 
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup>')
 
-      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Scheduleme.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.biweekly ({model:schedule});
-    } else if (schedule.get('type') == 'shifted' && Scheduleme.meta.d3) {
+      var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup> - '+(Shiftcheck.meta.mobile ? '' : '<br/>')+ndatestring+'<sup>'+Sups[nd.getDate()%10]+'</sup></a></li>';
+      //var view = new Shiftcheck.classes.views.ScheduleView.biweekly ({model:schedule});
+    } else if (schedule.get('type') == 'shifted' && Shiftcheck.meta.d3) {
 
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
       var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.d3 ({model:schedule});
+      //var view = new Shiftcheck.classes.views.ScheduleView.d3 ({model:schedule});
     } else if (typeof schedule.get('json') != 'undefined' && schedule.get('json') != null ) {
 
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
       var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.table ({model:schedule});
+      //var view = new Shiftcheck.classes.views.ScheduleView.table ({model:schedule});
     } else { //Defaults to daily schedule
 
       schedule.set('titledatestring', datestring+'<sup>'+Sups[d.getDate()%10]+'</sup>');
 
       var htmlText = '<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+datestring+'<sup>'+Sups[d.getDate()%10]+'</sup></a></li>';
-      //var view = new Scheduleme.classes.views.ScheduleView.daily ({model:schedule});
+      //var view = new Shiftcheck.classes.views.ScheduleView.daily ({model:schedule});
     }
 
     this.$('#dates').append(htmlText);
@@ -124,7 +124,7 @@ Scheduleme.classes.views.ScheduleListView = Backbone.View.extend({
     _.each(this.collection.models, function(schedule) {
       
       var d = new Date(schedule.get('datenum'));
-      d = Scheduleme.helpers.fromUTC(d);
+      d = Shiftcheck.helpers.fromUTC(d);
 
       if (schedule.get('type') == 'month') {
         this.$('#dates').append('<li class="schedule-tab"><a href="#", data-transition="slide", data-id="'+schedule.id+'" class="schedule-link">'+schedule.get('datestring')+'</a></li>');

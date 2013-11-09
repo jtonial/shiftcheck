@@ -1,4 +1,4 @@
-Scheduleme.classes.views.ChangeRequestView = Backbone.View.extend({
+Shiftcheck.classes.views.ChangeRequestView = Backbone.View.extend({
 
   tagName: 'tr',
 

@@ -2,11 +2,11 @@
 
   "use strict"
 
-  Scheduleme.classes.collections.Positions = Backbone.Collection.extend({
+  Shiftcheck.classes.collections.Positions = Backbone.Collection.extend({
 
     url: '/positions',
         
-    model: Scheduleme.classes.models.Position,
+    model: Shiftcheck.classes.models.Position,
 
     initialize: function () {
 

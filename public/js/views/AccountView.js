@@ -1,4 +1,4 @@
-Scheduleme.classes.views.AccountView = Backbone.View.extend({
+Shiftcheck.classes.views.AccountView = Backbone.View.extend({
   el: $('#content'),
 
   //tagName: 'div',
@@ -18,8 +18,8 @@ Scheduleme.classes.views.AccountView = Backbone.View.extend({
     "click .upload-modal-trigger" : "showModal"
   },
   render: function () {
-    $(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
-    $('#email').val(Scheduleme.data.email);
+    $(this.el).html(this.template(JSON.stringify(Shiftcheck.data)));
+    $('#email').val(Shiftcheck.data.email);
 
     $('#sched-date').datepicker({
       showOtherMonths: true,

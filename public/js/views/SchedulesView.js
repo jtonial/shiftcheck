@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.SchedulesViewItemView = Backbone.View.extend({
+  Shiftcheck.classes.views.SchedulesViewItemView = Backbone.View.extend({
     
     tagName: 'td',
 
@@ -21,7 +21,7 @@
     }
   });
 
-  Scheduleme.classes.views.SchedulesView = Backbone.View.extend({
+  Shiftcheck.classes.views.SchedulesView = Backbone.View.extend({
     
     el: $('#schedule-pane'),
 

@@ -1,4 +1,4 @@
-Scheduleme.classes.views.EditShiftView = Backbone.View.extend({
+Shiftcheck.classes.views.EditShiftView = Backbone.View.extend({
   //This renders directly into the el element; no need to append
     //Replaces everything in it; and no need to postRender()
   el: $('#edit-area'),
@@ -12,7 +12,7 @@ Scheduleme.classes.views.EditShiftView = Backbone.View.extend({
   },
   render: function () {
     //The JSON passed in does nothing right now, but may in the future
-    $(this.el).html(this.template(JSON.stringify(Scheduleme.data)));
+    $(this.el).html(this.template(JSON.stringify(Shiftcheck.data)));
     this.postRender();
 
     return $(this.el);

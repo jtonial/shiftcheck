@@ -29,10 +29,10 @@
       newLink.addClass('active');
 
       //Undelegate old view; I 'undelegate' instead of remove because remove removes the #content div, which all views try to bind to
-      if (Scheduleme.CurrentView.viewPane == 'main') Scheduleme.CurrentView._undelegateEvents();
+      if (Shiftcheck.CurrentView.viewPane == 'main') Shiftcheck.CurrentView._undelegateEvents();
 
       //Set current view to new view
-      Scheduleme.CurrentView = newview;
+      Shiftcheck.CurrentView = newview;
     },
     routes: {
       //'account':'account',
@@ -44,13 +44,13 @@
     },
 
     schedule: function (id) {
-      var model = Scheduleme.Schedules.get(id);
+      var model = Shiftcheck.Schedules.get(id);
 
       if (model) {
 
         var title = model.get('titledatestring');
         var $newLink = $('[data-id="'+id+'"]').parent();
-        var newView = new Scheduleme.classes.views.ScheduleView({ model: model });
+        var newView = new Shiftcheck.classes.views.ScheduleView({ model: model });
 
         this.switchMainView(title, $newLink, newView);
       } else {
@@ -77,7 +77,7 @@
 
       var title = 'Employees';
       var $newLink = $('#employees-link').parent();
-      var newView = new Scheduleme.classes.views.EmployeesView({ collection: Scheduleme.Employees });;
+      var newView = new Shiftcheck.classes.views.EmployeesView({ collection: Shiftcheck.Employees });;
 
       this.switchMainView(title, $newLink, newView);
 
@@ -86,7 +86,7 @@
 
       var title = 'Positions';
       var $newLink = $('#positions-link').parent();
-      var newView = new Scheduleme.classes.views.PositionsView({ collection: Scheduleme.Positions });;
+      var newView = new Shiftcheck.classes.views.PositionsView({ collection: Shiftcheck.Positions });;
 
       this.switchMainView(title, $newLink, newView);
     },
@@ -94,7 +94,7 @@
 
       var title = 'Change Requests';
       var $newLink = $('#requests-link').parent();
-      var newView = new Scheduleme.classes.views.ChangeRequestsView({ collection: {} });;
+      var newView = new Shiftcheck.classes.views.ChangeRequestsView({ collection: {} });;
 
       this.switchMainView(title, $newLink, newView);
     }

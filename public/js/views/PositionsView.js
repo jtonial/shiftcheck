@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.PositionsView = Backbone.View.extend({
+  Shiftcheck.classes.views.PositionsView = Backbone.View.extend({
     
     el: $('#schedule-pane'),
 
@@ -41,7 +41,7 @@
       });
     },
     addOneModel: function (model) {
-      var view = new Scheduleme.classes.views.PositionView({ model: model });
+      var view = new Shiftcheck.classes.views.PositionView({ model: model });
 
       this.$('tbody').append(view.render().el);
     },
@@ -59,12 +59,12 @@
 
       var form = $('#add-position-form');
 
-      // This should totally be done by adding to the Scheduleme.Employees collection...
-      Scheduleme.Positions.create({
+      // This should totally be done by adding to the Shiftcheck.Employees collection...
+      Shiftcheck.Positions.create({
         position    : form.find("input[name='position']").val(),
         full_name   : form.find("input[name='full_name']").val(),
         description : form.find("textarea[name='description']").val(),
-        order       : Scheduleme.Positions.newOrderValue()
+        order       : Shiftcheck.Positions.newOrderValue()
       }, { 
         wait: true,
         beforeSend: function (request) {

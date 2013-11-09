@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.ShiftView = Backbone.View.extend({
+  Shiftcheck.classes.views.ShiftView = Backbone.View.extend({
     
     el: $('#edit-area'),
     

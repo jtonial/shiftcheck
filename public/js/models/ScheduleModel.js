@@ -2,7 +2,7 @@
 
   "use strict"
 
-  Scheduleme.classes.models.Schedule = Scheduleme.classes.models.BaseModel.extend({
+  Shiftcheck.classes.models.Schedule = Shiftcheck.classes.models.BaseModel.extend({
 
     url: function () {
       return this.isNew() ? '/schedules' : '/schedules/'+this.id;
@@ -13,7 +13,7 @@
 
       // Create Shifts subcollection if the schedule contains shifts
       //if (this.get('shifts').length) {
-        this.Shifts = new Scheduleme.classes.collections.Shifts(this.get('Shifts'));
+        this.Shifts = new Shiftcheck.classes.collections.Shifts(this.get('Shifts'));
         //this.Shifts.reset(this.get('shifts'));
       //}
     },

@@ -1,4 +1,4 @@
-Scheduleme.classes.views.ScheduleBaseView = Backbone.View.extend({
+Shiftcheck.classes.views.ScheduleBaseView = Backbone.View.extend({
   
   /*tagName: 'div',
   

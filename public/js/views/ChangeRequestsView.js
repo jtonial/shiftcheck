@@ -1,4 +1,4 @@
-Scheduleme.classes.views.ChangeRequestsView = Backbone.View.extend({
+Shiftcheck.classes.views.ChangeRequestsView = Backbone.View.extend({
   
   el: $('#schedule-pane'),
 
@@ -24,7 +24,7 @@ Scheduleme.classes.views.ChangeRequestsView = Backbone.View.extend({
     });
   },
   addOneRequest: function (model) {
-    var view = new Scheduleme.classes.views.ChangeRequestView({ model: model });
+    var view = new Shiftcheck.classes.views.ChangeRequestView({ model: model });
 
     this.$('tbody').append(view.render().el);
   },

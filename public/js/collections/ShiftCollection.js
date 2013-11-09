@@ -2,7 +2,7 @@
 
   "use strict"
 
-  Scheduleme.classes.collections.Shifts = Backbone.Collection.extend({
+  Shiftcheck.classes.collections.Shifts = Backbone.Collection.extend({
     
     url: function () {
       if (!this.schedule_id) {
@@ -12,7 +12,7 @@
       return '/schedules/'+this.schedule_id+'/shifts';
     },
 
-    model: Scheduleme.classes.models.Shift,
+    model: Shiftcheck.classes.models.Shift,
 
     parse: function (data) {
       return data.data;

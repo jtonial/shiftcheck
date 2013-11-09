@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.models.BaseModel = Backbone.Model.extend({
+  Shiftcheck.classes.models.BaseModel = Backbone.Model.extend({
 
 
 

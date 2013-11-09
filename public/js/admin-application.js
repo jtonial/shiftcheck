@@ -2,7 +2,7 @@
   
   "use strict"
 
-  window.Scheduleme = window.Scheduleme || {
+  window.Shiftcheck = window.Shiftcheck || {
     classes: {
       models: {},
       collections: {},
@@ -31,18 +31,18 @@
   };
 
   window.log = function (s) {
-    if (Scheduleme.meta.debug) console.log(s);
+    if (Shiftcheck.meta.debug) console.log(s);
   };
-  Scheduleme.helpers.addMinutes = function(date, adding) {
+  Shiftcheck.helpers.addMinutes = function(date, adding) {
     return new Date(date.getTime() + minutes*60000);
   };
-  Scheduleme.helpers.UTCify = function (date) {
+  Shiftcheck.helpers.UTCify = function (date) {
     return new Date(date.getTime() + date.getTimezoneOffset()*60000);
   };
-  Scheduleme.helpers.fromUTC = function (date) {
+  Shiftcheck.helpers.fromUTC = function (date) {
     return new Date(date.getTime() - date.getTimezoneOffset()*60000);
   };
-  Scheduleme.helpers.addDays = function(date, adding) {
+  Shiftcheck.helpers.addDays = function(date, adding) {
     var nd = new Date(date);
 
     nd.setDate(date.getDate() + adding);
@@ -52,18 +52,18 @@
 
   //------------------PAYLOAD----------------------------
 
-  Scheduleme.Init = function () {
+  Shiftcheck.Init = function () {
 
-    $('body').attr('data-state', Scheduleme.meta.state).addClass(Scheduleme.meta.state);
+    $('body').attr('data-state', Shiftcheck.meta.state).addClass(Shiftcheck.meta.state);
 
 
-    Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+    Shiftcheck.Schedules = new Shiftcheck.classes.collections.Schedules();
 
     //Router takes care of this
-    Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
-    Scheduleme.ScheduleListView = new Scheduleme.classes.views.ScheduleListView({ collection: Scheduleme.Schedules });
+    Shiftcheck.AccountView = new Shiftcheck.classes.views.AccountView();
+    Shiftcheck.ScheduleListView = new Shiftcheck.classes.views.ScheduleListView({ collection: Shiftcheck.Schedules });
 
-    Scheduleme.UploadScheduleModalView = new Scheduleme.classes.views.UploadScheduleModalView();
+    Shiftcheck.UploadScheduleModalView = new Shiftcheck.classes.views.UploadScheduleModalView();
 
     //AJAX Setup
     $.ajaxSetup({
@@ -95,15 +95,15 @@
       $('#sidebar').removeClass('open closed').addClass(newState);
     });
 
-    Scheduleme.Employees = new Scheduleme.classes.collections.Employees();
-    Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
+    Shiftcheck.Employees = new Shiftcheck.classes.collections.Employees();
+    Shiftcheck.Positions = new Shiftcheck.classes.collections.Positions();
 
-    Scheduleme.Employees.fetch();
-    Scheduleme.Positions.fetch();
-    Scheduleme.Schedules.fetch({
+    Shiftcheck.Employees.fetch();
+    Shiftcheck.Positions.fetch();
+    Shiftcheck.Schedules.fetch({
       success: function () {
 
-        Scheduleme.ScheduleListView.reRenderTabs();
+        Shiftcheck.ScheduleListView.reRenderTabs();
         $('#schedule-pane').addClass('select-schedule');
       }, error: function () {
         //Remove loading div
@@ -116,7 +116,7 @@
         $('#schedule-pane').removeClass('loading');
 
         // This is initialized in the callback so that routes for existing schedules will be matched (and not say that the shift doesnt exist)
-        Scheduleme.Router = new AppRouter;
+        Shiftcheck.Router = new AppRouter;
 
         Backbone.history.start({
           pushState: true,
@@ -131,7 +131,7 @@
 
   $(document).ready(function () {
 
-    _.once(Scheduleme.Init());
+    _.once(Shiftcheck.Init());
 
   });
 

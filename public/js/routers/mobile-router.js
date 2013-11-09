@@ -27,7 +27,7 @@
 
     listView: function() {
       console.log('listView');
-      Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+      Shiftcheck.helpers.switchView(Shiftcheck.ScheduleListView);
       $('#mobile-nav-left-space').hide();
     },
     account: function () {
@@ -35,20 +35,20 @@
     },
     viewSchedule: function(id) {
       var postrender = false;
-      if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
+      if (Shiftcheck.meta.d3 && Shiftcheck.Schedules.get(id).get('type') == 'shifted') {
         postrender = true;
       }
 
-      var view = new Scheduleme.classes.views.ScheduleView({model: Scheduleme.Schedules.get(id)});
+      var view = new Shiftcheck.classes.views.ScheduleView({model: Shiftcheck.Schedules.get(id)});
       
       //Note this needs a back button
-      $('.header-text').html(Scheduleme.helpers.titleDate(
-        Scheduleme.Schedules.get(id).get('datenum'),
-        Scheduleme.Schedules.get(id).get('datestring')));
+      $('.header-text').html(Shiftcheck.helpers.titleDate(
+        Shiftcheck.Schedules.get(id).get('datenum'),
+        Shiftcheck.Schedules.get(id).get('datestring')));
 
       $('#mobile-nav-left-space').show();
 
-      Scheduleme.helpers.switchView(view, postrender);
+      Shiftcheck.helpers.switchView(view, postrender);
     }
   });
 })();

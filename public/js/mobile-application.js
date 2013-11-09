@@ -2,7 +2,7 @@
 
   "use strict"
 
-  window.Scheduleme = window.Scheduleme || {
+  window.Shiftcheck = window.Shiftcheck || {
     classes: {
       models: {},
       collections: {},
@@ -36,38 +36,38 @@
 
   window.isPhonegap = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 
-  Scheduleme.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.com' : '';
+  Shiftcheck.meta.url = window.isPhonegap ? 'http://staging-shift-check.herokuapp.com' : '';
 
 
   //$(function() {
 
-    Scheduleme.helpers.addMinutes = function(date, adding) {
+    Shiftcheck.helpers.addMinutes = function(date, adding) {
       return new Date(date.getTime() + minutes*60000);
     };
-    Scheduleme.helpers.UTCify = function (date) {
+    Shiftcheck.helpers.UTCify = function (date) {
       return new Date(date.getTime() + date.getTimezoneOffset()*60000);
     };
-    Scheduleme.helpers.fromUTC = function (date) {
+    Shiftcheck.helpers.fromUTC = function (date) {
       return new Date(date.getTime() + date.getTimezoneOffset()*60000);
     };
-    Scheduleme.helpers.addDays = function(date, adding) {
+    Shiftcheck.helpers.addDays = function(date, adding) {
       var nd = new Date();
       nd.setDate(date.getDate() + adding);
       return nd;
     };
-    Scheduleme.helpers.switchView = function (view, postRender) {
-      if (typeof Scheduleme.CurrentView.viewType !='undefined') {
-        Scheduleme.CurrentView.undelegateEvents();
+    Shiftcheck.helpers.switchView = function (view, postRender) {
+      if (typeof Shiftcheck.CurrentView.viewType !='undefined') {
+        Shiftcheck.CurrentView.undelegateEvents();
       }
-      Scheduleme.CurrentView = view;
-      Scheduleme.CurrentView.delegateEvents();
-      Scheduleme.CurrentView.render();
+      Shiftcheck.CurrentView = view;
+      Shiftcheck.CurrentView.delegateEvents();
+      Shiftcheck.CurrentView.render();
 
       if (postRender) {
-        Scheduleme.CurrentView.postRender();
+        Shiftcheck.CurrentView.postRender();
       }
     };
-    Scheduleme.helpers.titleDate = function(datenum, datestring) {
+    Shiftcheck.helpers.titleDate = function(datenum, datestring) {
       var t = new Date();
       var today = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+(t.getDate()+1);
       var output = '';
@@ -77,25 +77,25 @@
         return datestring;
       }
     }
-    /*Scheduleme.helpers.viewSchedule = function (id) {
-      console.log(typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined');
-      if (Scheduleme.meta.d3 && Scheduleme.Schedules.get(id).get('type') == 'shifted') {
-        var view = new Scheduleme.classes.views.ScheduleView.d3({model: Scheduleme.Schedules.get(id)});
-      } else if (typeof Scheduleme.Schedules.get(id).get('csv') != 'undefined') {
+    /*Shiftcheck.helpers.viewSchedule = function (id) {
+      console.log(typeof Shiftcheck.Schedules.get(id).get('csv') != 'undefined');
+      if (Shiftcheck.meta.d3 && Shiftcheck.Schedules.get(id).get('type') == 'shifted') {
+        var view = new Shiftcheck.classes.views.ScheduleView.d3({model: Shiftcheck.Schedules.get(id)});
+      } else if (typeof Shiftcheck.Schedules.get(id).get('csv') != 'undefined') {
         console.log('here');
-        var view = new Scheduleme.classes.views.ScheduleView.table({model: Scheduleme.Schedules.get(id)});
+        var view = new Shiftcheck.classes.views.ScheduleView.table({model: Shiftcheck.Schedules.get(id)});
       } else {
-        var view = new Scheduleme.classes.views.ScheduleView.gview({model: Scheduleme.Schedules.get(id)});
+        var view = new Shiftcheck.classes.views.ScheduleView.gview({model: Shiftcheck.Schedules.get(id)});
       }
       //Note this needs a back button
-      Scheduleme.helpers.switchView(view);
+      Shiftcheck.helpers.switchView(view);
     };*/
-    Scheduleme.helpers.fetchBootstrap = function () {
+    Shiftcheck.helpers.fetchBootstrap = function () {
       $.ajax({
-        url: Scheduleme.meta.url+'/bootstrap',
+        url: Shiftcheck.meta.url+'/bootstrap',
         success: function (res) {
 
-          window.Scheduleme.User = {
+          window.Shiftcheck.User = {
             loggedIn : true
           }
 
@@ -105,26 +105,26 @@
             transition: "fade",
             reverse: false
           });
-          // Scheduleme.helpers.switchView(Scheduleme.ScheduleListView);
+          // Shiftcheck.helpers.switchView(Shiftcheck.ScheduleListView);
 
           //Removing loading div
           $.each(res.data.schedules, function () {
-            Scheduleme.Schedules.add(this);
+            Shiftcheck.Schedules.add(this);
           });
           //I should only have to do this once, as any other schedule add (if even possible) will be in order (I hope)
           //Other option is to reRenderTabs() at the end of addOneSchedule
 
-          Scheduleme.ScheduleListView.reRenderTabs();
-          Scheduleme.ScheduleListPanelView.reRenderTabs();
+          Shiftcheck.ScheduleListView.reRenderTabs();
+          Shiftcheck.ScheduleListPanelView.reRenderTabs();
 
           //Add data into global object
-          Scheduleme.data.email = res.data.email;
-          Scheduleme.data.name = res.data.name;
-          Scheduleme.data.username = res.data.username;
+          Shiftcheck.data.email = res.data.email;
+          Shiftcheck.data.name = res.data.name;
+          Shiftcheck.data.username = res.data.username;
 
         }, error: function (xhr, status, text) {
           //Remove loading div
-            //Scheduleme.helpers.switchView(Scheduleme.LoginView);
+            //Shiftcheck.helpers.switchView(Shiftcheck.LoginView);
           $.mobile.changePage( '#login-page', {
             transition: "fade",
             reverse: false
@@ -137,14 +137,14 @@
         }
       });
 
-      Scheduleme.Positions = new Scheduleme.classes.collections.Positions();
-      Scheduleme.Positions.fetch();
+      Shiftcheck.Positions = new Shiftcheck.classes.collections.Positions();
+      Shiftcheck.Positions.fetch();
 
     };
-    Scheduleme.helpers.handleLogout = function () {
+    Shiftcheck.helpers.handleLogout = function () {
       //Destory session;
       $.ajax({
-        url: Scheduleme.meta.url+'/logout',
+        url: Shiftcheck.meta.url+'/logout',
         type: 'GET',
         beforeSend: function (request) {
           request.setRequestHeader("Accept", 'application/json');
@@ -153,7 +153,7 @@
           console.log('wtf cannot log out');
         },
         success: function () {
-          Scheduleme.User.loggedIn = false;
+          Shiftcheck.User.loggedIn = false;
 
           $.mobile.changePage( '#login-page', {
             transition: "fade",
@@ -164,7 +164,7 @@
     };
 
     //Used for global events
-    Scheduleme.classes.views.AppView = Backbone.View.extend({
+    Shiftcheck.classes.views.AppView = Backbone.View.extend({
       el: $('body'),
 
       template: Handlebars.compile($('#app-template').html()),
@@ -175,29 +175,29 @@
         'click .logout-trigger'   : 'logout'
       },
       back: function () {
-        Scheduleme.Router.navigate("/", {trigger: true});
+        Shiftcheck.Router.navigate("/", {trigger: true});
       },
       openAccountView: function () {
-        Scheduleme.Router.navigate("/account", {trigger: true});
+        Shiftcheck.Router.navigate("/account", {trigger: true});
       },
       logout: function () {
-        Scheduleme.helpers.handleLogout();
+        Shiftcheck.helpers.handleLogout();
       }
     });
 
   //------------------PAYLOAD----------------------------
 
-    Scheduleme.Init = function () {
+    Shiftcheck.Init = function () {
 
-      Scheduleme.Schedules = new Scheduleme.classes.collections.Schedules();
+      Shiftcheck.Schedules = new Shiftcheck.classes.collections.Schedules();
 
-      Scheduleme.AppView = new Scheduleme.classes.views.AppView();
+      Shiftcheck.AppView = new Shiftcheck.classes.views.AppView();
 
       //Router takes care of this
-      Scheduleme.ScheduleListView  = new Scheduleme.classes.views.ScheduleListView({collection: Scheduleme.Schedules});
-      Scheduleme.ScheduleListPanelView = new Scheduleme.classes.views.ScheduleListPanelView({collection: Scheduleme.Schedules});
-      Scheduleme.AccountView = new Scheduleme.classes.views.AccountView();
-      Scheduleme.LoginView = new Scheduleme.classes.views.LoginView();
+      Shiftcheck.ScheduleListView  = new Shiftcheck.classes.views.ScheduleListView({collection: Shiftcheck.Schedules});
+      Shiftcheck.ScheduleListPanelView = new Shiftcheck.classes.views.ScheduleListPanelView({collection: Shiftcheck.Schedules});
+      Shiftcheck.AccountView = new Shiftcheck.classes.views.AccountView();
+      Shiftcheck.LoginView = new Shiftcheck.classes.views.LoginView();
       //AJAX Setup
       $.ajaxSetup({
         dataType: 'json' //AJAX responses will all be treated as json dispite content-type
@@ -205,9 +205,9 @@
       //Add global $.ajaxError handlers
     
       //Note that the router is started in fetchBotstrap()
-      Scheduleme.helpers.fetchBootstrap();
+      Shiftcheck.helpers.fetchBootstrap();
 
-      Handlebars.registerHelper('outputDate', Scheduleme.helpers.titleDate);
+      Handlebars.registerHelper('outputDate', Shiftcheck.helpers.titleDate);
 
       $.mobile.defaultPageTransition = 'slide';
 
@@ -216,18 +216,18 @@
     };
 
     $(document).ready(function () {
-      Scheduleme.Init();
+      Shiftcheck.Init();
 
       $('#login-form').submit(function (e) {
         e.preventDefault();
 
         $.ajax({
-          url: Scheduleme.meta.url+'/login',
+          url: Shiftcheck.meta.url+'/login',
           type: 'POST',
           data: $(this).serialize(),
           success: function (response) {
             //Set loading screen
-            Scheduleme.helpers.fetchBootstrap();
+            Shiftcheck.helpers.fetchBootstrap();
           }, error: function (response) {
             alert('Username and password do not match. Please try again');
           }
@@ -236,7 +236,7 @@
       })
 
       $('.logout_trigger').click( function () {
-        Scheduleme.helpers.handleLogout();
+        Shiftcheck.helpers.handleLogout();
       })
     });
 
@@ -244,7 +244,7 @@
 
   $( document ).on( "pageshow", "#login-page", function() {
     console.log("login-page ready");
-    if (Scheduleme.User.loggedIn) {
+    if (Shiftcheck.User.loggedIn) {
       $.mobile.changePage( '#list-page', {
         transition: "fade",
         reverse: false
@@ -256,7 +256,7 @@
   $( document ).on( "pageinit", "#schedule-page", function() {
     console.log("schedule-page ready");
 
-    Scheduleme.ScheduleListPanelView.reRenderTabs();
+    Shiftcheck.ScheduleListPanelView.reRenderTabs();
 
       $( document ).on( "swipeleft swiperight", "#schedule-page", function( e ) {
           // We check if there is no open panel on the page because otherwise
@@ -299,7 +299,7 @@
   $( document ).on( "pageinit", "#list-page", function() {
     console.log("list-page ready");
 
-    Scheduleme.ScheduleListView.reRenderTabs();
+    Shiftcheck.ScheduleListView.reRenderTabs();
 
       $( document ).on( "swipeleft swiperight", "#list-page", function( e ) {
           // We check if there is no open panel on the page because otherwise
@@ -340,12 +340,12 @@
   });
   $( document ).on( "pageshow", "#list-page", function() {
     console.log('List view visible');
-    Scheduleme.ScheduleListView.reRenderTabs();
+    Shiftcheck.ScheduleListView.reRenderTabs();
   });
   function createSchedulePage(id) {
     console.log('The page doesn\'t exist yet; creating it');
 
-    var view = new Scheduleme.classes.views.ScheduleView({model: Scheduleme.Schedules.get(id)});
+    var view = new Shiftcheck.classes.views.ScheduleView({model: Shiftcheck.Schedules.get(id)});
 
     console.log('new view created');
 
@@ -369,7 +369,7 @@
       changeHash: true
     });*/
 
-    $('#schedule-page h1.page-header-text').html( Scheduleme.Schedules.get(id).get('titledatestring') );
+    $('#schedule-page h1.page-header-text').html( Shiftcheck.Schedules.get(id).get('titledatestring') );
     //$('#schedule-page').trigger('pagecreate');
 
     $.mobile.changePage( '#schedule-page', {

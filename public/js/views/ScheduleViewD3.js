@@ -2,9 +2,9 @@
   
   "use strict";
 
-  Scheduleme.events = typeof Scheduleme.events != 'undefined' ? Scheduleme.events : {};
+  Shiftcheck.events = typeof Shiftcheck.events != 'undefined' ? Shiftcheck.events : {};
 
-  Scheduleme.events.editShift = function (id, mouseX, mouseY) {
+  Shiftcheck.events.editShift = function (id, mouseX, mouseY) {
     var e = new CustomEvent(
       "editShift",
       {
@@ -20,7 +20,7 @@
     return e;
   };
 
-  Scheduleme.events.modifiedShift = function (id, mouseX, mouseY) {
+  Shiftcheck.events.modifiedShift = function (id, mouseX, mouseY) {
     var e = new CustomEvent(
       "modifiedShift",
       {
@@ -67,7 +67,7 @@
     return 'rgba('+rgb.r+','+rgb.g+','+rgb.b+','+trans+')';
   }
 
-  Scheduleme.classes.views.ScheduleView.d3 = Scheduleme.classes.views.ScheduleBaseView.extend({
+  Shiftcheck.classes.views.ScheduleView.d3 = Shiftcheck.classes.views.ScheduleBaseView.extend({
 
     template: Handlebars.compile($('#schedule-template-d3').html()),
     
@@ -287,7 +287,7 @@
 
       //Seperate by shift, then sort. This is not efficient, and should probably be redone.
       var tmp = {};
-      Scheduleme.Positions.forEach( function (pos) {
+      Shiftcheck.Positions.forEach( function (pos) {
         var position = pos.get('position');
         tmp[position] = [];
         dataset.forEach( function (d) {
@@ -539,7 +539,7 @@
             }
           })
           .on('click', function (d) {
-            //document.dispatchEvent(Scheduleme.events.editShift(d.id, d3.event.x, d3.event.y));
+            //document.dispatchEvent(Shiftcheck.events.editShift(d.id, d3.event.x, d3.event.y));
             if (_this.config.hideUnmatchingOnClick) hideUnmatching(d.id);
           })
           .on('dblclick', function (d) {
@@ -747,7 +747,7 @@
     },
 
     editShiftHandler: function (e) {
-      if (Scheduleme.meta.ADMIN) {
+      if (Shiftcheck.meta.ADMIN) {
         var _this = this;
 
         var sidebarLeft  = $('#sidebar').css('left');
@@ -777,13 +777,13 @@
         //This should be redone to use jquery (which will html escape the values)
 
         var output = [];
-        Scheduleme.Employees.forEach( function(employee) {
+        Shiftcheck.Employees.forEach( function(employee) {
           output.push('<option value="'+employee.get('id')+'">'+employee.get('first_name')+' '+employee.get('last_name')+'</option>');
         });
         this.$('#employee-edit').html(output.join(''));
 
         output = [];
-        Scheduleme.Positions.forEach( function(position) {
+        Shiftcheck.Positions.forEach( function(position) {
           output.push('<option value="'+position.get('id')+'">'+position.get('position')+'</option>');
         });
         this.$('#position-edit').html(output.join(''));
@@ -868,8 +868,8 @@
       var start       = _getMinutes($('#start-time-edit').val());
       var end         = _getMinutes($('#end-time-edit').val());
 
-      var employee = Scheduleme.Employees.get(employee_id);
-      var position = Scheduleme.Positions.get(position_id);
+      var employee = Shiftcheck.Employees.get(employee_id);
+      var position = Shiftcheck.Positions.get(position_id);
 
       shift.save({
         employee_id : employee_id,
@@ -1064,7 +1064,7 @@
 
       this.renderD3();
 
-      if (Scheduleme.meta.ADMIN) {
+      if (Shiftcheck.meta.ADMIN) {
         // Deactivated temporaraly as bs3 does not include a typeahead by default
         var employeeMapFunction = function (e) {
           return {
@@ -1088,11 +1088,11 @@
         };
 
         $('#new_shift_employee').typeahead({
-          local: Scheduleme.Employees.map( employeeMapFunction )
+          local: Shiftcheck.Employees.map( employeeMapFunction )
         });
 
         $('#new_shift_position').typeahead({
-          local: Scheduleme.Positions.map( positionMapFunction )
+          local: Shiftcheck.Positions.map( positionMapFunction )
         });
 
         $('#new_shift_start_time').timepicker({
@@ -1149,10 +1149,10 @@
 
       var errors = [];
 
-      if ( Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); }).indexOf(employee) < 0 ) {
+      if ( Shiftcheck.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); }).indexOf(employee) < 0 ) {
         errors.push('Employee invalid');
       }
-      if ( Scheduleme.Positions.pluck('position').indexOf(position) < 0 ) {
+      if ( Shiftcheck.Positions.pluck('position').indexOf(position) < 0 ) {
         errors.push('Position invalid');
       }
       /*if ( !start_time.match(/^\d{1,}:(?:[0-5]\d)(am|pm)$/) ) {
@@ -1178,8 +1178,8 @@
         alert(errors.join('\n'));
       } else {
         var schedule_id = _this.model.id;
-        var employee_id = Scheduleme.Employees.find(function (e) { return e.get('first_name')+' '+e.get('last_name') == employee; }).id;
-        var position_id = Scheduleme.Positions.find(function (p) { return p.get('position') == position; }).id;
+        var employee_id = Shiftcheck.Employees.find(function (e) { return e.get('first_name')+' '+e.get('last_name') == employee; }).id;
+        var position_id = Shiftcheck.Positions.find(function (p) { return p.get('position') == position; }).id;
 
         var start       = _getMinutes(start_time);
         var end         = _getMinutes(end_time);

@@ -2,7 +2,7 @@
 
   "use strict"
 
-  Scheduleme.classes.views.EmployeeView = Backbone.View.extend({
+  Shiftcheck.classes.views.EmployeeView = Backbone.View.extend({
 
     tagName: 'tr',
 

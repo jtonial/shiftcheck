@@ -2,7 +2,7 @@
   
   "use strict";
 
-  Scheduleme.classes.views.UploadScheduleModalView = Backbone.View.extend({
+  Shiftcheck.classes.views.UploadScheduleModalView = Backbone.View.extend({
     //This renders directly into the el element; no need to append
       //Replaces everything in it; and no need to postRender()
     el: $('#upload-modal'),
@@ -35,7 +35,7 @@
 
       var date = $('#upload-schedule-date').val();
       var dateObj = new Date(date);
-      dateObj = Scheduleme.helpers.UTCify(dateObj);
+      dateObj = Shiftcheck.helpers.UTCify(dateObj);
 
       var payload = {
         date: dateObj.toString(), // this should be validated as valid
@@ -43,9 +43,9 @@
         shifts: []
       };
 
-      //var schedule = new Scheduleme.classes.models.Schedule();
+      //var schedule = new Shiftcheck.classes.models.Schedule();
 
-      Scheduleme.Schedules.create({
+      Shiftcheck.Schedules.create({
         date      : dateObj.toString(), // this should be validated as valid
         timezone  : dateObj.getTimezoneOffset()
       }, {

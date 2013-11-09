@@ -2,7 +2,7 @@
 
   "use strict"
 
-  Scheduleme.classes.models.Shift = Scheduleme.classes.models.BaseModel.extend({
+  Shiftcheck.classes.models.Shift = Shiftcheck.classes.models.BaseModel.extend({
 
     url: function () {
       return '/schedules/'+this.get('schedule_id')+'/shifts'+ (this.isNew() ? '' : '/'+this.id );

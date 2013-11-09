@@ -2,7 +2,7 @@
   
   "use strict"
 
-  Scheduleme.classes.views.ScheduleView.table = Scheduleme.classes.views.ScheduleBaseView.extend({
+  Shiftcheck.classes.views.ScheduleView.table = Shiftcheck.classes.views.ScheduleBaseView.extend({
     
     template: Handlebars.compile($('#schedule-template-table').html())
     

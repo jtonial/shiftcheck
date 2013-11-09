@@ -5,15 +5,19 @@ block append scripts
   script(src='./js/login.js')
 
 block content
-  .container-fluid
-    .row-fluid
-      .col-sm-4.col-sm-offset-4
+  .container
+    .row
+      .col-sm-6.col-sm-offset-3
         .well
           h1 Login
           form(id="login-form")
-            input#email.input-block-level(type='text', name='email', placeholder='Email')
-            input#password.input-block-level(type='password', name='password', placeholder='Password')
-            label.checkbox
-              input(type="checkbox", value="remember-me") 
-              | Remember me
-            button.btn.btn-primary.input-block-level(type='submit') Login
+            .form-group
+              label.sr-only(for="email")
+              input#email.form-control(type='text', name='email', placeholder='Email')
+            .form-group
+              label.sr-only(for="password")
+              input#password.form-control(type='password', name='password', placeholder='Password')
+            button#signin-trigger.btn.btn-primary.btn-block(type='submit', style="margin-top:10px;height:40px;") Login
+            div(style="text-align:center;margin-top:5px;font-size:12px")
+              a(href="#") Forgot Your Password?
+            div#error-block.alert.alert-danger(style="display:none;text-align:center;margin-top:15px;")
