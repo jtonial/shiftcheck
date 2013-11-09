@@ -104,7 +104,11 @@
       success: function () {
 
         Shiftcheck.ScheduleListView.reRenderTabs();
-        $('#schedule-pane').addClass('select-schedule');
+        if (Shiftcheck.Schedules.length) {
+          $('#schedule-pane').addClass('select-schedule');
+        } else {
+          $('#schedule-pane').addClass('no-schedules');
+        }
       }, error: function () {
         //Remove loading div
         $('#schedule-pane').removeClass('loading').addClass('loading-error');
