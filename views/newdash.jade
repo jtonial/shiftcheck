@@ -42,14 +42,21 @@ block sidebar-content
               li.nav-header
                 p Manager Options
               li
-                a#employees-link Employees
+                a#employees-link
+                  i.icon.icon-fixed-width.icon-group(style="width: 20px;")
+                  | Employees
               li
-                a#positions-link Positions
+                a#positions-link
+                  i.icon.icon-fixed-width.icon-pushpin(style="width: 20px;")
+                  | Positions
               li
-                a#requests-link Change Requests
+                a#requests-link
+                  i.icon.icon-fixed-width.icon-comments(style="width: 20px;")
+                  | Change Requests
           - else
             ul#employee-options.nav.nav-list
-              li.nav-header Employee Options
+              li.nav-header
+                p Employee Options
               li
                 a#requests-link Change Requests
 

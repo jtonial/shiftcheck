@@ -1,0 +1,17 @@
+#shift-view-history-modal.modal.fade
+  .modal-dialog(style="width:800px")
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h4.modal-title Shift History
+      .modal-body
+        table.table.table-condensed
+          thead
+            tr
+              th 
+              th Employee
+              th Position
+              th Start Time
+              th End Time
+              th Timestamp
+          tbody#shift-history-body

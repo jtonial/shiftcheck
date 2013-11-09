@@ -83,10 +83,10 @@
     //This is here because I currently do not have a global view. If I do, it will be there
     $('#logout-trigger').click( function () {
       window.location.href = '/logout';
-    })
+    });
     $('#settings-trigger').click( function () {
       $('#account-modal').modal('show');
-    })
+    });
 
     //#toggle-sidebar-trigger
     $('#sidebar.closed #sidebar-header').click( function () {

@@ -1,7 +1,9 @@
-#edit-shift-popover.popover(style="display: block;")
+#edit-shift-popover.popover(style="display: block; max-width: 305px;")
   .arrow
-  h3.popover-title Edit Shift - 
-    span#shift-id-display
+  .popover-title.clearfix(style="line-height:22px;")
+    strong Edit Shift - 
+      span#shift-id-display
+    button#view-shift-history-trigger.btn.btn-default.btn-xs.pull-right.admin-only View History
   .popover-content.row(style="margin:0px")
     form.form-horizontal#edit-shift-popover-form
       .form-group

@@ -1,9 +1,9 @@
-#account-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static')
+#account-modal.modal.fade(tabindex='-1', aria-hidden='true', data-backdrop='static')
   .modal-dialog
     .modal-content
       .modal-header.clearfix
-        h3.pull-left Account Options
-        button.pull-right(type="button", class="close", data-dismiss="modal", aria-hidden="true") ×
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h4.modal-title Account Options
       .modal-body.clearfix
         .account-nav
           ul.nav.nav-list

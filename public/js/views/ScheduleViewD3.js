@@ -1,6 +1,6 @@
 (function () {
   
-  "use strict"
+  "use strict";
 
   Scheduleme.events = typeof Scheduleme.events != 'undefined' ? Scheduleme.events : {};
 
@@ -18,7 +18,7 @@
       }
     );
     return e;
-  }
+  };
 
   Scheduleme.events.modifiedShift = function (id, mouseX, mouseY) {
     var e = new CustomEvent(
@@ -32,7 +32,7 @@
       }
     );
     return e;
-  }
+  };
 
   function _getMinutes (string) {
     var hours = parseInt(string.substr(0, string.indexOf(':')));
@@ -73,6 +73,8 @@
     
     initialize: function () {
       _.bind(this.focusOnShift, this);
+
+      //this.listenTo(this.model, 'change', this.render);
     },
 
     config: {
@@ -109,13 +111,18 @@
     events: {
       "click #save-shift-trigger" : "saveModifiedShift",
       "click #delete-shift-trigger" : "deleteShift",
+      "click #view-shift-history-trigger" : "viewShiftHistory",
+
       "click #add_shift_trigger" : "addShift",
 
       "click rect.shift" : 'editShiftHandler',
 
       "click #unfocus-trigger" : "unfocus",
 
-      "click #save-schedule" : "saveSchedule"
+      "click #save-schedule" : "saveSchedule",
+      "click #delete-schedule" : "deleteSchedule",
+      "click #publish-trigger" : "publishSchedule",
+      "click #unpublish-trigger" : "unpublishSchedule"
     },
 
     truncate: function (s) {
@@ -132,7 +139,7 @@
       _this.indexes.shiftMeta = {};
 
       dataset.forEach(function (shift) {
-        _this.indexes.shiftMeta[shift.id] = {}
+        _this.indexes.shiftMeta[shift.id] = {};
           
           var sMin = shift.start;
 
@@ -184,7 +191,7 @@
         dataset.forEach(function(y) {
           var sy = _this.indexes.shiftMeta[y.id];
           _this.indexes.overlappingAmounts[x.id][y.id] = _this.amountOverlapping(sx.sMin, sx.eMin, sy.sMin, sy.eMin);
-        })
+        });
       });
     },
     generateHorizontalAreaMapping: function (dataset) {
@@ -211,7 +218,7 @@
             a.push(this);
             b.push(s.id);
           }
-        })
+        });
 
         _this.indexes.crossMapping[x]=a;
         _this.indexes.crossMappingId[x]=b;
@@ -309,9 +316,9 @@
       var shiftInfoFontSize = _this.config.barHeight*(4/5);
 
 
-      var ylineData = d3.range(_this.config.topPadding - 1 + _this.config.barHeight, 
-                (dataset.length * _this.config.barHeight) + _this.config.topPadding, 
-                _this.config.barHeight); 
+      var ylineData = d3.range(_this.config.topPadding - 1 + _this.config.barHeight,
+                (dataset.length * _this.config.barHeight) + _this.config.topPadding,
+                _this.config.barHeight);
       var xlineData = d3.range(min, max, 30);
 
       var xScale = d3.scale.linear()
@@ -326,7 +333,7 @@
 
 
       // IDEXES::: shiftMeta, overlappingAmounts
-      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; })
+      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; });
 
       _this.generateShiftMeta(dataset);
       _this.generateOverlappingAmounts(dataset);
@@ -358,10 +365,10 @@
             //var sMin = d.start;
 
             //console.log ('mod: '+s.getMinutes());
-            if (sMin % 60 == 0) {
+            if (sMin % 60 === 0) {
               return "rgb(200,200,200)";
             } else {
-              return "rgba(200,200,200,0.5)"; 
+              return "rgba(200,200,200,0.5)";
             }
           })
           .style("stroke-width", 1);
@@ -572,7 +579,7 @@
           .attr("height", 0)
           .remove();
 
-      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; })
+      dataset.forEach( function (d) { _this.indexes.shiftText[d.id] = {}; });
 
       //  EMPLOYEE NAMES------------------------------------------------
       var employeeNames = canvas.selectAll('.employeeName')
@@ -660,12 +667,12 @@
             tmp.setHours(Math.floor(d / 60));
             tmp.setMinutes(d % 60);
             var hours = (Math.floor(d / 60)) % 12;
-            if (hours == 0) {
+            if (hours === 0) {
               hours = 12;
             }
             var minutes = ("0" + (d%60)).slice(-2);
 
-            if (minutes % 60 == 0) {
+            if (minutes % 60 === 0) {
               return hours;//+':'+minutes;
             }
 
@@ -689,12 +696,12 @@
             tmp.setHours(Math.floor(d / 60));
             tmp.setMinutes(d % 60);
             var hours = (Math.floor(d / 60)) % 12;
-            if (hours == 0) {
+            if (hours === 0) {
               hours = 12;
             }
             var minutes = ("0" + (d%60)).slice(-2);
 
-            if (minutes % 60 == 0) {
+            if (minutes % 60 === 0) {
               return hours;//+':'+minutes;
             }
 
@@ -702,7 +709,7 @@
           })
           .attr("x", function(d) {
             return xScale(d)-3;//12;
-          })
+          });
         // DELETE
         gridTimes.exit()
           .remove();
@@ -816,7 +823,7 @@
           mouseY--;
           position = 'top';
         } else if ( botDiff > boxHeight-buffer && leftDiff > boxWidth/2-buffer && rightDiff > boxWidth/2-buffer) {
-          mouseY+=8
+          mouseY+=8;
           position = 'bottom';
         } else if ( leftDiff > boxWidth-buffer && topDiff < boxHeight/2+buffer && botDiff > boxHeight/2-buffer) {
           mouseX-=4;
@@ -869,8 +876,8 @@
         position_id : position_id,
         start       : start,
         end         : end
-      }, { 
-        wait: true, 
+      }, {
+        wait: true,
         success: function () {
           shift.set({
             employee_name : employee.get('first_name')+' '+employee.get('last_name'),
@@ -893,7 +900,43 @@
         timezone : newTimezone
       }, {
         wait: true
-      })
+      });
+    },
+    deleteSchedule: function (e) {
+      console.log('flag');
+      this.model.destroy({
+        wait: true ,
+        success: function (model, response) {
+          console.log('navigating to first schedule');
+          // Hack for now
+          location.reload();
+        },
+        error: function (something) {
+          alert('schedule delete failed');
+        }
+      });
+    },
+    publishSchedule: function (e) {
+      this.model.save({
+        published: 1
+      },{
+        wait: true ,
+        success: function (model, response) {
+          $('#publish-trigger').hide();
+          $('#unpublish-trigger').show();
+        }
+      });
+    },
+    unpublishSchedule: function (e) {
+      this.model.save({
+        published: 0
+      },{
+        wait: true ,
+        success: function (model, response) {
+          $('#publish-trigger').show();
+          $('#unpublish-trigger').hide();
+        }
+      });
     },
     deleteShift: function (e) {
       e.preventDefault();
@@ -905,7 +948,9 @@
       _this.$('#edit-area').hide();
 
     },
-
+    viewShiftHistory: function (e) {
+      console.log('Viewing shift history');
+    },
     highlightShift: function (highlight, s, hoveredId) {
 
       var _this = this;
@@ -936,7 +981,7 @@
             return _makeRGBa(_this.config.baseShiftColor, overlap);
           }
           return t.property('baseColor');
-        })
+        });
       } else if (highlight == 'unselect') {
         d3.select(_this.indexes.shiftText[id].employeeName)
           .attr("fill", _this.config.fadedTextColor)
@@ -977,7 +1022,7 @@
         .transition()
         .duration(250)
         .attr("height", function(d) {
-          if (id == '-1' || _this.indexes.overlappingAmounts[id][d.id] != 0) {
+          if (id == '-1' || _this.indexes.overlappingAmounts[id][d.id] !== 0) {
             return this.config.barHeight - this.config.barPadding;
           } else {
             return 0;
@@ -1008,22 +1053,47 @@
 
     },
 
-    postRender: function () {
-      var _this = this;
+    renderD3: function () {
 
       var contentTarget = document.getElementById('d3Target');
 
-      _this.createD3(contentTarget);
+      this.createD3(contentTarget);
+    },
+    postRender: function () {
+      var _this = this;
+
+      this.renderD3();
 
       if (Scheduleme.meta.ADMIN) {
         // Deactivated temporaraly as bs3 does not include a typeahead by default
-        // $('#new_shift_employee').typeahead({
-        //   source: Scheduleme.Employees.map( function (e) { return e.get('first_name')+' '+e.get('last_name'); })
-        // });
+        var employeeMapFunction = function (e) {
+          return {
+            value   : e.get('first_name')+' '+e.get('last_name') ,
+            tokens  : [
+              e.get('first_name') ,
+              e.get('last_name')
+            ] ,
+            name    : e.get('first_name')+' '+e.get('last_name')
+          };
+        };
+        var positionMapFunction = function (p) {
+          return {
+            value   : p.get('position') ,
+            tokens  : [
+              p.get('full_name') ,
+            ] ,
+            name    : p.get('full_name') ,
+            description : p.get('description')
+          };
+        };
 
-        // $('#new_shift_position').typeahead({
-        //   source: Scheduleme.Positions.pluck('position')
-        // });
+        $('#new_shift_employee').typeahead({
+          local: Scheduleme.Employees.map( employeeMapFunction )
+        });
+
+        $('#new_shift_position').typeahead({
+          local: Scheduleme.Positions.map( positionMapFunction )
+        });
 
         $('#new_shift_start_time').timepicker({
             minuteStep: 15
@@ -1045,6 +1115,12 @@
         $('#end-time-edit').timepicker({
             minuteStep: 15
         });
+
+        if (_this.model.get('published')) {
+          $('#publish-trigger').hide();
+        } else {
+          $('#unpublish-trigger').hide();
+        }
 
       }
 
@@ -1117,7 +1193,7 @@
           position      : position,
           start         : start,
           end           : end
-        }, { 
+        }, {
           wait: true,
           beforeSend: function (request) {
             $('#add_shift_trigger').attr('disabled', true);

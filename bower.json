@@ -26,9 +26,12 @@
     "backbone-validation": "~0.8.2",
     "bootstrap-datepicker": "~1.2.0",
     "bootstrap-timepicker": "~0.2.5",
-    "momentjs": "~2.3.1"
+    "momentjs": "~2.3.1",
+    "typeahead.js": "~0.9.3",
+    "typeahead.js-bootstrap.css": "*"
   },
   "resolutions": {
-    "bootstrap": "3.x.x"
+    "bootstrap": "3.x.x",
+    "jquery": "2.0.3"
   }
 }

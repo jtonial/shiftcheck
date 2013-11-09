@@ -23,10 +23,10 @@
       var fd = new FormData();
 
       fd.append('key', obj.key);
-      fd.append('acl', obj.acl); 
+      fd.append('acl', obj.acl);
       fd.append('Content-Type', 'application/pdf');
       fd.append('AWSAccessKeyId', obj.s3Key);
-      fd.append('policy', obj.s3PolicyBase64)
+      fd.append('policy', obj.s3PolicyBase64);
       fd.append('signature', obj.s3Signature);
 
       fd.append("file",file);
@@ -184,8 +184,6 @@
     postRender: function () {
 
       console.log('ScheduleListView - post render');
-
-      console.log($('#sched-date').datepicker);
 
       $('#sched-date').datepicker({
         showOtherMonths : true,

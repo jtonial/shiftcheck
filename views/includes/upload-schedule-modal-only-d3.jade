@@ -1,17 +1,18 @@
-#upload-modal.modal(tabindex='-1', aria-hidden='true', data-backdrop='static', style='display: none;')
+#upload-modal.modal.fade(tabindex='-1', aria-hidden='true', data-backdrop='static')
   .modal-dialog
     .modal-content
       .modal-header
-        h3 Upload Schedule
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h4 Upload Schedule
       .modal-body
-        form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
+        //- form#s3-upload-form(action='http://nrmitchi.schedules.s3.amazonaws.com/', method='post', enctype='multipart/form-data', style="margin:0")
     
         form.form-horizontal
-          .form-group
-          label.col-sm-5.control-label(for='date') Date
-          span.col-sm-4
-            input#upload-schedule-date.form-control.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
+          .form-group(style="margin-bottom:0px;")
+            label.col-sm-5.control-label(for='date') Date
+            span.col-sm-4
+              input#upload-schedule-date.form-control.datepicker.upload-schedule-info(type='text', name='date', placeholder='YYYY-MM-DD')
 
-      .modal-footer
+      .modal-footer(style="margin-top:0px;")
         button.btn.btn-default(data-dismiss='modal') Cancel
         button#new-empty-schedule-button.btn.btn-success(name='dontsubmit') Create

@@ -1,6 +1,6 @@
 (function () {
   
-  "use strict"
+  "use strict";
 
   Scheduleme.classes.views.UploadScheduleModalView = Backbone.View.extend({
     //This renders directly into the el element; no need to append
@@ -41,7 +41,7 @@
         date: dateObj.toString(), // this should be validated as valid
         timezone: dateObj.getTimezoneOffset(),
         shifts: []
-      }
+      };
 
       //var schedule = new Scheduleme.classes.models.Schedule();
 
@@ -50,7 +50,7 @@
         timezone  : dateObj.getTimezoneOffset()
       }, {
         wait: true
-      })
+      });
 
     }
   });

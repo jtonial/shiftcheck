@@ -30,12 +30,24 @@
     .row
       .col-sm-3.col-sm-offset-9
         button#add_shift_trigger.btn.btn-primary.btn-block.pull-right Add
-  #edit-shift-area.clearfix
+  #edit-schedule-area.clearfix
     h5 Edit Schedule
-    .form-horizontal.col-sm-6
-      .form-group
-        label.control-label.col-sm-2 Timezone
-        .col-sm-10
-          input#timezone.form-control(type='text', name='schedule[timezone]', value='{{timezone}}')
-
-      button#save-schedule.btn.btn-primary.input-small.pull-right(type='submit') Save
+    .row
+      .col-sm-6
+        .form-horizontal
+          .form-group
+            label.control-label.col-sm-6 Timezone
+            .col-sm-6
+              input#timezone.form-control(type='text', name='schedule[timezone]', value='{{timezone}}')
+          .form-group
+            .col-sm-6.col-sm-offset-6
+              button#save-schedule.btn.btn-primary.btn-block(type='submit') Save
+      .col-sm-6
+        .row
+          .col-sm-6.col-sm-offset-6
+            button#unpublish-trigger.btn.btn-default.btn-block Un-Publish
+            button#publish-trigger.btn.btn-success.btn-block(style="margin-top:0") Publish
+  #delete-schedule-area.clearfix
+    h5 Danger Zone
+    .col-sm-6
+      btn#delete-schedule.btn.btn-danger.btn-block Delete Schedule
