@@ -1,5 +1,5 @@
 
-require(__basedir+'/helpers/logger').info('Loading global.js...');
+require(__basedir+'/connections/logger').info('Loading global.js...');
 
 
 exports.Helpers     = require('../helpers/helpers');
@@ -7,22 +7,19 @@ exports.Render      = require('../helpers/render');
 
 exports.Config      = require('../config');
 
-exports.db          = require('../db/mysql');
-exports.mysql       = require('../db/mysql');
+exports.db          = require('../connections/mysql');
+exports.mysql       = require('../connections/mysql');
 
-exports.Redis       = require('../db/redis');
+exports.Redis       = require('../connections/redis');
 //exports.Memcache    = require('../db/memcache');
 
 exports.Controllers = {
-  Employees : require('../lib/employees/controller'),
-  Employers : require('../lib/employers/controller')
+  Employees : require('../modules/employees/controller'),
+  Employers : require('../modules/employers/controller')
 };
 exports.Models      = {
-  Employer : require('../lib/employers/model'),
-  Schedule : require('../lib/schedules/model')
+  Employer : require('../modules/employers/model'),
+  Schedule : require('../modules/schedules/model')
 };
-exports.Cache       = require('../helpers/cache');
-//By exporting the Logger here I can modify the transports no problem
-exports.Logger      = require('../helpers/logger');
-exports.Queries     = require('../helpers/queries');
-exports.Permissions = require('../helpers/permissions');
+
+exports.Logger      = require('../connections/logger');

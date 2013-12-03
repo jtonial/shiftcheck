@@ -1,5 +1,5 @@
 
-require(__basedir+'/helpers/logger').info('Loading render helpers...');
+require(__basedir+'/connections/logger').info('Loading render helpers...');
 
 var Main = require('../helpers/global');
 

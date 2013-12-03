@@ -28,7 +28,6 @@ if (cluster.isMaster && Main.Config.cluster) {
     https         = require('https') ,
     path          = require('path') ,
     RedisStore    = require('connect-redis')(express) ,
-    authenticate  = require('./middleware/authenticate') ,
     device        = require('express-device') ,
     Main          = require('./helpers/global') ,
     // redis         = Main.redis ,
@@ -83,14 +82,14 @@ if (cluster.isMaster && Main.Config.cluster) {
       next();
     });
 
-    var about      = require('./lib/about') ,
-        schedules  = require('./lib/schedules') ,
-        employees  = require('./lib/employees') ,
-        me         = require('./lib/me') ,
-        positions  = require('./lib/positions') ,
-        auth       = require('./lib/auth') ,
-        available_shifts = require('./lib/available_shifts') ,
-        change_requests  = require('./lib/change_requests') ;
+    var about      = require('./modules/about') ,
+        schedules  = require('./modules/schedules') ,
+        employees  = require('./modules/employees') ,
+        me         = require('./modules/me') ,
+        positions  = require('./modules/positions') ,
+        auth       = require('./modules/auth') ,
+        available_shifts = require('./modules/available_shifts') ,
+        change_requests  = require('./modules/change_requests') ;
 
     app.use('/',          auth);
     app.use('/',          me);

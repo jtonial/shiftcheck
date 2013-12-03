@@ -1,5 +1,5 @@
 
-require(__basedir+'/helpers/logger').info('Loading mongo engine...');
+require(__basedir+'/connections/logger').info('Loading mongo engine...');
 
 var mongo;
 

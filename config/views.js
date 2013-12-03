@@ -1,5 +1,5 @@
 
-require(__basedir+'/helpers/logger').info('Loading views engine...');
+require(__basedir+'/connections/logger').info('Loading views engine...');
 
 
 module.exports = views = {

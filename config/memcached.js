@@ -2,7 +2,7 @@
   Docs: https://github.com/3rd-Eden/node-memcached
 */
 
-require(__basedir+'/helpers/logger').info('Loading memcached engine...');
+require(__basedir+'/connections/logger').info('Loading memcached engine...');
 
 var memcached;
 

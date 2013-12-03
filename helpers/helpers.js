@@ -2,7 +2,7 @@
   Global helper methods. Can all be used blackbox
 */
 
-require(__basedir+'/helpers/logger').info('Loading general helpers...');
+require(__basedir+'/connections/logger').info('Loading general helpers...');
 
 var Main = require('../helpers/global') ;
 

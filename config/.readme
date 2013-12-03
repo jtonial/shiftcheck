@@ -1,1 +1,0 @@
-The index.js file will be loaded on a require() to the config directory. If the index.js filename is changed, require calls will have to specify the file.

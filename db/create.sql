@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS shiftcheck;
 use shiftcheck;
 
 DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS shift_history;
+DROP TABLE IF EXISTS available_shifts;
 DROP TABLE IF EXISTS shifts;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS employee_positions;

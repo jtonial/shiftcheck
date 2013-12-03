@@ -7,8 +7,8 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['src/**/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['public/**/*.js'],
+        dest: 'dist/public/<%= pkg.name %>.js'
       }
     },
     uglify: {
@@ -17,15 +17,12 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+          'dist/public/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
     jshint: {
-      files: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'package.json', 'src/**/*.js', 'test/**/*.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
@@ -38,26 +35,14 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['<%= jshint.files %>'],
-      tasks: ['jshint', 'qunit']
+      tasks: ['test']
     },
-    zip: {
-      your_target: {
-        src: [
-          'public/css/*.css',
-          'public/img/*',
-          'public/js/*',
-          'views/dash.html'
-        ],
-        dest: 'build/phonegap/package.zip',
-
-        /* optional */
+    mochaTest: {
+      test: {
         options: {
-          base: 'public/',
-          subdir: '/',
-          zlib: {
-            level: 1
-          }
-        }
+          reporter: 'spec'
+        },
+        src: ['test/**/*.js']
       }
     }
   });
@@ -66,11 +51,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-scaffold');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.loadNpmTasks('grunt-zipstream');
+  grunt.registerTask('test', ['jshint', 'mochaTest']);
 
-  grunt.registerTask('hint', ['jshint']);
+  grunt.registerTask('dist', ['test', 'concat', 'uglify']);
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['concat', 'uglify']);
 
 };

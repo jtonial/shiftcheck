@@ -1,14 +1,13 @@
 {
   "folders": [
     {
-      "path": ".",
-      "folder_exclude_patterns": [
+      "path": "/workspace/env/Shiftcheck",
+      "folder_exclude_pattern": [
         "node_modules",
-        "bower_components",
-        //"public/components",
+        "public/components",
         "build"
       ],
-      "file_exclude_patterns": [
+      "file_exclude_pattern": [
         "*.sublime-workspace"
       ]
     }
