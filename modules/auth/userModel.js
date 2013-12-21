@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/helpers') ,
+var Main        = require(__basedir+'/main.js') ,
     _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
     validation  = require('backbone-validation') ,

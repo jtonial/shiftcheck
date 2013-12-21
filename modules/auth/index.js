@@ -2,7 +2,7 @@ require(__basedir+'/connections/logger').info('Loading login engine...');
 
 var express     = require('express') ,
     app         = module.exports = express() ,
-    Main        = require(__basedir+'/helpers') ,
+    Main        = require(__basedir+'/main.js') ,
     User        = require('./userModel.js') ,
     Controller  = require('./controller.js') ;
 

@@ -1,5 +1,5 @@
 
-var Main            = require(__basedir+'/helpers/global.js') ,
+var Main            = require(__basedir+'/main.js') ,
     _               = require('underscore') ,
     User            = require('../auth/userModel.js') ,
     EmployeeCollection  = require('./collection.js') ;

@@ -4,7 +4,7 @@
 
 require(__basedir+'/connections/logger').info('Loading general helpers...');
 
-var Main = require('../helpers/global') ;
+var Main = require(__basedir+'/main.js') ;
 
 var crypto = require('crypto') ,
     bcrypt = require('bcrypt') ;

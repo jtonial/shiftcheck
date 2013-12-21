@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/helpers/global') ,
+var Main        = require(__basedir+'/main.js') ,
     crypto      = require('crypto') ,
     _           = require('underscore') ,
     Schedule    = require('./model.js') ,

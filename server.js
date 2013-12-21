@@ -5,7 +5,7 @@ global.__basedir = __dirname;
 console.log('Executing with base dir: '+__basedir);
 
 var cluster     = require('cluster') ,
-    Main        = require('./helpers/global.js') ;
+    Main        = require('./main.js') ;
 
 if (cluster.isMaster && Main.Config.cluster) {
   // Count the machine's CPUs
@@ -29,7 +29,7 @@ if (cluster.isMaster && Main.Config.cluster) {
     path          = require('path') ,
     RedisStore    = require('connect-redis')(express) ,
     device        = require('express-device') ,
-    Main          = require('./helpers/global') ,
+    Main          = require('./main.js') ,
     // redis         = Main.redis ,
     db            = Main.db ,
     app           = express() ;

@@ -44,6 +44,23 @@ module.exports = function(grunt) {
         },
         src: ['test/**/*.js']
       }
+    },
+    migrate: {
+      create: {
+        options: {
+          binaryPath: "./node_modules/grunt-migrate/node_modules/migrate/bin/migrate"
+        }
+      },
+      up: {
+        options: {
+          binaryPath: "./node_modules/migrate/bin/migrate"
+        }
+      },
+      down: {
+        options: {
+          binaryPath: "./node_modules/migrate/bin/migrate"
+        }
+      }
     }
   });
 
@@ -51,8 +68,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-scaffold');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-migrate');
 
   grunt.registerTask('test', ['jshint', 'mochaTest']);
 

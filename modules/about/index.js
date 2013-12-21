@@ -2,7 +2,7 @@
 require(__basedir+'/connections/logger').info('Loading about pages...');
 
 var express   = require('express') ,
-    Main      = require(__basedir+'/helpers/global.js') ,
+    Main      = require(__basedir+'/main.js') ,
     app       = module.exports = express();
 
 app.locals(Main.Config.views);

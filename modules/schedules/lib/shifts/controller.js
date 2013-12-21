@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/helpers') ,
+var Main        = require(__basedir+'/main.js') ,
     Shift       = require('./model.js') ;
 
 exports.create = function (req, res) {

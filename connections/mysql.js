@@ -1,7 +1,7 @@
 
 require(__basedir+'/connections/logger').info('Loading mysql connection...');
 
-var Main      = require('../helpers/global') ;
+var Main      = require(__basedir+'/main.js') ;
 
 //I'm not sure why Config doesn't seem to be set at this point but this hack works for now
 Main.Config = require('../config');

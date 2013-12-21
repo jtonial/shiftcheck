@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/helpers/global') ,
+var Main        = require(__basedir+'/main.js') ,
     _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
     db          = require(__basedir+'/connections/mysql.js') ,

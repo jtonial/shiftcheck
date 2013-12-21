@@ -1,6 +1,6 @@
 // Note: I should generate all the errors I will return, and make a code mapping for all of them
 
-var Main      = require(__basedir+'/helpers') ,
+var Main      = require(__basedir+'/main.js') ,
     User      = require('./userModel.js') ,
     db        = Main.mysql , //Main.mysql ,
     Queries   = require('./helpers/queries.js') ,

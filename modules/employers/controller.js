@@ -1,4 +1,4 @@
-var Main      = require(__basedir+'/helpers/global') ,
+var Main      = require(__basedir+'/main.js') ,
     _         = require('underscore') ;
 
 exports.bootstrap = function(req, res){

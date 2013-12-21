@@ -1,7 +1,7 @@
 
 require(__basedir+'/connections/logger').info('Loading render helpers...');
 
-var Main = require('../helpers/global');
+var Main = require(__basedir+'/main.js');
 
 exports.renderLoginPage = function (req, res) {
   res.render('login', { } );

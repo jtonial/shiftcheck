@@ -2,7 +2,7 @@
 require(__basedir+'/connections/logger').info('Loading change request engine...');
 
 var express     = require('express') ,
-    Main        = require(__basedir+'/helpers/global.js') ,
+    Main        = require(__basedir+'/main.js') ,
     app         = module.exports = express() ,
     Controller  = require('./controller.js') ,
     Request     = require('./model.js') ;

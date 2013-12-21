@@ -41,6 +41,7 @@
     "grunt-contrib-concat": "~0.1.3",
     "grunt-contrib-qunit": "~0.2.0",
     "grunt-phonegap-build": "0.0.1",
-    "grunt-mocha-test": "~0.7.0"
+    "grunt-mocha-test": "~0.7.0",
+		"grunt-migrate": "nrmitchi/grunt-migrate"
   }
 }
