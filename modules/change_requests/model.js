@@ -1,7 +1,7 @@
 var _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
     validation  = require('backbone-validation') ,
-    db          = require(__basedir+'/connections/mysql.js') ,
+    db          = require(__basePath+'/connections/mysql.js') ,
     Queries     = require('./helpers/queries.js') 
 
     States      = require('./helpers/states') ;

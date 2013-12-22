@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/main.js') ,
+var Main        = require(__basePath+'/main.js') ,
     _           = require('underscore')._ ,
     Model       = require('./model.js') ,
     Collection  = require('./collection.js') ;

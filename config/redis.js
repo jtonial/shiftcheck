@@ -2,7 +2,7 @@
   Docs: https://github.com/3rd-Eden/node-memcached
 */
 
-require(__basedir+'/connections/logger').info('Loading redis engine...');
+require(__basePath+'/connections/logger').info('Loading redis engine...');
 
 var redis = {};
 

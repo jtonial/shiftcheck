@@ -1,5 +1,5 @@
 
-var Logger        = require(__basedir+'/connections/logger') ,
+var Logger        = require(__basePath+'/connections/logger') ,
     mysql         = require('mysql') ,
     pool, conCount = 0, queryCount = 0; //Query count used for logs only
 

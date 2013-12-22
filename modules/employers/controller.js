@@ -1,4 +1,4 @@
-var Main      = require(__basedir+'/main.js') ,
+var Main      = require(__basePath+'/main.js') ,
     _         = require('underscore') ;
 
 exports.bootstrap = function(req, res){

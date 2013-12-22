@@ -1,4 +1,4 @@
-require(__basedir+'/connections/logger').info('Loading error responses...');
+require(__basePath+'/connections/logger').info('Loading error responses...');
 
 module.exports = queries = {
 

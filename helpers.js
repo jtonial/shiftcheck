@@ -2,9 +2,9 @@
   Global helper methods. Can all be used blackbox
 */
 
-require(__basedir+'/connections/logger').info('Loading general helpers...');
+require(__basePath+'/connections/logger').info('Loading general helpers...');
 
-var Main = require(__basedir+'/main.js') ;
+var Main = require(__basePath+'/main.js') ;
 
 var crypto = require('crypto') ,
     bcrypt = require('bcrypt') ;

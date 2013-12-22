@@ -1,5 +1,5 @@
 
-require(__basedir+'/connections/logger').info('Loading server engine...');
+require(__basePath+'/connections/logger').info('Loading server engine...');
 
 module.exports = config = {
 

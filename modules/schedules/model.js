@@ -1,7 +1,7 @@
-var Main        = require(__basedir+'/main.js') ,
+var Main        = require(__basePath+'/main.js') ,
     _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
-    db          = require(__basedir+'/connections/mysql.js') ,
+    db          = require(__basePath+'/connections/mysql.js') ,
     async       = require('async') ,
     Queries     = require('./helpers/queries.js') ,
     ShiftCollection = require('./lib/shifts/collection.js') ;

@@ -1,6 +1,6 @@
 var _         = require('underscore')._ ,
     Backbone  = require('backbone') ,
-    db        = require(__basedir+'/connections/mysql') ,
+    db        = require(__basePath+'/connections/mysql') ,
     Model     = require('./model.js') ,
     Queries   = require('./helpers/queries.js') ;
 

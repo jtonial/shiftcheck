@@ -1,5 +1,5 @@
 
-global.__basedir = __dirname+'/../..';
+global.__basePath = __dirname+'/../..';
 
 function wrapAsync (t) {
   return function (callback) {

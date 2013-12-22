@@ -1,7 +1,7 @@
 
-require(__basedir+'/connections/logger').info('Loading render helpers...');
+require(__basePath+'/connections/logger').info('Loading render helpers...');
 
-var Main = require(__basedir+'/main.js');
+var Main = require(__basePath+'/main.js');
 
 exports.renderLoginPage = function (req, res) {
   res.render('login', { } );
@@ -79,7 +79,7 @@ exports.code401 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/401', { user: req.user } );
+    res.render(__basePath+'/views/401', { user: req.user } );
   }
 };
 exports.code403 = function (req, res) {
@@ -87,7 +87,7 @@ exports.code403 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/403', { user: req.user } );
+    res.render(__basePath+'/views/403', { user: req.user } );
   }
 };
 exports.code404 = function (req, res) {
@@ -95,7 +95,7 @@ exports.code404 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/404', { user: req.user } );
+    res.render(__basePath+'/views/404', { user: req.user } );
   }
 };
 exports.code500 = function (req, res) {
@@ -103,6 +103,6 @@ exports.code500 = function (req, res) {
   if (req.xhr) {
     res.end();
   } else {
-    res.render(__basedir+'/views/500', { user: req.user } );
+    res.render(__basePath+'/views/500', { user: req.user } );
   }
 };

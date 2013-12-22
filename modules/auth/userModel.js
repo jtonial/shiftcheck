@@ -1,4 +1,4 @@
-var Main        = require(__basedir+'/main.js') ,
+var Main        = require(__basePath+'/main.js') ,
     _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
     validation  = require('backbone-validation') ,
@@ -66,12 +66,12 @@ var UserModel = Backbone.Model.extend({
     var toDelete = [];
     _.keys(_this.schema).forEach( function (attr) {
       if (!_this.schema[attr].public) toDelete.push(attr);
-    })
+    });
     //_.filter(this.schema, function (attr) { return !attr.public; })
 
     toDelete.forEach( function (attr) {
       delete json[attr];
-    })
+    });
 
     return json;
   },
@@ -93,7 +93,7 @@ var UserModel = Backbone.Model.extend({
           cb(err, result);
           // OR
           // cb(_this);
-        })
+        });
       } else {
         // Insert
         db.query(Queries.insert, [ this.get('first_name'), this.get('last_name'), this.get('employer_id'), this.get('username'), this.get('email'), this.get('password') ], function (err, result) {
@@ -105,7 +105,7 @@ var UserModel = Backbone.Model.extend({
             cb(err, result);
           }
 
-        })
+        });
       }
     } else {
       this._invalid = true;
@@ -119,7 +119,7 @@ var UserModel = Backbone.Model.extend({
       cb(err, result);
       // OR
       // cb(_this);
-    })
+    });
   },
   fetch: function (cb) {
     var _this = this;
@@ -132,14 +132,14 @@ var UserModel = Backbone.Model.extend({
         if (row) {
           _.keys(row).forEach( function (attr) {
             _this.set(attr, row[attr]);
-          })
+          });
         } else {
           _this._notExists = true;
         }
 
         cb(err);
 
-      })  
+      });
     } else if (this.get('supplier_id')) {
       db.querySingle(Queries.selectBySupplierId, [this.get('supplier_id')], function (err, row) {
 
@@ -148,14 +148,14 @@ var UserModel = Backbone.Model.extend({
         if (row) {
           _.keys(row).forEach( function (attr) {
             _this.set(attr, row[attr]);
-          })
+          });
         } else {
           _this._notExists = true;
         }
 
         cb(err);
 
-      })
+      });
     } else {
       cb();
     }
@@ -169,7 +169,7 @@ var UserModel = Backbone.Model.extend({
     _this.save( function (err, result) {
       console.log('Saved admin');
       cb(err, result);
-    })
+    });
   }
 
 });

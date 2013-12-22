@@ -1,5 +1,5 @@
 
-require(__basedir+'/connections/logger').info('Loading mysql engine...');
+require(__basePath+'/connections/logger').info('Loading mysql engine...');
 
 var mysql;
 
@@ -50,7 +50,7 @@ if (process.env.RDS_USER) {
 }
 
 if (process.env.NODE_DB == 'local') {
-  require(__basedir+'/connections/logger').info('    Using local db');
+  require(__basePath+'/connections/logger').info('    Using local db');
   mysql = mysql_config.local;
 }
 

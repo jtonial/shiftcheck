@@ -1,6 +1,6 @@
 // Note: I should generate all the errors I will return, and make a code mapping for all of them
 
-var Main      = require(__basedir+'/main.js') ,
+var Main      = require(__basePath+'/main.js') ,
     User      = require('./userModel.js') ,
     db        = Main.mysql , //Main.mysql ,
     Queries   = require('./helpers/queries.js') ,
@@ -259,8 +259,9 @@ exports.login = function (req, res) {
         Main.Logger.error(err.code);
       } else {
         if (row[0]) {
-          console.log(password);
-          console.log(row[0].password);
+          
+          console.log(password+'/'+row[0].password);
+
           if (Main.Helpers.hash.compare(password, row[0].password)) {
             req.session.user_id     = row[0].user_id;
             req.session.email       = email;

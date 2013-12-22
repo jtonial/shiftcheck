@@ -1,8 +1,8 @@
-var Main        = require(__basedir+'/main.js') ,
+var Main        = require(__basePath+'/main.js') ,
     _           = require('underscore')._ ,
     Backbone    = require('backbone') ,
     validation  = require('backbone-validation') ,
-    db          = require(__basedir+'/connections/mysql.js') ,
+    db          = require(__basePath+'/connections/mysql.js') ,
     Queries     = require('./helpers/queries.js') ;
 
 

@@ -1,5 +1,5 @@
 
-require(__basedir+'/connections/logger').info('Loading global.js...');
+require(__basePath+'/connections/logger').info('Loading global.js...');
 
 
 exports.Helpers     = require('./helpers');
