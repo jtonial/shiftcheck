@@ -16,14 +16,14 @@ var Config  = require('../../config/mysql') ,
     when    = require('when') ,
     series  = require('when/sequence') ,
     async   = require('async') ,
-    _       = require('underscore') ,
+    _       = require('underscore') ;
     knex    = Knex.initialize({
       client: Config.client ,
       connection: {
         host      : Config.host ,
         user      : Config.user ,
         password  : Config.password ,
-        database  : Config.database+'__migrate_test' ,
+        database  : Config.database ,
         charset   : 'utf8'
       }
     });

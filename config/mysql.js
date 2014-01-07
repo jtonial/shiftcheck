@@ -5,6 +5,7 @@ var mysql;
 
 var mysql_config = {
   local   : {
+    client    : 'mysql' ,
     user      : 'root',
     password  : 'password',
     database  : 'shiftcheck',
@@ -13,6 +14,7 @@ var mysql_config = {
     connectionLimit : 100
   },
   cleardb : {
+    client    : 'mysql' ,
     user      : process.env.CLEARDB_DATABASE_USER,
     password  : process.env.CLEARDB_DATABASE_PASSWORD,
     database  : process.env.CLEARDB_DATABASE_DB,
@@ -21,6 +23,7 @@ var mysql_config = {
     connectionLimit : 30
   },
   rds   : {
+    client    : 'mysql' ,
     user      : process.env.RDS_USER,
     password  : process.env.RDS_PASSWORD,
     database  : 'shiftcheck_'+(process.env.shiftcheck_mode || 'development'),
@@ -29,6 +32,7 @@ var mysql_config = {
     connectionLimit : 10
   },
   test  : {
+    client    : 'mysql' ,
     user      : 'root',
     password  : 'password',
     database  : 'shiftcheck_test',
